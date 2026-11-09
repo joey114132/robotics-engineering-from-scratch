@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A block rests on a plane tilted by theta. Which ratio decides stick versus slip?",
+  "options": [
+   "tan(theta) against mu",
+   "sin(theta) against mu",
+   "cos(theta) against mu"
+  ],
+  "answer": 0,
+  "explanation": "Needed friction over normal force is m g sin / m g cos = tan(theta)."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "mu = 0.5. At which tilt does the block start to slide?",
+  "options": [
+   "About 26.6 degrees",
+   "30 degrees",
+   "45 degrees"
+  ],
+  "answer": 0,
+  "explanation": "arctan(0.5) is about 26.6 degrees."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "The block slides. What is its acceleration down the slope?",
+  "options": [
+   "g sin(theta)",
+   "g (sin(theta) - mu cos(theta))",
+   "mu g cos(theta)"
+  ],
+  "answer": 1,
+  "explanation": "Friction at the cap, mu fn, opposes the pull."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "In the penalty model, what stops the tangential spring from growing forever?",
+  "options": [
+   "The normal damper",
+   "Clipping the force at mu times fn and moving the anchor",
+   "The time step"
+  ],
+  "answer": 1,
+  "explanation": "At the cap the contact slips and the anchor is dragged along."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Doubling the mass of the block changes the sticking angle how?",
+  "options": [
+   "Doubles it",
+   "Halves it",
+   "Does not change it"
+  ],
+  "answer": 2,
+  "explanation": "Mass cancels in ft / fn = tan(theta)."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "A part slips from a wrist tilt. Best first check?",
+  "options": [
+   "Raise the controller gain",
+   "Compare the needed ft / fn with mu",
+   "Lower the simulator time step"
+  ],
+  "answer": 1,
+  "explanation": "If the ratio exceeds mu, no controller gain can hold it."
+ }
+]

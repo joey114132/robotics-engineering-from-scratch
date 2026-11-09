@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "P shoves, I holds a grudge, D hits the brakes. Turn all three up and I hum like a fridge.",
+    "mission": "In `code/main.py` change `(2.0, 30.0)` to `(40.0,)`. Is the spectral radius above or below 1? Predict, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "P는 밀고 I는 원한을 쌓고 D는 브레이크를 밟습니다. 셋을 다 올리면 저는 냉장고처럼 웅웅거립니다.",
+    "mission": "`code/main.py`에서 `(2.0, 30.0)`을 `(40.0,)`으로 바꾸세요. spectral radius가 1보다 클지 작을지 예측한 다음 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": "pd-step"
+}

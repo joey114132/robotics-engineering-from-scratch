@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Name transforms like postal addresses and the tree finds the route. Call one T1 and I mail the cup to the wrong frame.",
+    "mission": "In `code/main.py` change `lookup(\"tool\", \"cam\")` to `lookup(\"cam\", \"tool\")`. Guess whether the position is just the old one with flipped signs, then run it."
+  },
+  "ko": {
+    "hook": "transform에 우편 주소처럼 이름을 붙이면 tree가 길을 찾아 줍니다. T1이라고 부르면 저는 컵을 엉뚱한 frame으로 보냅니다.",
+    "mission": "`code/main.py`에서 `lookup(\"tool\", \"cam\")`을 `lookup(\"cam\", \"tool\")`로 바꾸세요. 위치가 이전 값의 부호만 뒤집은 것인지 짐작한 다음 실행해 보세요."
+  },
+  "toy": null
+}

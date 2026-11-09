@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "A policy can say anything, even NaN. The wrapper is the bouncer: boring, deterministic, never impressed.",
+    "mission": "In `simulate()` in `code/main.py` change `max_step=0.2` to `0.05`. Predict whether the `rate` count goes up or down, then run `python3 code/main.py` and compare the counters."
+  },
+  "ko": {
+    "hook": "policy는 무슨 말이든 할 수 있고 NaN도 뱉습니다. wrapper는 문지기입니다. 지루하고 결정적이며 무슨 말에도 감동하지 않습니다.",
+    "mission": "`code/main.py`의 `simulate()`에서 `max_step=0.2`를 `0.05`로 바꾸세요. `rate` 횟수가 늘지 줄지 예측한 뒤 `python3 code/main.py`를 실행해 카운터를 비교하세요."
+  },
+  "toy": null
+}

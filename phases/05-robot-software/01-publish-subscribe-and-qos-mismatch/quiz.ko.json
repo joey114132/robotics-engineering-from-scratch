@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "카메라 node는 publish하고 에러도 없는데 viewer에 아무것도 안 보입니다. 가장 먼저 무엇을 봅니까?", "options": ["양쪽의 QoS profile", "모니터 케이블", "CPU 온도"], "answer": 0, "explanation": "QoS가 호환되지 않으면 어느 node도 죽지 않은 채 전달만 막힙니다."},
+  {"id": 2, "stage": "check", "question": "호환되지 않는 쌍은 어느 것입니까?", "options": ["reliable publisher, best effort subscriber", "best effort publisher, reliable subscriber", "reliable publisher, reliable subscriber"], "answer": 1, "explanation": "subscriber가 publisher가 제공하는 것보다 더 많이 요구합니다."},
+  {"id": 3, "stage": "check", "question": "depth 3인 keep-last 큐에 메시지 5개가 한꺼번에 들어옵니다. 몇 개가 어떤 순서로 버려집니까?", "options": ["2개, 가장 오래된 것", "2개, 가장 새로운 것", "5개 전부"], "answer": 0, "explanation": "keep last는 최신 3개를 남기고 가장 오래된 것부터 버립니다."},
+  {"id": 4, "stage": "check", "question": "callback은 tick당 하나를 가져가는데 publisher는 tick당 둘을 보냅니다. depth를 키우면 어떻게 됩니까?", "options": ["유실이 없어진다", "유실이 늦어질 뿐 없어지지 않는다", "callback 속도가 두 배가 된다"], "answer": 1, "explanation": "큐는 burst를 흡수하지만 평균적으로 더 느린 consumer를 고치지는 못합니다."},
+  {"id": 5, "stage": "post", "question": "durability 쌍이 volatile publisher와 transient-local subscriber입니다. 결과는 무엇입니까?", "options": ["연결되지 않는다", "subscriber가 옛 메시지를 받는다", "연결되지만 느려진다"], "answer": 0, "explanation": "subscriber가 publisher가 제공하지 않는 replay를 요구합니다."},
+  {"id": 6, "stage": "post", "question": "손실이 있는 무선 링크를 견뎌야 하는 센서 스트림에 가장 좋은 설정은 무엇입니까?", "options": ["양쪽 best effort에 작은 depth", "양쪽 reliable에 큰 depth", "history 전부 유지"], "answer": 0, "explanation": "best effort는 낡은 샘플을 재전송하지 않고 버립니다. 작은 depth는 가장 최신 것을 남깁니다."}
+]

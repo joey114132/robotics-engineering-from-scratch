@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "planner 속도 한계를 3 rad/s로 올렸는데 관절은 절반으로 움직입니다. 가장 가능성이 큰 원인은?",
+  "options": [
+   "encoder에 노이즈가 있다",
+   "planner가 너무 느리다",
+   "아래쪽 계층의 한계가 더 빡빡해 조용히 잘랐다"
+  ],
+  "answer": 2,
+  "explanation": "가장 빡빡한 계층이 알리지 않고 이깁니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "한계의 어느 순서가 정상입니까?",
+  "options": [
+   "drive가 가장 빡빡하고 planner가 가장 느슨하다",
+   "planner가 가장 빡빡하고 drive가 가장 느슨하다",
+   "모두 같고 임의다"
+  ],
+  "answer": 1,
+  "explanation": "바깥 계층은 거의 작동하지 않는 안전망입니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "어떤 계층이 토크 한계를 정하지 않을 때 점검은 어떻게 다룹니까?",
+  "options": [
+   "그 계층을 건너뛰고 한계를 정한 이웃끼리 비교한다",
+   "0으로 취급한다",
+   "예외를 낸다"
+  ],
+  "answer": 0,
+  "explanation": "None은 그 계층이 그 양을 정하지 않는다는 뜻입니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "어긋난 구성에서 effective(L, 'vel')은 무엇을 돌려줍니까?",
+  "options": [
+   "(3.0, 'planner')",
+   "(1.0, 'controller')",
+   "(1.5, 'drive')"
+  ],
+  "answer": 2,
+  "explanation": "계층 전체의 최솟값과 그 소유자입니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "시작 점검이 첫 번째에서 멈추지 않고 모든 어긋남을 나열하는 이유는?",
+  "options": [
+   "목록이 더 빠르다",
+   "고치는 사람이 한 번에 전부 고칠 수 있다",
+   "첫 번째가 항상 최악이다"
+  ],
+  "answer": 1,
+  "explanation": "시작 한 번에 보고 하나가 수정 하나보다 쌉니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "한계가 drive register와 설정 사본에 모두 있을 때 어느 쪽을 믿습니까?",
+  "options": [
+   "drive에서 읽은 register",
+   "설정 사본",
+   "더 큰 쪽"
+  ],
+  "answer": 0,
+  "explanation": "drive는 사본이 아니라 register를 집행합니다."
+ }
+]

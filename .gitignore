@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+.wiki/
+.board/
+site/
+wiki/
+.handoff/
+.bkit/
+site-single/
+AGENT_BRIEF.md
+intent.md

@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A tool commands a depth of fd / k_est and the real surface is stiffer than k_est. What happens?",
+  "options": [
+   "The force is larger than wanted",
+   "The force is as wanted",
+   "The tool loses contact"
+  ],
+  "answer": 0,
+  "explanation": "Force is ke times depth, so a larger real ke gives a larger force."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Integral force control v = ki (fd - f) on a spring surface. What is the settling time constant?",
+  "options": [
+   "1 / (ke ki)",
+   "ke ki",
+   "ke / ki"
+  ],
+  "answer": 0,
+  "explanation": "f_dot = ke ki (fd - f) is a first-order lag."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Which surface makes the integral force loop settle faster?",
+  "options": [
+   "A softer one",
+   "A stiffer one",
+   "Neither"
+  ],
+  "answer": 1,
+  "explanation": "The loop gain is ke ki, so a stiffer surface gives a shorter time constant."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "What does S = diag(0, 1) mean on a 2-D tool?",
+  "options": [
+   "x force law, y position law",
+   "x position law, y force law",
+   "Both axes use both laws"
+  ],
+  "answer": 1,
+  "explanation": "S = 1 selects the force law for that axis."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Why does the discrete force loop need ke ki dt < 2?",
+  "options": [
+   "The error is multiplied by 1 - ke ki dt each step",
+   "Force sensors saturate",
+   "Velocity must stay below 2"
+  ],
+  "answer": 0,
+  "explanation": "The factor must stay inside the unit circle, so its size must be below 1."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "A force loop works on a soft pad and shakes on steel. Likely cause?",
+  "options": [
+   "ke ki dt passed the limit on the stiff surface",
+   "The pad is too heavy",
+   "The desired force is too small"
+  ],
+  "answer": 0,
+  "explanation": "Loop gain scales with ke, so the stiff surface is the one that goes unstable."
+ }
+]

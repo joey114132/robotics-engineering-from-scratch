@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "One thread runs one callback at a time. A slow callback is one coffee machine with a long line, and my heartbeat is in it.",
+    "mission": "In `code/main.py` change the slow callback's `60` to `30`. Predict the worst timer wait with 1 thread, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "thread 하나는 callback을 한 번에 하나만 돌립니다. 느린 callback은 커피머신이 하나뿐인 긴 줄이고 제 heartbeat도 그 줄에 서 있습니다.",
+    "mission": "`code/main.py`에서 느린 callback의 `60`을 `30`으로 바꾸세요. thread 1개일 때 timer의 최악 대기를 예측한 다음 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

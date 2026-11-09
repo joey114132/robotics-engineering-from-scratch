@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Aim too close and I snake like a nervous noodle. Aim too far and I cut the corner. Both come from one number.",
+    "mission": "In `code/main.py` change the `4.0` in `(0.4, 1.5, 4.0)` to `2.5` and run `python3 code/main.py`. Predict the corner cut, somewhere between 0.41 m and 1.37 m, before you look."
+  },
+  "ko": {
+    "hook": "너무 가까이 겨냥하면 겁먹은 국수처럼 휘청대고 너무 멀리 겨냥하면 코너를 가로지릅니다. 둘 다 숫자 하나에서 나옵니다.",
+    "mission": "`code/main.py`에서 `(0.4, 1.5, 4.0)`의 `4.0`을 `2.5`로 바꾸고 `python3 code/main.py`를 실행하세요. 코너 절단이 0.41 m와 1.37 m 사이 어디쯤일지 먼저 예측하세요."
+  },
+  "toy": null
+}

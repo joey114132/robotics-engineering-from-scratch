@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "관절각을 알고 있습니다. gripper가 어디 있는지 알려면 무엇이 필요합니까?", "options": ["순기구학", "역기구학", "PID 제어기"], "answer": 0, "explanation": "FK는 관절 공간을 팁 pose로 옮깁니다."},
+  {"id": 2, "stage": "check", "question": "평면 회전관절 사슬에서 각 link는 FK 곱에 무엇을 넣습니까?", "options": ["길이만큼의 회전", "자기 x축을 따른 이동", "크기 조정"], "answer": 1, "explanation": "관절은 회전하고 link는 이동합니다."},
+  {"id": 3, "stage": "check", "question": "link가 [0.7, 0.4]일 때 base에서 팁까지의 최대 거리는 얼마입니까?", "options": ["0.3", "1.1", "0.28"], "answer": 1, "explanation": "사슬을 완전히 편 길이의 합입니다."},
+  {"id": 4, "stage": "check", "question": "link가 [3, 1]일 때 base에서 팁까지의 최소 거리는 얼마입니까?", "options": ["0", "2", "4"], "answer": 1, "explanation": "2*3 - 4 = 2입니다. 짧은 link로는 긴 link를 상쇄할 수 없습니다."},
+  {"id": 5, "stage": "post", "question": "테스트에 독립된 FK 구현을 두 개 두는 이유는 무엇입니까?", "options": ["속도", "같은 실수를 할 가능성이 낮아서 불일치가 버그를 드러낸다", "ROS가 요구한다"], "answer": 1, "explanation": "서로 다른 식으로 교차 검증하면 한 경로가 숨기는 오류를 잡습니다."},
+  {"id": 6, "stage": "post", "question": "실제 팔에서 FK 결과가 일정한 오프셋만큼 어긋납니다. 가장 먼저 볼 것은 무엇입니까?", "options": ["URDF origin frame과 단위", "모터 토크 한계", "DDS 프로파일"], "answer": 0, "explanation": "고정 오프셋은 동역학이 아니라 모델 frame을 가리킵니다."}
+]

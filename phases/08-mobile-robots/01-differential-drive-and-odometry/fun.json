@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Perfect square, flawless wheels, and I still came home 18 cm off. Two numbers I typed in a hurry did it.",
+    "mission": "In `code/main.py` change `B * 1.01` to `B * 1.02` and run `python3 code/main.py`. Predict the closure error of that row (0.089 m now) before looking, then check your guess."
+  },
+  "ko": {
+    "hook": "완벽한 사각형에 멀쩡한 바퀴였는데 18 cm 어긋나서 돌아왔습니다. 급히 적은 숫자 두 개 때문입니다.",
+    "mission": "`code/main.py`에서 `B * 1.01`을 `B * 1.02`로 바꾸고 `python3 code/main.py`를 실행하세요. 그 줄의 closure error(지금 0.089 m)가 얼마가 될지 보기 전에 예측하세요."
+  },
+  "toy": "diff-drive"
+}

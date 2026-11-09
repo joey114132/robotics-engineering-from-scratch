@@ -1,0 +1,8 @@
+# Lessons run on Python 3.10+. numpy is the only hard dependency; scipy is used only in "Use It" cross-checks and its tests skip when absent.
+numpy
+scipy
+pytest
+# Optional: only for the terminal reader scripts/robo.py. Lessons and their tests do not need these.
+# rich is required to run robo; Pillow is optional (without it figures print as caption lines). Tests: python3 -m pytest scripts/tests_robo
+rich
+Pillow

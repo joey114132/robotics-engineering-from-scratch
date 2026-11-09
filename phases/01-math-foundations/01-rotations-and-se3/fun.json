@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Matrix order is socks and shoes. Swap them and everything still looks valid, just wrong.",
+  "mission": "In `code/main.py` change `np.pi / 2` to `np.pi`. Predict where the point (1,0,0) lands, then run `python3 code/main.py`."
+ },
+ "ko": {
+  "hook": "행렬 순서는 양말과 신발과 같습니다. 바꿔도 멀쩡해 보이지만 결과는 틀립니다.",
+  "mission": "`code/main.py`에서 `np.pi / 2`를 `np.pi`로 바꾸세요. 점 (1,0,0)이 어디에 놓일지 예측한 다음 `python3 code/main.py`를 실행하세요."
+ },
+ "toy": null,
+ "motion": "rotation-frames"
+}

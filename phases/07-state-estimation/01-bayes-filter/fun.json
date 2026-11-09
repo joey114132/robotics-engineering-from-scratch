@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Where am I? Somewhere in this corridor, probably. Predict makes me less sure, update makes me less wrong, and I need both.",
+  "mission": "In `code/main.py` change `[1] * 25` to `[1] * 5` and run `python3 code/main.py`. Predict whether the best guess still equals the true cell, and how far the entropy falls after only five steps."
+ },
+ "ko": {
+  "hook": "저는 어디 있을까요? 아마 이 복도 어딘가입니다. predict는 저를 덜 확신하게 만들고 update는 덜 틀리게 만듭니다. 둘 다 필요합니다.",
+  "mission": "`code/main.py`에서 `[1] * 25`를 `[1] * 5`로 바꾸고 `python3 code/main.py`를 실행하세요. 최선의 추측이 실제 셀과 같을지 먼저 예측하고 entropy가 얼마까지 내려가는지 보세요."
+ },
+ "toy": null,
+ "motion": "bayes-belief"
+}

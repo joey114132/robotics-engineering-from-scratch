@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "A gust leans on me and my PD loop lets it win. Give the inner loop a memory and it pushes back, quietly, until the lean is gone.",
+    "mission": "In the `I, kp, kd, ki = ...` line of `code/main.py` change the last value `0.5` to `0.0` and run `python3 code/main.py`. Predict how the cascade compares with PD, then explain why."
+  },
+  "ko": {
+    "hook": "돌풍이 기대면 PD 루프는 그냥 져 줍니다. 안쪽 루프에 기억을 주면 기울기가 사라질 때까지 조용히 되밀어 냅니다.",
+    "mission": "`code/main.py`의 `I, kp, kd, ki = ...` 줄에서 마지막 값 `0.5`를 `0.0`으로 바꾸고 `python3 code/main.py`를 실행하세요. cascade가 PD와 어떻게 비교될지 예측하고 이유를 설명해 보세요."
+  },
+  "toy": null
+}

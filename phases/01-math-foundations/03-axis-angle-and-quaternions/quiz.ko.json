@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "목표 quaternion의 모든 성분에 부호가 반대로 붙어서 도착했습니다. 같은 자세입니까?", "options": ["아니다, 거울상 자세다", "같다", "w가 0일 때만 같다"], "answer": 1, "explanation": "q와 -q는 같은 회전 행렬을 만듭니다."},
+  {"id": 2, "stage": "check", "question": "Rodrigues 공식은 무엇을 계산합니까?", "options": ["행렬에서 quaternion", "transform의 inverse", "축과 각도에서 회전 행렬"], "answer": 2, "explanation": "R = I + sin(t) K + (1 - cos(t)) K^2입니다."},
+  {"id": 3, "stage": "check", "question": "모든 회전에 단위 quaternion이 두 개씩 있는 이유는 무엇입니까?", "options": ["각도 t와 t + 2pi가 q와 -q를 주기 때문", "quaternion에 축이 두 개라서", "부동소수점 반올림 때문"], "answer": 0, "explanation": "각도가 2pi 늘면 반각 t/2는 pi 늘어 부호가 뒤집힙니다."},
+  {"id": 4, "stage": "check", "question": "dot(q0, q1) < 0인데 부호 보정 없이 slerp를 부르면 어떻게 됩니까?", "options": ["q0를 돌려준다", "긴 호로 돌아간다", "예외가 난다"], "answer": 1, "explanation": "4차원 구 위의 두 점 사이 호가 사분원보다 길어서 회전이 180도를 넘습니다."},
+  {"id": 5, "stage": "post", "question": "해결 방법은 무엇입니까?", "options": ["q0를 두 번 정규화한다", "각도를 degree로 쓴다", "dot가 음수이면 q1의 부호를 뒤집는다"], "answer": 2, "explanation": "회전은 그대로이고 짧은 호를 타게 됩니다."},
+  {"id": 6, "stage": "post", "question": "라이브러리는 (x, y, z, w)를 돌려주는데 내 코드는 (w, x, y, z)를 기대합니다. 무슨 일이 생깁니까?", "options": ["다른 회전을 뜻하는 유효한 단위 quaternion이 된다", "예외가 난다", "같은 회전이 된다"], "answer": 0, "explanation": "뒤바뀜을 알려 주는 것이 없으므로 경계마다 순서를 확인해야 합니다."}
+]

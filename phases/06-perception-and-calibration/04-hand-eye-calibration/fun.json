@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Spin about one axis forever and call it calibration? The math keeps asking for a second axis.",
+    "mission": "In `code/main.py` change the spreads `(0.0, 15.0, 60.0)` to `(0.0, 2.0, 5.0)` and run `python3 code/main.py`. Predict the rotation error at 5 deg first, then see how few degrees start to help."
+  },
+  "ko": {
+    "hook": "한 축으로만 돌려 놓고 보정이라고 부를 수 있을까요? 수학은 계속 두 번째 축을 요구합니다.",
+    "mission": "`code/main.py`에서 `(0.0, 15.0, 60.0)`을 `(0.0, 2.0, 5.0)`으로 바꾸고 `python3 code/main.py`를 실행하세요. 5도일 때 회전 오차를 먼저 예측하고 몇 도부터 도움이 되는지 확인하세요."
+  },
+  "toy": null
+}

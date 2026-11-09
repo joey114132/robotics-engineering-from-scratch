@@ -1,0 +1,15 @@
+# 모든 레슨 그림에 공통으로 적용되는 읽기 쉬운 기본값 (build_figures.py 가 MATPLOTLIBRC 로 지정한다)
+font.size: 15
+axes.titlesize: 17
+axes.labelsize: 15
+legend.fontsize: 12.5
+xtick.labelsize: 13
+ytick.labelsize: 13
+lines.linewidth: 2.6
+lines.markersize: 8
+axes.grid: True
+grid.alpha: 0.28
+axes.spines.top: False
+axes.spines.right: False
+figure.dpi: 100
+savefig.facecolor: white

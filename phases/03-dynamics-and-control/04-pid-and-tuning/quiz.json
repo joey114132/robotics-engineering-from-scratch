@@ -1,0 +1,74 @@
+[
+{
+"id": 1,
+"stage": "pre",
+"question": "A joint oscillates. You raise kp and kd together. What can go wrong?",
+"options": [
+"Nothing, more gain is more damping",
+"The command can flip sign every tick once kd passes the sampling limit",
+"Only the encoder noise changes"
+],
+"answer": 1,
+"explanation": "A held command acts on old velocity, so a large kd chatters (lesson 03/01)."
+},
+{
+"id": 2,
+"stage": "check",
+"question": "PD control (no I), constant load torque. Steady error?",
+"options": [
+"load * kp",
+"load / kp",
+"zero"
+],
+"answer": 1,
+"explanation": "At rest kp * e = load."
+},
+{
+"id": 3,
+"stage": "check",
+"question": "What does the integral term fix?",
+"options": [
+"Overshoot",
+"The steady offset under a constant load",
+"Sensor noise"
+],
+"answer": 1,
+"explanation": "It keeps adding error until the offset is gone."
+},
+{
+"id": 4,
+"stage": "check",
+"question": "Why does windup happen?",
+"options": [
+"The integrator keeps adding while the actuator is at its limit",
+"kd is too small",
+"The loop runs too fast"
+],
+"answer": 0,
+"explanation": "The output is clipped but the integral state is not."
+},
+{
+"id": 5,
+"stage": "post",
+"question": "Conditional integration freezes the integrator when:",
+"options": [
+"Always",
+"The output is saturated and the error pushes it deeper",
+"The error is zero"
+],
+"answer": 1,
+"explanation": "It still integrates when the error pulls the output out of saturation."
+},
+{
+"id": 6,
+"stage": "post",
+"question": "The closed-loop update matrix has a largest eigenvalue magnitude of 1.3. What happens?",
+"options": [
+"The motion decays",
+"The motion grows every tick",
+"The motion is smooth but slow"
+],
+"answer": 1,
+"explanation": "Magnitude above 1 means growth."
+}
+]

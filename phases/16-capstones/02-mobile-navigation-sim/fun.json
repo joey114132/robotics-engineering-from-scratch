@@ -1,0 +1,11 @@
+{
+ "en": {
+  "hook": "Final boss: the plan is perfect and I'm still hugging the wall, because I believe I'm somewhere I'm not. Defeat the drift.",
+  "mission": "Victory lap: in `code/main.py` set `bad` to `scale_err=0.01, w_bias=0.01, sigma=0.02`. Predict whether the run without the fix still hits the wall, then run `python3 code/main.py`."
+ },
+ "ko": {
+  "hook": "최종 보스입니다. 계획은 완벽한데 저는 제가 있지도 않은 곳에 있다고 믿어서 벽을 껴안고 있습니다. drift를 물리칩시다.",
+  "mission": "마무리 과제입니다. `code/main.py`에서 `bad`를 `scale_err=0.01, w_bias=0.01, sigma=0.02`로 바꾸세요. fix 없는 run이 여전히 벽에 닿을지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+ },
+ "toy": null
+}

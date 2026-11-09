@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "A simulator is the real joint with some chores deleted. One deleted chore sends the biggest bill, and you can measure which.",
+    "mission": "In `REAL` in `code/main.py` change `c=0.05` to `c=0.025`. Predict whether friction is still the costliest effect, then run `python3 code/main.py` and compare the costs."
+  },
+  "ko": {
+    "hook": "시뮬레이터는 집안일 몇 개를 지워 버린 진짜 관절입니다. 지운 일 가운데 청구서가 제일 큰 것이 무엇인지 직접 잴 수 있습니다.",
+    "mission": "`code/main.py`의 `REAL`에서 `c=0.05`를 `c=0.025`로 바꾸세요. friction이 여전히 가장 큰 비용일지 예측한 뒤 `python3 code/main.py`로 비용을 비교하세요."
+  },
+  "toy": null
+}

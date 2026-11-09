@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "pure pursuit에서 로봇은 무엇을 향해 조향합니까?", "options": ["경로에서 일정 거리 앞의 점", "경로에서 가장 가까운 점", "경로 끝의 목표점"], "answer": 0, "explanation": "lookahead 점은 경로를 따라 Ld만큼 떨어진 점입니다."},
+  {"id": 2, "stage": "check", "question": "목표점이 로봇 좌표계에서 옆 offset y, 거리 d입니다. 그 점에 닿는 곡률은 무엇입니까?", "options": ["2 y / d^2", "y / d", "d / 2 y"], "answer": 0, "explanation": "진행 방향에 접하고 그 점을 지나는 원의 곡률은 k = 2 y / d^2입니다."},
+  {"id": 3, "stage": "check", "question": "lookahead를 훨씬 길게 하면 직각 코너에서 어떻게 됩니까?", "options": ["코너를 더 크게 자른다", "더 많이 흔들린다", "변화 없다"], "answer": 0, "explanation": "코너 근처에서 먼 목표점은 경로 밖에 있어서 로봇이 일찍 돕니다."},
+  {"id": 4, "stage": "check", "question": "lookahead가 아주 짧고 구동부에 지연이 있습니다. 직선에서 어떻게 됩니까?", "options": ["경로 주위로 흔들린다", "느려진다", "코너를 자른다"], "answer": 0, "explanation": "높은 gain이 지연을 만나 조향이 반복해서 overshoot합니다."},
+  {"id": 5, "stage": "post", "question": "지연 없는 시뮬레이션에서 짧은 lookahead가 흔들리지 않는 이유는 무엇입니까?", "options": ["높은 gain이 overshoot할 지연이 없다", "경로가 더 짧다", "속도가 더 낮다"], "answer": 0, "explanation": "기하만으로는 감쇠가 잘 됩니다. 진동은 지연이 만듭니다."},
+  {"id": 6, "stage": "post", "question": "고속에서의 흔들림과 저속에서의 코너 절단을 함께 줄이는 방법은 무엇입니까?", "options": ["lookahead를 속도에 비례시킨다", "경로를 더 길게 한다", "제어 주기를 낮춘다"], "answer": 0, "explanation": "고속에서 긴 lookahead는 흔들림을 줄이고 저속에서 짧은 lookahead는 코너를 가깝게 따라갑니다."}
+]

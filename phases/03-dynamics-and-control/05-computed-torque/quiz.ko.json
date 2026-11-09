@@ -1,0 +1,74 @@
+[
+{
+"id": 1,
+"stage": "pre",
+"question": "관절별 PD는 느린 움직임은 잘 따라가지만 빠른 swing에서는 뒤처집니다. 왜입니까?",
+"options": [
+"속도에 따라 커지는 관성·결합 토크를 PD가 모델링하지 않기 때문이다",
+"encoder 주기가 떨어지기 때문이다",
+"kd가 너무 크기 때문이다"
+],
+"answer": 0,
+"explanation": "관성 항과 Coriolis 항은 가속도와 속도 제곱에 비례해 커집니다."
+},
+{
+"id": 2,
+"stage": "check",
+"question": "computed torque는 tau = M(q) a + h(q, qd)이고 a = qdd_d + kd*ed + kp*e입니다. 모델이 정확하면 오차는 무엇을 따릅니까?",
+"options": [
+"e'' + kd e' + kp e = 0",
+"즉시 e = 0이 된다",
+"e'' = h"
+],
+"answer": 0,
+"explanation": "모델이 팔을 상쇄해 오차 동역학이 선형으로 남습니다."
+},
+{
+"id": 3,
+"stage": "check",
+"question": "토크 없이 자유롭게 움직이는 수평 팔에서 무엇이 일정합니까?",
+"options": [
+"관절 1 속도",
+"운동에너지",
+"관절 2 각도"
+],
+"answer": 1,
+"explanation": "중력도 토크도 없으면 에너지는 운동에너지뿐이어서 보존됩니다."
+},
+{
+"id": 4,
+"stage": "check",
+"question": "2링크 팔의 M11은 어느 변수에 가장 크게 좌우됩니까?",
+"options": [
+"팔꿈치 각도 q2",
+"베이스 각도 q1",
+"속도"
+],
+"answer": 0,
+"explanation": "M은 cos(q2)를 통해 q2에만 의존합니다."
+},
+{
+"id": 5,
+"stage": "post",
+"question": "모델의 질량이 20% 틀렸습니다. computed torque는 PD와 비교해 어떻게 됩니까?",
+"options": [
+"여전히 더 잘 따라가지만 정확한 모델보다 오차가 크다",
+"항상 불안정해진다",
+"PD와 같아진다"
+],
+"answer": 0,
+"explanation": "상쇄가 불완전해도 모델 항 대부분이 사라집니다."
+},
+{
+"id": 6,
+"stage": "post",
+"question": "역동역학을 가장 독립적으로 검증하는 방법은 무엇입니까?",
+"options": [
+"무작위 상태에서 mj_inverse 같은 엔진의 역동역학과 비교한다",
+"M이 2x2 배열인지 본다",
+"궤적을 그려 본다"
+],
+"answer": 0,
+"explanation": "두 번째 구현이 같은 실수를 걸러 냅니다."
+}
+]

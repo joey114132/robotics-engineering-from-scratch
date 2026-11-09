@@ -1,0 +1,74 @@
+[
+{
+"id": 1,
+"stage": "pre",
+"question": "A joint-by-joint PD tracks slow motion well but lags on a fast swing. Why?",
+"options": [
+"The inertia and coupling torques grow with speed and the PD does not model them",
+"The encoder rate drops",
+"kd is too large"
+],
+"answer": 0,
+"explanation": "Inertial and Coriolis terms scale with acceleration and velocity squared."
+},
+{
+"id": 2,
+"stage": "check",
+"question": "Computed torque is tau = M(q) a + h(q, qd) with a = qdd_d + kd*ed + kp*e. What does the error obey with an exact model?",
+"options": [
+"e'' + kd e' + kp e = 0",
+"e = 0 immediately",
+"e'' = h"
+],
+"answer": 0,
+"explanation": "The model cancels the arm, leaving the error dynamics linear."
+},
+{
+"id": 3,
+"stage": "check",
+"question": "Free motion of a horizontal arm with no torque. What stays constant?",
+"options": [
+"Joint 1 velocity",
+"Kinetic energy",
+"Joint 2 angle"
+],
+"answer": 1,
+"explanation": "Without gravity or torque, only kinetic energy is available, so it is conserved."
+},
+{
+"id": 4,
+"stage": "check",
+"question": "M11 of a 2-link arm changes most with which variable?",
+"options": [
+"The elbow angle q2",
+"The base angle q1",
+"The velocity"
+],
+"answer": 0,
+"explanation": "M depends on q2 only, through cos(q2)."
+},
+{
+"id": 5,
+"stage": "post",
+"question": "The masses in the model are 20% wrong. What does computed torque do compared with PD?",
+"options": [
+"Still tracks better, with a larger error than with the exact model",
+"Becomes unstable always",
+"Equals PD"
+],
+"answer": 0,
+"explanation": "The cancelation is imperfect but removes most of the model terms."
+},
+{
+"id": 6,
+"stage": "post",
+"question": "Which check gives the most independent test of your inverse dynamics?",
+"options": [
+"Compare with an engine's inverse dynamics, such as mj_inverse, on random states",
+"Check that M is a 2x2 array",
+"Plot the trajectory"
+],
+"answer": 0,
+"explanation": "A second implementation catches shared mistakes."
+}
+]

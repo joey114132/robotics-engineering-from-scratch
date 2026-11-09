@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "The scariest faults are the quiet ones: no error, no alarm, just a joint happily walking into its stop.",
+    "mission": "In `code/main.py` change `ranked()` to `ranked(delay=0.3)`. Predict which rank the delay fault moves to, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "제일 무서운 고장은 조용한 고장입니다. 에러도 알람도 없이 관절이 신나게 stop을 향해 걸어갑니다.",
+    "mission": "`code/main.py`에서 `ranked()`를 `ranked(delay=0.3)`으로 바꾸세요. delay 고장이 몇 위로 올라갈지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

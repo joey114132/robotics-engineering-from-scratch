@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "A stiff position loop fights every touch. Make me a spring and a damper instead and my handshake turns polite.",
+    "mission": "In `code/main.py` change the `0.2` in `damping_for_zeta(100.0, 1.0, 0.2)` to `1.0`. Predict how `peak` compares with `steady`, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "뻣뻣한 position loop는 건드릴 때마다 싸웁니다. 저를 스프링과 댐퍼로 만들어 주면 악수가 훨씬 예의 바릅니다.",
+    "mission": "`code/main.py`에서 `damping_for_zeta(100.0, 1.0, 0.2)`의 `0.2`를 `1.0`으로 바꾸세요. `peak`가 `steady`와 어떻게 다를지 예측한 다음 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

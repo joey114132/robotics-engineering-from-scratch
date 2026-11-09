@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "명령 프로그램이 죽었을 때 관절이 일정 속도로 움직이고 있습니다. watchdog이 없으면?",
+  "options": [
+   "즉시 멈춘다",
+   "원점으로 돌아간다",
+   "마지막 명령을 계속 실행한다"
+  ],
+  "answer": 2,
+  "explanation": "drive는 마지막 명령을 유지합니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "속도 v에서 일정 감속 a로 멈출 때 정지 거리는?",
+  "options": [
+   "v / a",
+   "v^2 / (2a)",
+   "v * a"
+  ],
+  "answer": 1,
+  "explanation": "t = v / a를 x = v t - a t^2 / 2에 넣은 값입니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "brake가 없는 관절에서 토크 차단이 정지가 아닌 이유는?",
+  "options": [
+   "마찰만 작용해 미끄러진다",
+   "관절이 반대로 돈다",
+   "관절이 빨라진다"
+  ],
+  "answer": 0,
+  "explanation": "미끄러지는 거리 J v / b는 ramp 정지보다 훨씬 깁니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "관절이 한계 안에 머무는 timeout 부등식은?",
+  "options": [
+   "v T <= a",
+   "T >= v / a",
+   "v T + v^2 / (2a) <= 여유 거리"
+  ],
+  "answer": 2,
+  "explanation": "timeout 동안의 이동과 제동 이동이 여유 거리 안에 들어와야 합니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "timeout이 heartbeat 주기에 jitter를 더한 값보다 짧으면 무엇이 깨집니까?",
+  "options": [
+   "관절이 제동하지 못한다",
+   "늦은 메시지 하나에 watchdog이 오탐한다",
+   "한계가 움직인다"
+  ],
+  "answer": 1,
+  "explanation": "timeout에는 하한도 필요합니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "같은 여유 거리와 감속에서 속도가 두 배가 되면 제동 거리는?",
+  "options": [
+   "네 배가 된다",
+   "두 배가 된다",
+   "절반이 된다"
+  ],
+  "answer": 0,
+  "explanation": "거리는 v의 제곱에 비례합니다."
+ }
+]

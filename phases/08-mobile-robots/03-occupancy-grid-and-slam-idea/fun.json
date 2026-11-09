@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Draw a map while lost and every wall shows up twice, with a ghost room next door. I make a terrible interior designer.",
+  "mission": "In `code/main.py` change the `0.001` in `(0.0, 0.001, 0.003)` to `0.0005` and run `python3 code/main.py`. Guess where its precision lands between 0.89 and 0.41 before you look."
+ },
+ "ko": {
+  "hook": "길을 잃은 채 지도를 그리면 벽이 두 겹으로 생기고 옆에 유령 방까지 나옵니다. 저는 인테리어 솜씨가 형편없습니다.",
+  "mission": "`code/main.py`에서 `(0.0, 0.001, 0.003)`의 `0.001`을 `0.0005`로 바꾸고 `python3 code/main.py`를 실행하세요. 정밀도가 0.89와 0.41 사이 어디에 놓일지 먼저 맞혀 보세요."
+ },
+ "toy": null,
+ "motion": "lidar-grid"
+}

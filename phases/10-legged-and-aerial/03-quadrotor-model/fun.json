@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Tell me to go right and I stare at the floor first. I can't push sideways, so I lean and let the thrust do the work.",
+  "mission": "In `code/main.py` change the torque `0.002` in `(hover_thrust(m), 0.002)` to `0.004` and run `python3 code/main.py`. Predict pitch and sideways distance after 1 s, then compare with 14.3 deg and 0.204 m."
+ },
+ "ko": {
+  "hook": "오른쪽으로 가라고 하면 저는 먼저 바닥을 봅니다. 옆으로 못 미니 기울이고 추력이 밀어 주길 기다려요.",
+  "mission": "`code/main.py`의 `hover_thrust(m), 0.002`에서 토크 `0.002`를 `0.004`로 바꾸고 `python3 code/main.py`를 실행하세요. 1초 뒤 pitch와 옆 이동을 예측하고 14.3도, 0.204 m와 비교하세요."
+ },
+ "toy": null,
+ "motion": "quad-thrust"
+}

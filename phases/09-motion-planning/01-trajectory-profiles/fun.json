@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Reaching the target on time is easy. Arriving without a knock takes six promises, and a cubic keeps only four.",
+  "mission": "In `code/main.py` change `T, dt = 2.0, 0.002` to `T, dt = 1.0, 0.002` and run `python3 code/main.py`. Predict how many times bigger the quintic peak jerk (7.5 now) gets when the move takes half the time."
+ },
+ "ko": {
+  "hook": "제시간에 목표에 닿는 건 쉽습니다. 덜컥거림 없이 닿으려면 약속이 여섯 개 필요한데 cubic은 네 개만 지킵니다.",
+  "mission": "`code/main.py`에서 `T, dt = 2.0, 0.002`를 `T, dt = 1.0, 0.002`로 바꾸고 `python3 code/main.py`를 실행하세요. 움직임이 절반 시간이면 quintic peak jerk(현재 7.5)가 몇 배가 될지 예측하세요."
+ },
+ "toy": null,
+ "motion": "trapezoid-profile"
+}

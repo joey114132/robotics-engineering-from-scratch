@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Every joint origin is written in its parent's frame. Read it from the world and I point, very confidently, at the wrong corner.",
+    "mission": "Run `cd code && python3 -c \"from main import *; c=chain(parse_urdf(URDF)[1],'base','hand'); print(naive_position(c), link_positions(c,{'shoulder':0,'elbow':0})['hand'])\"`. Which hand position is right, and why?"
+  },
+  "ko": {
+    "hook": "joint origin은 부모 link의 frame으로 적혀 있습니다. 월드 기준으로 읽으면 저는 자신 있게 엉뚱한 곳을 가리킵니다.",
+    "mission": "`cd code && python3 -c \"from main import *; c=chain(parse_urdf(URDF)[1],'base','hand'); print(naive_position(c), link_positions(c,{'shoulder':0,'elbow':0})['hand'])\"`를 실행해 보세요. 어느 hand 위치가 맞는지 이유와 함께 말해 보세요."
+  },
+  "toy": null
+}

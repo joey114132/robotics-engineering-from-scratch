@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "카메라와 IMU 샘플이 컴퓨터 두 대에서 오는데 융합 결과가 뒤로 튑니다. 샘플은 모두 맞습니다. 무엇을 의심합니까?", "options": ["두 시계가 어긋나 샘플 순서가 바뀐다", "카메라 렌즈가 더럽다", "IMU가 너무 느리다"], "answer": 0, "explanation": "사건 간격보다 큰 시계 offset은 정렬된 순서를 바꿉니다."},
+  {"id": 2, "stage": "check", "question": "t0, t1, t2, t3에서 server 빼기 client offset을 주는 식은 무엇입니까?", "options": ["((t1 - t0) + (t2 - t3)) / 2", "(t3 - t0) / 2", "(t1 + t2) - (t0 + t3)"], "answer": 0, "explanation": "두 편도 차이를 평균하므로 지연이 같으면 정확히 상쇄됩니다."},
+  {"id": 3, "stage": "check", "question": "가는 지연이 30 ms이고 오는 지연이 10 ms입니다. offset 오차는 얼마입니까?", "options": ["0 ms", "10 ms", "20 ms"], "answer": 1, "explanation": "오차는 두 지연 차이의 절반입니다."},
+  {"id": 4, "stage": "check", "question": "교환이 여러 번 있을 때 가장 믿을 것은 어느 것입니까?", "options": ["왕복이 가장 짧은 것", "맨 처음 것", "offset이 가장 큰 것"], "answer": 0, "explanation": "왕복이 짧으면 지연이 비대칭일 여지가 작습니다."},
+  {"id": 5, "stage": "post", "question": "intent는 이동을 요구했는데 trace 한 줄의 pre와 post가 같습니다. reader는 무엇을 보고합니까?", "options": ["not_executed", "no_motion", "wrong_motion"], "answer": 1, "explanation": "step은 실행됐지만 상태가 바뀌지 않았습니다."},
+  {"id": 6, "stage": "post", "question": "실행이 step 40에서 실패했는데 trace에는 step 12에서 잘못된 이동이 있습니다. 어디서부터 디버깅합니까?", "options": ["step 40", "step 12", "로그의 마지막 줄"], "answer": 1, "explanation": "첫 불일치가 실행이 의도와 어긋나기 시작한 가장 이른 지점입니다."}
+]

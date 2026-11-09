@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Two clocks off by a few milliseconds and my sensors swear the effect came first. A trace settles the argument.",
+    "mission": "In `code/main.py` change `exchange(0.123, 0.03, 0.01)` to `exchange(0.123, 0.02, 0.02)`. Predict the offset estimate, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "시계 둘이 몇 ms만 어긋나도 제 센서들은 결과가 원인보다 먼저라고 우깁니다. 그 다툼은 trace가 판정합니다.",
+    "mission": "`code/main.py`에서 `exchange(0.123, 0.03, 0.01)`을 `exchange(0.123, 0.02, 0.02)`로 바꾸세요. offset 추정값을 예측한 다음 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

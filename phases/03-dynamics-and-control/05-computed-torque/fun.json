@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Computed torque is me doing my own physics homework so the controller does not have to. Wrong homework still loses points.",
+    "mission": "Run `cd code && python3 -c \"from main import *; h=dict(PARAMS,m2=1.2); print([tracking_error(c,PARAMS,h).max() for c in (pd_control,computed_torque)])\"`. Plant 20% heavier. Does computed torque still win?"
+  },
+  "ko": {
+    "hook": "computed torque는 제가 물리 숙제를 직접 해서 제어기가 안 해도 되게 하는 방법입니다. 숙제가 틀리면 점수도 깎입니다.",
+    "mission": "`cd code && python3 -c \"from main import *; h=dict(PARAMS,m2=1.2); print([tracking_error(c,PARAMS,h).max() for c in (pd_control,computed_torque)])\"`를 실행해 보세요. plant가 model보다 20% 무겁습니다. computed torque가 여전히 이길지 예측해 보세요."
+  },
+  "toy": null
+}

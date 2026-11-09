@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "impedance controller가 K = 20을 요청했는데 관절이 뻣뻣합니다. 가능성 높은 원인은 무엇입니까?",
+  "options": [
+   "drive가 gain이 고정된 자체 position loop를 돌린다",
+   "K가 반올림되었다",
+   "중력이 너무 작다"
+  ],
+  "answer": 0,
+  "explanation": "position 모드는 바깥 loop가 부드럽게 만들 수 없는 안쪽 PD입니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "position 모드에서 일정한 외력에 대한 관절 처짐은 대략 얼마입니까?",
+  "options": [
+   "tau_ext / 요청한 K",
+   "tau_ext * kd_in",
+   "tau_ext / kp_in"
+  ],
+  "answer": 2,
+  "explanation": "안쪽 스프링이 유일한 스프링이기 때문입니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "impedance 제어는 drive에서 어떤 인터페이스를 필요로 합니까?",
+  "options": [
+   "토크(effort) 명령",
+   "position 명령만",
+   "속도 제한"
+  ],
+  "answer": 0,
+  "explanation": "impedance는 위치와 속도 오차에서 토크를 만듭니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "position만 되는 drive에 admittance 층을 얹습니다. 그 층에 필요한 것은 무엇입니까?",
+  "options": [
+   "더 빠른 encoder",
+   "더 큰 kp_in",
+   "측정한 외부 토크"
+  ],
+  "answer": 2,
+  "explanation": "q_cmd를 tau_ext / K만큼 옮기므로 tau_ext를 측정해야 합니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "kp_in = 400일 때 admittance 층으로 관절을 400 Nm/rad보다 뻣뻣하게 만들 수 있습니까?",
+  "options": [
+   "가능하다. K를 크게 둔다",
+   "불가능하다. 1/K + 1/kp_in은 항상 1/kp_in보다 크다",
+   "kd를 쓰면 가능하다"
+  ],
+  "answer": 1,
+  "explanation": "안쪽 compliance 1/kp_in이 요청한 compliance에 항상 더해집니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "같은 hardware에서 아주 뻣뻣한 관절과 아주 부드러운 관절이 모두 필요합니다. 가장 알맞은 모드는 무엇입니까?",
+  "options": [
+   "둘 다 position 모드",
+   "토크 모드. K가 자유 매개변수이기 때문입니다",
+   "둘 다 admittance"
+  ],
+  "answer": 1,
+  "explanation": "K가 전 범위를 지나갈 수 있는 것은 토크 모드뿐입니다."
+ }
+]

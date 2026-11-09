@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "You paste a DH table into FK code and the zero pose matches the drawing. What does that prove?",
+  "options": [
+   "Almost nothing: a wrong convention can also match at zero",
+   "The table is correct",
+   "The joint axes are correct"
+  ],
+  "answer": 0,
+  "explanation": "Wrong-convention errors can vanish at q = 0 and grow elsewhere."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "In Craig's convention, which parameters sit on row i?",
+  "options": [
+   "a(i), alpha(i)",
+   "a(i-1), alpha(i-1)",
+   "d(i-1), theta(i-1)"
+  ],
+  "answer": 1,
+  "explanation": "Craig's table is proximal: the fixed link transform comes before the joint."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "A URDF-style joint is described by what?",
+  "options": [
+   "Four DH symbols",
+   "An xyz offset and an rpy rotation from the parent, then a turn about the joint axis",
+   "Only the link length"
+  ],
+  "answer": 1,
+  "explanation": "The origin is a plain pose of the joint frame in the parent frame."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Why does converting Craig to URDF need theta offsets of zero in this lesson?",
+  "options": [
+   "Offsets are illegal in URDF",
+   "Rx(alpha) Rz(offset) is not a plain roll, pitch, yaw and the code would drop it",
+   "The offset changes d"
+  ],
+  "answer": 1,
+  "explanation": "The converter raises instead of silently dropping the offset."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Best way to test a DH table you did not derive?",
+  "options": [
+   "FK at 5 or more random poses against a second description",
+   "FK at the zero pose",
+   "Reading the table twice"
+  ],
+  "answer": 0,
+  "explanation": "Random poses expose convention and offset mistakes that the zero pose hides."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "The routine raises no error on a table from the other convention. Why?",
+  "options": [
+   "DH code checks types only: any four numbers are valid input",
+   "The table is secretly equivalent",
+   "numpy fixes it"
+  ],
+  "answer": 0,
+  "explanation": "Nothing in the numbers says which convention they were written for."
+ }
+]

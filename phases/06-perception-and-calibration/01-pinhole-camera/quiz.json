@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A target from a pixel and a depth is off sideways by centimetres. Which input is most likely wrong?", "options": ["The depth sampled at the pixel", "The image width", "The frame rate"], "answer": 0, "explanation": "A wrong depth slides the point along the viewing ray."},
+  {"id": 2, "stage": "check", "question": "A point doubles its distance from the camera along a ray. What happens to its pixel offset from the principal point?", "options": ["Doubles", "Halves", "Unchanged"], "answer": 1, "explanation": "u - cx = fx*x/z, so doubling z halves it."},
+  {"id": 3, "stage": "check", "question": "A pixel error of 1 px at depth z gives a sideways error of about?", "options": ["fx / z", "z * fx", "z / fx"], "answer": 2, "explanation": "x = (u - cx)*z/fx, so one pixel is z/fx metres."},
+  {"id": 4, "stage": "check", "question": "Depth is 0.1 m too large at a pixel exactly on the principal point. The 3D error is?", "options": ["0.1 m sideways", "0.1 m along the optical axis", "Zero"], "answer": 1, "explanation": "The ray there is the optical axis, so there is no sideways part."},
+  {"id": 5, "stage": "post", "question": "Which pixel is hurt most by the same wrong depth?", "options": ["Far from the principal point", "On the principal point", "All equally"], "answer": 0, "explanation": "The sideways shift is dz*(u-cx)/fx."},
+  {"id": 6, "stage": "post", "question": "Best fix for depth read from the background at an object edge?", "options": ["Raise the image resolution", "Increase fx", "Sample an interior pixel or take the nearer depth in a window"], "answer": 2, "explanation": "The pixel and depth must describe the same surface."}
+]

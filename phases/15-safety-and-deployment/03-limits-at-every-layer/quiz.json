@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "You raise the planner speed limit to 3 rad/s but the joint moves at half that. A likely cause?",
+  "options": [
+   "The encoder is noisy",
+   "The planner is too slow",
+   "A downstream layer has a tighter limit and clamps silently"
+  ],
+  "answer": 2,
+  "explanation": "The tightest layer wins without reporting it."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Which ordering of limits is healthy?",
+  "options": [
+   "Drive tightest, planner loosest",
+   "Planner tightest, drive loosest",
+   "All equal and random"
+  ],
+  "answer": 1,
+  "explanation": "Outer layers are safety nets that rarely fire."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "A layer sets no torque limit. How does the check treat it?",
+  "options": [
+   "It skips that layer and compares the neighbours that do set one",
+   "It treats it as zero",
+   "It raises an error"
+  ],
+  "answer": 0,
+  "explanation": "None means the layer does not set that quantity."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "What does effective(L, 'vel') return for the mismatched stack?",
+  "options": [
+   "(3.0, 'planner')",
+   "(1.0, 'controller')",
+   "(1.5, 'drive')"
+  ],
+  "answer": 2,
+  "explanation": "The minimum over layers, with its owner."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Why does the startup check list every mismatch instead of stopping at the first?",
+  "options": [
+   "Lists are faster",
+   "The fixer can repair all of them in one pass",
+   "The first is always the worst"
+  ],
+  "answer": 1,
+  "explanation": "One report per start is cheaper than one fix per start."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Which source should win when a limit lives in a drive register and in a config copy?",
+  "options": [
+   "The register read from the drive",
+   "The config copy",
+   "Whichever is larger"
+  ],
+  "answer": 0,
+  "explanation": "The drive enforces its register, not the copy."
+ }
+]

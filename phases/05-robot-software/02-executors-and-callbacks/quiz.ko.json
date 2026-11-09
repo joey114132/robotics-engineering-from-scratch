@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "CPU는 대부분 놀고 있는데 10 ms timer가 가끔 50 ms 늦게 울립니다. 가장 가능성 높은 원인은 무엇입니까?", "options": ["긴 callback이 executor의 유일한 스레드를 쥐고 있다", "timer 주기가 clock에 비해 너무 짧다", "topic이 best effort다"], "answer": 0, "explanation": "스레드 하나는 callback 하나씩만 실행하므로 준비된 callback이 기다립니다."},
+  {"id": 2, "stage": "check", "question": "callback 둘이 같은 mutually exclusive group에 있고 executor에 스레드가 네 개 있습니다. 동시에 실행될 수 있습니까?", "options": ["된다. 스레드가 남는다", "안 된다. group이 금지한다", "하나가 timer일 때만 된다"], "answer": 1, "explanation": "mutually exclusive group은 자기 callback 둘을 병렬로 실행하지 않습니다."},
+  {"id": 3, "stage": "check", "question": "timer와 60 ms callback이 서로 다른 group에 있고 스레드가 둘입니다. timer의 최악 대기 시간은 얼마입니까?", "options": ["약 59 ms", "약 30 ms", "0 ms"], "answer": 2, "explanation": "timer의 group이 비어 있으므로 놀고 있는 스레드가 바로 가져갑니다."},
+  {"id": 4, "stage": "check", "question": "group 인자 없이 만든 callback은 어느 group에 들어갑니까?", "options": ["각자 자기 group", "node의 default group", "어느 group에도 안 들어간다"], "answer": 1, "explanation": "node의 default callback group에 배정됩니다."},
+  {"id": 5, "stage": "post", "question": "스레드를 하나 더 넣었는데 나아지지 않습니다. 가장 먼저 무엇을 봅니까?", "options": ["callback들이 mutually exclusive group을 공유하는지", "모니터 주사율", "메시지 타입"], "answer": 0, "explanation": "스레드는 group이 병렬을 허용하는 callback에만 도움이 됩니다."},
+  {"id": 6, "stage": "post", "question": "스레드를 늘리는 것 말고 굶김을 없애는 방법은 무엇입니까?", "options": ["느린 callback을 짧은 조각으로 나눈다", "timer 주기를 1초로 늘린다", "메시지를 크게 만든다"], "answer": 0, "explanation": "callback이 짧으면 스레드를 쥐는 시간이 줄어 최악 대기 시간이 줄어듭니다."}
+]

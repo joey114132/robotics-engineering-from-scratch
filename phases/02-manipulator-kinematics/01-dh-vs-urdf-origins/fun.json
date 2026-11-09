@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Two textbooks, two DH conventions, one arm, and nobody complains when I mix them up. I find that rude.",
+    "mission": "In `code/main.py` change `q = [0.5, 0.8]` to `q = [0.0, 0.0]`. Do `craig` and `wrong` still disagree? Predict, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "교과서 둘에 DH 규약이 둘이고 팔은 하나입니다. 섞어 써도 아무도 불평하지 않아서 저는 좀 얄밉습니다.",
+    "mission": "`code/main.py`에서 `q = [0.5, 0.8]`을 `q = [0.0, 0.0]`으로 바꾸세요. `craig`와 `wrong`이 여전히 다를지 예측한 다음 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

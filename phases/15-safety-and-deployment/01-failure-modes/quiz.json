@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A joint slams into its stop and the log shows no error. Most likely?",
+  "options": [
+   "The CPU ran out of memory",
+   "The setpoint was too small",
+   "The controller acted correctly on wrong inputs or a wrong command path"
+  ],
+  "answer": 2,
+  "explanation": "A fault in the sensor or command path leaves the controller consistent with itself."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Which fault ends with the true joint far from the target while the controller sees a calm, constant reading?",
+  "options": [
+   "Delay",
+   "Stuck sensor",
+   "Saturation"
+  ],
+  "answer": 1,
+  "explanation": "A frozen reading hides the motion, so the torque keeps pushing."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "A wrong-sign torque turns the PD spring into what?",
+  "options": [
+   "A repeller that pushes the joint away from the target",
+   "A stiffer spring",
+   "A damper only"
+  ],
+  "answer": 0,
+  "explanation": "The restoring force flips direction, so error grows."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Why does saturation get caught last in this lesson?",
+  "options": [
+   "It produces the largest error",
+   "It hides the sensor",
+   "It only slows the response, so only a time-based check trips"
+  ],
+  "answer": 2,
+  "explanation": "Nothing jumps, freezes or grows fast, so the 2 s check fires."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Same stuck sensor, injected after the joint settled. What happens?",
+  "options": [
+   "The joint hits the limit",
+   "Almost nothing, torque is near zero",
+   "The loop goes unstable"
+  ],
+  "answer": 1,
+  "explanation": "The held reading equals the true one and the commanded torque is about zero."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "What should you do with the alarm thresholds measured here?",
+  "options": [
+   "Re-measure them on your own plant",
+   "Copy them to every robot",
+   "Use them as certified limits"
+  ],
+  "answer": 0,
+  "explanation": "They depend on this plant's inertia, gains and rates."
+ }
+]

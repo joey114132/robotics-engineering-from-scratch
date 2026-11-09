@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Every rotation has two names, plus and minus. Pick the wrong one and my wrist takes the scenic route.",
+    "mission": "In `code/main.py` delete the minus in front of `quat_from_axis_angle([0, 0, 1], 0.1)`. Predict both swept angles, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "회전에는 이름이 둘 있습니다. 플러스와 마이너스입니다. 잘못 고르면 제 손목은 한 바퀴를 돌아서 갑니다.",
+    "mission": "`code/main.py`에서 `quat_from_axis_angle([0, 0, 1], 0.1)` 앞의 마이너스를 지우세요. 두 swept 각도를 예측한 다음 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

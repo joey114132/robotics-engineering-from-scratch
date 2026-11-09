@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "관절 값이 90인데 np.cos(90)을 호출했습니다. numpy는 이 값을 무엇으로 가정합니까?", "options": ["90도", "90 라디안", "오류를 냅니다"], "answer": 1, "explanation": "numpy 삼각함수는 항상 라디안을 받고 단위를 검사하지 않습니다."},
+  {"id": 2, "stage": "check", "question": "점을 shape (N, 3)의 행으로 저장했습니다. 3x3 행렬 R로 회전시키려면 어떻게 합니까?", "options": ["points @ R", "R * points", "points @ R.T"], "answer": 2, "explanation": "각 행 p가 R @ p가 되어야 하는데 행 벡터에서는 p @ R.T와 같습니다."},
+  {"id": 3, "stage": "check", "question": "a의 shape은 (3,)이고 b의 shape은 (3, 1)입니다. a - b의 shape은 무엇입니까?", "options": ["(3, 3)", "(3,)", "오류가 납니다"], "answer": 0, "explanation": "broadcasting이 조용히 둘 다 3x3으로 늘리므로 경계에서 shape을 검사하는 것이 도움이 됩니다."},
+  {"id": 4, "stage": "check", "question": "looks_like_degrees에 limit 인자가 있는 이유는 무엇입니까?", "options": ["numpy가 요구해서", "continuous 관절은 정상적으로 2 pi를 넘을 수 있어서", "라디안은 1을 넘을 수 없어서"], "answer": 1, "explanation": "기본 limit은 경험적인 값이라, 자유롭게 도는 관절에는 더 큰 값이 필요합니다."},
+  {"id": 5, "stage": "post", "question": "단위 가드와 shape 가드는 어디에 두어야 합니까?", "options": ["데이터가 코드로 들어오는 경계", "모든 안쪽 반복문", "테스트 안에만"], "answer": 0, "explanation": "경계에서 한 번 검사하면 안쪽 반복문을 느리게 하지 않고도 오류를 일찍 잡습니다."},
+  {"id": 6, "stage": "post", "question": ".T를 빼먹어 점이 반대로 회전합니다. 프로그램은 어떻게 반응합니까?", "options": ["멈춥니다", "경고를 출력합니다", "실행되고 틀린 답을 냅니다"], "answer": 2, "explanation": "shape이 그대로 맞으므로 손으로 계산한 값과 비교하는 테스트만 이것을 잡습니다."}
+]

@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A standing body is pushed and the ankle torque is at its limit. What decides whether it falls?", "options": ["Whether the capture point lies inside the foot", "The colour of the sole", "The control loop language"], "answer": 0, "explanation": "The ankle can only move the ZMP inside the foot, so xi outside the foot needs a step."},
+  {"id": 2, "stage": "check", "question": "For x'' = (g/h)(x - p), what is the time constant?", "options": ["sqrt(g/h)", "sqrt(h/g)", "h/g"], "answer": 1, "explanation": "Substituting exp(t/Tc) gives 1/Tc^2 = g/h."},
+  {"id": 3, "stage": "check", "question": "Body height is multiplied by 4. How does Tc change?", "options": ["Doubles", "Quadruples", "Halves"], "answer": 0, "explanation": "Tc is proportional to sqrt(h)."},
+  {"id": 4, "stage": "check", "question": "The foot is placed exactly on the capture point. What does the body do?", "options": ["Keeps accelerating", "Comes to rest over that point", "Oscillates forever"], "answer": 1, "explanation": "xi' = (xi - p)/Tc is zero, and the velocity decays to zero."},
+  {"id": 5, "stage": "post", "question": "Which statement about the ZMP is true?", "options": ["It can lie anywhere on the floor", "It must stay inside the support area", "It equals the capture point"], "answer": 1, "explanation": "The ground can only push, so the force point stays inside the contact area."},
+  {"id": 6, "stage": "post", "question": "The same push is applied to a taller robot. Compared with a shorter one, it has", "options": ["Less time before it must react", "More time before it must react", "No change"], "answer": 1, "explanation": "A larger h gives a larger Tc, so the divergence is slower."}
+]

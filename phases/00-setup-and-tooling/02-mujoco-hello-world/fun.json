@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "A pendulum that gains energy on its own sounds like a free lunch. It is just two lines in the wrong order.",
+    "mission": "Run `cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`. Predict which scheme ends with more energy before you look."
+  },
+  "ko": {
+    "hook": "혼자 에너지가 불어나는 진자는 공짜 점심 같습니다. 알고 보면 코드 두 줄의 순서가 틀렸을 뿐입니다.",
+    "mission": "`cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`를 실행하기 전에 어느 scheme이 에너지가 더 많이 남을지 예측해 보세요."
+  },
+  "toy": null
+}

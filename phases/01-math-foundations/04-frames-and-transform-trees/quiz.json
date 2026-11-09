@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "What does T_base_cam convert?", "options": ["Coordinates from base into cam", "Coordinates from cam into base", "Nothing, it is just a label"], "answer": 1, "explanation": "T_to_from maps from the second name into the first."},
+  {"id": 2, "stage": "check", "question": "Which product is valid?", "options": ["T_a_b @ T_c_b", "T_b_a @ T_b_c", "T_a_b @ T_b_c"], "answer": 2, "explanation": "The inner names must be equal so they cancel."},
+  {"id": 3, "stage": "check", "question": "How does the tree compute T_tool_cup when tool and cup are on different branches?", "options": ["Climb to the common ancestor, then go down one side with an inverse", "Invert the whole tree", "Multiply every stored transform"], "answer": 0, "explanation": "inv(T_anc_tool) @ T_anc_cup."},
+  {"id": 4, "stage": "check", "question": "Why does add() reject a second parent?", "options": ["It saves memory", "A frame with two parents has two paths and ambiguous lookups", "The tree must be binary"], "answer": 1, "explanation": "Each frame must have exactly one path to the root."},
+  {"id": 5, "stage": "post", "question": "A lookup between two frames in disconnected trees should:", "options": ["Return identity", "Return the last known transform", "Fail loudly"], "answer": 2, "explanation": "A silent identity is a valid-looking pose in the wrong place."},
+  {"id": 6, "stage": "post", "question": "The cup lands in the wrong place but the pose is a valid rotation and position. First check?", "options": ["Product order and T_to_from names", "The control loop rate", "The camera exposure"], "answer": 0, "explanation": "A wrong product is still rigid, so only the naming finds it."}
+]

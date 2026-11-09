@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Two fingers pinch a box and the box twists out. What can be missing?",
+  "options": [
+   "Force closure: the contacts cannot resist every load direction",
+   "More squeeze force always fixes it",
+   "A heavier box"
+  ],
+  "answer": 0,
+  "explanation": "Grip can fail even with strong squeeze if the contact wrenches do not span all directions."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "How many numbers does a planar wrench have?",
+  "options": [
+   "Two",
+   "Three",
+   "Six"
+  ],
+  "answer": 1,
+  "explanation": "fx, fy and one torque."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Two frictionless opposite contacts give how many independent wrench directions?",
+  "options": [
+   "Two",
+   "Three",
+   "One"
+  ],
+  "answer": 2,
+  "explanation": "Both normals and torques lie on one line, so they span one direction in each sign."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "The test for force closure is?",
+  "options": [
+   "The wrench hull contains the origin strictly inside",
+   "The contacts are on opposite sides",
+   "The squeeze force is above the weight"
+  ],
+  "answer": 0,
+  "explanation": "Then non-negative contact forces can balance any load."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Two jaws on a box 2 wide, mu = 0.4. Largest vertical offset that still closes?",
+  "options": [
+   "0.4",
+   "0.8",
+   "1.6"
+  ],
+  "answer": 1,
+  "explanation": "The line joining the contacts must stay in the cone: offset / 2 <= mu."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "What does a very small epsilon on a closed grasp tell you?",
+  "options": [
+   "The grasp is robust",
+   "The grasp is fragile to small errors",
+   "The object is light"
+  ],
+  "answer": 1,
+  "explanation": "The origin is near a facet of the hull, so a small change opens the grasp."
+ }
+]

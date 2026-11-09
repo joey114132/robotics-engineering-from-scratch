@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "loop의 평균 주기는 목표와 정확히 같은데 로봇이 가끔 떨립니다. 둘이 동시에 가능한 이유는 무엇입니까?", "options": ["드문 긴 지연은 평균을 거의 못 움직인다", "평균은 늘 틀린다", "떨림은 화면 때문이다"], "answer": 0, "explanation": "정상 cycle 수천 개 사이의 나쁜 몇 개는 평균을 거의 바꾸지 못합니다."},
+  {"id": 2, "stage": "check", "question": "hard deadline에서 가장 중요한 통계는 무엇입니까?", "options": ["평균 jitter", "최악 jitter", "주기의 중앙값"], "answer": 1, "explanation": "deadline을 한 번만 놓쳐도 제어 step이 깨집니다."},
+  {"id": 3, "stage": "check", "question": "loop가 0.2 ms 일하고 1 ms 잔다면 평균 주기는 얼마입니까?", "options": ["약 1.0 ms", "약 1.2 ms", "약 0.8 ms"], "answer": 1, "explanation": "상대 sleep은 일한 시간을 매 cycle에 더하므로 loop가 느려지는 쪽으로 drift합니다."},
+  {"id": 4, "stage": "check", "question": "iteration이 deadline miss가 되는 경우는 언제입니까?", "options": ["i 곱하기 주기보다 늦게 시작할 때", "다음 deadline 뒤에 끝날 때", "주기가 평균과 다를 때"], "answer": 1, "explanation": "다음 iteration이 오기 전에 일이 끝나야 합니다."},
+  {"id": 5, "stage": "post", "question": "i 곱하기 T라는 절대 시각까지 자면, 깨어나는 시각이 무작위로 늦어도 무엇이 안정됩니까?", "options": ["평균 주기", "최악 주기", "CPU 부하"], "answer": 0, "explanation": "지연이 누적되지 않고 T 주변의 퍼짐으로만 나타납니다."},
+  {"id": 6, "stage": "post", "question": "리뷰에 loop 타이밍을 보고해야 합니다. 최소한의 묶음은 무엇입니까?", "options": ["평균만", "평균, p99, 최악, miss 횟수", "평균과 CPU 부하"], "answer": 1, "explanation": "평균이 가리는 위험은 꼬리와 miss 횟수에 있습니다."}
+]

@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "occupancy grid cell의 log-odds가 0이면 무슨 뜻입니까?", "options": ["모름, 확률 1/2", "확실히 비어 있음", "확실히 점유됨"], "answer": 0, "explanation": "p = 1 - 1 / (1 + exp(0)) = 0.5이므로 어느 쪽으로도 증거가 없습니다."},
+  {"id": 2, "stage": "check", "question": "빔이 벽에서 끝납니다. 벽 앞 빔 경로의 cell은 어떻게 됩니까?", "options": ["log-odds가 내려간다", "log-odds가 올라간다", "변화 없다"], "answer": 0, "explanation": "빔이 그곳을 통과했으므로 비어 있을 가능성이 높습니다."},
+  {"id": 3, "stage": "check", "question": "벽 뒤의 cell을 그대로 두는 이유는 무엇입니까?", "options": ["빔이 그곳을 보지 못했다", "항상 비어 있다", "grid가 너무 작다"], "answer": 0, "explanation": "빔은 처음 맞은 곳에서 멈추므로 그 뒤에 대한 증거가 없습니다."},
+  {"id": 4, "stage": "check", "question": "log-odds를 +-5에서 자르는 이유는 무엇입니까?", "options": ["세계가 바뀌어도 다시 학습할 수 있게 하려고", "메모리를 아끼려고", "지도를 밝게 하려고"], "answer": 0, "explanation": "자르지 않으면 증거가 아주 큰 cell은 뒤집히는 데 스캔이 매우 많이 필요합니다."},
+  {"id": 5, "stage": "post", "question": "스캐너는 정상인데 지도에 벽이 두 겹으로 비스듬히 보입니다. 가능성 높은 원인은 무엇입니까?", "options": ["스캔을 배치한 자세가 drift했다", "grid 해상도가 너무 높다", "로봇이 너무 느리다"], "answer": 0, "explanation": "스캔마다 틀린 자세에서 그려져서 같은 벽이 다른 cell에 놓입니다."},
+  {"id": 6, "stage": "post", "question": "SLAM은 단순 mapping에 무엇을 더합니까?", "options": ["자세와 지도를 함께 추정한다", "더 빠른 스캐너", "더 큰 grid"], "answer": 0, "explanation": "스캔을 지도에 맞추면 자세가 고쳐집니다. 고쳐진 자세가 지도를 개선합니다."}
+]

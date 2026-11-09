@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "sleep() in a test means time is a hidden dependency. I'd rather own the clock, fake it, and replay the past.",
+    "mission": "In `Controller` in `code/main.py` change `kp=40.0` to `kp=20.0`. Run `python3 -m pytest code/tests -q`, name the test that fails and why, then undo the edit."
+  },
+  "ko": {
+    "hook": "테스트에 sleep()이 있으면 시간이 숨은 dependency라는 뜻입니다. 저는 시계를 직접 쥐고 가짜로 돌리고 과거를 다시 재생하겠습니다.",
+    "mission": "`code/main.py`의 `Controller`에서 `kp=40.0`을 `kp=20.0`으로 바꾸세요. `python3 -m pytest code/tests -q`를 돌려 실패하는 테스트와 이유를 말한 뒤 원래대로 되돌리세요."
+  },
+  "toy": null
+}

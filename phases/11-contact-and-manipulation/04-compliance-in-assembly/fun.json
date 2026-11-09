@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Shoving a jammed peg harder is like shouting at a stuck door. Let the tool give a little and the door stops fighting back.",
+    "mission": "Add `3e4` to the `kx` tuple in `code/main.py`. Guess whether it jams or inserts, and at what depth, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "끼인 peg를 더 세게 미는 건 닫힌 문에 소리치는 것과 같습니다. 도구가 조금 물러서 주면 문도 버티기를 멈춥니다.",
+    "mission": "`code/main.py`의 `kx` 튜플에 `3e4`를 추가하세요. 끼일지 들어갈지와 깊이를 짐작한 뒤 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Instead of one confident guess I carry a crowd of them, and the sensors vote the bad ones off the island.",
+    "mission": "In `code/main.py` change both `500` values to `20` and run `python3 code/main.py`. Predict whether the final error (about 0.11 m with 500) grows or shrinks, then see how a thin crowd copes."
+  },
+  "ko": {
+    "hook": "저는 확신에 찬 추측 하나 대신 추측 무리를 데리고 다닙니다. 센서가 투표로 틀린 추측들을 쫓아내 줍니다.",
+    "mission": "`code/main.py`에서 `500` 두 곳을 모두 `20`으로 바꾸고 `python3 code/main.py`를 실행하세요. 최종 오차(500개일 때 약 0.11 m)가 커질지 줄지 예측하고 확인하세요."
+  },
+  "toy": "particle-filter"
+}

@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "I'm a pencil standing on its tip, and my ankles are the only help I have. When they run out of room, my feet decide.",
+    "mission": "In `code/main.py` change the push `0.4` in `fall_or_recover(0.4, ...)` to `0.1` and run `python3 code/main.py`. Predict first: can the ankle alone hold this smaller push without a step?"
+  },
+  "ko": {
+    "hook": "저는 끝으로 선 연필 같아서 믿을 곳은 발목뿐입니다. 발목 여유가 다하면 발이 나서야 해요.",
+    "mission": "`code/main.py`에서 `fall_or_recover(0.4, ...)`의 `0.4`를 `0.1`로 바꾸고 `python3 code/main.py`를 실행하세요. 더 작은 밀침은 발목만으로 버틸지 먼저 예측하세요."
+  },
+  "toy": "pendulum-balance"
+}

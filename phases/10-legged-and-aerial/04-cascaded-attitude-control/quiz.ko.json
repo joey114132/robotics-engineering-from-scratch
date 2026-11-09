@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "단일 PD 루프가 일정한 돌풍 토크 d를 버틸 때 남는 오차는 무엇입니까?", "options": ["d / kp", "d * kp", "없습니다"], "answer": 0, "explanation": "정지 상태에서 kp * error가 d와 균형을 이룹니다."},
+  {"id": 2, "stage": "check", "question": "바깥 P 각도 루프와 안쪽 P 각속도 루프는 어떤 단일 루프와 같습니까?", "options": ["kp = k_w k_theta, kd = k_w인 PD", "kp = k_theta, kd = k_w인 PD", "각도에 대한 PI"], "answer": 0, "explanation": "tau = k_w (k_theta e - omega)를 전개하면 정확히 그것입니다."},
+  {"id": 3, "stage": "check", "question": "안쪽 루프의 적분이 없애 주는 것은 무엇입니까?", "options": ["일정한 돌풍 아래의 정상 각도 오프셋", "센서 잡음", "각속도 센서의 필요성"], "answer": 0, "explanation": "적분 상태가 돌풍 토크를 낼 때까지 자라므로 각도 오차가 0으로 돌아옵니다."},
+  {"id": 4, "stage": "check", "question": "돌풍이 끝난 뒤 캐스케이드가 반대쪽으로 흔들리는 이유는 무엇입니까?", "options": ["적분이 돌풍을 상쇄하던 토크를 아직 쥐고 있어서입니다", "모터가 반대로 돌아서입니다", "돌풍의 부호가 바뀌어서입니다"], "answer": 0, "explanation": "쌓인 적분이 풀려야 하고, 그동안은 원치 않는 토크입니다."},
+  {"id": 5, "stage": "post", "question": "PD와의 동등성을 그대로 두는 이득 변경은 무엇입니까?", "options": ["k_i를 0으로 두기", "각속도 적분 추가", "돌풍 feedforward 추가"], "answer": 0, "explanation": "적분이 없으면 캐스케이드는 PD 루프입니다."},
+  {"id": 6, "stage": "post", "question": "실제 제어기가 적분을 제한하는 이유는 무엇입니까?", "options": ["토크가 포화될 때의 windup 때문입니다", "kp를 올리기 위해서입니다", "gyro를 없애기 위해서입니다"], "answer": 0, "explanation": "포화된 구동기는 오차를 상쇄하지 못하고 적분은 계속 자랍니다."}
+]

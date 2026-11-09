@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A single PD loop holds a constant gust torque d. What error remains?", "options": ["d / kp", "d * kp", "None"], "answer": 0, "explanation": "At rest kp * error balances d."},
+  {"id": 2, "stage": "check", "question": "An outer P angle loop with an inner P rate loop equals which single loop?", "options": ["PD with kp = k_w k_theta and kd = k_w", "PD with kp = k_theta and kd = k_w", "PI on angle"], "answer": 0, "explanation": "tau = k_w (k_theta e - omega) expands to exactly that."},
+  {"id": 3, "stage": "check", "question": "What does the integral in the inner loop remove?", "options": ["The steady angle offset under a constant gust", "The sensor noise", "The need for a rate sensor"], "answer": 0, "explanation": "The integral state grows until it supplies the gust torque, so the angle error returns to zero."},
+  {"id": 4, "stage": "check", "question": "After the gust ends, why does the cascade swing the other way?", "options": ["The integral still holds the torque that cancelled the gust", "The motors reverse", "The gust changes sign"], "answer": 0, "explanation": "The stored integral must unwind, and for a short time it is an unwanted torque."},
+  {"id": 5, "stage": "post", "question": "Which gain change leaves the PD equivalence intact?", "options": ["Setting k_i to zero", "Adding a rate integral", "Adding gust feedforward"], "answer": 0, "explanation": "Without the integral the cascade is a PD loop."},
+  {"id": 6, "stage": "post", "question": "Why does a real controller limit the integral?", "options": ["Windup when the torque saturates", "To raise kp", "To remove the gyro"], "answer": 0, "explanation": "A saturated actuator cannot cancel the error, and the integral keeps growing."}
+]

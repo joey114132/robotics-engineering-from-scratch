@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "kp를 낮췄더니 팔이 더 처집니다. 가장 가능성 높은 원인은 무엇입니까?", "options": ["중력 feedforward가 실제 중력과 맞지 않는다", "encoder가 고장 났다", "DDS 주기가 낮다"], "answer": 0, "explanation": "모델 잔차는 kp로 나뉘므로 낮은 kp가 그 오차를 드러냅니다."},
+  {"id": 2, "stage": "check", "question": "feedforward ff와 실제 중력 tau_g가 다를 때 PD loop의 1차 정상상태 오차는 무엇입니까?", "options": ["(ff - tau_g) / kp", "(ff - tau_g) * kp", "kd / kp"], "answer": 0, "explanation": "kp*(q_des - q) + ff = tau_g에서 나옵니다."},
+  {"id": 3, "stage": "check", "question": "모델이 실제 팔보다 가볍습니다. 팔은 어떻게 됩니까?", "options": ["위로 뜬다", "처진다", "변화 없다"], "answer": 1, "explanation": "feedforward가 모자라면 아래로 향하는 순토크가 남습니다."},
+  {"id": 4, "stage": "check", "question": "같은 모델 오차에서 kp를 절반으로 줄이면 처짐은 어떻게 됩니까?", "options": ["절반이 된다", "두 배가 된다", "그대로다"], "answer": 1, "explanation": "처짐은 kp에 반비례합니다."},
+  {"id": 5, "stage": "post", "question": "평면 팔에서 관절 1의 중력 토크가 가장 큰 자세는 무엇입니까?", "options": ["팔이 수직", "팔이 수평", "접힌 자세"], "answer": 1, "explanation": "팔을 쭉 뻗으면 모멘트 암이 수평 도달 거리 전체가 됩니다."},
+  {"id": 6, "stage": "post", "question": "낮은 kp에서만 나타나는 처짐에 대한 가장 좋은 대응은 무엇입니까?", "options": ["kp를 다시 올린다", "여러 자세에서 처짐을 재서 모델을 고친다", "모든 관절에 적분 gain을 넣는다"], "answer": 1, "explanation": "kp를 올리면 모델 오차를 가릴 뿐이고 적분 gain은 windup과 drift를 더합니다."}
+]

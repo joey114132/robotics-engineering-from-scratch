@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A target is 5 cm beyond the arm's full stretch. What should IK do?",
+  "options": [
+   "Report it as unreachable",
+   "Return the angles for the nearest point and say nothing",
+   "Return nan and continue"
+  ],
+  "answer": 0,
+  "explanation": "A refusal with the reach band is the only answer that is not a guess."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "How many arm configurations reach a point strictly inside the reachable band of a two-link arm?",
+  "options": [
+   "One",
+   "Two",
+   "Infinitely many"
+  ],
+  "answer": 1,
+  "explanation": "The sign of q2 gives elbow-up and elbow-down."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "What does the law of cosines give in this lesson?",
+  "options": [
+   "cos q2 from the target distance and the link lengths",
+   "q1 directly",
+   "The joint torque"
+  ],
+  "answer": 0,
+  "explanation": "The triangle has sides L1, L2 and r, so the angle at the elbow follows from them."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Which targets are reachable by a two-link arm with L1 = 0.5 and L2 = 0.4?",
+  "options": [
+   "Distances from 0.1 to 0.9",
+   "Distances from 0 to 0.9",
+   "Distances from 0.4 to 0.5"
+  ],
+  "answer": 0,
+  "explanation": "The band runs from |L1 - L2| to L1 + L2."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "What is the most reliable test of an IK function?",
+  "options": [
+   "FK of the answer returns the target, on many targets and both branches",
+   "The answer looks plausible in a plot",
+   "The answer is finite"
+  ],
+  "answer": 0,
+  "explanation": "FK is exact and cheap, so the round trip leaves no room for a guess."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Why does the lesson clip cos q2 after a tolerance check?",
+  "options": [
+   "Rounding noise at full stretch must not become a false refusal",
+   "To hide unreachable targets",
+   "To pick the elbow"
+  ],
+  "answer": 0,
+  "explanation": "Targets on the boundary can land a few ulps outside [-1, 1]."
+ }
+]

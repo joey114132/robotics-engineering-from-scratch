@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "planner의 경로가 모든 장애물을 피하지만 지그재그입니다. 좋은 다음 단계는 무엇입니까?", "options": ["그대로 실행한다", "장애물과 떨어진 채로 부드러움 비용을 최소화한다", "waypoint를 무작위로 더 넣는다"], "answer": 1, "explanation": "부드러움 항과 장애물 항이 있는 비용은 장애물로 다시 들어가지 않고 지그재그를 없앱니다."},
+  {"id": 2, "stage": "check", "question": "부드러움 비용의 gradient는 waypoint에 무엇을 합니까?", "options": ["이웃을 잇는 직선 쪽으로 끌어당긴다", "이웃에게서 밀어낸다", "그대로 둔다"], "answer": 0, "explanation": "gradient 2 x_i - x_{i-1} - x_{i+1}이 0이 되는 것은 점이 이웃의 중점일 때입니다."},
+  {"id": 3, "stage": "check", "question": "끝점의 gradient를 0으로 두는 이유는 무엇입니까?", "options": ["가장 싼 점이기 때문이다", "경로가 주어진 자세에서 시작하고 끝나야 하기 때문이다", "항상 충돌 상태이기 때문이다"], "answer": 1, "explanation": "끝점을 움직이면 경로가 아니라 과제가 바뀝니다."},
+  {"id": 4, "stage": "check", "question": "걸음 크기를 키웠더니 한 반복에서 다음 반복으로 갈 때 비용이 올랐습니다. 무슨 뜻입니까?", "options": ["걸음이 비용의 곡률이 허용하는 것보다 크다", "gradient가 틀렸다", "경로가 최적이다"], "answer": 0, "explanation": "가장 큰 곡률 분의 2를 넘는 descent 걸음은 최솟값을 지나쳐 버립니다."},
+  {"id": 5, "stage": "post", "question": "penalty가 waypoint에만 걸립니다. 그래도 무엇이 잘못될 수 있습니까?", "options": ["waypoint 사이의 선분이 장애물을 스칠 수 있다", "끝점이 움직인다", "비용이 오른다"], "answer": 0, "explanation": "샘플 사이의 경로는 검사되지 않으므로 03 레슨의 터널링이 다시 나타납니다."},
+  {"id": 6, "stage": "post", "question": "장애물이 없고 반복이 충분히 많으면 경로는 어떻게 됩니까?", "options": ["그대로다", "끝점 사이의 간격이 고른 직선이 된다", "원이 된다"], "answer": 1, "explanation": "부드러움 비용의 최솟값은 모든 점이 이웃의 중점일 때입니다."}
+]

@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Every millisecond between my sensor and my motor comes out of one wallet called phase margin. The wallet is tiny.",
+    "mission": "In `code/main.py` double `KD` from `2.0` to `4.0`. Will the delay margin in ms double, stay put or shrink? Predict, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "센서에서 motor까지 걸리는 1 ms는 전부 phase margin이라는 한 지갑에서 나갑니다. 그 지갑이 이렇게 작은 줄 몰랐습니다.",
+    "mission": "`code/main.py`에서 `KD`를 `2.0`에서 `4.0`으로 두 배로 올리세요. delay margin(ms)이 두 배가 될지 그대로일지 줄어들지 예측한 다음 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "입력이 없는데 simulation의 진자가 흔들릴 때마다 높이 올라갑니다. 가장 가능성 높은 원인은 무엇입니까?", "options": ["중력이 너무 작다", "explicit Euler처럼 integrator가 에너지를 더한다", "진자가 너무 가볍다"], "answer": 1, "explanation": "explicit Euler는 step마다 진동계에 에너지를 조금씩 더합니다."},
+  {"id": 2, "stage": "check", "question": "semi-implicit Euler에서 위치를 움직이는 값은 무엇입니까?", "options": ["옛 속도", "가속도", "새 속도"], "answer": 2, "explanation": "속도를 먼저 갱신하고 갱신된 값으로 위치를 움직입니다."},
+  {"id": 3, "stage": "check", "question": "L을 4배로 키웠습니다. 작게 흔들 때의 주기는 어떻게 바뀝니까?", "options": ["두 배가 된다", "네 배가 된다", "그대로다"], "answer": 0, "explanation": "주기는 2 pi sqrt(L/g)이므로 L의 제곱근에 비례합니다."},
+  {"id": 4, "stage": "check", "question": "dt를 절반으로 줄였고 integrator 오차가 2차입니다. 주기 오차는 어떻게 됩니까?", "options": ["절반이 된다", "약 4분의 1로 줄어든다", "그대로다"], "answer": 1, "explanation": "2차 오차는 dt의 제곱에 비례합니다."},
+  {"id": 5, "stage": "post", "question": "직접 만든 반복문을 MuJoCo와 비교하는 이유는 무엇입니까?", "options": ["서로 독립인 두 solver가 일치하면 둘 다 제대로 설정되었다는 증거가 된다", "MuJoCo는 항상 정확해서", "테스트를 쓰지 않으려고"], "answer": 0, "explanation": "일치하면 길이나 축을 잘못 넣은 설정 실수를 잡을 수 있지만 둘 중 하나가 정확하다는 증명은 아닙니다."},
+  {"id": 6, "stage": "post", "question": "크게 흔들 때의 주기가 2 pi sqrt(L/g)보다 긴 이유는 무엇입니까?", "options": ["integrator가 고장나서", "중력이 각도에 따라 바뀌어서", "sin(theta)가 theta보다 작아 복원력이 약하기 때문"], "answer": 2, "explanation": "작은 각도 공식은 sin(theta)를 theta로 근사하므로 큰 각도에서는 복원력을 크게 잡습니다."}
+]

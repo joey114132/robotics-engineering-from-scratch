@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "로봇이 바퀴 회전 수만으로 위치를 셉니다. 여러 스텝 뒤 위치 불확실성은 어떻게 되나요?", "options": ["step마다 커집니다", "그대로입니다", "줄어듭니다"], "answer": 0, "explanation": "오차가 있는 이동마다 분산이 더해지고 그것을 덜어 주는 것이 없기 때문입니다."},
+  {"id": 2, "stage": "check", "question": "predict 단계는 belief에 무엇을 하나요?", "options": ["이동량만큼 옮기고 번지게 합니다", "센서 likelihood를 곱합니다", "균등 분포로 되돌립니다"], "answer": 0, "explanation": "predict는 belief를 모션 kernel과 convolution합니다."},
+  {"id": 3, "stage": "check", "question": "두 셀의 prior가 0.5/0.5이고 센서값이 셀 A에는 likelihood 0.8, 셀 B에는 0.2로 맞습니다. A의 posterior는?", "options": ["0.5", "0.8", "0.2"], "answer": 1, "explanation": "0.8*0.5 / (0.8*0.5 + 0.2*0.5) = 0.8입니다."},
+  {"id": 4, "stage": "check", "question": "(0.05, 0.9, 0.05) 모션 kernel을 시작 위치가 확실한 belief에 20번 적용했습니다. belief의 분산은?", "options": ["0.1", "2.0", "20"], "answer": 1, "explanation": "step마다 0.05 + 0.05 = 0.1이 더해지므로 20스텝이면 2.0입니다."},
+  {"id": 5, "stage": "post", "question": "update가 renormalise를 해야 하는 이유는?", "options": ["likelihood를 곱하면 확률의 합이 1이 아니게 되기 때문입니다", "루프를 빠르게 하려고", "모션 번짐을 없애려고"], "answer": 0, "explanation": "likelihood는 셀에 대한 확률 분포가 아니므로 곱한 결과를 그 합으로 나눠야 합니다."},
+  {"id": 6, "stage": "post", "question": "문을 여러 개 지나도 localizer의 belief가 평평합니다. 가장 가능성 높은 원인은?", "options": ["update 단계가 없거나 likelihood가 0.5에 가깝습니다", "복도가 너무 짧습니다", "모션 kernel이 정확합니다"], "answer": 0, "explanation": "likelihood가 뚜렷하지 않으면 센서가 불확실성을 덜어 주지 못합니다."}
+]

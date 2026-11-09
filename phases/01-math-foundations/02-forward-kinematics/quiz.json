@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "Joint angles are known. What do you need to find where the gripper is?", "options": ["Forward kinematics", "Inverse kinematics", "A PID controller"], "answer": 0, "explanation": "FK maps joint space to the tip pose."},
+  {"id": 2, "stage": "check", "question": "What does each link contribute to the FK product for a planar revolute chain?", "options": ["A rotation by its length", "A translation along its own x axis", "A scaling"], "answer": 1, "explanation": "The joint rotates, the link translates."},
+  {"id": 3, "stage": "check", "question": "Maximum tip distance from the base for links [0.7, 0.4]?", "options": ["0.3", "1.1", "0.28"], "answer": 1, "explanation": "The sum of the lengths, with the chain fully stretched."},
+  {"id": 4, "stage": "check", "question": "Links [3, 1]. Minimum tip distance from the base?", "options": ["0", "2", "4"], "answer": 1, "explanation": "2*3 - 4 = 2. The long link cannot be cancelled by the short one."},
+  {"id": 5, "stage": "post", "question": "Why keep two independent FK implementations in a test?", "options": ["Speed", "A shared mistake is unlikely, so disagreement exposes bugs", "It is required by ROS"], "answer": 1, "explanation": "Cross-checking different formulations catches errors a single path hides."},
+  {"id": 6, "stage": "post", "question": "An FK result is off by a fixed offset on a real arm. Check first?", "options": ["The URDF origin frames and units", "The motor torque limit", "The DDS profile"], "answer": 0, "explanation": "A fixed offset points to the model frames, not dynamics."}
+]

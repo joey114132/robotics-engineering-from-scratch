@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A joint reaches its target at zero speed but knocks at the start. Which quantity is likely discontinuous?", "options": ["Position", "Acceleration", "Time"], "answer": 1, "explanation": "A cubic fixes position and velocity only, so acceleration jumps from rest to a nonzero value."},
+  {"id": 2, "stage": "check", "question": "How many boundary conditions does a quintic with position, velocity and acceleration fixed at both ends use?", "options": ["Four", "Six", "Eight"], "answer": 1, "explanation": "Three quantities at two ends give six conditions, one per coefficient."},
+  {"id": 3, "stage": "check", "question": "You halve the sample period. The peak finite-difference jerk of a cubic profile does what?", "options": ["Halves", "Stays the same", "Doubles"], "answer": 2, "explanation": "A fixed acceleration step divided by a smaller dt is a taller jerk spike."},
+  {"id": 4, "stage": "check", "question": "How many times does a symmetric trapezoid acceleration step during a rest-to-rest move, counting the start from rest and the return to rest?", "options": ["Two", "Four", "Six"], "answer": 1, "explanation": "0 to a, a to 0, 0 to -a and -a to 0."},
+  {"id": 5, "stage": "post", "question": "The move time is doubled for a quintic. Peak acceleration becomes?", "options": ["Half", "One quarter", "Unchanged"], "answer": 1, "explanation": "Acceleration scales with d / T^2."},
+  {"id": 6, "stage": "post", "question": "Best fix for a start-of-move knock on a cubic profile?", "options": ["Sample the profile faster", "Use a profile with zero acceleration at the ends", "Lower the move time"], "answer": 1, "explanation": "Faster sampling makes the jerk spike taller, and a shorter time raises the step."}
+]

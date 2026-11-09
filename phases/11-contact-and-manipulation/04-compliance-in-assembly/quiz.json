@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A peg stops halfway into a tight hole and pushing harder holds it firmer. What is the likely cause?",
+  "options": [
+   "A wedge jam made worse by a stiff wrist",
+   "The peg is too long",
+   "The push is too weak"
+  ],
+  "answer": 0,
+  "explanation": "More push raises contact forces and friction, so a jammed wedge locks harder."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "With a lateral offset e and wrist stiffness kx, the side force at the tip is about?",
+  "options": [
+   "kx times the misalignment",
+   "e divided by kx",
+   "The push force"
+  ],
+  "answer": 0,
+  "explanation": "The lateral spring turns misalignment into force."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "What does the model call a jam?",
+  "options": [
+   "The wrist wrench can be balanced by forces inside both friction cones",
+   "The peg touches a wall",
+   "The tilt is zero"
+  ],
+  "answer": 0,
+  "explanation": "Then the contacts hold the peg and the push cannot move it."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Which change helps a jammed insertion most?",
+  "options": [
+   "More lateral compliance",
+   "A larger push force",
+   "A stiffer wrist"
+  ],
+  "answer": 0,
+  "explanation": "A softer wrist lowers the side force that feeds friction."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Frictionless contact in this model:",
+  "options": [
+   "Never jams",
+   "Always jams",
+   "Jams only when tilted"
+  ],
+  "answer": 0,
+  "explanation": "The cones shrink to the normals, which cannot balance a wrench that is not exactly along them."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "What is NOT covered by the model?",
+  "options": [
+   "Landing on the hole edge before the wedge forms",
+   "Coulomb friction",
+   "The wrist spring"
+  ],
+  "answer": 0,
+  "explanation": "The model starts in the wedge state."
+ }
+]

@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "관절 offset xyz를 모두 더해 손 위치를 구했는데 크게 틀립니다. 무엇을 무시했습니까?", "options": ["로봇 이름", "각 부모 frame을 돌리는 회전", "link 색"], "answer": 1, "explanation": "각 offset은 부모 frame에서 쓰여 있으므로 앞선 회전이 world에서 가리키는 방향을 바꿉니다."},
+  {"id": 2, "stage": "check", "question": "joint의 <origin>은 어느 frame에서 쓰여 있습니까?", "options": ["world frame", "자식 link frame", "부모 link frame"], "answer": 2, "explanation": "ROS wiki는 이것을 부모 link에서 자식 link로 가는 transform으로 정의합니다."},
+  {"id": 3, "stage": "check", "question": "URDF의 rpy 회전은 어떻게 정의됩니까?", "options": ["고정축 기준으로 x축 roll, y축 pitch, z축 yaw 순서", "움직이는 축 기준으로 z축 yaw, pitch, roll 순서", "quaternion x, y, z, w 순서"], "answer": 0, "explanation": "URDF joint 문서가 고정축 기준의 그 순서를 명시합니다."},
+  {"id": 4, "stage": "check", "question": "어떤 link가 joint 두 개의 자식으로 나옵니다. 무슨 뜻입니까?", "options": ["그 link는 camera다", "tree가 아니므로 URDF가 될 수 없다", "loop는 허용된다"], "answer": 1, "explanation": "URDF는 tree이므로 root를 뺀 모든 link에는 부모 joint가 정확히 하나 있습니다."},
+  {"id": 5, "stage": "post", "question": "link_positions()에서 revolute joint에 먼저 적용되는 것은 무엇입니까?", "options": ["joint origin, 그다음 joint 회전", "joint 회전, 그다음 joint origin", "joint 회전만"], "answer": 0, "explanation": "자식 frame이 origin 위치에 놓이고 joint가 그 자식을 axis 둘레로 돌립니다."},
+  {"id": 6, "stage": "post", "question": "파서가 axis 없는 revolute joint를 거부하는 이유는 무엇입니까?", "options": ["XML이 요구해서", "revolute joint에는 limit이 없어서", "회전 방향이 추측이 되므로"], "answer": 2, "explanation": "확인된 기본값이 없으므로 추측한 축으로 돌리기보다 분명하게 실패하는 편이 안전합니다."}
+]

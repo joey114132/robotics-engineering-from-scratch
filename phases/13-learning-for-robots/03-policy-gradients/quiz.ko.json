@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "REINFORCE는 행동의 log-probability gradient에 무엇을 곱합니까?", "options": ["전문가의 행동", "그 뒤에 얻은 return (baseline을 뺀 값)", "정책의 entropy"], "answer": 1, "explanation": "높은 return이 뒤따른 행동이 더 자주 나오게 됩니다."},
+  {"id": 2, "stage": "check", "question": "다른 에피소드들의 평균 return을 빼면 기대 gradient가 바뀝니까?", "options": ["예, 편향이 생깁니다", "아니요, 분산만 바뀝니다", "0이 됩니다"], "answer": 1, "explanation": "baseline은 곱해지는 행동에 의존하지 않으므로 그 항의 평균은 0입니다."},
+  {"id": 3, "stage": "check", "question": "이 레슨에서 raw 추정기의 분산이 큰 이유는 무엇입니까?", "options": ["return이 전부 크고 양수라서 행동의 noise에 큰 수가 곱해집니다", "learning rate가 너무 큽니다", "정책이 결정론적입니다"], "answer": 0, "explanation": "return의 offset이 모든 행동의 score에 곱해집니다."},
+  {"id": 4, "stage": "check", "question": "에피소드 i의 baseline을 다른 에피소드로 계산하는 이유는 무엇입니까?", "options": ["시간을 아끼려고", "에피소드 i 자신의 행동에 의존하지 않게 하려고", "값을 키우려고"], "answer": 1, "explanation": "자기 샘플을 보는 baseline은 추정에 편향을 만듭니다."},
+  {"id": 5, "stage": "post", "question": "같은 설정인데 곡선이 서로 다릅니다. 가장 먼저 무엇을 확인합니까?", "options": ["seed 사이의 gradient 추정치 분산", "그래프의 글꼴", "관절 수"], "answer": 0, "explanation": "분산이 큰 추정기는 방법이 맞아도 곡선이 달라집니다."},
+  {"id": 6, "stage": "post", "question": "reward-to-go란 무엇입니까?", "options": ["시각 t부터 끝까지의 reward 합", "시각 t의 reward만", "시각 t 이전의 reward"], "answer": 0, "explanation": "행동은 그 이전에 받은 reward를 바꿀 수 없습니다."}
+]

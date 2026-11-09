@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "The planner says fast, the drive says slow, and nobody tells me. The tightest limit wins in silence.",
+    "mission": "In `MISMATCHED` in `code/main.py` change the controller `vel=3.0` to `1.5`. Predict whether the mismatch count drops below 3 and who owns `vel`, then run `python3 code/main.py`."
+  },
+  "ko": {
+    "hook": "planner는 빠르게 가라 하고 drive는 느리게 가라 하는데 아무도 저에게 알려 주지 않습니다. 가장 빡빡한 limit이 조용히 이깁니다.",
+    "mission": "`code/main.py`의 `MISMATCHED`에서 controller의 `vel=3.0`을 `1.5`로 바꾸세요. mismatch가 3 아래로 내려갈지와 `vel`을 누가 쥘지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+  },
+  "toy": null
+}

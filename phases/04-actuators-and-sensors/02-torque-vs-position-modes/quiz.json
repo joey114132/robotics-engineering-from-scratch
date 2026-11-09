@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Your impedance controller asks for K = 20 but the joint stays stiff. What is the likely cause?",
+  "options": [
+   "The drive runs its own fixed-gain position loop",
+   "K was rounded",
+   "Gravity is too small"
+  ],
+  "answer": 0,
+  "explanation": "A position mode is an inner PD that your outer loop cannot soften."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "In position mode, joint deflection under a constant push is about?",
+  "options": [
+   "tau_ext / K requested",
+   "tau_ext * kd_in",
+   "tau_ext / kp_in"
+  ],
+  "answer": 2,
+  "explanation": "The inner spring is the only spring there is."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Which interface does impedance control need from the drive?",
+  "options": [
+   "A torque (effort) command",
+   "A position command only",
+   "A velocity limit"
+  ],
+  "answer": 0,
+  "explanation": "Impedance writes torque from position and velocity error."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "A position-only drive gets an admittance layer. What does that layer need?",
+  "options": [
+   "A faster encoder",
+   "A larger kp_in",
+   "A measured external torque"
+  ],
+  "answer": 2,
+  "explanation": "q_cmd is shifted by tau_ext / K, so tau_ext must be measured."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "With kp_in = 400, can an admittance layer make the joint feel stiffer than 400 Nm/rad?",
+  "options": [
+   "Yes, set K large",
+   "No, 1/K + 1/kp_in is always above 1/kp_in",
+   "Only with kd"
+  ],
+  "answer": 1,
+  "explanation": "The inner compliance 1/kp_in always adds to the requested one."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "You want a very stiff joint and a very soft one on the same hardware. Best mode?",
+  "options": [
+   "Position mode for both",
+   "Torque mode, because K is a free parameter",
+   "Admittance for both"
+  ],
+  "answer": 1,
+  "explanation": "Only torque mode lets K span the whole range."
+ }
+]

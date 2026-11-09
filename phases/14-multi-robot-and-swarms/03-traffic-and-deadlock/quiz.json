@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "Four robots each hold one cell and each wants the next robot's cell in a loop. What happens?", "options": ["They take turns automatically", "Deadlock: none can ever move", "The last one yields by itself"], "answer": 1, "explanation": "Each waits for another in the loop, so no wait can end."},
+  {"id": 2, "stage": "check", "question": "In a wait-for graph, what does an arrow from robot A to robot B mean?", "options": ["A is faster than B", "A needs the cell B is standing on", "A and B share a goal"], "answer": 1, "explanation": "Edges record who blocks whom."},
+  {"id": 3, "stage": "check", "question": "What in the graph proves a deadlock?", "options": ["A node with two arrows", "A cycle", "An isolated node"], "answer": 1, "explanation": "Every robot on a cycle waits for the next, so none can start."},
+  {"id": 4, "stage": "check", "question": "Which deadlock condition does whole-route reservation remove?", "options": ["One robot per cell", "Hold-and-wait", "Robots being unable to pass"], "answer": 1, "explanation": "A reserving robot never waits while holding cells, and a waiting robot holds nothing."},
+  {"id": 5, "stage": "post", "question": "Why does reservation level off instead of rising with more robots?", "options": ["It deadlocks eventually", "Whole routes block each other, so few run at once", "The grid shrinks"], "answer": 1, "explanation": "Holding a full route keeps cells idle, which is the price of safety."},
+  {"id": 6, "stage": "post", "question": "Two robots face each other in one lane. What does the wait-for graph show?", "options": ["No edges", "A cycle of length 2", "A chain of length 3"], "answer": 1, "explanation": "A waits for B and B waits for A."}
+]

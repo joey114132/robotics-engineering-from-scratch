@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "Unprojected points near the image edge are centimetres off, but the datasheet focal length is used. What is the fix?", "options": ["Lower the frame rate", "Move the camera closer", "Measure fx, fy, cx, cy from a known target"], "answer": 2, "explanation": "Nominal intrinsics differ from the real ones, so measure them."},
+  {"id": 2, "stage": "check", "question": "What does one view of a flat grid give you in this method?", "options": ["A 3x3 homography", "One full 3D pose of the robot", "Lens distortion only"], "answer": 0, "explanation": "H = K [r1 r2 t] relates grid coordinates to pixels."},
+  {"id": 3, "stage": "check", "question": "Why must the views have different tilts?", "options": ["Tilts make the image brighter", "Pure shifts repeat the same constraints", "The detector needs it"], "answer": 1, "explanation": "Identical orientations add no new equations on B."},
+  {"id": 4, "stage": "check", "question": "How many equations does each view add to B?", "options": ["Two", "One", "Nine"], "answer": 0, "explanation": "h1'Bh2 = 0 and h1'Bh1 = h2'Bh2."},
+  {"id": 5, "stage": "post", "question": "With 1 px pixel noise, what happens to the linear result when you go from 3 to 10 views?", "options": ["The error vanishes", "The error doubles", "The error roughly halves"], "answer": 2, "explanation": "More constraints average the noise, but it does not vanish."},
+  {"id": 6, "stage": "post", "question": "A calibration gives cx far from the image centre and fx very different from fy. First suspicion?", "options": ["The camera is broken", "Too few or too similar views, so the fit is weak", "Nothing, it is normal"], "answer": 1, "explanation": "The linear solution amplifies noise when views are poor."}
+]

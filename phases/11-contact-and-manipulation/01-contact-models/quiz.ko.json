@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "theta만큼 기운 면 위에 블록이 놓여 있습니다. stick과 slip을 가르는 비율은 무엇입니까?",
+  "options": [
+   "tan(theta)와 mu의 비교",
+   "sin(theta)와 mu의 비교",
+   "cos(theta)와 mu의 비교"
+  ],
+  "answer": 0,
+  "explanation": "필요한 마찰력을 수직항력으로 나누면 m g sin / m g cos = tan(theta)입니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "mu = 0.5입니다. 블록은 몇 도에서 미끄러지기 시작합니까?",
+  "options": [
+   "약 26.6도",
+   "30도",
+   "45도"
+  ],
+  "answer": 0,
+  "explanation": "arctan(0.5)는 약 26.6도입니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "블록이 미끄러집니다. 경사를 따라 내려가는 가속도는 얼마입니까?",
+  "options": [
+   "g sin(theta)",
+   "g (sin(theta) - mu cos(theta))",
+   "mu g cos(theta)"
+  ],
+  "answer": 1,
+  "explanation": "한계에 닿은 마찰력 mu fn이 당기는 힘을 거스릅니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "penalty 모델에서 접선 spring이 끝없이 늘어나지 않게 막는 것은 무엇입니까?",
+  "options": [
+   "법선 damper",
+   "mu fn에서 힘을 자르고 anchor를 옮기는 것",
+   "시간 간격"
+  ],
+  "answer": 1,
+  "explanation": "한계에서 접촉이 미끄러지고 anchor가 따라 끌려옵니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "블록 질량을 두 배로 하면 sticking 각도는 어떻게 됩니까?",
+  "options": [
+   "두 배가 됩니다",
+   "절반이 됩니다",
+   "변하지 않습니다"
+  ],
+  "answer": 2,
+  "explanation": "질량은 ft / fn = tan(theta)에서 약분됩니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "손목을 기울였더니 부품이 미끄러집니다. 가장 먼저 볼 것은 무엇입니까?",
+  "options": [
+   "controller gain 올리기",
+   "필요한 ft / fn을 mu와 비교하기",
+   "simulator 시간 간격 줄이기"
+  ],
+  "answer": 1,
+  "explanation": "비율이 mu를 넘으면 어떤 gain으로도 붙잡을 수 없습니다."
+ }
+]

@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Randomise too little and I'm fragile, too much and I'm a nervous wreck. The right width sits somewhere in between.",
+  "mission": "Change the width tuple in `code/main.py` to `(0.0, 0.15, 0.3)`. Predict whether tuning on 0.15 beats tuning on 0.0 in a width-0.3 world, then run `python3 code/main.py`."
+ },
+ "ko": {
+  "hook": "너무 조금 흔들면 약해지고 너무 많이 흔들면 겁쟁이가 됩니다. 알맞은 width는 그 사이 어딘가에 있습니다.",
+  "mission": "`code/main.py`의 width 튜플을 `(0.0, 0.15, 0.3)`으로 바꾸세요. 0.15로 튜닝한 쪽이 0.0으로 튜닝한 쪽보다 width 0.3 세계에서 나을지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+ },
+ "toy": null,
+ "motion": "domain-rand"
+}

@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "A pixel is not a spot but a whole ray. Tell me where along it the cup sits, or I will happily grab the wall behind it.",
+  "mission": "In `code/main.py` set `du=0.0` and run `python3 code/main.py`. Predict first: does the 4 m error drop a lot or barely at all? Then name the bigger villain, depth error or pixel error."
+ },
+ "ko": {
+  "hook": "픽셀은 점이 아니라 광선 하나입니다. 컵이 광선 위 어디쯤인지 알려 주세요. 안 그러면 저는 뒤에 있는 벽을 집으러 갑니다.",
+  "mission": "`code/main.py`에서 `du=0.5`를 `du=0.0`으로 바꾸고 `python3 code/main.py`를 실행하세요. 4 m 오차가 많이 줄지 먼저 예측하세요. 그다음 depth 오차와 픽셀 오차 중 누가 주범인지 확인하세요."
+ },
+ "toy": null,
+ "motion": "pinhole-rays"
+}

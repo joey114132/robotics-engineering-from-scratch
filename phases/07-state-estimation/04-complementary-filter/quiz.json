@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "Which sensor is good for the long-run tilt and which for fast changes?", "options": ["Accelerometer for the long run, gyro for fast changes", "Gyro for the long run, accelerometer for fast changes", "Both are equally good everywhere"], "answer": 0, "explanation": "The accelerometer senses gravity so it never drifts but is noisy. The gyro is smooth but its bias accumulates."},
+  {"id": 2, "stage": "check", "question": "tau = 0.5 s. What is the crossover frequency?", "options": ["0.32 Hz", "2 Hz", "0.5 Hz"], "answer": 0, "explanation": "1 / (2 pi tau) = 1 / 3.14 = 0.318 Hz."},
+  {"id": 3, "stage": "check", "question": "A constant gyro bias of 0.02 rad/s and tau = 0.4 s leave a steady tilt error of?", "options": ["0.008 rad", "0.05 rad", "0.5 rad"], "answer": 0, "explanation": "The steady error is exactly tau * b = 0.4 * 0.02."},
+  {"id": 4, "stage": "check", "question": "You raise tau. What gets worse?", "options": ["Accelerometer noise passes through", "Gyro bias passes through", "Nothing"], "answer": 1, "explanation": "A larger tau trusts the gyro for longer, so its bias error tau * b grows."},
+  {"id": 5, "stage": "post", "question": "Why does a true tilt pass through the filter without distortion?", "options": ["The two paths add to exactly 1", "The gyro is integrated twice", "The filter has no memory"], "answer": 0, "explanation": "Low-pass plus high-pass equals 1 at every frequency."},
+  {"id": 6, "stage": "post", "question": "The accelerometer noise doubles. What happens to the best tau?", "options": ["It grows, because the accelerometer deserves less trust", "It shrinks", "It stays the same"], "answer": 0, "explanation": "tau^3 = s^2 dt / (4 b^2), so a larger s means a larger best tau."}
+]

@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Why is a test that only checks the controller returns a number weak for robot code?",
+  "options": [
+   "It is too slow",
+   "It needs hardware",
+   "It passes even when the sign is wrong and the joint runs away"
+  ],
+  "answer": 2,
+  "explanation": "The output is a number either way."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "What does a FakeClock buy you?",
+  "options": [
+   "Faster hardware",
+   "Seconds of controller time pass instantly and repeatably",
+   "A better encoder"
+  ],
+  "answer": 1,
+  "explanation": "The test decides when time moves."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Which test would catch a changed sign from a recorded trace?",
+  "options": [
+   "A replay test comparing outputs to the recording",
+   "A test that checks the file exists",
+   "A test that sleeps 1 s"
+  ],
+  "answer": 0,
+  "explanation": "The recorded inputs give a different torque through the bug."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "What does the property test assert?",
+  "options": [
+   "Torque equals 5 Nm",
+   "The joint reaches the target",
+   "Torque is finite and within the limit for every random input"
+  ],
+  "answer": 2,
+  "explanation": "One rule over many inputs, NaN and huge values included."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Why should MockJoint raise on an over-limit command?",
+  "options": [
+   "To speed up the run",
+   "So a bad command fails the test where it happens",
+   "To record more data"
+  ],
+  "answer": 1,
+  "explanation": "The failure points at the offending call."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "After a deliberate gain change the replay test fails. What next?",
+  "options": [
+   "Check the change is intended, then re-record",
+   "Delete the test",
+   "Loosen the tolerance to pass"
+  ],
+  "answer": 0,
+  "explanation": "A replay fails on any behaviour change, and a person decides which are real."
+ }
+]

@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "학습 정책을 결정론적인 일반 코드로 감싸는 이유는 무엇일까요?", "options": ["모델이 무엇을 내놓아도 action의 범위를 테스트로 보장할 수 있습니다", "정책이 더 정확해집니다", "시연 데이터가 필요 없어집니다"], "answer": 0, "explanation": "모델의 안전은 증명할 수 없지만, 모델 주변의 짧은 규칙은 테스트할 수 있습니다."},
+  {"id": 2, "stage": "check", "question": "nearest-neighbour 정책은 새 관측에 무엇을 돌려줄까요?", "options": ["가장 가까운 시연 k개의 평균 action", "가장 먼 시연의 action", "무작위 action"], "answer": 0, "explanation": "여기서 behaviour cloning은 시연을 조회하는 것이라서, 시연이 덮은 범위만큼만 쓸 만합니다."},
+  {"id": 3, "stage": "check", "question": "낡은 관측 규칙을 clip과 변화율 제한보다 먼저 검사하는 이유는 무엇일까요?", "options": ["낡은 action은 대체해야 하고, 대체한 값도 나머지 두 규칙을 거쳐야 하기 때문입니다", "clip은 오래된 데이터에 동작하지 않기 때문입니다", "순서는 중요하지 않습니다"], "answer": 0, "explanation": "hold 명령이 원래 action을 대신하고, 그 뒤 다른 action처럼 clip과 변화율 제한을 받습니다."},
+  {"id": 4, "stage": "check", "question": "변화율 제한은 무엇을 막을까요?", "options": ["한 step짜리 spike나 hold로의 급전환 같은 갑작스러운 토크 점프", "토크의 모든 변화", "정책이 목표에 도달하는 것"], "answer": 0, "explanation": "걸음당 변화를 제한하므로 hold 명령도 서서히 내려갑니다."},
+  {"id": 5, "stage": "post", "question": "여기서 hold 명령이 영토크인 이유는 무엇일까요?", "options": ["낡은 데이터로는 속도를 모르고, 감쇠가 있는 관절은 스스로 멈추기 때문입니다", "영토크는 언제나 관절을 제자리에 붙잡기 때문입니다", "가장 큰 안전 토크이기 때문입니다"], "answer": 0, "explanation": "중력이 있는 관절이라면 대신 중력을 보상하는 토크로 hold해야 합니다."},
+  {"id": 6, "stage": "post", "question": "배포 중에 개입 횟수는 무엇을 알려 줄까요?", "options": ["정책을 얼마나 자주 고쳐야 했는지, 그래서 늘어나는 횟수는 나쁜 모델의 신호입니다", "쓸모 있는 것이 없습니다", "학습 손실입니다"], "answer": 0, "explanation": "깨끗한 실행에는 clip과 hold가 없으므로, 늘어나는 횟수는 측정 가능한 경고입니다."}
+]

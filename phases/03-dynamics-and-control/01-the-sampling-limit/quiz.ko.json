@@ -1,0 +1,74 @@
+[
+{
+"id": 1,
+"stage": "pre",
+"question": "host loop가 damper 토크를 tick마다 한 번 계산해 붙잡고 있습니다. 연속 시간에서 안정인 gain이 불안정해질 수 있습니까?",
+"options": [
+"아니오",
+"예, dt*kd/J가 충분히 크면 그렇습니다",
+"스프링 항이 있을 때만 그렇습니다"
+],
+"answer": 1,
+"explanation": "damper는 한 tick 지난 속도에 작용합니다."
+},
+{
+"id": 2,
+"stage": "check",
+"question": "r = dt*kd/J일 때 tick당 속도 인자는 무엇입니까?",
+"options": [
+"1 + r",
+"1 - r",
+"r"
+],
+"answer": 1,
+"explanation": "v+ = v - dt*kd*v/J입니다."
+},
+{
+"id": 3,
+"stage": "check",
+"question": "속도가 tick마다 부호를 뒤집기 시작하는 r은 얼마입니까?",
+"options": [
+"r > 0.5",
+"r > 1",
+"r > 2"
+],
+"answer": 1,
+"explanation": "r이 1을 넘으면 인자 1 - r이 음수가 됩니다."
+},
+{
+"id": 4,
+"stage": "check",
+"question": "속도가 tick마다 커지는 r은 얼마입니까?",
+"options": [
+"r > 1",
+"r > 2",
+"r > 4"
+],
+"answer": 1,
+"explanation": "r이 2를 넘으면 |1 - r|이 1을 넘습니다."
+},
+{
+"id": 5,
+"stage": "post",
+"question": "같은 kd가 어깨(J = 0.5)와 손목(J = 0.001)에 전달됩니다. 어느 쪽이 먼저 선을 넘습니까?",
+"options": [
+"어깨",
+"손목",
+"동시에"
+],
+"answer": 1,
+"explanation": "r은 1/J에 비례합니다."
+},
+{
+"id": 6,
+"stage": "post",
+"question": "낮은 관성 관절에서 host 쪽 damper가 덜덜 떨릴 때 가장 좋은 대응은 무엇입니까?",
+"options": [
+"kd를 올린다",
+"damping loop를 드라이브로 옮기거나 kd를 J/dt 아래로 낮춘다",
+"DDS queue 깊이를 늘린다"
+],
+"answer": 1,
+"explanation": "한계는 메시징이 아니라 loop 주기와 J에서 나옵니다."
+}
+]

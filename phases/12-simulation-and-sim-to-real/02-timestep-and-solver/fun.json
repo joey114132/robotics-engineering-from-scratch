@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Change the time step and my bouncing ball grows taller. Physics didn't do that. My integrator got greedy with energy.",
+    "mission": "In `code/main.py` replace `1.9e-2` with `5e-3`. Predict the semi-implicit rebound height at that step, then run `python3 code/main.py` and compare it with the euler column."
+  },
+  "ko": {
+    "hook": "time step을 바꿨더니 공이 더 높이 튑니다. 물리가 한 일이 아닙니다. integrator가 에너지를 욕심낸 것입니다.",
+    "mission": "`code/main.py`에서 `1.9e-2`를 `5e-3`으로 바꾸세요. 그 dt에서 semi-implicit의 rebound 높이를 예측한 뒤 `python3 code/main.py`를 실행해 euler 열과 비교하세요."
+  },
+  "toy": null
+}

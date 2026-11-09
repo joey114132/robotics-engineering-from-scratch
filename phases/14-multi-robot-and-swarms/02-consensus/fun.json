@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Robots that only whisper to neighbours can still agree on one number. It's gossip, but with eigenvalues.",
+  "mission": "In `code/main.py` change `0.05` to `0.3`. Using the `eps * lambda_max < 2` rule, predict which graph fails to agree, then run `python3 code/main.py` (overflow warnings are expected)."
+ },
+ "ko": {
+  "hook": "이웃에게만 속삭이는 로봇도 숫자 하나에 합의할 수 있습니다. 소문 퍼뜨리기에 eigenvalue를 얹은 셈입니다.",
+  "mission": "`code/main.py`에서 `0.05`를 `0.3`으로 바꾸세요. 규칙 `eps * lambda_max < 2`로 어느 그래프가 합의에 실패할지 예측한 뒤 `python3 code/main.py`를 실행하세요. overflow 경고는 정상입니다."
+ },
+ "toy": null,
+ "motion": "consensus-converge"
+}

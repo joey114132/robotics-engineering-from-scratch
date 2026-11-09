@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "오래 보는 기울기와 빠른 변화에 각각 어느 센서가 좋은가요?", "options": ["오래 보는 쪽은 가속도계, 빠른 변화는 gyro", "오래 보는 쪽은 gyro, 빠른 변화는 가속도계", "어디서나 둘이 똑같이 좋습니다"], "answer": 0, "explanation": "가속도계는 중력을 재므로 drift하지 않지만 잡음이 많습니다. gyro는 매끄럽지만 bias가 쌓입니다."},
+  {"id": 2, "stage": "check", "question": "tau = 0.5 s일 때 crossover 주파수는?", "options": ["0.32 Hz", "2 Hz", "0.5 Hz"], "answer": 0, "explanation": "1 / (2 pi tau) = 1 / 3.14 = 0.318 Hz입니다."},
+  {"id": 3, "stage": "check", "question": "상수 gyro bias 0.02 rad/s와 tau = 0.4 s가 남기는 정상상태 기울기 오차는?", "options": ["0.008 rad", "0.05 rad", "0.5 rad"], "answer": 0, "explanation": "정상상태 오차는 정확히 tau * b = 0.4 * 0.02입니다."},
+  {"id": 4, "stage": "check", "question": "tau를 키우면 무엇이 나빠지나요?", "options": ["가속도계 잡음이 통과합니다", "gyro bias가 통과합니다", "아무것도 나빠지지 않습니다"], "answer": 1, "explanation": "tau가 크면 gyro를 더 오래 믿으므로 bias 오차 tau * b가 커집니다."},
+  {"id": 5, "stage": "post", "question": "진짜 기울기가 필터를 왜곡 없이 통과하는 이유는?", "options": ["두 경로의 합이 정확히 1이기 때문입니다", "gyro를 두 번 적분하기 때문입니다", "필터에 기억이 없기 때문입니다"], "answer": 0, "explanation": "low-pass와 high-pass의 합은 모든 주파수에서 1입니다."},
+  {"id": 6, "stage": "post", "question": "가속도계 잡음이 두 배가 되면 최적 tau는 어떻게 되나요?", "options": ["가속도계를 덜 믿어야 하므로 커집니다", "작아집니다", "그대로입니다"], "answer": 0, "explanation": "tau^3 = s^2 dt / (4 b^2)이므로 s가 커지면 최적 tau도 커집니다."}
+]

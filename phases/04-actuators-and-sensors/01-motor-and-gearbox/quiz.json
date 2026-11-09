@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A joint with a 100:1 gearbox behaves the same empty and loaded. Why?",
+  "options": [
+   "The motor is stronger at high speed",
+   "The load inertia reaches the motor divided by N squared",
+   "The encoder filters the load"
+  ],
+  "answer": 1,
+  "explanation": "At N = 100 the load is 10,000 times smaller on the motor side."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "How does motor torque change with speed at fixed voltage?",
+  "options": [
+   "It falls on a straight line to zero at the no-load speed",
+   "It rises with speed",
+   "It stays constant"
+  ],
+  "answer": 0,
+  "explanation": "Back-EMF grows with speed, so current and torque fall linearly."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "A gearbox of ratio N is added. What happens at the output shaft?",
+  "options": [
+   "Torque / N, speed x N",
+   "Torque x N, speed x N",
+   "Torque x N, speed / N"
+  ],
+  "answer": 2,
+  "explanation": "Power is conserved apart from losses."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Rotor inertia as felt on the output shaft of a ratio-N gearbox?",
+  "options": [
+   "J_r * N",
+   "J_r * N^2",
+   "J_r / N^2"
+  ],
+  "answer": 1,
+  "explanation": "Energy 0.5*J*w^2 is conserved when speed is divided by N."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Which ratio makes the drive see the load least?",
+  "options": [
+   "N = 1",
+   "N = 10",
+   "N = 100"
+  ],
+  "answer": 2,
+  "explanation": "The load share of the motor-side inertia falls as 1 / N^2."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "You tuned a gearmotor empty and the load later doubles. A sound expectation for a high ratio?",
+  "options": [
+   "The motor-side response barely changes, so the load change must be sensed another way",
+   "The drive will detect it quickly",
+   "The motor will stall"
+  ],
+  "answer": 0,
+  "explanation": "A high ratio hides load changes from motor-side signals."
+ }
+]

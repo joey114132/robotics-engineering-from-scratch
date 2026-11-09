@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "위치 센서에 잡음이 있고 로봇은 부드럽게 움직입니다. 둘 중 하나만 믿는 것보다 나은 방법은?", "options": ["모션 예측과 각 센서값을 각자의 불확실성에 따라 섞습니다", "최근 센서값 100개를 평균합니다", "센서만 쓰고 모델은 무시합니다"], "answer": 0, "explanation": "filter는 모델과 센서를 각각의 불확실성으로 가중하므로 긴 평균 같은 지연이 없습니다."},
+  {"id": 2, "stage": "check", "question": "prior 분산이 4이고 측정 분산이 1이며 숫자 하나를 직접 측정합니다. Kalman gain은?", "options": ["0.2", "0.8", "4"], "answer": 1, "explanation": "K = P / (P + R) = 4 / 5입니다."},
+  {"id": 3, "stage": "check", "question": "센서 잡음 R이 훨씬 커지면 K는 어떻게 되나요?", "options": ["1에 가까워집니다", "0에 가까워집니다", "변하지 않습니다"], "answer": 1, "explanation": "K = P H^T (H P H^T + R)^-1은 R이 오르면 내려가므로 filter가 모델을 따릅니다."},
+  {"id": 4, "stage": "check", "question": "여러 번 실행해 보니 filter가 보고하는 P는 1.0 m^2인데 실제 제곱 오차 평균은 4.0 m^2입니다. 무엇을 뜻하나요?", "options": ["filter가 과신하고 있으며 Q나 R이 너무 작습니다", "filter가 완벽합니다", "센서에 잡음이 없습니다"], "answer": 0, "explanation": "일관된 filter의 P는 실제 오차 공분산과 같아야 합니다. P가 더 작으면 아는 것보다 많이 안다고 주장하는 것입니다."},
+  {"id": 5, "stage": "post", "question": "filter가 일관되다면 오차의 몇 퍼센트가 2-sigma 띠 안에 들어와야 하나요?", "options": ["68%", "95%", "99.7%"], "answer": 1, "explanation": "Gaussian의 표준편차 두 배 안에는 약 95%가 들어옵니다."},
+  {"id": 6, "stage": "post", "question": "P가 센서값에 상관없이 일정한 값으로 수렴하는 이유는?", "options": ["P는 F, Q, H, R로만 갱신되고 z는 쓰지 않기 때문입니다", "센서값이 평균되어 사라지기 때문입니다", "K를 손으로 고정했기 때문입니다"], "answer": 0, "explanation": "z는 상태 추정값 x에 들어가고 공분산 점화식에는 들어가지 않습니다."}
+]

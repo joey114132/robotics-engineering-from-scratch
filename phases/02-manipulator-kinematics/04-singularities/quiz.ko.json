@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "팔이 거의 완전히 펴졌고 tip을 반지름 방향으로 움직이라고 명령합니다. 일반 J 역행렬은 무엇을 돌려줍니까?",
+  "options": [
+   "매우 큰 joint 속도",
+   "0인 joint 속도",
+   "정확히 맞는 속도"
+  ],
+  "answer": 0,
+  "explanation": "반지름 방향이 거의 사라져서 역행렬이 0에 가까운 수로 나눕니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "이 2링크 팔에서 det J는 얼마입니까?",
+  "options": [
+   "L1 L2 sin q2",
+   "L1 + L2",
+   "L1 L2 cos q1"
+  ],
+  "answer": 0,
+  "explanation": "elbow 각에만 달려 있으므로 singularity는 q2 = 0과 q2 = pi입니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "완전히 뻗은 자세에서 불가능한 tip 운동은 무엇입니까?",
+  "options": [
+   "반지름 방향(팔을 따라)",
+   "옆 방향(팔에 수직)",
+   "둘 다"
+  ],
+  "answer": 0,
+  "explanation": "그 자세에서는 두 joint 모두 tip을 옆으로만 움직입니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "damped least squares가 joint 속도에 대해 보장하는 것은 무엇입니까?",
+  "options": [
+   "|qd| <= |v| / (2 lam)",
+   "|qd| = 0",
+   "|qd| = |v|"
+  ],
+  "answer": 0,
+  "explanation": "각 특이값 s가 s / (s^2 + lam^2)로 바뀌고 이 값은 1 / (2 lam) 이하입니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "damping의 대가는 무엇입니까?",
+  "options": [
+   "singularity 근처에서 tip이 명령을 따르지 못한다",
+   "팔이 불안정해진다",
+   "순기구학이 바뀐다"
+  ],
+  "answer": 0,
+  "explanation": "Jacobian이 rank를 잃는 곳에서는 속도 제한과 정확한 추종이 동시에 성립할 수 없습니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "이 팔의 manipulability가 가장 큰 곳은 어디입니까?",
+  "options": [
+   "elbow가 직각일 때",
+   "완전히 뻗었을 때",
+   "완전히 접혔을 때"
+  ],
+  "answer": 0,
+  "explanation": "|det J| = L1 L2 |sin q2|는 q2 = pi / 2에서 최대입니다."
+ }
+]

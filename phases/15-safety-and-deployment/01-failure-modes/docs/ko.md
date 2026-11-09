@@ -1,0 +1,74 @@
+# 고장 유형 (Failure Modes)
+
+> 관절을 지키려면 먼저 어떻게 망가지는지 알아야 하고 가장 위험한 결함은 조용한 결함입니다.
+
+**유형:** 만들기   **선수 지식:** 03/02 중력 보상   **시간:** 약 15분
+
+## 문제
+
+일주일 내내 잘 따라가던 관절이 갑자기 한계 stop에 부딪히는데 로그에는 에러가 없습니다. 제어기는 입력이 시킨 대로 정확히 움직였을 뿐입니다. 이 레슨은 작은 PD loop에 결함 다섯 가지를 넣고 피해가 얼마나 큰지, 값싼 검사가 얼마나 빨리 알아챌 수 있는지 잽니다.
+
+## 개념
+
+![결함이 루프에 들어가는 위치](../assets/diagram-fault-points.png)
+
+*wrong sign과 saturation은 명령 경로에 있습니다. stuck, dropout, delay는 제어기가 관절에 대해 믿는 내용을 망가뜨립니다.*
+
+결함은 자기가 속한 루프를 통해서만 위험해집니다. stuck 센서는 제어기가 멈춰 있다고 믿는 관절을 계속 밀게 만듭니다. wrong sign은 스프링을 밀어내는 힘으로 바꿉니다.
+
+![결함별 관절 응답](../assets/fig-fault-responses.png)
+
+*회색 점선은 정상 실행입니다. 파란 세로선은 첫 경보입니다. wrong sign과 stuck은 한계에 붙은 채 끝납니다. dropout은 한계에 부딪힌 뒤 회복하고 delay는 진동하며 saturation은 기어갑니다.*
+
+![피해와 경보 시각](../assets/fig-fault-ranking.png)
+
+*왼쪽은 실행이 끝났을 때 남은 오차입니다. 오른쪽에서 한계에 닿는 결함은 모두 경보가 먼저 울리지만 saturation은 시계로만 잡힙니다.*
+
+![어떤 검사가 어떤 결함을 보는가](../assets/diagram-fault-checks.png)
+
+*제어기 자신의 신호에 거는 검사 네 개로 이 모델의 결함 다섯 개를 모두 표시할 수 있습니다.*
+
+## 만들기
+
+`simulate(fault)`는 2 rad에 hard stop이 있는 1자유도 관절(`J qdd = tau - b qd`)을 돌립니다. 결함은 루프 안의 몇 줄입니다. 예를 들면 다음과 같습니다.
+
+```python
+if fault == "stuck" and on:
+    held = held or (q, qd)
+    qm, qdm = held          # controller sees a frozen joint
+tau = clip(kp*(q_ref - qm) - kd*qdm, -tau_max, tau_max)
+if fault == "wrong_sign":
+    tau = -tau
+```
+
+`metrics()`는 실제 관절을 잽니다. `alarm_time()`은 제어기가 볼 수 있는 값만 씁니다. `ranked()`는 한계 도달 여부, 최종 오차, 도달 속도 순으로 정렬합니다.
+
+```bash
+cd robotics-engineering-from-scratch
+python3 -m pytest phases/15-safety-and-deployment/01-failure-modes -q
+python3 phases/15-safety-and-deployment/01-failure-modes/code/main.py
+```
+
+```text
+rank fault        peak|q| final err limit at alarm at  warned first
+1    wrong_sign      2.00     3.000    0.460    0.205  True
+2    stuck           2.00     3.000    1.301    0.350  True
+3    dropout         2.00     0.000    0.513    0.300  True
+4    delay           1.77     0.451    never    0.300  True
+5    saturation      1.37     0.190    never    2.000  True
+6    none            1.16     0.000    never    never  False
+```
+
+## 실제 도구로 보기
+
+같은 주입을 MuJoCo 관절이나 ROS 2 노드에서도 할 수 있습니다. 센서 topic과 명령 topic을 감싼 뒤 자기 monitor를 이 표와 비교합니다. 이 임계값은 이 plant의 값이므로 자기 plant에서 다시 재야 합니다.
+
+## 결과물
+
+`outputs/skill-fault-injection-review.md`는 주입할 결함 다섯 가지와 monitor마다 던질 질문을 정리합니다.
+
+## 연습 문제
+
+1. 관절이 안정된 뒤에 stuck 센서를 넣고 왜 아무 일도 없는지 설명하세요.
+2. 이 루프가 처음 진동하는 delay를 밀리초 단위로 찾으세요.
+3. 실제 각도의 두 배를 읽는 encoder를 여섯 번째 결함으로 넣고 순위를 매기세요.

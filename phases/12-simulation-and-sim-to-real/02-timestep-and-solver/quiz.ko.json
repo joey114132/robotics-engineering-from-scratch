@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "시뮬레이션에서 link가 떨어뜨린 높이보다 높이 튑니다. 가장 먼저 무엇을 의심해야 합니까?", "options": ["접촉이라는 새로운 물리 효과입니다", "integrator나 time step이 에너지를 더하고 있습니다", "중력이 너무 작습니다"], "answer": 1, "explanation": "보존적인 접촉은 받은 것보다 많은 에너지를 돌려줄 수 없으므로 수치 방법이 에너지를 더하는 것입니다."},
+  {"id": 2, "stage": "check", "question": "explicit Euler는 선형 진동자의 에너지에 매 step 어떤 인자를 곱합니까?", "options": ["1 - (w*dt)^2", "1 + (w*dt)^2", "1"], "answer": 1, "explanation": "이 인자는 어떤 dt에서도 1보다 크므로 에너지는 항상 커집니다."},
+  {"id": 3, "stage": "check", "question": "semi-implicit Euler는 explicit Euler와 무엇이 다릅니까?", "options": ["속도를 먼저 갱신하고 새 속도로 위치를 옮깁니다", "step을 절반으로 줄입니다", "중력을 무시합니다"], "answer": 0, "explanation": "이 순서가 shadow 에너지를 보존하므로 에너지 오차가 유한하게 머뭅니다."},
+  {"id": 4, "stage": "check", "question": "선형 진동자에서 semi-implicit Euler는 어느 조건에서 안정합니까?", "options": ["w*dt < 2", "w*dt > 2", "dt = 1"], "answer": 0, "explanation": "w*dt = 2를 넘으면 매 step 진폭이 커집니다. 테스트에서 1.9/w는 안정하고 2.1/w는 불안정합니다."},
+  {"id": 5, "stage": "post", "question": "접촉 결과가 dt = 3 ms에서는 기준과 맞고 dt = 19 ms에서는 6배 높습니다. 무엇을 쓰겠습니까?", "options": ["더 빠르니 19 ms", "sweep의 평평한 구간에 있는 step, 예를 들어 3 ms 이하", "처음 나온 값"], "answer": 1, "explanation": "결과는 sweep 전체에서 확인해야 하고, 쓰는 step은 답이 더 움직이지 않는 곳에 있어야 합니다."},
+  {"id": 6, "stage": "post", "question": "19 ms semi-implicit 실행이 아주 큰 수가 아니라 0.65 m를 돌려주는 이유는 무엇입니까?", "options": ["그 step에서 방법이 정확하기 때문입니다", "penalty 접촉은 몇 step만 작용하므로 질량이 바닥을 떠나면 증가가 멈추기 때문입니다", "중력이 오차를 상쇄하기 때문입니다"], "answer": 1, "explanation": "불안정은 접촉 중에만 있으므로 틀린 결과가 그럴듯해 보입니다."}
+]

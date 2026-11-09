@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "목표 속도에 필요한 것보다 조금 짧은 고정 보폭으로 걸으면 여러 걸음 뒤에 어떻게 됩니까?", "options": ["속도가 조금 낮게 안정됩니다", "걸음마다 속도가 커집니다", "모델이 안정적이라 변화가 없습니다"], "answer": 1, "explanation": "짧은 걸음은 몸이 여분의 에너지를 가진 채 발을 지나치게 하고, 다음 stance가 그것을 증폭합니다."},
+  {"id": 2, "stage": "check", "question": "deadbeat 발 규칙이 정확히 맞추는 것은 무엇입니까?", "options": ["다음 stance 끝의 속도", "걸음 시간", "몸의 높이"], "answer": 0, "explanation": "닫힌 해의 끝 속도를 발에 대해 풀므로 한 걸음에 목표에 닿습니다."},
+  {"id": 3, "stage": "check", "question": "정상 속도 v에서 걸음은 2 Tc v tanh(T/2Tc)입니다. v를 두 배로 하면 어떻게 됩니까?", "options": ["두 배가 됩니다", "그대로입니다", "절반이 됩니다"], "answer": 0, "explanation": "식이 v에 대해 선형입니다."},
+  {"id": 4, "stage": "check", "question": "명령한 걸음이 deadbeat 걸음의 1.5배입니다. 레슨에서 어떤 결과가 나옵니까?", "options": ["속도가 목표에 고정됩니다", "속도가 요동치다 뒤집힙니다", "속도가 낮게 안정됩니다"], "answer": 1, "explanation": "deadbeat 보정에 1보다 큰 이득을 주면 걸음 간 사상이 불안정해져 진동합니다."},
+  {"id": 5, "stage": "post", "question": "stance가 시작될 때 몸이 발보다 앞에 있습니다. 몸의 속도는 어떻게 됩니까?", "options": ["커집니다", "작아집니다", "변하지 않습니다"], "answer": 0, "explanation": "진자 모델에서 x - p > 0이면 가속도가 양수입니다."},
+  {"id": 6, "stage": "post", "question": "걷는 로봇이 움직이기 시작한 뒤 바로가 아니라 한 걸음 뒤에 목표에 닿는 이유는 무엇입니까?", "options": ["발을 한 stance가 끝날 때 다음 stance를 위해 고르기 때문입니다", "모델이 너무 느려서입니다", "첫 걸음에서는 목표를 무시해서입니다"], "answer": 0, "explanation": "첫 stance는 이미 발이 정해져 있어서 선택이 두 번째 stance부터 작용합니다."}
+]

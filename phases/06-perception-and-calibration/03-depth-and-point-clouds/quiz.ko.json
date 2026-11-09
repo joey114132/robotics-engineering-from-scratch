@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "상자와 엉뚱한 픽셀 몇 개 때문에 최소제곱으로 맞춘 테이블 평면이 기울었습니다. 표준 해결책은 무엇입니까?", "options": ["RANSAC으로 찾고 inlier로 재적합한다", "픽셀을 더 쓴다", "해상도를 낮춘다"], "answer": 0, "explanation": "RANSAC은 다수 평면과 맞지 않는 점을 무시합니다."},
+  {"id": 2, "stage": "check", "question": "voxel grid는 점군을 어떻게 줄입니까?", "options": ["한 점 건너 하나씩 지운다", "점이 있는 칸마다 평균 점 하나", "가장 가까운 점만 남긴다"], "answer": 1, "explanation": "칸별로 점을 모아 평균을 냅니다."},
+  {"id": 3, "stage": "check", "question": "평면을 찾을 때 RANSAC은 매 회차에 무엇을 뽑습니까?", "options": ["점 하나와 법선", "점군 전체", "무작위 점 세 개"], "answer": 2, "explanation": "일직선이 아닌 점 세 개가 평면을 정합니다."},
+  {"id": 4, "stage": "check", "question": "inlier가 절반일 때 한 번이라도 inlier 세 점을 뽑을 확률 99%에 필요한 반복 횟수는 얼마입니까?", "options": ["35", "3", "1000"], "answer": 0, "explanation": "log(0.01) / log(1 - 0.5^3)이 약 34.5이므로 올림해서 35입니다."},
+  {"id": 5, "stage": "post", "question": "마지막에 inlier로 최소제곱 재적합을 하는 이유는 무엇입니까?", "options": ["최소제곱이 더 빠르다", "뽑은 세 점은 잡음이 크고 inlier 전체는 잡음을 평균한다", "RANSAC은 평면을 출력하지 못한다"], "answer": 1, "explanation": "세 점으로 만든 평면은 그 점들의 잡음에 민감합니다."},
+  {"id": 6, "stage": "post", "question": "inlier 비율이 50% 아래이면 무엇을 의심해야 합니까?", "options": ["평면이 완벽하다", "카메라 캘리브레이션 오류", "찾은 면이 테이블이 아닐 수 있다"], "answer": 2, "explanation": "RANSAC은 가장 큰 일관된 집합을 찾는데 그것이 다른 면일 수 있습니다."}
+]

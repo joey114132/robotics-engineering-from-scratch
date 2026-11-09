@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A target quaternion arrives with every component negated. Is it the same orientation?", "options": ["No, it is the mirror orientation", "Yes", "Only if w is zero"], "answer": 1, "explanation": "q and -q give the same rotation matrix."},
+  {"id": 2, "stage": "check", "question": "What does Rodrigues' formula compute?", "options": ["A quaternion from a matrix", "The inverse of a transform", "A rotation matrix from an axis and an angle"], "answer": 2, "explanation": "R = I + sin(t) K + (1 - cos(t)) K^2."},
+  {"id": 3, "stage": "check", "question": "Why does every rotation have two unit quaternions?", "options": ["Angles t and t + 2pi give q and -q", "Quaternions have two axes", "Floating point rounding"], "answer": 0, "explanation": "The half angle t/2 flips the sign when t grows by 2pi."},
+  {"id": 4, "stage": "check", "question": "Slerp is called with dot(q0, q1) < 0 and no fix. What happens?", "options": ["It returns q0", "It takes the long arc", "It raises an error"], "answer": 1, "explanation": "The arc between the two points is longer than a quarter circle on the 4D sphere, so the rotation sweeps more than 180 degrees."},
+  {"id": 5, "stage": "post", "question": "What is the fix?", "options": ["Normalise q0 twice", "Use degrees", "Negate q1 when the dot product is negative"], "answer": 2, "explanation": "The rotation is unchanged and the short arc is taken."},
+  {"id": 6, "stage": "post", "question": "A library returns (x, y, z, w) and your code expects (w, x, y, z). What do you get?", "options": ["A valid unit quaternion for a different rotation", "An exception", "The same rotation"], "answer": 0, "explanation": "Nothing flags the swap, so the order must be checked at every boundary."}
+]

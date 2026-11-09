@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "Every pose on my path was free, and I still hit the post. I only looked where I stepped.",
+    "mission": "In `code/main.py` change the middle step `0.4` in `(1.0, 0.4, 0.1)` to `0.15` and run `python3 code/main.py`. With r = 0.1, predict whether `swept` now catches the post, using the `2r` rule."
+  },
+  "ko": {
+    "hook": "경로의 모든 자세가 비어 있었는데도 기둥에 부딪혔습니다. 알고 보니 발 디딘 곳만 봤더군요.",
+    "mission": "`code/main.py`의 `(1.0, 0.4, 0.1)`에서 `0.4`를 `0.15`로 바꾸고 `python3 code/main.py`를 실행하세요. r이 0.1이니 step이 `2r` 이하면 swept가 기둥을 잡을지 먼저 예측하세요."
+  },
+  "toy": null
+}

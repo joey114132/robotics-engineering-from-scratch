@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "I tilted my wrench and it slid away. Friction has a limit, and tan(theta) tells you when you cross it.",
+  "mission": "Change the `0.5` in `simulate(np.radians(deg), 0.5)` in `code/main.py` to `0.3`. Predict which of 15, 25, 28, 35 degrees now slide, then run `python3 code/main.py`."
+ },
+ "ko": {
+  "hook": "렌치를 기울였더니 미끄러졌습니다. 마찰에는 한계가 있고, 그 한계를 넘는 순간은 tan(theta)로 알 수 있습니다.",
+  "mission": "`code/main.py`의 `simulate(np.radians(deg), 0.5)`에서 `0.5`를 `0.3`으로 바꾸세요. 15, 25, 28, 35도 중 어디가 미끄러질지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+ },
+ "toy": null,
+ "motion": "contact-friction"
+}

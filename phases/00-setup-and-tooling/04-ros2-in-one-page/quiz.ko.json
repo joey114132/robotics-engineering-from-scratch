@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "subscriber가 publisher보다 느립니다. queue depth를 1에서 50으로 올리면 읽는 데이터는 어떻게 됩니까?", "options": ["더 새로워진다", "더 오래된다", "그대로다"], "answer": 1, "explanation": "가득 찬 queue는 가장 오래된 쪽에서 읽으므로 depth가 깊을수록 메시지가 더 낡습니다."},
+  {"id": 2, "stage": "check", "question": "history가 keep-last이고 depth가 N일 때, 가득 찬 queue에 새 메시지가 오면 어떻게 됩니까?", "options": ["새 메시지가 버려진다", "publisher가 막힌다", "가장 오래된 메시지가 버려진다"], "answer": 2, "explanation": "keep-last는 가장 최근 N개를 보관하므로 가장 오래된 것이 자리를 비웁니다."},
+  {"id": 3, "stage": "check", "question": "publisher 100 Hz, subscriber 40 Hz, depth 10입니다. subscriber가 읽는 메시지는 대략 얼마나 오래된 것입니까?", "options": ["약 90 ms", "약 250 ms", "약 10 ms"], "answer": 0, "explanation": "queue는 10 ms마다 다시 채워지므로 10개 중 가장 오래된 것은 발행 주기 약 9개만큼 오래된 것입니다."},
+  {"id": 4, "stage": "check", "question": "depth를 키우면 손실을 막을 수 있는 경우는 언제입니까?", "options": ["계속되는 속도 불일치", "queue보다 짧은 burst", "없다"], "answer": 1, "explanation": "queue는 짧은 burst를 흡수하지만 꾸준한 초과분은 어떤 유한한 queue도 넘칩니다."},
+  {"id": 5, "stage": "post", "question": "topic과 service의 차이는 무엇입니까?", "options": ["topic은 응답이 없는 스트림이고 service는 요청 하나에 응답 하나다", "topic이 더 빠르다", "service에는 publisher가 여럿 있다"], "answer": 0, "explanation": "topic은 publisher와 subscriber를 분리하고 service는 요청과 응답을 짝지웁니다."},
+  {"id": 6, "stage": "post", "question": "메시지를 꾸준히 잃는 subscriber에 가장 먼저 할 일은 무엇입니까?", "options": ["depth를 1000으로 올린다", "publisher를 하나 더 둔다", "subscriber가 publisher를 따라가게 만든다"], "answer": 2, "explanation": "depth는 손실을 옮길 뿐이고 원인은 속도 불일치입니다."}
+]

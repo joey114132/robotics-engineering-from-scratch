@@ -1,0 +1,74 @@
+[
+{
+"id": 1,
+"stage": "pre",
+"question": "관절이 진동해서 kp와 kd를 같이 올렸습니다. 무엇이 잘못될 수 있습니까?",
+"options": [
+"없다, gain이 클수록 감쇠가 커진다",
+"kd가 샘플링 한계를 넘으면 명령이 tick마다 부호를 뒤집는다",
+"encoder 잡음만 달라진다"
+],
+"answer": 1,
+"explanation": "붙잡힌 명령은 낡은 속도에 작용하므로 kd가 크면 덜덜 떱니다(레슨 03/01)."
+},
+{
+"id": 2,
+"stage": "check",
+"question": "PD 제어(I 없음)에 일정한 부하 토크가 걸립니다. 정상 오차는 얼마입니까?",
+"options": [
+"load * kp",
+"load / kp",
+"0"
+],
+"answer": 1,
+"explanation": "정지 상태에서는 kp * e = load입니다."
+},
+{
+"id": 3,
+"stage": "check",
+"question": "적분 항은 무엇을 고칩니까?",
+"options": [
+"overshoot",
+"일정한 부하에서 생기는 정상 오프셋",
+"센서 잡음"
+],
+"answer": 1,
+"explanation": "오프셋이 사라질 때까지 오차를 계속 더합니다."
+},
+{
+"id": 4,
+"stage": "check",
+"question": "windup은 왜 생깁니까?",
+"options": [
+"액추에이터가 한계에 있는 동안에도 적분기가 계속 더하기 때문이다",
+"kd가 너무 작기 때문이다",
+"loop가 너무 빠르기 때문이다"
+],
+"answer": 0,
+"explanation": "출력은 잘리지만 적분 상태는 잘리지 않습니다."
+},
+{
+"id": 5,
+"stage": "post",
+"question": "조건부 적분(conditional integration)은 언제 적분기를 멈춥니까?",
+"options": [
+"항상",
+"출력이 포화되었고 오차가 더 깊이 밀 때",
+"오차가 0일 때"
+],
+"answer": 1,
+"explanation": "오차가 출력을 포화에서 끌어내릴 때는 계속 적분합니다."
+},
+{
+"id": 6,
+"stage": "post",
+"question": "폐루프 갱신 행렬의 가장 큰 고유값 크기가 1.3입니다. 어떻게 됩니까?",
+"options": [
+"움직임이 줄어든다",
+"움직임이 tick마다 커진다",
+"부드럽지만 느리다"
+],
+"answer": 1,
+"explanation": "크기가 1을 넘으면 커집니다."
+}
+]

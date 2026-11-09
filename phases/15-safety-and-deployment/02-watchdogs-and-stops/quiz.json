@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "The command program crashes while a joint moves at constant speed. What does the joint do without a watchdog?",
+  "options": [
+   "Stops at once",
+   "Returns home",
+   "Keeps running the last command"
+  ],
+  "answer": 2,
+  "explanation": "The drive latches the last command."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Stopping distance from speed v with constant deceleration a?",
+  "options": [
+   "v / a",
+   "v^2 / (2a)",
+   "v * a"
+  ],
+  "answer": 1,
+  "explanation": "x = v t - a t^2 / 2 with t = v / a."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Why is cutting torque not a stop on a joint with no brake?",
+  "options": [
+   "Only friction slows it, so it coasts",
+   "It reverses the joint",
+   "It speeds the joint up"
+  ],
+  "answer": 0,
+  "explanation": "The coast distance is J v / b, many times the ramped stop."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Which timeout inequality keeps the joint inside the limit?",
+  "options": [
+   "v T <= a",
+   "T >= v / a",
+   "v T + v^2 / (2a) <= room"
+  ],
+  "answer": 2,
+  "explanation": "Travel during the timeout plus braking travel must fit in the room."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "What breaks if the timeout is shorter than the heartbeat period plus jitter?",
+  "options": [
+   "The joint cannot brake",
+   "One late message trips the watchdog falsely",
+   "The limit moves"
+  ],
+  "answer": 1,
+  "explanation": "The timeout needs a lower bound as well."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Speed doubles with the same room and deceleration. What happens to the braking distance?",
+  "options": [
+   "It quadruples",
+   "It doubles",
+   "It halves"
+  ],
+  "answer": 0,
+  "explanation": "Distance grows with v squared."
+ }
+]

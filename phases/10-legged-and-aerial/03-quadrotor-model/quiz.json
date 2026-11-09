@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A planar quadrotor has two inputs, T and tau. How can it move sideways?", "options": ["By tilting so thrust has a sideways part", "By a dedicated sideways motor", "It cannot"], "answer": 0, "explanation": "Thrust follows the body axis, so only a tilt creates a sideways force."},
+  {"id": 2, "stage": "check", "question": "What thrust holds a level, still vehicle?", "options": ["T = m g", "T = m g / 2", "T = 0"], "answer": 0, "explanation": "At theta = 0 the vertical acceleration is T/m - g."},
+  {"id": 3, "stage": "check", "question": "The vehicle tilts by theta and T stays at m g. What happens to height?", "options": ["It sinks", "It rises", "It holds"], "answer": 0, "explanation": "The vertical part is m g cos(theta), smaller than the weight."},
+  {"id": 4, "stage": "check", "question": "A constant torque tau is applied from rest with small angles and T = m g. How does x grow?", "options": ["Like t", "Like t^2", "Like t^4"], "answer": 2, "explanation": "Four integrations separate torque from position."},
+  {"id": 5, "stage": "post", "question": "Which T holds height while tilted by theta?", "options": ["m g cos(theta)", "m g / cos(theta)", "m g sin(theta)"], "answer": 1, "explanation": "The vertical part T cos(theta) must equal m g."},
+  {"id": 6, "stage": "post", "question": "Why does a position command to the vehicle seem to lag at first?", "options": ["Pitch must build up before sideways force exists", "The motors are slow to start", "Gravity cancels the thrust"], "answer": 0, "explanation": "The sideways force is T sin(theta), which is near zero until theta grows."}
+]

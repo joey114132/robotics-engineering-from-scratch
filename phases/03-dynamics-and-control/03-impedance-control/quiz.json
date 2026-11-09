@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A joint should yield smoothly to a push. Which controller shape fits?", "options": ["Very stiff position loop", "Virtual spring-damper (impedance)", "Open-loop torque"], "answer": 1, "explanation": "Impedance sets how the joint pushes back."},
+  {"id": 2, "stage": "check", "question": "Constant external torque F, stiffness K. Steady deflection?", "options": ["F*K", "F/K", "K/F"], "answer": 1, "explanation": "At rest K*q = F."},
+  {"id": 3, "stage": "check", "question": "Damping ratio for K, J and D?", "options": ["D / (2 sqrt(K J))", "D / K", "sqrt(K / J)"], "answer": 0, "explanation": "The standard second-order form."},
+  {"id": 4, "stage": "check", "question": "zeta = 1 gives:", "options": ["Oscillation forever", "No overshoot", "Divergence"], "answer": 1, "explanation": "Critical damping returns without overshoot."},
+  {"id": 5, "stage": "post", "question": "You need at most 2 cm deflection under 20 N. Minimum K?", "options": ["10 N/m", "1000 N/m", "40 N/m"], "answer": 1, "explanation": "K = F / x = 20 / 0.02."},
+  {"id": 6, "stage": "post", "question": "After picking D, what else must you check on a host loop?", "options": ["That dt*D/J is under the sampling limit", "The screen resolution", "That K equals D"], "answer": 0, "explanation": "A held damper command chatters or diverges above the limit from lesson 03/01."}
+]

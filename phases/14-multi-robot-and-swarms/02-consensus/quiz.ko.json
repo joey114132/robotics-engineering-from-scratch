@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "로봇이 이웃과만 값을 주고받습니다. 그래도 그룹 평균에 도달할 수 있습니까?", "options": ["아니다, 중앙 노드가 필요하다", "그렇다, 이웃 쪽으로 반복해서 움직이면 된다", "완전 그래프에서만 가능하다"], "answer": 1, "explanation": "국소 규칙 x_i += eps * sum_j (x_j - x_i)는 평균을 보존하고 불일치를 줄입니다."},
+  {"id": 2, "stage": "check", "question": "x <- (I - eps L) x 의 점근 속도를 정하는 양은 무엇입니까?", "options": ["L의 가장 큰 고유값", "두 번째로 작은 고유값 lambda2", "연결 수뿐이다"], "answer": 1, "explanation": "끝까지 남는 가장 느린 모드가 step마다 1 - eps * lambda2배로 줄어듭니다."},
+  {"id": 3, "stage": "check", "question": "lambda2 = 0 이면 무엇을 알 수 있습니까?", "options": ["그래프가 끊어져 일부 로봇은 끝내 합의하지 못한다", "step 크기가 너무 크다", "그래프가 완전하다"], "answer": 0, "explanation": "0인 고유값이 하나 더 있으면 상수 모드가 하나 더 있어서 무리마다 다른 값을 유지합니다."},
+  {"id": 4, "stage": "check", "question": "평균이 매 step 변하지 않는 이유는 무엇입니까?", "options": ["L의 행 합이 0이고 L이 대칭이다", "eps가 작다", "링이 대칭이다"], "answer": 0, "explanation": "모든 성분이 1인 벡터가 좌우 영공간 벡터라서 x의 합이 변하지 않습니다."},
+  {"id": 5, "stage": "post", "question": "갱신이 발산하는 step 크기는 어느 것입니까?", "options": ["eps > 2 / lambda_max", "eps < 1", "eps = lambda2"], "answer": 0, "explanation": "eps * lambda_k > 2 인 모드는 크기가 1을 넘는 배율로 곱해집니다."},
+  {"id": 6, "stage": "post", "question": "링에 장거리 연결을 하나 더하면 lambda2는 보통 어떻게 됩니까?", "options": ["내려간다", "올라가서 합의가 빨라진다", "정확히 그대로다"], "answer": 1, "explanation": "연결을 더해도 lambda2는 내려가지 않고, 링을 가로지르는 지름길은 보통 올립니다."}
+]

@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "The gyro is a smooth talker who drifts, and the accelerometer is honest but twitchy. One time constant decides who speaks when.",
+    "mission": "In `code/main.py` swap the `best_tau(dt, b, sa)` argument of `complementary(...)` for `0.05` and run `python3 code/main.py`. Predict whether fused rmse beats the best tau's 0.0068."
+  },
+  "ko": {
+    "hook": "gyro는 말이 매끄럽지만 슬금슬금 밀리고 가속도계는 정직하지만 떨립니다. 누가 언제 말할지는 시간상수 하나가 정합니다.",
+    "mission": "`code/main.py`의 `complementary(...)`에서 `best_tau(dt, b, sa)`를 `0.05`로 바꾸고 `python3 code/main.py`를 실행하세요. fused rmse가 최적 tau의 약 0.0068보다 나을지 예측하세요."
+  },
+  "toy": null
+}

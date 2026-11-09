@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "같은 gain으로 bench에서는 안정적인데 실제 controller에서 떨립니다. 가장 먼저 의심할 것은 무엇입니까?",
+  "options": [
+   "모터 토크 상수",
+   "계산하지 않은 loop 지연",
+   "encoder 해상도뿐"
+  ],
+  "answer": 1,
+  "explanation": "지연은 gain을 바꾸지 않고 phase margin을 깎습니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "loop의 delay margin은 무엇과 같습니까?",
+  "options": [
+   "PM / wc",
+   "PM * wc",
+   "wc / PM"
+  ],
+  "answer": 0,
+  "explanation": "지연 T는 wc*T의 위상을 쓰므로 T = PM / wc에서 전부 소모됩니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "zero-order-hold 명령은 이상적인 연속 명령보다 얼마나 늦습니까?",
+  "options": [
+   "한 주기",
+   "반 주기",
+   "늦지 않는다"
+  ],
+  "answer": 1,
+  "explanation": "평균적으로 유지된 값은 반 주기 묵은 값입니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "순수 지연이 loop gain의 크기를 바꿉니까?",
+  "options": [
+   "그렇다. 낮춘다",
+   "아니다. 위상만 바꾼다",
+   "그렇다. 높인다"
+  ],
+  "answer": 1,
+  "explanation": "exp(-j*w*T)의 크기는 1입니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "지연이 고정일 때 kd를 최적점보다 훨씬 크게 올리면 delay margin은 어떻게 됩니까?",
+  "options": [
+   "한없이 커진다",
+   "crossover가 margin보다 빨리 올라가 줄어든다",
+   "변하지 않는다"
+  ],
+  "answer": 1,
+  "explanation": "kd가 크면 delay margin은 대략 1/kd로 줄어듭니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "지연 예산이 3 ms 늘었습니다. 가장 알맞은 대응은 무엇입니까?",
+  "options": [
+   "안전한 최대 kd를 다시 계산한다",
+   "kp를 올려 보상한다",
+   "3 ms는 작으니 무시한다"
+  ],
+  "answer": 0,
+  "explanation": "loop 지연이 늘면 안전한 kd가 줄어듭니다."
+ }
+]

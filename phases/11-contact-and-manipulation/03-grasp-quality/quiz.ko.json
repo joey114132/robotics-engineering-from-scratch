@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "손가락 두 개로 상자를 집었는데 상자가 돌아 빠집니다. 무엇이 빠졌을 수 있습니까?",
+  "options": [
+   "force closure, 즉 접촉이 모든 하중 방향을 견디지 못합니다",
+   "쥐는 힘을 올리면 항상 해결됩니다",
+   "더 무거운 상자"
+  ],
+  "answer": 0,
+  "explanation": "접촉 wrench가 모든 방향을 span하지 못하면 세게 쥐어도 실패할 수 있습니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "평면 wrench는 숫자 몇 개로 이루어집니까?",
+  "options": [
+   "두 개",
+   "세 개",
+   "여섯 개"
+  ],
+  "answer": 1,
+  "explanation": "fx, fy와 토크 하나입니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "마찰 없는 마주 보는 접촉 두 개는 독립인 wrench 방향을 몇 개 줍니까?",
+  "options": [
+   "두 개",
+   "세 개",
+   "한 개"
+  ],
+  "answer": 2,
+  "explanation": "법선과 토크가 모두 한 직선 위에 있어 한 방향의 양쪽만 span합니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "force closure의 판정 조건은 무엇입니까?",
+  "options": [
+   "wrench hull이 원점을 엄밀히 안쪽에 품습니다",
+   "접촉이 서로 반대편에 있습니다",
+   "쥐는 힘이 무게보다 큽니다"
+  ],
+  "answer": 0,
+  "explanation": "그러면 음이 아닌 접촉력으로 어떤 하중도 균형 맞출 수 있습니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "폭 2인 상자에 jaw 둘이 있고 mu = 0.4입니다. 닫히는 최대 수직 offset은 얼마입니까?",
+  "options": [
+   "0.4",
+   "0.8",
+   "1.6"
+  ],
+  "answer": 1,
+  "explanation": "두 접촉을 잇는 직선이 cone 안에 있어야 하므로 offset / 2 <= mu입니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "닫힌 파지의 epsilon이 아주 작다면 무엇을 뜻합니까?",
+  "options": [
+   "파지가 튼튼합니다",
+   "작은 오차에도 파지가 약합니다",
+   "물체가 가볍습니다"
+  ],
+  "answer": 1,
+  "explanation": "원점이 hull의 면 가까이 있으므로 작은 변화로도 열립니다."
+ }
+]

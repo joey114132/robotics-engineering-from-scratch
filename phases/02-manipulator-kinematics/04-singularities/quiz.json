@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "The arm is almost fully straight and you command a radial tip velocity. What does a plain J inverse return?",
+  "options": [
+   "Very large joint speeds",
+   "Zero joint speeds",
+   "Exactly the right speeds"
+  ],
+  "answer": 0,
+  "explanation": "The radial direction is nearly lost, so the inverse divides by something close to zero."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "For this two-link arm, det J equals?",
+  "options": [
+   "L1 L2 sin q2",
+   "L1 + L2",
+   "L1 L2 cos q1"
+  ],
+  "answer": 0,
+  "explanation": "It depends on the elbow angle only, so singularities are q2 = 0 and q2 = pi."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "At the fully stretched pose, which tip motion is impossible?",
+  "options": [
+   "Radial (along the arm)",
+   "Sideways (perpendicular to the arm)",
+   "Both"
+  ],
+  "answer": 0,
+  "explanation": "Both joints then move the tip only sideways."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "What does damped least squares guarantee about joint speed?",
+  "options": [
+   "|qd| <= |v| / (2 lam)",
+   "|qd| = 0",
+   "|qd| = |v|"
+  ],
+  "answer": 0,
+  "explanation": "Each singular value s becomes s / (s^2 + lam^2), at most 1 / (2 lam)."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "What is the price of damping?",
+  "options": [
+   "Near a singularity the tip no longer follows the command",
+   "The arm becomes unstable",
+   "Forward kinematics changes"
+  ],
+  "answer": 0,
+  "explanation": "Bounded speed and exact tracking cannot both hold where the Jacobian loses rank."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Where is manipulability largest for this arm?",
+  "options": [
+   "A right-angle elbow",
+   "Fully stretched",
+   "Fully folded"
+  ],
+  "answer": 0,
+  "explanation": "|det J| = L1 L2 |sin q2| peaks at q2 = pi / 2."
+ }
+]

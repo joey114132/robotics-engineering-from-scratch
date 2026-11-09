@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A loop is stable on the bench but buzzes on the real controller with the same gains. First suspect?",
+  "options": [
+   "The motor torque constant",
+   "Unaccounted loop delay",
+   "Encoder resolution only"
+  ],
+  "answer": 1,
+  "explanation": "Delay removes phase margin without changing the gains."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Delay margin of a loop equals?",
+  "options": [
+   "PM / wc",
+   "PM * wc",
+   "wc / PM"
+  ],
+  "answer": 0,
+  "explanation": "A delay T costs wc*T of phase, so T = PM / wc uses it all."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "A zero-order-hold command lags an ideal continuous one by?",
+  "options": [
+   "A full period",
+   "Half a period",
+   "Nothing"
+  ],
+  "answer": 1,
+  "explanation": "On average the held value is half a period old."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Does a pure delay change the loop gain magnitude?",
+  "options": [
+   "Yes, it lowers it",
+   "No, only the phase",
+   "Yes, it raises it"
+  ],
+  "answer": 1,
+  "explanation": "exp(-j*w*T) has magnitude one."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "With a fixed delay, raising kd far past its optimum does what to the delay margin?",
+  "options": [
+   "Raises it without limit",
+   "Lowers it, because the crossover rises faster than the margin",
+   "Leaves it unchanged"
+  ],
+  "answer": 1,
+  "explanation": "Delay margin falls roughly as 1/kd at high kd."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Your budget grows by 3 ms. Best response?",
+  "options": [
+   "Recompute the largest safe kd",
+   "Raise kp to compensate",
+   "Ignore it, 3 ms is small"
+  ],
+  "answer": 0,
+  "explanation": "The safe kd shrinks as the loop delay grows."
+ }
+]

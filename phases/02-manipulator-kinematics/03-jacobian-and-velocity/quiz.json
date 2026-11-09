@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "What does column j of the Jacobian mean?",
+  "options": [
+   "The tip velocity per unit speed of joint j",
+   "The torque of joint j",
+   "The length of link j"
+  ],
+  "answer": 0,
+  "explanation": "Each column is the effect of one joint moving alone."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Which relation maps a tip force to joint torques in a static pose?",
+  "options": [
+   "tau = J^T F",
+   "tau = J F",
+   "tau = F / J"
+  ],
+  "answer": 0,
+  "explanation": "Power balance forces the transpose."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Analytic and finite-difference Jacobians disagree by 0.3 at a random pose. What is the most likely cause?",
+  "options": [
+   "A bug in one of them",
+   "Rounding noise",
+   "The arm is near a singularity"
+  ],
+  "answer": 0,
+  "explanation": "Rounding noise is near 1e-10 here, so 0.3 is a real error."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "A central-difference step of 1e-12 rad is used. What happens?",
+  "options": [
+   "The reference is dominated by rounding noise",
+   "It is the most accurate",
+   "Nothing changes"
+  ],
+  "answer": 0,
+  "explanation": "The tip change is smaller than float64 can resolve reliably."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "A 2 kg mass hangs at the tip. How do you get the joint torques that hold it?",
+  "options": [
+   "J^T times the weight force at the tip",
+   "J times the weight",
+   "Divide the weight by the joint count"
+  ],
+  "answer": 0,
+  "explanation": "A tip force goes to joints through J transposed."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Why is a Jacobian test at one pose not enough?",
+  "options": [
+   "A wrong sign or link order can still pass at a symmetric pose",
+   "Jacobians change with time",
+   "Poses are random"
+  ],
+  "answer": 0,
+  "explanation": "Check many random poses, as for the DH table in lesson 1."
+ }
+]

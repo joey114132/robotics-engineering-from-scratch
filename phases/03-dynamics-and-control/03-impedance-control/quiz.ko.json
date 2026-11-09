@@ -1,0 +1,74 @@
+[
+{
+"id": 1,
+"stage": "pre",
+"question": "관절이 밀림에 부드럽게 양보해야 합니다. 어떤 컨트롤러 형태가 맞습니까?",
+"options": [
+"매우 뻣뻣한 position loop",
+"가상 스프링-damper(임피던스)",
+"open-loop 토크"
+],
+"answer": 1,
+"explanation": "임피던스는 관절이 어떻게 밀어낼지를 정합니다."
+},
+{
+"id": 2,
+"stage": "check",
+"question": "일정한 외부 토크 F와 강성 K에서 정상 처짐은 얼마입니까?",
+"options": [
+"F*K",
+"F/K",
+"K/F"
+],
+"answer": 1,
+"explanation": "정지 상태에서는 K*q = F입니다."
+},
+{
+"id": 3,
+"stage": "check",
+"question": "K, J, D에서 감쇠비는 무엇입니까?",
+"options": [
+"D / (2 sqrt(K J))",
+"D / K",
+"sqrt(K / J)"
+],
+"answer": 0,
+"explanation": "2차 시스템의 표준 형태입니다."
+},
+{
+"id": 4,
+"stage": "check",
+"question": "zeta = 1이면 어떻게 됩니까?",
+"options": [
+"영원히 진동한다",
+"overshoot가 없다",
+"발산한다"
+],
+"answer": 1,
+"explanation": "임계 감쇠는 overshoot 없이 돌아옵니다."
+},
+{
+"id": 5,
+"stage": "post",
+"question": "20 N에서 처짐이 최대 2 cm여야 합니다. 최소 K는 얼마입니까?",
+"options": [
+"10 N/m",
+"1000 N/m",
+"40 N/m"
+],
+"answer": 1,
+"explanation": "K = F / x = 20 / 0.02입니다."
+},
+{
+"id": 6,
+"stage": "post",
+"question": "D를 고른 뒤 host loop에서 또 무엇을 확인해야 합니까?",
+"options": [
+"dt*D/J가 샘플링 한계 아래인지",
+"화면 해상도",
+"K가 D와 같은지"
+],
+"answer": 0,
+"explanation": "붙잡힌 damper 명령은 레슨 03/01의 한계를 넘으면 떨거나 발산합니다."
+}
+]

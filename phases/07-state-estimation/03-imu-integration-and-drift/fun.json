@@ -1,0 +1,11 @@
+{
+  "en": {
+    "hook": "A tiny constant error, integrated, becomes a runaway. I sat perfectly still and still walked ten meters. Blame the math.",
+    "mission": "In the first `gyro_angle(...)` call in `code/main.py` change the bias `0.01` to `0.02` and run `python3 code/main.py`. Predict the angle error after 10 s, then check it against `b t`."
+  },
+  "ko": {
+    "hook": "가만히 앉아 있었는데도 10 m를 걸었습니다. 탓은 적분에 있습니다. 아주 작은 상수 오차도 적분하면 폭주합니다.",
+    "mission": "`code/main.py`의 첫 `gyro_angle(...)` 호출에서 bias `0.01`을 `0.02`로 바꾸고 `python3 code/main.py`를 실행하세요. 10초 뒤 각도 오차를 먼저 예측하고 `b t`와 맞는지 확인하세요."
+  },
+  "toy": null
+}

@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Why can a faster loop make slow-speed velocity noisier?",
+  "options": [
+   "The encoder loses counts",
+   "Differences cancel noise",
+   "The velocity step 2*pi/(CPR*dt) grows as dt shrinks"
+  ],
+  "answer": 2,
+  "explanation": "One count per shorter sample is a larger speed."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Smallest non-zero speed from a one-sample difference with CPR = 1000, dt = 1 ms?",
+  "options": [
+   "2*pi rad/s",
+   "2*pi/1000 rad/s",
+   "1000 rad/s"
+  ],
+  "answer": 0,
+  "explanation": "2*pi / (1000 * 0.001) = 2*pi."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "A slow constant ramp is differenced. The long-run average velocity is?",
+  "options": [
+   "Biased low",
+   "Correct",
+   "Always zero"
+  ],
+  "answer": 1,
+  "explanation": "Counts add up, so only the sample-to-sample values are noisy."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "An n-sample window velocity estimate trails an accelerating signal by?",
+  "options": [
+   "n*dt",
+   "dt",
+   "n*dt/2"
+  ],
+  "answer": 2,
+  "explanation": "The estimate describes the middle of the window."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Doubling the window length does what?",
+  "options": [
+   "Halves the velocity step and doubles the delay",
+   "Doubles the step and halves the delay",
+   "Changes only the delay"
+  ],
+  "answer": 0,
+  "explanation": "Step is step/n, delay is n*dt/2."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "The joint is slow most of the time and kd kicks it. Best first move?",
+  "options": [
+   "Raise the loop rate",
+   "Use a longer window or timing between edges, and check the added delay",
+   "Remove kd entirely"
+  ],
+  "answer": 1,
+  "explanation": "Smoothing cures it, but you must budget for its delay."
+ }
+]
