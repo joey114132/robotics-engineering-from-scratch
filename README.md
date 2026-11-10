@@ -8,6 +8,36 @@ Scope: robotics in general. Manipulators, wheeled and legged robots, aerial vehi
 
 Status: 67 lessons in 17 phases, English and Korean. Every lesson has diagrams drawn in Excalidraw, a data figure, runnable code with tests, a six-question quiz and a reusable checklist skill. The lesson list is in [ROADMAP.md](ROADMAP.md).
 
+## See it
+
+![Learning path: six stages from setup and math to fleets, safety and capstones](docs/img/roadmap.png)
+
+*Seventeen phases in six stages. Each lesson takes about 15 minutes.*
+
+<table>
+<tr>
+<td width="50%"><img src="docs/img/motion-scene.gif" alt="A damped pendulum arm settling while its angle trace shrinks into the target band"></td>
+<td width="50%"><img src="docs/img/motion-singularity.gif" alt="A two-link arm stretching out while the plain inverse joint speed blows up and the damped one stays bounded"></td>
+</tr>
+<tr>
+<td><em>Phase 3 opener: a damped swing settles. Every phase starts with a looping scene.</em></td>
+<td><em>Lesson 02-04: near full stretch the plain inverse needs a huge joint speed, damped least squares stays bounded.</em></td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="25%"><img src="docs/img/index-phone.png" alt="The course home page on a phone: Start button, mascot, level and XP"></td>
+<td width="25%"><img src="docs/img/03-02-gravity-compensation-phone.png" alt="A lesson on a phone: data figures with captions, then the Build It code"></td>
+<td width="50%"><img src="docs/img/cli-home.png" alt="The robo terminal home screen listing the 17 phases and the next lesson"></td>
+</tr>
+<tr>
+<td><em>Website home on a phone.</em></td>
+<td><em>A lesson: figures first, then a few lines of code.</em></td>
+<td><em><code>robo</code> in the terminal, same lessons and progress.</em></td>
+</tr>
+</table>
+
 ## Read it as a website
 
 ```bash
@@ -57,3 +87,5 @@ The multi-page site registers a service worker on http(s) and caches pages and f
 ## License and credits
 
 MIT, see [LICENSE](LICENSE). The lesson shape follows rohitg00/ai-engineering-from-scratch (MIT); the text, code and figures here are original. The site's animations use GSAP 3.15.0 (`scripts/vendor/gsap.min.js`), which keeps its own terms in `scripts/vendor/GSAP-LICENSE.txt`. The Korean text was drafted and checked with tooling and has not been reviewed by a native editor, so corrections are welcome.
+
+The pictures above are regenerated with `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs site|cli|gif` after building the site.
