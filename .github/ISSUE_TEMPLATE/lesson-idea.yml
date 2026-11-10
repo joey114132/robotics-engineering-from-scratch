@@ -1,0 +1,17 @@
+name: Lesson idea
+description: A topic the course should cover
+labels: [enhancement]
+body:
+  - type: input
+    id: topic
+    attributes:
+      label: Topic
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What failure or confusion would it fix?
+      description: One concrete moment where a learner gets stuck.
+    validations:
+      required: true

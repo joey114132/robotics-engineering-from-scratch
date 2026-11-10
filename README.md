@@ -84,6 +84,10 @@ Add `--lang ko`, `--plain` (no colour, for pipes) or `--no-pager`. Progress is a
 The multi-page site registers a service worker on http(s) and caches pages and figures on the reader's device (Clear local data is in the sync panel). Nothing leaves the device. The one-file bundle and the shared Artifact cannot register a worker, so they rely on the browser cache only. Known limits: two `robo` quiz processes running at the same moment can undercount XP (the last save wins on XP, answers are merged); the service worker handles one offline pack download at a time; terminals narrower than 60 columns may wrap.
 
 
+## Fork it
+
+Forks and pull requests are welcome, from a typo to a whole new lesson. Fork the repository, run the two checks in [CONTRIBUTING.md](CONTRIBUTING.md), and the same checks run on your fork through GitHub Actions. Use the green "Use this template" button if you want your own copy without this history. To host your fork's site, run the `site` workflow after choosing GitHub Actions as the Pages source.
+
 ## License and credits
 
 MIT, see [LICENSE](LICENSE). The lesson shape follows rohitg00/ai-engineering-from-scratch (MIT); the text, code and figures here are original. The site's animations use GSAP 3.15.0 (`scripts/vendor/gsap.min.js`), which keeps its own terms in `scripts/vendor/GSAP-LICENSE.txt`. The Korean text was drafted and checked with tooling and has not been reviewed by a native editor, so corrections are welcome.

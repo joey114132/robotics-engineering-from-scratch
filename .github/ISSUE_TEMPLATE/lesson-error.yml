@@ -1,0 +1,25 @@
+name: Error in a lesson
+description: A wrong number, a broken command, a figure that does not match its caption, or a mistranslation
+labels: [bug]
+body:
+  - type: input
+    id: lesson
+    attributes:
+      label: Lesson
+      placeholder: "03-02 Gravity Compensation"
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options: [English text, Korean text, Code or tests, Figure or diagram, Quiz, Website, robo terminal reader]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What is wrong, and what should it say
+      description: A source link helps for any number or claim.
+    validations:
+      required: true
