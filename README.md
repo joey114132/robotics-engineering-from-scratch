@@ -8,6 +8,13 @@ Learn how robots work by building the math and control yourself, in plain numpy,
 
 ![Learning path: six stages from setup and math to fleets, safety and capstones](docs/img/roadmap.png)
 
+<details>
+<summary>See all 17 phases</summary>
+
+![The 17 phases as toy-render covers: setup, math, kinematics, dynamics and control, actuators, software, perception, estimation, mobile robots, planning, legged and aerial, contact, simulation, learning, swarms, safety and capstones](docs/img/phases-gallery.jpg)
+
+</details>
+
 ## What a lesson gives you
 
 - A short "In Plain Words" opening in everyday terms, before any math
@@ -101,6 +108,6 @@ Forks and pull requests are welcome, from a typo to a whole new lesson. Run the 
 
 ## License and credits
 
-MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The banner picture and the Bolt animation are AI-generated (Higgsfield) from the Bolt mascot, and the lesson figures are not. The animations use GSAP 3.15.0, which keeps its own terms in `scripts/vendor/GSAP-LICENSE.txt`.
+MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The banner, the 17 phase covers, the social card background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures and 3D scenes are drawn in code, not generated. The animations use GSAP 3.15.0, which keeps its own terms in `scripts/vendor/GSAP-LICENSE.txt`.
 
 To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs site|cli|gif|gif3d|gallery3d` after building the site.
