@@ -8,5 +8,6 @@
   "mission": "`code/main.py` 데모를 `w`가 `(0, 1, 6)`일 때 돌려 보세요. 확장한 칸 수와 경로 비용을 비교하고 어느 가중치부터 안전하지 않은지 말해 보세요."
  },
  "toy": "astar-flood",
- "motion": "astar-weight"
+ "motion": "astar-weight",
+ "three": "warehouse-astar-3d"
 }

@@ -70,7 +70,7 @@ console.log(JSON.stringify({spec, model:s.model, calls, registered:Object.keys(r
 def test_registration_fun_and_bilingual_rest(phase, slug, name):
     js = ROOT / f"scripts/motion3d/p{phase}.js"
     assert js.exists()
-    assert js.stat().st_size < 20_000
+    assert js.stat().st_size < 45_000  # see PHASE_FILE_MAX in test_motion3d_wave2.py
     path = lesson(phase, slug) / "fun.json"
     assert json.loads(path.read_text())["three"] == name
     for lang in ("en", "ko"):

@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `kx` 튜플에 `3e4`를 추가하세요. 끼일지 들어갈지와 깊이를 짐작한 뒤 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
-  "motion": "peg-wrist-stiffness"
+  "motion": "peg-wrist-stiffness",
+  "three": "peg-wrist-compliance-3d"
 }

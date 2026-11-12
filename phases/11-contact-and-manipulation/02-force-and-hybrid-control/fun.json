@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `5e3`을 `1e4`로 바꾸세요. position 모드의 힘을 먼저 예측한 뒤 `python3 code/main.py`를 실행해 force 모드가 여전히 10인지 확인하세요."
   },
   "toy": null,
-  "motion": "force-loop-surface-swap"
+  "motion": "force-loop-surface-swap",
+  "three": "probe-sponge-3d"
 }

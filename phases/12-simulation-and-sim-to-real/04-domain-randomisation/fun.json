@@ -8,5 +8,6 @@
   "mission": "`code/main.py`의 width 튜플을 `(0.0, 0.15, 0.3)`으로 바꾸세요. 0.15로 튜닝한 쪽이 0.0으로 튜닝한 쪽보다 width 0.3 세계에서 나을지 예측한 뒤 `python3 code/main.py`를 실행하세요."
  },
  "toy": null,
- "motion": "domain-rand"
+ "motion": "domain-rand",
+ "three": "gain-fan-3d"
 }

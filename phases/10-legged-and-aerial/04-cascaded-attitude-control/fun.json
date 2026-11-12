@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `I, kp, kd, ki = ...` 줄에서 마지막 값 `0.5`를 `0.0`으로 바꾸고 `python3 code/main.py`를 실행하세요. cascade가 PD와 어떻게 비교될지 예측하고 이유를 설명해 보세요."
   },
   "toy": null,
-  "motion": "gust-integral"
+  "motion": "gust-integral",
+  "three": "attitude-gust-stand-3d"
 }

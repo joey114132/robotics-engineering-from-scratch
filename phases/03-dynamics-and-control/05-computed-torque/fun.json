@@ -8,5 +8,6 @@
     "mission": "`cd code && python3 -c \"from main import *; h=dict(PARAMS,m2=1.2); print([tracking_error(c,PARAMS,h).max() for c in (pd_control,computed_torque)])\"`를 실행해 보세요. plant가 model보다 20% 무겁습니다. computed torque가 여전히 이길지 예측해 보세요."
   },
   "toy": null,
-  "motion": "tracking-arms"
+  "motion": "tracking-arms",
+  "three": "computed-torque-pair-3d"
 }

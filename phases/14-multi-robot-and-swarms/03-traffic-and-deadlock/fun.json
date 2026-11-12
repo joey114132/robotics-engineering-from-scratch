@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `Sim(...)` 줄에서 `\"naive\"`를 `\"reserve\"`로 바꾸세요. `find_cycle`이 무엇을 출력할지 예측한 뒤 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
- "motion": "deadlock-ring"
+ "motion": "deadlock-ring",
+ "three": "deadlock-grid-3d"
 }

@@ -8,5 +8,6 @@
   "mission": "`code/main.py`에서 `r`을 0.01, 1, 100으로 바꿔 `dare`를 돌리세요. 첫 성분이 가장 큰 K가 어느 것일지 예측한 뒤 `K`를 출력해 확인하세요."
  },
  "toy": "lqr-tradeoff",
- "motion": "riccati-converge"
+ "motion": "riccati-converge",
+  "three": "lqr-cart-rail-3d"
 }

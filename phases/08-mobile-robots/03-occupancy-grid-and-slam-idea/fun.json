@@ -8,5 +8,6 @@
   "mission": "`code/main.py`에서 `(0.0, 0.001, 0.003)`의 `0.001`을 `0.0005`로 바꾸고 `python3 code/main.py`를 실행하세요. 정밀도가 0.89와 0.41 사이 어디에 놓일지 먼저 맞혀 보세요."
  },
  "toy": null,
- "motion": "lidar-grid"
+ "motion": "lidar-grid",
+ "three": "occupancy-room-3d"
 }

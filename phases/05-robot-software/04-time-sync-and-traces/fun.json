@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `exchange(0.123, 0.03, 0.01)`을 `exchange(0.123, 0.02, 0.02)`로 바꾸세요. offset 추정값을 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
-  "motion": "clock-order"
+  "motion": "clock-order",
+  "three": "clock-offset-3d"
 }

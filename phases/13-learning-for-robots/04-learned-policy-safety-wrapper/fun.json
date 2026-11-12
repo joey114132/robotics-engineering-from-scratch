@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `simulate()`에서 `max_step=0.2`를 `0.05`로 바꾸세요. `rate` 횟수가 늘지 줄지 예측한 뒤 `python3 code/main.py`를 실행해 카운터를 비교하세요."
   },
   "toy": null,
-  "motion": "wrapper-contains-burst"
+  "motion": "wrapper-contains-burst",
+  "three": "wrapper-rails-3d"
 }

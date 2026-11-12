@@ -8,5 +8,6 @@
   "mission": "`code/main.py`에서 `[4.0, 0.0]`에서 출발해 `umax` 0.5로 `N`을 2, 5, 20으로 `simulate`를 돌리세요. 각 실행의 최저 위치를 출력해 어느 쪽이 가장 많이 넘치는지 보세요."
  },
  "toy": "mpc-horizon",
- "motion": "replan-loop"
+ "motion": "replan-loop",
+  "three": "mpc-horizon-rail-3d"
 }

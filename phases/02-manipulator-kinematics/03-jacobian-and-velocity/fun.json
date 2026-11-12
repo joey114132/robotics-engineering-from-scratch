@@ -8,5 +8,6 @@
     "mission": "`cd code && python3 -c \"from main import *; q=np.array([.3,.8]); L=(.5,.4); print(abs(jacobian(q,L)-jacobian_fd(q,L,eps=1e-2)).max())\"`를 실행하세요. 이 숫자가 `python3 code/main.py`가 출력하는 2.8e-11보다 클지 작을지 먼저 예측해 보세요."
   },
   "toy": null,
- "motion": "jacobian-ellipse"
+ "motion": "jacobian-ellipse",
+  "three": "jacobian-push-arm-3d"
 }

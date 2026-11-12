@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `(0.4, 1.5, 4.0)`의 `4.0`을 `2.5`로 바꾸고 `python3 code/main.py`를 실행하세요. 코너 절단이 0.41 m와 1.37 m 사이 어디쯤일지 먼저 예측하세요."
   },
   "toy": null,
-  "motion": "lookahead-race"
+  "motion": "lookahead-race",
+  "three": "pure-pursuit-3d"
 }

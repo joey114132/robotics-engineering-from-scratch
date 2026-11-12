@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `damping_for_zeta(100.0, 1.0, 0.2)`의 `0.2`를 `1.0`으로 바꾸세요. `peak`가 `steady`와 어떻게 다를지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
-  "motion": "push-and-settle"
+  "motion": "push-and-settle",
+  "three": "impedance-spring-joint-3d"
 }

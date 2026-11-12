@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `(1, 3, 10, 30)`을 `(2, 5, 20)`으로 바꾸세요. 3-NN이 90%에 닿으려면 시연이 몇 개 필요할지 짐작한 뒤 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
-  "motion": "demos-fan-in"
+  "motion": "demos-fan-in",
+  "three": "imitation-demos-3d"
 }

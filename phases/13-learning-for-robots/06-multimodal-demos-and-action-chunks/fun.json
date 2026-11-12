@@ -1,3 +1,4 @@
 {"en": {"hook": "Left or right around the box? Ask two friends and average them, and you walk into the box. I just pick one and stay picked.", "mission": "In `code/main.py` change the pair `(8, 4)` in the last loop to `(16, 8)`. Guess whether the jitter rises or falls, then run `python3 code/main.py`."}, "ko": {"hook": "상자의 왼쪽일까요 오른쪽일까요? 친구 둘에게 묻고 평균을 내면 상자에 부딪힙니다. 저는 하나를 골라 끝까지 갑니다.", "mission": "`code/main.py` 마지막 반복문에서 `(8, 4)`를 `(16, 8)`로 바꾸세요. jitter가 오를지 내릴지 예측한 뒤 `python3 code/main.py`를 실행하세요."}, "toy": "chunk-vs-mean",
-  "motion": "average-or-commit"
+  "motion": "average-or-commit",
+  "three": "action-chunk-fork-3d"
 }

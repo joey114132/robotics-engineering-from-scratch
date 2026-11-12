@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `(1, 10, 50)`을 `(5,)`로 바꾸세요. 출력될 last age를 10 ms 안으로 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
- "motion": "queue-depth"
+ "motion": "queue-depth",
+  "three": "topic-queue-tray-3d"
 }

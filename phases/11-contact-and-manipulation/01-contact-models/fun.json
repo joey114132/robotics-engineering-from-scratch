@@ -8,5 +8,6 @@
   "mission": "`code/main.py`의 `simulate(np.radians(deg), 0.5)`에서 `0.5`를 `0.3`으로 바꾸세요. 15, 25, 28, 35도 중 어디가 미끄러질지 예측한 뒤 `python3 code/main.py`를 실행하세요."
  },
  "toy": "friction-cone",
- "motion": "contact-friction"
+ "motion": "contact-friction",
+ "three": "tilting-ramp-cone-3d"
 }

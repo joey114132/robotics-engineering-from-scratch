@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `Controller`에서 `kp=40.0`을 `kp=20.0`으로 바꾸세요. `python3 -m pytest code/tests -q`를 돌려 실패하는 테스트와 이유를 말한 뒤 원래대로 되돌리세요."
   },
   "toy": null,
- "motion": "fake-clock"
+ "motion": "fake-clock",
+ "three": "sign-bug-replay-3d"
 }

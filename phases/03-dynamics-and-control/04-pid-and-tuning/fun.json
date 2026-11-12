@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `(2.0, 30.0)`을 `(40.0,)`으로 바꾸세요. spectral radius가 1보다 클지 작을지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
   "toy": "pd-step",
-  "motion": "windup-race"
+  "motion": "windup-race",
+  "three": "pid-windup-lever-3d"
 }

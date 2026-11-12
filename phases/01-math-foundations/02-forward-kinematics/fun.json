@@ -8,5 +8,6 @@
   "mission": "`python3 code/main.py`를 실행하세요. 두 번째 줄을 읽기 전에 link `[3.0, 1.0]`의 손끝이 가장 가까울 때와 가장 멀 때의 거리를 짐작하고 `reach_bounds`와 비교하세요."
  },
  "toy": null,
- "motion": "fk-chain"
+ "motion": "fk-chain",
+  "three": "planar-fk-reach-3d"
 }

@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `ranked()`를 `ranked(delay=0.3)`으로 바꾸세요. delay 고장이 몇 위로 올라갈지 예측한 뒤 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
- "motion": "stuck-sensor"
+ "motion": "stuck-sensor",
+ "three": "fault-joint-3d"
 }

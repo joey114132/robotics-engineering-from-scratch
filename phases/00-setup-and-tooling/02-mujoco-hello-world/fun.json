@@ -8,5 +8,6 @@
     "mission": "`cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`를 실행하기 전에 어느 scheme이 에너지가 더 많이 남을지 예측해 보세요."
   },
   "toy": null,
- "motion": "euler-energy"
+ "motion": "euler-energy",
+  "three": "pendulum-timestep-3d"
 }

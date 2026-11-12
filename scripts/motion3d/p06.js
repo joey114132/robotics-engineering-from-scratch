@@ -109,3 +109,43 @@
     s.text(14, 84, m.t(`inlier fraction ${(w * 100).toFixed(0)}%: 99% needs ${need} rounds`, `inlier 비율 ${(w * 100).toFixed(0)}%: 99%에는 ${need}회가 필요합니다`), '--mut', 15);
   });
 })();
+
+// 06/02 camera-calibration-3d (wave 3d): a hand-held checkerboard seen from n poses; the intrinsics are recovered by the lesson's DLT + Zhang code.
+// POSES and TAB are the output of 02-camera-calibration/code/main.py run offline: make_views(K, n, noise, seed=1) and calibrate(homography_dlt(...)), K = (620, 580, 330, 235).
+(() => {
+  const I = [[1, 0, 0], [0, 1, 0], [0, 0, 1]], K = [620, 580, 330, 235];
+  const POSES = [[[0.8397,0.3392,0.4241,-0.334,0.9383,-0.0892,-0.4282,-0.0668,0.9012],[0.045,-0.019,0.669]],[[0.8768,-0.2924,0.3818,0.4245,0.8436,-0.3289,-0.2259,0.4504,0.8638],[0.016,-0.025,0.807]],[[0.9048,-0.2849,-0.3166,0.158,0.9148,-0.3717,0.3955,0.2863,0.8727],[-0.031,-0.011,0.593]],[[0.9981,0.0425,0.0438,-0.0538,0.9517,0.3023,-0.0289,-0.3041,0.9522],[0.046,0.045,0.819]],[[0.8976,0.0354,-0.4393,-0.1813,0.9382,-0.2948,0.4017,0.3443,0.8486],[0.006,0.012,0.6]],[[0.9933,0.1156,-0.0053,-0.1087,0.9482,0.2986,0.0396,-0.296,0.9544],[0.011,-0.025,0.54]]];
+  const TAB = [[[620.0,580.0,330.0,235.0,0.0],[620.0,580.0,330.0,235.0,0.0],[620.0,580.0,330.0,235.0,0.0],[620.0,580.0,330.0,235.0,0.0],[620.0,580.0,330.0,235.0,0.0]],[[617.2,577.6,331.6,234.1,1.91],[617.3,578.0,331.0,234.1,1.48],[618.0,578.5,330.9,234.3,1.21],[618.1,578.5,330.9,234.2,1.33],[618.9,579.1,331.0,234.5,1.13]],[[614.3,575.1,333.2,233.2,3.88],[614.7,575.9,332.0,233.1,2.95],[616.0,577.0,331.8,233.7,2.39],[616.2,577.1,331.9,233.3,2.64],[617.8,578.2,332.0,234.0,2.24]],[[611.3,572.5,334.9,232.3,5.92],[612.0,573.8,332.9,232.2,4.41],[614.1,575.5,332.7,233.0,3.56],[614.4,575.6,332.8,232.5,3.93],[616.7,577.4,333.0,233.5,3.35]],[[608.1,569.7,336.7,231.4,8.02],[609.3,571.8,333.9,231.3,5.87],[612.2,574.1,333.6,232.4,4.7],[612.6,574.3,333.7,231.7,5.19],[615.7,576.6,333.9,233.1,4.44]],[[604.8,566.9,338.5,230.4,10.19],[606.5,569.7,334.8,230.3,7.32],[610.4,572.7,334.4,231.8,5.82],[610.8,572.9,334.6,231.0,6.44],[614.7,575.8,334.9,232.6,5.52]],[[601.4,563.9,340.4,229.4,12.41],[603.8,567.5,335.7,229.4,8.76],[608.6,571.3,335.3,231.2,6.92],[609.1,571.6,335.6,230.2,7.67],[613.7,575.0,335.9,232.2,6.6]],[[597.9,560.7,342.3,228.4,14.7],[601.0,565.4,336.6,228.4,10.19],[606.8,570.0,336.1,230.7,7.99],[607.4,570.3,336.5,229.5,8.88],[612.7,574.3,336.8,231.8,7.66]],[[594.2,557.5,344.3,227.4,17.04],[598.2,563.3,337.4,227.5,11.62],[605.0,568.7,337.0,230.2,9.05],[605.8,569.0,337.4,228.8,10.08],[611.8,573.6,337.8,231.3,8.71]]];
+  const GRID = []; for (let i = -3; i <= 3; i++) for (let j = -2; j <= 2; j++) GRID.push([.06 * i, .06 * j]);
+  // camera frame (x right, y down, z forward) to the engine world (x, z, -y), as in the rest of this file
+  const W = c => [c[0], c[2], -c[1]];
+  const onBoard = (v, X, Y) => { const [r, t] = POSES[v]; return W([r[0] * X + r[1] * Y + t[0], r[3] * X + r[4] * Y + t[1], r[6] * X + r[7] * Y + t[2]]); };
+  window.MOTION.three('camera-calibration-3d', {
+    en: 'A hand-held checkerboard is shown to a camera from several tilts; more views and less pixel noise pull the estimated lens numbers toward the true ones',
+    ko: '손으로 든 체커보드를 여러 기울기로 카메라에 보여 줍니다. 자세 수가 많고 pixel noise가 작을수록 추정한 렌즈 값이 실제 값에 가까워집니다',
+    cap: ['Each plate is the lesson’s 7 x 5 grid with 0.06 m pitch, seen from one of 6 random tilts (up to 0.5 rad) at 0.54 to 0.82 m; the newest view is blue. The true camera is fx = 620, fy = 580, cx = 330, cy = 235 px. The numbers are the lesson’s own output (homography_dlt per view, then calibrate, seed 1) for the first n views with Gaussian pixel noise of the slider’s sigma, run offline and stored in a table, so the browser does not redo the SVD. The pixel error is the lesson’s RMS reprojection distance of random 3D points under the estimated and true intrinsics. The lesson’s own run is 6 views and 0.5 px (617.8, 578.2, 332.0, 234.0, 2.24 px). Two views is the minimum the code accepts.',
+      '판은 수업의 7 x 5 격자(간격 0.06 m)이고 최대 0.5 rad까지 무작위로 기울어진 6가지 자세에서 0.54~0.82 m 거리에 놓입니다. 가장 최근 자세는 파란색입니다. 실제 카메라는 fx = 620, fy = 580, cx = 330, cy = 235 px입니다. 표시되는 값은 수업 코드의 결과(view마다 homography_dlt, 이어서 calibrate, seed 1)로, 슬라이더의 sigma만큼 Gaussian pixel noise를 준 앞쪽 n개 자세에 대해 미리 돌려 표로 저장한 것입니다. 그래서 브라우저가 SVD를 다시 풀지 않습니다. Pixel error는 수업의 RMS reprojection 거리로, 임의의 3D 점을 추정 intrinsics와 실제 intrinsics로 투영해 비교한 값입니다. 수업의 실행은 자세 6개와 noise 0.5 px(617.8, 578.2, 332.0, 234.0, 2.24 px)입니다. 자세 2개가 코드가 받아 주는 최소입니다.'],
+    period: 12, rest: 8, H: 310, unit: 300, look: [0, .45, 0], oy: 15, cam: {yaw: .75, pitch: .3, dist: 8},
+    controls: [
+      {id: 'n', en: 'number of views', ko: '자세 수', min: 2, max: 6, step: 1, auto: t => 2 + Math.floor(t / 12 * 5)},
+      {id: 'sig', en: 'pixel noise sigma', ko: 'pixel noise sigma', min: 0, max: 2, step: .25, dec: 2, unit: ' px', val: .5},
+    ],
+  }, (s, t, m) => {
+    const n = s.v.n, e = TAB[Math.round(s.v.sig / .25)][n - 2], d = .9;
+    const fr = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => W([a * K[2] / K[0] * d, b * K[3] / K[1] * d, d]));
+    s.poly(fr, '--line', {a: .08, edge: '--line', w: 1});
+    fr.forEach(c => s.line([0, 0, 0], c, '--line', 1));
+    s.box([0, .03, 0], [.05, .04, .04], I, '--pd'); s.box([0, .08, 0], [.025, .025, .025], I, '--fg');
+    s.label([0, 0, 0], m.t('camera', '카메라'), '--mut', 14, 'center', 0, 24);
+    for (let v = 0; v < n; v++) {
+      const last = v === n - 1, corners = [[-.21, -.15], [.21, -.15], [.21, .15], [-.21, .15]].map(([x, y]) => onBoard(v, x, y));
+      s.poly(corners, last ? '--pf' : '--mut', {a: last ? .3 : .12, edge: last ? '--pf' : '--line', w: last ? 2 : 1});
+      s.points(GRID.map(([x, y]) => onBoard(v, x, y)), last ? '--fg' : '--mut', last ? 2.2 : 1.6, {bias: -1});
+    }
+    const f = (x, tru) => `${x.toFixed(1)} (${tru})`;
+    s.text(14, 24, m.t(`fx ${f(e[0], 620)}  fy ${f(e[1], 580)}`, `fx ${f(e[0], 620)}  fy ${f(e[1], 580)}`), '--fg', 14);
+    s.text(14, 44, m.t(`cx ${f(e[2], 330)}  cy ${f(e[3], 235)}`, `cx ${f(e[2], 330)}  cy ${f(e[3], 235)}`), '--fg', 14);
+    s.text(14, 64, m.t(`pixel error ${e[4].toFixed(2)} px`, `pixel error ${e[4].toFixed(2)} px`), e[4] < 1 ? '--ok' : '--bad', 15);
+    s.text(466, 24, m.t(`${n} views, σ ${s.v.sig.toFixed(2)} px`, `자세 ${n}개, σ ${s.v.sig.toFixed(2)} px`), '--mut', 14, 'right');
+  });
+})();

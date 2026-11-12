@@ -8,5 +8,6 @@
   "mission": "`code/main.py`의 `(0, 2, 4)`를 `(0, 1, 6)`으로 바꾸세요. DAgger 한 라운드가 plain cloning보다 얼마나 올려 줄지 짐작한 뒤 `python3 code/main.py`를 실행하세요."
  },
  "toy": null,
- "motion": "bc-drift"
+ "motion": "bc-drift",
+ "three": "bc-drift-3d"
 }

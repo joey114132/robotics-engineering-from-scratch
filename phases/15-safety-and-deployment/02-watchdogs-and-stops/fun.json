@@ -8,5 +8,6 @@
   "mission": "0.5 rad 여유로 4 rad/s에서 a=8일 때 timeout이 가능한지 예측한 뒤 `cd code && python3 -c 'from main import max_timeout; print(max_timeout(0.5, 4.0, 8.0))'`를 실행하세요. 에러도 정답입니다."
  },
  "toy": "watchdog-budget",
- "motion": "watchdog-stop"
+ "motion": "watchdog-stop",
+ "three": "watchdog-stop-3d"
 }

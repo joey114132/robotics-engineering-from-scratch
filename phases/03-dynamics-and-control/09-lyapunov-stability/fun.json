@@ -8,5 +8,6 @@
   "mission": "`code/main.py`에서 `kd`를 -0.2, -0.1, 0.0으로 바꿔 `check`를 부르세요(c는 0.1입니다). 최악 기울기의 부호를 각각 예측하고 실행해서 부호가 바뀌는 정확한 `kd`를 찾으세요."
  },
  "toy": "lyapunov-arrows",
- "motion": "energy-falls"
+ "motion": "energy-falls",
+  "three": "lyapunov-bowl-3d"
 }

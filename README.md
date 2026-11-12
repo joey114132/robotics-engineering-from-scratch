@@ -9,7 +9,7 @@ Learn how robots work by building the math and control yourself, in plain numpy,
 ## What a lesson gives you
 
 - A short "In Plain Words" opening in everyday terms, before any math
-- An animation, and for some lessons a toy you can drag or a 3D scene you can orbit (25 lessons so far)
+- An animation and a 3D scene you can orbit, and for some lessons a toy you can drag
 - Diagrams and data figures
 - Code that runs, with tests
 - A six-question quiz and a one-page checklist you can reuse

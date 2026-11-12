@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 느린 callback의 `60`을 `30`으로 바꾸세요. thread 1개일 때 timer의 최악 대기를 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
-  "motion": "executor-queue"
+  "motion": "executor-queue",
+  "three": "executor-lanes-3d"
 }

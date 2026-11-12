@@ -8,5 +8,6 @@
   "mission": "`code/main.py`의 `energy_drift` 파라미터에서 `m2`를 두 배로 하고 `h_sign=1`과 `h_sign=-1`로 돌리세요. 어느 쪽이 0 근처에 머물고 다른 쪽은 얼마나 흔들리나요?"
  },
  "toy": "inertia-by-pose",
- "motion": "free-motion-energy"
+ "motion": "free-motion-energy",
+  "three": "arm-energy-sign-3d"
 }

@@ -8,5 +8,6 @@
   "mission": "`code/main.py`에서 `T, dt = 2.0, 0.002`를 `T, dt = 1.0, 0.002`로 바꾸고 `python3 code/main.py`를 실행하세요. 움직임이 절반 시간이면 quintic peak jerk(현재 7.5)가 몇 배가 될지 예측하세요."
  },
  "toy": null,
- "motion": "trapezoid-profile"
+ "motion": "trapezoid-profile",
+ "three": "trajectory-lanes-3d"
 }

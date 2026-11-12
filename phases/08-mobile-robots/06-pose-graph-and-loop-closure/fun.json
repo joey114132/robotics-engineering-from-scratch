@@ -8,5 +8,6 @@
   "mission": "`code/main.py`에서 `bias=0.02`를 `0.04`로 바꿔 실행하세요. 폐쇄 뒤 rms 오차가 0.2 m 아래인지 예측한 다음 확인하세요."
  },
  "toy": "pose-graph-closure",
- "motion": "loop-bend"
+ "motion": "loop-bend",
+ "three": "pose-graph-loop-3d"
 }

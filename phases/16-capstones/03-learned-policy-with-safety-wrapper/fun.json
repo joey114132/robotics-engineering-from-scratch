@@ -8,5 +8,6 @@
   "mission": "마무리 과제입니다. `code/main.py`에서 `Safety()`를 `Safety(max_age=30)`으로 바꾸세요. lost-observation run의 `hold` 횟수와 peak q를 예측한 뒤 `python3 code/main.py`를 실행하세요."
  },
  "toy": null,
- "motion": "spike-wrapper"
+ "motion": "spike-wrapper",
+ "three": "wrapped-policy-arms-3d"
 }

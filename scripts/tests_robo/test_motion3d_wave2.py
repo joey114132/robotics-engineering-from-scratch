@@ -19,6 +19,9 @@ SCENES = [
     ("16", "02", "navigation-floor-3d"),
 ]
 
+# One phase file is loaded with the 5 KB gzip engine; the largest is about 15 KB gzip (measured 2026-11-12), so a page stays near 20 KB.
+PHASE_FILE_MAX = 45_000
+
 
 def lesson(phase, number):
     return next((ROOT / "phases").glob(f"{phase}-*/{number}-*"))
@@ -39,8 +42,8 @@ global.window = { MOTION: {} };
 vm.runInThisContext(fs.readFileSync('scripts/motion3d/00-engine.js', 'utf8'));
 const scenes = {};
 window.MOTION.three = (name, spec, frame) => { scenes[name] = {spec, frame}; };
-for (const p of ['00','04','05','12','13','16'])
-  vm.runInThisContext(fs.readFileSync(`scripts/motion3d/p${p}.js`, 'utf8'));
+for (const f of fs.readdirSync('scripts/motion3d').filter(f => /^p[0-9][0-9][.]js$/.test(f)).sort())
+  vm.runInThisContext(fs.readFileSync(`scripts/motion3d/${f}`, 'utf8'));
 const model = name => scenes[name].spec.model;
 """ + "\nconsole.log(JSON.stringify(" + expression + "));"
     result = subprocess.run(["node", "-e", script], cwd=ROOT, text=True,
@@ -62,7 +65,7 @@ def test_registration_and_backup(phase, number, name):
     assert len(info["cap"]) == 2 and all(info["cap"])
     assert 0 < info["rest"] < info["period"]
     assert info["controls"]
-    assert (ROOT / f"scripts/motion3d/p{phase}.js").stat().st_size < 20_000
+    assert (ROOT / f"scripts/motion3d/p{phase}.js").stat().st_size < PHASE_FILE_MAX
 
 
 @pytest.mark.parametrize("q", [(0., 0.), (.6, -.4), (-3., 1.)])
@@ -249,14 +252,14 @@ def test_all_frames_controls_extremes_and_rest_are_finite():
         }});
         const m = {t: (en, ko) => en};
         for (const t of [0, spec.rest, spec.period - .01]) {
-          for (const c of spec.controls) s.v[c.id] = c.auto ? c.auto(t) : c.val;
+          for (const c of (spec.controls || [])) s.v[c.id] = c.auto ? c.auto(t) : c.val;
           for (const lang of ['en', 'ko']) {
             m.t = (en, ko) => lang === 'ko' ? ko : en;
             frame(s, t, m);
           }
         }
         for (const edge of ['min', 'max']) {
-          for (const c of spec.controls) s.v[c.id] = c[edge] ?? c.val;
+          for (const c of (spec.controls || [])) s.v[c.id] = c[edge] ?? c.val;
           frame(s, spec.rest, m);
         }
         counts[name] = primitives;
@@ -265,7 +268,9 @@ def test_all_frames_controls_extremes_and_rest_are_finite():
       return {failures, counts};
     })()""")
     assert result["failures"] == []
-    assert len(result["counts"]) == 8
+    registered = {json.loads(f.read_text()).get("three") for f in (ROOT / "phases").glob("*/*/fun.json")} - {None}
+    assert len(registered) == 81  # every lesson has its own 3D scene
+    assert set(result["counts"]) == registered
 
 
 def test_default_orbit_label_anchors_stay_inside_canvas():
@@ -288,7 +293,7 @@ def test_default_orbit_label_anchors_stay_inside_canvas():
               const k = unit * cam.dist / (cam.dist + q[1]);
               check(W/2 + k*q[0] + (dx || 0), H/2 + (spec.oy ?? 24) - k*q[2] + (dy || 0), str, size);
             }}, {get(o,k) { return k in o ? o[k] : () => {}; }});
-          for (const c of spec.controls)
+          for (const c of (spec.controls || []))
             s.v[c.id] = edge === 'rest' ? (c.auto ? c.auto(t) : c.val) : (c[edge] ?? c.val);
           frame(s, t, {t: (en,ko) => ko});
         }

@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `(0.6, 0.3)`을 완전히 편 상태인 `(0.9, 0.0)`으로 바꾸세요. 두 elbow 답이 어떻게 비교될지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
   "toy": "ik-2link",
- "motion": "ik-reach-limit"
+ "motion": "ik-reach-limit",
+  "three": "ik-two-elbows-3d"
 }

@@ -114,3 +114,93 @@
     s.text(14, 64, `x = ${state[0].toFixed(3)} m; Δz = ${state[1].toFixed(3)} m`, '--mut', 15);
   });
 })();
+
+// 10단계 3D 추가: 발 위치로 속도를 정하는 LIPM 보행자와 돌풍을 받는 pitch 자세 제어(PD와 cascade).
+(() => {
+  const R = window.M3D, PI = Math.PI, G = 9.81, I3 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+
+  // ---- 10/02 walking by foot placement: step_scale times the deadbeat step ----
+  const H = .9, T = .4, VT = .6, NSTEP = 8, TC = Math.sqrt(H / G), cacheW = {}, look = [0, 0, .5];
+  const lipm = (x0, v0, p, t) => { const a = x0 - p, c = Math.cosh(t / TC), sh = Math.sinh(t / TC); return [p + a * c + TC * v0 * sh, a * sh / TC + v0 * c]; };
+  function walk(scale) {
+    const key = Math.round(scale * 20); if (cacheW[key]) return cacheW[key];
+    let x = -.05, v = .3, foot = 0; const st = [];
+    for (let k = 0; k < NSTEP; k++) {
+      const [xe, ve] = lipm(x, v, foot, T), u = (VT - ve * Math.cosh(T / TC)) * TC / Math.sinh(T / TC);
+      st.push({x, v, foot, ve});
+      foot = foot + scale * ((xe - u) - foot); x = xe; v = ve;
+    }
+    return cacheW[key] = st;
+  }
+  window.MOTION.three('foot-placement-walker-3d', {
+    en: 'A walker modelled as a point mass on a stiff leg picks each next foot spot. Step a little too short and its speed runs away instead of settling at the target',
+    ko: '점 질량이 뻣뻣한 다리 위에 있는 보행자가 다음 발 자리를 정합니다. 걸음이 조금만 짧아도 속도가 목표에 수렴하지 않고 계속 커집니다',
+    cap: ['Linear inverted pendulum with height h = 0.9 m, a stance of T = 0.4 s and a target speed of 0.6 m/s, started at x = -0.05 m and 0.3 m/s as in the lesson. At each touchdown the deadbeat foot (from next_foot) is scaled by the slider: 1.0 reaches 0.6 m/s after one correction, 0.6 ends at 9.85 m/s after 8 steps and 1.5 ends at 8.11 m/s while swinging sign. The camera follows the walker; the ground ticks are 0.5 m apart. The torso is just the point mass and the leg is a line; the swing leg is not drawn.',
+      '높이 h = 0.9 m의 선형 inverted pendulum이며 한 번의 stance는 T = 0.4초, 목표 속도는 0.6 m/s입니다. Lesson처럼 x = -0.05 m, 0.3 m/s에서 출발합니다. 발이 닿을 때마다 next_foot이 준 deadbeat 발 위치에 slider 값을 곱합니다. 1.0이면 한 번 보정한 뒤 0.6 m/s에 닿고 0.6이면 8걸음 뒤 9.85 m/s까지 커지며 1.5이면 부호를 바꿔 흔들리다 8.11 m/s가 됩니다. 카메라는 보행자를 따라가고 바닥 눈금은 0.5 m 간격입니다. 몸통은 점 질량이고 다리는 선이며 휘두르는 다리는 그리지 않았습니다.'],
+    period: 24, rest: 3, H: 350, unit: 150, look, oy: 30,
+    cam: {yaw: .45, pitch: .3, dist: 7},
+    controls: [{id: 'scale', en: 'step length vs deadbeat', ko: '걸음 길이 / deadbeat 걸음', min: .5, max: 1.5, step: .05, dec: 2, unit: '×', auto: t => 1 + .5 * Math.cos(2 * PI * t / 24 + PI)}],
+  }, (s, t, m) => {
+    const st = walk(s.v.scale), total = NSTEP * T, ph = Math.min(t % (total + 1.2), total - 1e-6), k = Math.floor(ph / T), c = st[k];
+    const [x, v] = lipm(c.x, c.v, c.foot, ph - k * T);
+    look[0] = x;
+    for (let g = Math.floor(x - 4) * 2; g <= (x + 4) * 2; g++) s.line([g / 2, -.45, 0], [g / 2, .45, 0], '--mut', g % 2 ? 1 : 2, {a: .5});
+    s.box([x, 0, -.02], [4.2, .5, .015], I3, '--card', {a: .8});
+    for (let j = 0; j <= k; j++) s.box([st[j].foot, 0, .015], [.07, .1, .015], I3, j === k ? '--pl' : '--mut');
+    s.line([c.foot, 0, .03], [x, 0, H], '--pd', 5);
+    s.box([x, 0, H], [.09, .14, .17], I3, '--pf');
+    s.dot([x, 0, H], '--fg', 4, {ring: true, front: true});
+    s.arrow([x, 0, H + .3], [x + Math.min(Math.abs(v), 2.5) * .3 * Math.sign(v), 0, H + .3], Math.abs(v - VT) < .08 ? '--ok' : '--bad', 3);
+    const len = k ? st[k].foot - st[k - 1].foot : st[0].foot, good = Math.abs(c.ve - VT) < .05 && k > 1;
+    s.text(14, 24, m.t(`step length ${s.v.scale.toFixed(2)}x the deadbeat step`, `걸음 길이 = deadbeat의 ${s.v.scale.toFixed(2)}배`), '--fg', 15);
+    s.text(14, 44, m.t(`speed ${v.toFixed(2)} m/s, target ${VT}`, `속도 ${v.toFixed(2)} m/s, 목표 ${VT}`), Math.abs(v - VT) < .08 ? '--ok' : '--bad', 15);
+    s.text(14, 64, m.t(`step ${k + 1}: length ${len.toFixed(2)} m, speed at its end ${c.ve.toFixed(2)}`, `${k + 1}번째 걸음: 길이 ${len.toFixed(2)} m, 끝 속도 ${c.ve.toFixed(2)}`), good ? '--ok' : '--mut', 15);
+  });
+
+  // ---- 10/04 cascaded attitude control: PD against angle-P + rate-PI under a gust ----
+  const INERTIA = .004, KP = .9, KD = .084, DT = 1e-3, TEND = 3, EXAG = 4, cacheA = {};
+  function simulate(ctrl) {
+    const n = TEND / DT, th = new Float32Array(n + 1); let w = 0, a = 0;
+    for (let i = 0; i < n; i++) {
+      const t = i * DT, d = t >= .5 && t < 1.5 ? .1 : 0, tau = ctrl(-a, w);
+      w += (tau + d) / INERTIA * DT; a += w * DT; th[i + 1] = a;
+    }
+    return th;
+  }
+  function runs(ki) {
+    const key = Math.round(ki * 20); if (cacheA[key]) return cacheA[key];
+    const pd = simulate((e, w) => KP * e - KD * w); let z = 0;
+    const kt = KP / KD, cas = simulate((e, w) => { const ew = kt * e - w; z += ew * DT; return KD * ew + ki * z; });
+    const pk = a => { let p = 0; for (let i = 0; i < a.length; i++) p = Math.max(p, Math.abs(a[i])); return p * 180 / PI; };
+    return cacheA[key] = {pd, cas, pkPd: pk(pd), pkCas: pk(cas)};
+  }
+  function stand(s, x, color, tr, ph, label) {
+    const i = Math.min(3000, Math.round(ph * 1000)), phi = tr[i] * EXAG, d = [Math.cos(phi), 0, Math.sin(phi)], c = [x, 0, .5];
+    s.box([x, 0, .22], [.04, .04, .22], I3, '--pd'); s.box([x, 0, .02], [.3, .2, .02], I3, '--pd');
+    s.line([x - .55, 0, .5], [x + .55, 0, .5], '--mut', 1.2, {dash: [4, 3]});
+    s.box(c, [.55, .035, .025], R.ry(-phi), color);
+    s.box(R.add(c, [0, 0, .06 * Math.cos(phi)]), [.12, .1, .06], R.ry(-phi), '--fg');
+    for (const sg of [-1, 1]) { const p = R.add(c, R.mul(d, .55 * sg)); s.dot(R.add(p, [0, 0, .04]), '--pd', 9, {ring: true}); s.box(R.add(p, [0, 0, .03]), [.14, .14, .008], R.ry(-phi), '--mut', {a: .6}); }
+    const pts = []; for (let i = 0; i <= 120; i++) pts.push([x - .5 + i / 120, 0, -.12 + tr[Math.round(i / 120 * 3000)] * 180 / PI * .04]);
+    s.path(pts, color, 2);
+    s.dot([x - .5 + i / 3000, 0, -.12 + tr[i] * 180 / PI * .04], color, 5, {ring: true});
+    s.label([x, 0, -.38], label, color, 15, 'center');
+    return tr[i] * 180 / PI;
+  }
+  window.MOTION.three('attitude-gust-stand-3d', {
+    en: 'Two identical flying bodies on a test stand take the same gust torque. The single PD loop is left leaning; the cascade with an integral term pushes back to level',
+    ko: '같은 비행체 두 대를 시험대에 올리고 같은 돌풍 토크를 줍니다. PD 한 겹은 기운 채 남고 적분 항이 있는 cascade는 수평으로 되돌립니다',
+    cap: ['Plant I theta-double-dot = tau + d with I = 0.004 kg m^2 and a 0.1 N m gust between 0.5 s and 1.5 s, simulated with the lesson\'s semi-implicit Euler at 1 ms. Left: PD with kp = 0.9, kd = 0.084. Right: angle P (kp / kd) feeding a rate PI (kd, ki). At ki = 0.5 the lesson gives a peak of 6.65 deg for PD against 3.93 deg for the cascade, and 6.37 deg against 0.05 deg at 1.5 s. At ki = 0 the cascade reduces to the PD loop, so both stands move together. The tilt of the bar is drawn 4x larger than real; the curves below each stand are the true angle against time, 3 s wide.',
+      '식은 I theta-double-dot = tau + d이며 I = 0.004 kg m^2이고 0.5초에서 1.5초 사이에 0.1 N m 돌풍이 들어옵니다. Lesson의 semi-implicit Euler를 1 ms로 돌렸습니다. 왼쪽은 kp = 0.9, kd = 0.084인 PD이고 오른쪽은 각도 P(kp / kd)가 속도 PI(kd, ki)를 구동하는 cascade입니다. ki = 0.5에서 lesson 값은 peak가 PD 6.65도, cascade 3.93도이고 1.5초에는 6.37도와 0.05도입니다. ki = 0이면 cascade가 PD와 같은 loop가 되어 두 시험대가 똑같이 움직입니다. 막대의 기울기는 실제의 4배로 그렸고 각 시험대 아래 곡선은 실제 각도를 시간에 따라 그린 것입니다(폭 3초).'],
+    period: 12, rest: 1.4, H: 350, unit: 100, look: [0, 0, .2], oy: 30,
+    cam: {yaw: .25, pitch: .25, dist: 7},
+    controls: [{id: 'ki', en: 'integral gain ki', ko: '적분 gain ki', min: 0, max: 1.5, step: .05, dec: 2, auto: t => .75 - .75 * Math.cos(2 * PI * t / 12)}],
+  }, (s, t, m) => {
+    const r = runs(s.v.ki), ph = Math.min(t % (TEND + .6), TEND), gust = ph >= .5 && ph < 1.5;
+    const a = stand(s, -1.05, '--bad', r.pd, ph, 'PD'), b = stand(s, 1.05, '--ok', r.cas, ph, 'cascade');
+    if (gust) for (const x of [-1.05, 1.05]) s.arrow([x + .55, 0, .1], [x + .55, 0, .38], '--pl', 3.4, {front: true});
+    s.text(14, 24, m.t(`ki = ${s.v.ki.toFixed(2)}${gust ? '; gust on' : ''}`, `ki = ${s.v.ki.toFixed(2)}${gust ? '; 돌풍 중' : ''}`), '--fg', 15);
+    s.text(14, 44, m.t(`PD: ${a.toFixed(2)} deg now, peak ${r.pkPd.toFixed(2)}`, `PD: 지금 ${a.toFixed(2)}도, peak ${r.pkPd.toFixed(2)}`), '--bad', 15);
+    s.text(14, 64, m.t(`cascade: ${b.toFixed(2)} deg now, peak ${r.pkCas.toFixed(2)}`, `cascade: 지금 ${b.toFixed(2)}도, peak ${r.pkCas.toFixed(2)}`), '--ok', 15);
+  });
+})();

@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `spike_p=0.003`을 `spike_p=0.0`으로 바꾸세요. `mean_period`와 `worst`와 `misses` 중 무엇이 바뀔지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
-  "motion": "jitter-bars"
+  "motion": "jitter-bars",
+  "three": "loop-jitter-belt-3d"
 }

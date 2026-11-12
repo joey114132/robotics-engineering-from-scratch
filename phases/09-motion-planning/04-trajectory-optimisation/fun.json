@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `optimise(X0, obs, iters=4000)` 호출에 `wo=0.0`을 더하고 `python3 code/main.py`를 실행하세요. 장애물이 밀어내지 않으면 closest approach가 어떻게 될지 예측하세요."
   },
   "toy": null,
-  "motion": "path-relax"
+  "motion": "path-relax",
+  "three": "path-rubber-band-3d"
 }

@@ -21,7 +21,7 @@
     const o = [0, 0, 0], ring = (ax) => { const p = []; for (let i = 0; i <= 64; i++) { const a = i / 64 * 2 * PI, c = Math.cos(a), n = Math.sin(a); p.push(ax === 0 ? [0, c, n] : ax === 1 ? [c, 0, n] : [c, n, 0]); } return p; };
     // world frame and unit sphere (three great circles)
     [0, 1, 2].forEach(ax => s.path(ring(ax), '--line', 1.5, { a: .9 }));
-    [[1.35, 0, 0, 'x'], [0, 1.35, 0, 'y'], [0, 0, 1.35, 'z']].forEach(a => { s.line(o, a.slice(0, 3), '--mut', 1.5, { a: .7 }); s.label(a.slice(0, 3), a[3], '--mut', 16, 'center', 0, -4); });
+    [[1.35, 0, 0, 'x'], [0, 1.35, 0, 'y'], [0, 0, 1.35, 'z']].forEach(a => { s.line(o, a.slice(0, 3), '--mut', 1.5, { a: .7 }); s.label(a.slice(0, 3), a[3], '--mut', 16, 'center', 0, 0); });
     // the pose now, and the finished pose of order A as a dashed ghost once it exists
     const Rn = t < 6.2 ? pose(t, .6, 'x', 'z') : t < 7.4 ? pose(Math.max(.6, 5.2 - (t - 6.2) * 3.83), .6, 'x', 'z') : pose(t, 7.4, 'z', 'x');   // 6.2-7.4: order A runs backwards to the start
     if (t >= 6.2) s.wire(o, H, A[0], '--mut', 1.8, { dash: [5, 4] });
@@ -120,5 +120,48 @@
     s.text(14, 24, m.t('T_base_cam @ T_cam_cup', 'T_base_cam @ T_cam_cup'), '--ok', 15);
     s.text(14, 44, m.t(`swapped factors: off ${err(swapped).toFixed(2)} m`, `곱의 순서 바꿈: ${err(swapped).toFixed(2)} m 어긋남`), '--bad', 15);
     s.text(14, 64, m.t(`stray inverse: off ${err(inv).toFixed(2)} m`, `inverse 잘못 사용: ${err(inv).toFixed(2)} m 어긋남`), '--acc', 15);
+  });
+})();
+
+// 01단계 3D (wave 1): 평면 2R 팔의 forward kinematics와 reach bounds.
+(() => {
+  const R = window.M3D, PI = Math.PI, I = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+  // 01/02 main.py: fk_planar([1.0, 0.5], angles) and reach_bounds(lengths) = (max(0, 2*max(l) - sum(l)), sum(l)).
+  const LEN = [1, .5], HI = LEN[0] + LEN[1], LO = Math.max(0, 2 * Math.max(...LEN) - HI);
+  function fk(q1, q2) {
+    const h1 = q1, h2 = q1 + q2, e = [LEN[0] * Math.cos(h1), LEN[0] * Math.sin(h1), 0];
+    return {elbow: e, tip: [e[0] + LEN[1] * Math.cos(h2), e[1] + LEN[1] * Math.sin(h2), 0], heading: h2};
+  }
+  const ring = r => Array.from({length: 73}, (_, i) => [r * Math.cos(i * PI / 36), r * Math.sin(i * PI / 36), .005]);
+  window.MOTION.three('planar-fk-reach-3d', {
+    en: 'A two-link arm on a table. Each joint angle is relative to the link before it, and the tip can only land between two circles',
+    ko: '탁자 위의 두 link 팔입니다. 각 joint 각도는 앞 link를 기준으로 잰 상대각이고 tip은 두 원 사이에만 놓일 수 있습니다',
+    cap: ['Link lengths 1.0 and 0.5 m as in fk_planar([1.0, 0.5], …). The tip is the sum of each length times cos and sin of the running heading, so q1 = 90° and q2 = −90° give (0.5, 1.0). The green band is reach_bounds: from 0.5 m (2 × longest − total) to 1.5 m (total). The arrow at the tip is the heading q1 + q2. Planar only; the arm is drawn lying on the table, without joint limits.',
+      'Link 길이는 fk_planar([1.0, 0.5], …)의 1.0과 0.5 m입니다. Tip은 길이에 누적 heading의 cos와 sin을 곱해 더한 값이어서 q1 = 90°, q2 = −90°이면 (0.5, 1.0)입니다. 초록 띠는 reach_bounds로 가장 긴 link의 2배에서 합을 뺀 0.5 m부터 합인 1.5 m까지입니다. Tip의 화살표는 heading q1 + q2입니다. 평면 팔이며 탁자 위에 눕혀 그렸고 joint limit은 없습니다.'],
+    period: 12, rest: 4, H: 340, unit: 80, look: [0, 0, 0], oy: 36,
+    cam: {yaw: .35, pitch: 1.0, dist: 7},
+    controls: [
+      {id: 'q1', en: 'q1', ko: 'q1', min: -180, max: 180, step: 1, unit: '°', val: 90, auto: t => 90 * Math.sin(2 * PI * t / 12)},
+      {id: 'q2', en: 'q2 (relative to link 1)', ko: 'q2 (link 1 기준)', min: -180, max: 180, step: 1, unit: '°', val: -90, auto: t => 120 * Math.cos(2 * PI * t / 12)},
+    ],
+  }, (s, t, m) => {
+    const p = fk(s.v.q1 * PI / 180, s.v.q2 * PI / 180), o = [0, 0, 0], r = Math.hypot(p.tip[0], p.tip[1]);
+    s.poly([[-1.7, -1.7, -.03], [1.7, -1.7, -.03], [1.7, 1.7, -.03], [-1.7, 1.7, -.03]], '--mut', {a: .1, edge: '--mut'});
+    for (let i = 0; i < 36; i += 2) {
+      const a0 = i * PI / 18, a1 = (i + 2) * PI / 18, pt = (rr, a) => [rr * Math.cos(a), rr * Math.sin(a), 0];
+      s.poly([pt(LO, a0), pt(HI, a0), pt(HI, a1), pt(LO, a1)], '--ok', {a: .14});
+    }
+    s.path(ring(HI), '--ok', 2, {dash: [5, 4]}); s.path(ring(LO), '--ok', 2, {dash: [5, 4]});
+    [[o, p.elbow, '--pf'], [p.elbow, p.tip, '--pl']].forEach(([a, b, c]) => {
+      const d = R.sub(b, a), ang = Math.atan2(d[1], d[0]);
+      s.box(R.mul(R.add(a, b), .5), [Math.hypot(d[0], d[1]) / 2, .04, .025], R.rz(ang), c);
+    });
+    s.box(o, [.09, .09, .04], I, '--pd');
+    [o, p.elbow].forEach(q => s.dot(q, '--fg', 7, {ring: true, front: true}));
+    s.dot(p.tip, '--acc', 7, {ring: true, front: true});
+    s.arrow(p.tip, R.add(p.tip, [.25 * Math.cos(p.heading), .25 * Math.sin(p.heading), 0]), '--bad', 3, {front: true});
+    s.text(14, 24, `tip (x, y) = (${p.tip[0].toFixed(2)}, ${p.tip[1].toFixed(2)}) m`, '--fg', 15);
+    s.text(14, 44, `heading = ${(p.heading * 180 / PI).toFixed(0)}°`, '--bad', 15);
+    s.text(14, 64, `|tip| = ${r.toFixed(2)} m  (${LO.toFixed(1)}–${HI.toFixed(1)} m)`, '--ok', 15);
   });
 })();

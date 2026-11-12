@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `(8, 2)` 두 곳을 `(30, 2)`로 바꾸세요. greedy와 `hungarian`의 격차가 커질지 작아질지 예측한 뒤 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
- "motion": "greedy-trap"
+ "motion": "greedy-trap",
+ "three": "allocation-lines-3d"
 }

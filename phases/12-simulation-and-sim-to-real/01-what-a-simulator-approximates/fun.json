@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `REAL`에서 `c=0.05`를 `c=0.025`로 바꾸세요. friction이 여전히 가장 큰 비용일지 예측한 뒤 `python3 code/main.py`로 비용을 비교하세요."
   },
   "toy": null,
-  "motion": "sim-missing-effects"
+  "motion": "sim-missing-effects",
+  "three": "joint-sim-gap-3d"
 }

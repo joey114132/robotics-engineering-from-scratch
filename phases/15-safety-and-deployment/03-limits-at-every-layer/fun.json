@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `MISMATCHED`에서 controller의 `vel=3.0`을 `1.5`로 바꾸세요. mismatch가 3 아래로 내려갈지와 `vel`을 누가 쥘지 예측한 뒤 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
- "motion": "silent-clamp"
+ "motion": "silent-clamp",
+ "three": "limit-stack-3d"
 }

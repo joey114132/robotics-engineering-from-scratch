@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `Retry(\"retry\", 3, ...)`을 `Retry(\"retry\", 2, ...)`로 바꿔 실행하세요. 작업이 몇 번째 tick에 실패하고 root가 무엇을 돌려줄지 예측하세요."
   },
   "toy": "bt-ticks",
-  "motion": "bt-resume"
+  "motion": "bt-resume",
+  "three": "behaviour-tree-fetch-3d"
 }

@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 표적을 `[0.5, 0.3]`에서 `[0.85, 0.0]`으로 바꾸고 수렴하는 seed 수를 출력하세요. 수가 늘지 줄지 먼저 예측하세요."
   },
   "toy": "ik-seeds",
- "motion": "ik-iterate"
+ "motion": "ik-iterate",
+  "three": "numeric-ik-steps-3d"
 }

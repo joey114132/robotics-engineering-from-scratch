@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `train(...)` 호출에 `batch=4,`를 추가하세요. baseline이 있는 run과 없는 run 중 어느 쪽이 더 흔들릴지 예측한 뒤 `python3 code/main.py`를 실행하세요."
   },
   "toy": null,
-  "motion": "baseline-narrows-gradient"
+  "motion": "baseline-narrows-gradient",
+  "three": "baseline-spread-3d"
 }

@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `(1.0, 0.6, 1.5)`의 `0.6`을 `0.95`로 바꾸고 `python3 code/main.py`를 실행하세요. 5%만 짧은 걸음도 속도가 폭주할지 예측한 뒤 속도 줄을 읽으세요."
   },
   "toy": null,
-  "motion": "step-vs-speed"
+  "motion": "step-vs-speed",
+  "three": "foot-placement-walker-3d"
 }

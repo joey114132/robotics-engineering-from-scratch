@@ -8,5 +8,6 @@
   "mission": "`code/main.py`에서 `[1] * 25`를 `[1] * 5`로 바꾸고 `python3 code/main.py`를 실행하세요. 최선의 추측이 실제 셀과 같을지 먼저 예측하고 entropy가 얼마까지 내려가는지 보세요."
  },
  "toy": null,
- "motion": "bayes-belief"
+ "motion": "bayes-belief",
+ "three": "bayes-ring-3d"
 }

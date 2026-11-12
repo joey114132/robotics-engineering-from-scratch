@@ -8,5 +8,6 @@
     "mission": "`python3 code/main.py`를 실행하세요. 출력을 읽기 전에 `a=0.0`과 `a=1.0` 중 어느 쪽이 `b`를 맞힐지 짐작한 뒤 두 `cond` 값을 비교하세요."
   },
   "toy": null,
-  "motion": "excitation-pins-down-b"
+  "motion": "excitation-pins-down-b",
+  "three": "excitation-wheel-3d"
 }

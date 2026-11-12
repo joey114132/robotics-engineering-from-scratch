@@ -111,3 +111,64 @@
     s.text(14, 68, `x ${a.x.toFixed(2)}, y ${a.y.toFixed(2)} m`, '--ok', 15);
   });
 })();
+
+// Phase 16 (03): the capstone's cloned reaching policy with and without the deterministic safety wrapper, ported from the lesson.
+(() => {
+  const R = window.M3D, PI = Math.PI, clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  const DT = .02, J = 1, B = .5, UMAX = 3;
+  const plant = (q, v, u) => { v += DT * (u - B * v) / J; return [q + DT * v, v]; };
+  const expert = (e, v) => clamp(8 * e - 4 * v, -UMAX, UMAX);
+  // 40 episodes' (start q, target) from numpy default_rng(0), as in the lesson's demos()
+  const EP = [[0.410885, -0.460427], [-1.377079, -0.966945], [0.939811, 0.825511], [0.319907, 0.458993], [0.130875, 0.870145], [0.947561, -0.994523], [1.072213, -0.932829], [0.688966, -0.648689], [1.089537, 0.082922], [-0.600864, -0.154626], [-1.415041, -0.751433], [0.511873, 0.294379], [0.346155, -0.232645], [1.49163, 0.961671], [0.556626, 0.300919], [0.56534, -0.222157], [-1.09471, 0.442977], [0.076063, -0.379516], [-0.042494, 0.778976], [1.302131, -0.28441], [0.214589, -0.356261], [0.2829, -0.324178], [-0.325143, 0.780549], [-0.818527, 0.246374], [-1.247954, 0.665288], [0.861295, -0.521261], [1.129453, -0.882864], [-0.491649, -0.699441], [-0.148982, 0.592649], [-0.808073, -0.895957], [-0.286344, -0.602974], [-1.227741, 0.160665], [-0.603912, 0.34399], [-0.901454, 0.884226], [-0.404669, -0.789009], [0.387324, 0.854309], [-0.178869, 0.909181], [-0.000313, -0.149543], [0.36064, 0.990193], [1.346831, -0.07991]];
+  const X = [], Y = [];
+  EP.forEach(([q0, target]) => { let q = q0, v = 0; for (let i = 0; i < 100; i++) { const e = target - q, u = expert(e, v); X.push([e, v]); Y.push(u); [q, v] = plant(q, v, u); } });
+  function policy(e, v) {   // k = 5 nearest demonstrations, mean action
+    const d = [], idx = [];
+    for (let i = 0; i < X.length; i++) { const dx = X[i][0] - e, dy = X[i][1] - v, dd = dx * dx + dy * dy; if (idx.length < 5 || dd < d[4]) { let j = idx.length < 5 ? idx.length : 4; if (idx.length < 5) { idx.push(i); d.push(dd); } else { idx[4] = i; d[4] = dd; } while (j > 0 && d[j] < d[j - 1]) { [d[j], d[j - 1]] = [d[j - 1], d[j]]; [idx[j], idx[j - 1]] = [idx[j - 1], idx[j]]; j--; } } }
+    return idx.reduce((a, i) => a + Y[i], 0) / 5;
+  }
+  function rollout(wrap, glitch, drop) {   // lesson rollout(): target 1.0, 150 steps; Safety(umax=3, du=0.5, max_age=3)
+    let q = 0, v = 0, age = 0, last = [1, 0], u0 = 0; const n = {clip: 0, rate: 0, hold: 0}, r = {q: [], u: [], raw: [], n: []};
+    for (let k = 0; k < 150; k++) {
+      age = drop && k >= drop[0] && k < drop[1] ? age + 1 : 0;
+      if (age === 0) last = [1 - q, v];
+      const a = policy(last[0], last[1]) + (glitch && k === glitch ? 40 : 0);
+      let u = a;
+      if (wrap) {
+        let raw = a; if (age > 3) { raw = 0; n.hold++; }
+        const c = clamp(raw, -UMAX, UMAX); u = u0 + clamp(c - u0, -.5, .5);
+        if (c !== raw) n.clip++; if (Math.abs(u - c) > 1e-9) n.rate++; u0 = u;   // the lesson counts `r != c`, which also fires on rounding error of u + (c − u)
+      }
+      [q, v] = plant(q, v, u); r.q.push(q); r.u.push(u); r.raw.push(a); r.n.push({...n});
+    }
+    return r;
+  }
+  const SCEN = [['clean', null, null], ['spike at step 30', 30, null], ['observation lost 10..35', null, [10, 36]]], cache = new Map();
+  const get = sc => cache.get(sc) || (cache.set(sc, {raw: rollout(false, SCEN[sc][1], SCEN[sc][2]), wrapped: rollout(true, SCEN[sc][1], SCEN[sc][2])}), cache.get(sc));
+  function arm(s, ox, q, u, c) {
+    const o = [ox, 0, 0], tp = [ox + Math.cos(q), 0, Math.sin(q)];
+    s.box([ox, 0, -.12], [.1, .08, .12], R.ry(0), '--pd'); s.box([(o[0] + tp[0]) / 2, 0, tp[2] / 2], [.5, .035, .035], R.ry(-q), c); s.dot(o, '--fg', 7, {ring: true, front: true});
+    if (Math.abs(u) > 1e-6) { const sw = clamp(u / UMAX, -1, 1) * PI * 1.4, pts = Array.from({length: 25}, (_, i) => { const a = PI / 2 + sw * i / 24; return [ox + .2 * Math.cos(a), -.07, .2 * Math.sin(a)]; }); s.path(pts, c, 3, {front: true}); s.arrow(pts[23], pts[24], c, 3, {front: true}); }
+  }
+  window.MOTION.three('wrapped-policy-arms-3d', {
+    en: 'Two identical joints run the same cloned reaching policy; the one behind the safety wrapper ignores a torque spike and a lost observation',
+    ko: '똑같은 관절 둘이 같은 행동 복제 reaching policy를 돌립니다. 안전 wrapper 뒤의 관절은 torque 급등과 끊긴 관측을 무시합니다',
+    cap: ['Both joints use the capstone’s nearest-neighbour policy (k = 5, fitted to 40 expert reaching episodes, the same 40 starts and targets as the lesson’s seed 0) to reach 1.0 rad. Left, raw: the policy’s action goes straight to the joint. Right, wrapped: clip to ±3 Nm, change at most 0.5 Nm per step, and command zero torque once the observation is more than 3 steps old. Scenario 1 adds +40 to the action at step 30; scenario 2 loses the observation at steps 10 to 35, so the policy keeps acting on the last one it saw. The curved arrows are the torque actually applied (full circle sweep at 3 Nm or more). The dashed line is the 1.0 rad target. Peak values match the lesson’s printout: raw spike 39.9 Nm and 1.36 rad against 3.0 Nm and 1.01 rad wrapped; lost observation 1.47 rad raw against 1.01 wrapped. The rate count here only counts real limiting (|u − c| above 1e-9), so it reads 5, 8 and 13 where the lesson prints 19, 20 and 19: its `r != c` test also counts floating-point rounding of u + (c − u).',
+      '두 관절 모두 capstone의 nearest-neighbour policy(k = 5, expert reaching episode 40개로 fit, 시작점과 목표는 lesson의 seed 0과 같은 40개)로 1.0 rad에 가려고 합니다. 왼쪽 raw는 policy의 action이 관절로 곧바로 갑니다. 오른쪽 wrapped는 ±3 Nm로 clip하고 step당 변화를 0.5 Nm 이하로 제한하며 관측이 3 step보다 오래되면 torque 0을 명령합니다. 시나리오 1은 30 step에 action에 +40을 더하고 시나리오 2는 10~35 step 동안 관측이 끊겨 policy가 마지막으로 본 관측으로 계속 움직입니다. 굽은 화살표는 실제로 가해진 torque입니다(3 Nm 이상이면 원 한 바퀴 가까이 그립니다). 점선은 1.0 rad 목표입니다. 최댓값은 lesson의 출력과 같습니다. 급등 시나리오에서 raw는 39.9 Nm와 1.36 rad, wrapped는 3.0 Nm와 1.01 rad이고 관측 소실에서 raw 1.47 rad, wrapped 1.01 rad입니다. 여기서 rate 횟수는 실제로 제한된 경우(|u − c|가 1e-9보다 큼)만 세므로 5, 8, 13이고 lesson은 19, 20, 19를 출력합니다. Lesson의 `r != c` 검사가 u + (c − u)의 부동소수점 반올림 오차까지 세기 때문입니다.'],
+    period: 12, rest: 5, H: 340, unit: 100, look: [.45, 0, .35], oy: 10, cam: {yaw: -.1, pitch: .2, dist: 7},
+    controls: [{id: 'sc', en: 'scenario 0 clean, 1 spike, 2 lost observation', ko: '시나리오 0 정상, 1 급등, 2 관측 소실', min: 0, max: 2, step: 1, auto: t => Math.floor(t / 4) % 3},
+      {id: 'k', en: 'step', ko: 'step', min: 0, max: 149, step: 1, auto: t => Math.floor((t % 4) / 4 * 149)}],
+  }, (s, t, m) => {
+    const {raw, wrapped} = get(s.v.sc), k = s.v.k, peak = (r, f) => Math.max(...r.slice(0, k + 1).map(f));
+    s.model = {raw, wrapped, pu: [peak(raw.u, Math.abs), peak(wrapped.u, Math.abs)], pq: [peak(raw.q, x => x), peak(wrapped.q, x => x)]};
+    const tgt = x => s.line([x, 0, 0], [x + 1.1, 0, 1.1 * Math.sin(1)].map((v, i) => i === 0 ? x + 1.1 * Math.cos(1) : v), '--ok', 2, {dash: [6, 4]});
+    tgt(-1.3); tgt(1.3);
+    arm(s, -1.3, raw.q[k], raw.u[k], '--bad'); arm(s, 1.3, wrapped.q[k], wrapped.u[k], '--ok');
+    s.label([-1.3, 0, -.45], m.t('raw policy', 'raw policy'), '--bad', 13, 'center'); s.label([1.3, 0, -.45], m.t('with wrapper', 'wrapper 사용'), '--ok', 13, 'center');
+    if (s.v.sc === 2 && k >= 10 && k < 36) s.label([0, 0, .8], m.t('observation lost', '관측 끊김'), '--mut', 13, 'center');
+    const nn = wrapped.n[k];
+    s.text(14, 24, m.t(`${SCEN[s.v.sc][0]}, step ${k}`, `${['정상', '30 step 급등', '관측 소실 10..35'][s.v.sc]}, step ${k}`), '--fg', 15);
+    s.text(14, 44, m.t(`peak |u| so far: raw ${s.model.pu[0].toFixed(1)}, wrapped ${s.model.pu[1].toFixed(1)} Nm`, `지금까지 최대 |u|: raw ${s.model.pu[0].toFixed(1)}, wrapped ${s.model.pu[1].toFixed(1)} Nm`), '--mut', 15);
+    s.text(14, 64, m.t(`peak q: raw ${s.model.pq[0].toFixed(2)}, wrapped ${s.model.pq[1].toFixed(2)} rad; wrapper clip ${nn.clip} rate ${nn.rate} hold ${nn.hold}`, `최대 q: raw ${s.model.pq[0].toFixed(2)}, wrapped ${s.model.pq[1].toFixed(2)} rad; wrapper clip ${nn.clip} rate ${nn.rate} hold ${nn.hold}`), '--ok', 14);
+  });
+})();

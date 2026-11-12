@@ -8,5 +8,6 @@
   "mission": "`code/main.py`의 데모 반복문에서 시작 회전을 1.0, 1.2, 1.4 rad으로 바꿔 보세요. 어느 값부터 final rms가 0.1 m를 넘는지 찾으세요."
  },
  "toy": "icp-steps",
- "motion": "icp-two-starts"
+ "motion": "icp-two-starts",
+ "three": "icp-room-3d"
 }

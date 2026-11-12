@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `kalman(zs)`를 `kalman(zs, r=6.0)`으로 바꾸고 `python3 code/main.py`를 실행하세요. 센서 잡음은 그대로 2.0 m입니다. filter rmse가 나빠질지와 `sqrt(P00)`이 정직할지 예측하세요."
   },
   "toy": "kalman",
-  "motion": "kalman-gain"
+  "motion": "kalman-gain",
+  "three": "kalman-lane-3d"
 }

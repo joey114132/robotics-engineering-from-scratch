@@ -8,5 +8,6 @@
   "mission": "`code/main.py`의 첫 줄에서 `Qos(\"reliable\")`을 `Qos(\"best_effort\")`로 바꾸세요. `connected`와 `delivered`를 예측한 다음 `python3 code/main.py`를 실행하세요."
  },
  "toy": null,
- "motion": "pubsub-flow"
+ "motion": "pubsub-flow",
+ "three": "qos-queue-3d"
 }

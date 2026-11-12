@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `KD`를 `2.0`에서 `4.0`으로 두 배로 올리세요. delay margin(ms)이 두 배가 될지 그대로일지 줄어들지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
   "toy": "latency-ring",
-  "motion": "delay-budget"
+  "motion": "delay-budget",
+  "three": "latency-budget-bars-3d"
 }

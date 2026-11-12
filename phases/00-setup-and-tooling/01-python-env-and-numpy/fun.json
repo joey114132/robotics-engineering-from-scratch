@@ -8,5 +8,6 @@
     "mission": "`cd code && python3 -c \"from main import joint_angles; print(joint_angles([90, 45]))\"`를 실행하되 결과를 먼저 예측해 보세요. 이어서 `[1.5, 0.8]`을 넣고 guard가 왜 가만히 있는지 확인하세요."
   },
   "toy": null,
- "motion": "degrees-guard"
+ "motion": "degrees-guard",
+  "three": "degrees-guard-arm-3d"
 }

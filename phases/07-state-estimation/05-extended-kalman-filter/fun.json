@@ -8,5 +8,6 @@
   "mission": "`code/main.py`에서 `mean_nees(30, 0.6, lms=LMS[:1])`을 돌리고 `LMS[:2]`로도 돌리세요. 어느 쪽이 3 근처에 머물지 실행 전에 예측하세요."
  },
  "toy": "ekf-consistency",
-  "motion": "ekf-stall"
+  "motion": "ekf-stall",
+  "three": "ekf-circle-3d"
 }

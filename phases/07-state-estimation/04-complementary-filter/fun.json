@@ -8,5 +8,6 @@
     "mission": "`code/main.py`의 `complementary(...)`에서 `best_tau(dt, b, sa)`를 `0.05`로 바꾸고 `python3 code/main.py`를 실행하세요. fused rmse가 최적 tau의 약 0.0068보다 나을지 예측하세요."
   },
   "toy": null,
-  "motion": "tau-lanes"
+  "motion": "tau-lanes",
+  "three": "tilt-planks-3d"
 }

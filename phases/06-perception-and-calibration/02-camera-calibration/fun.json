@@ -8,5 +8,6 @@
     "mission": "`code/main.py`에서 `make_views(K, 6, 0.5, 1)`의 6을 3으로 바꾸고 `python3 code/main.py`를 실행하세요. 픽셀 오차가 오를지 내릴지 먼저 예측하고 원래 값 2.24와 비교하세요."
   },
   "toy": null,
-  "motion": "calib-views"
+  "motion": "calib-views",
+  "three": "camera-calibration-3d"
 }
