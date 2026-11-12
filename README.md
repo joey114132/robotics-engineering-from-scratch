@@ -1,5 +1,7 @@
 # Robotics Engineering from Scratch
 
+![Bolt, the course mascot, in a toy robotics workshop with a small arm, a drone and a blueprint wall](docs/img/hero-bolt.jpg)
+
 Learn how robots work by building the math and control yourself, in plain numpy, with tests. Then see what the production library does.
 
 81 lessons, 17 phases, English and Korean. Arms, wheeled and legged robots, drones, perception, planning, learning, fleets and safety. About 15 minutes each. The full list is in [ROADMAP.md](ROADMAP.md).
@@ -17,6 +19,8 @@ Learn how robots work by building the math and control yourself, in plain numpy,
 Every lesson is simulation only. Nothing sends a command to real hardware.
 
 ## 3D scenes
+
+<img src="docs/img/hero-bolt.gif" alt="Bolt waves while a small robot arm lifts a hex nut and a drone drifts past" align="right" width="46%">
 
 Every lesson has a 3D scene of something real: an arm holding itself up, a quadrotor, a robot finding its way back to the start. Drag to orbit it, move a slider, and watch the lesson's law happen.
 
@@ -97,6 +101,6 @@ Forks and pull requests are welcome, from a typo to a whole new lesson. Run the 
 
 ## License and credits
 
-MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The animations use GSAP 3.15.0, which keeps its own terms in `scripts/vendor/GSAP-LICENSE.txt`.
+MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The banner picture and the Bolt animation are AI-generated (Higgsfield) from the Bolt mascot, and the lesson figures are not. The animations use GSAP 3.15.0, which keeps its own terms in `scripts/vendor/GSAP-LICENSE.txt`.
 
 To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs site|cli|gif|gif3d|gallery3d` after building the site.
