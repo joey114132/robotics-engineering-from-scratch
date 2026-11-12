@@ -7,5 +7,7 @@
     "hook": "지도에 다트를 던지고 다트마다 잔가지를 뻗습니다. 난장판 같아도 출구는 찾아냅니다.",
     "mission": "`code/main.py`의 `rrt(...)` 호출 끝에 `step=1.5`를 인자로 더하고 `python3 code/main.py`를 실행하세요. node 수가 step 0.4일 때의 146개보다 늘지 줄지 먼저 예측하세요."
   },
-  "toy": "rrt"
+  "toy": "rrt",
+  "motion": "rrt-shortcut",
+  "three": "rrt-volume-3d"
 }

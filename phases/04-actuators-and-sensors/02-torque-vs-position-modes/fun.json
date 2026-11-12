@@ -7,5 +7,6 @@
     "hook": "position mode는 남의 PD gain을 입은 torque mode입니다. 제가 부드러운 스프링을 짰는데 drive가 예의 바르게 무시했습니다.",
     "mission": "다음 명령을 실행하세요. `cd code && python3 -c \"from main import *; print(felt_stiffness('position', 20.0, kp_in=100.0))\"` 결과를 보기 전에 관절이 20으로 느껴질지 100일지 400일지 짐작하고 누구의 gain이 이기는지도 생각해 보세요."
   },
-  "toy": null
+  "toy": null,
+  "motion": "push-modes"
 }

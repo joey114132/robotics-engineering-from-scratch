@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 03/01 The Sampling Limit, 03/04 PID and Tuning   **Time:** ~30 minutes
 
+## In Plain Words
+
+An old camera view can make you keep powering a toy boat toward a target it has already reached. Cutting motor power lets it coast; it
+does not lock the boat in place.
+
+This capstone trains a policy from demonstrations, then puts a wrapper between its output and a simulated joint. Stale observations
+request zero torque, oversized outputs are clipped, and torque changes are limited. Faulty runs measure the actual motion and count
+interventions to check how those rules limit the faults' effects.
+
 ## The Problem
 
 A policy trained from demonstrations works in every test, then one bad network output or one lost camera frame sends a joint into its limit. Nobody can prove a learned model never does this. What you can do is put a small piece of plain code between the model and the motor, and prove that piece.

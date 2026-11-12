@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 03/01 The Sampling Limit, 03/03 Impedance Control   **Time:** ~15 minutes
 
+## In Plain Words
+
+Push a trolley toward a floor mark. P increases your forward push with the remaining distance; D brakes
+according to speed. I builds extra push while an error persists, overcoming a steady opposing load.
+
+If you are already pushing as hard as possible, accumulating more I cannot add any more force. It can keep the
+push excessive near the mark and cause overshoot. Anti-windup stops that accumulation while the limit prevents
+the requested extra push.
+
 ## The Problem
 
 A joint oscillated, so someone raised `kp` and `kd` to stiffen it. Now it buzzes and the motor runs hot. PID gains look like three independent knobs, but each one has a limit set by the plant, the actuator and the control period.

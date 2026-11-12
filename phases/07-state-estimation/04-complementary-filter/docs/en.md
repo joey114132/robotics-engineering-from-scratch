@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 07/03 IMU Integration and Drift   **Time:** ~15 minutes
 
+## In Plain Words
+
+Use a phone as a level while adjusting a shelf. Gyro readings follow quick tilts smoothly, but adding a small
+bias over time makes the angle wander. Tilt inferred from gravity gives a long-term reference, yet noisy
+readings can shake the displayed angle.
+
+A complementary filter combines the gyro's quick changes with a slowly averaged accelerometer reference. A
+longer time constant trusts the gyro longer and suppresses more accelerometer noise, but leaves more gyro-bias
+error. A shorter one reverses that trade.
+
 ## The Problem
 
 You estimate tilt from the accelerometer and the angle jitters so much that a balancing controller shakes. You switch to the integrated gyro and the angle is smooth, but it creeps away from the truth until the robot believes it is leaning when it stands straight.

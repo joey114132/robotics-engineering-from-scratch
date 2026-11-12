@@ -7,5 +7,6 @@
     "hook": "행렬 하나가 제 관절 속도를 손끝 속도로 바꿉니다. 그 transpose는 손끝을 미는 힘을 관절 토크로 바꿉니다. 싸게 쓰는 마법입니다.",
     "mission": "`cd code && python3 -c \"from main import *; q=np.array([.3,.8]); L=(.5,.4); print(abs(jacobian(q,L)-jacobian_fd(q,L,eps=1e-2)).max())\"`를 실행하세요. 이 숫자가 `python3 code/main.py`가 출력하는 2.8e-11보다 클지 작을지 먼저 예측해 보세요."
   },
-  "toy": null
+  "toy": null,
+ "motion": "jacobian-ellipse"
 }

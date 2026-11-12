@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 12/03 System Identification   **Time:** ~15 minutes
 
+## In Plain Words
+
+Try parking a remote-controlled toy car at a chalk line using the same rule each time. A heavier load or slower response can make a
+rule tested on an empty car miss the line.
+
+Domain randomisation tries controller settings across simulated variations, then keeps a fixed setting that performs well across them.
+A narrow range misses likely differences. An unnecessarily wide range can favour slower settings to handle conditions that never occur.
+Here the controller is tuned, without training a learned policy.
+
 ## The Problem
 
 Gains tuned on the nominal simulator work there and fail on the real joint, whose mass, friction, lag and delay are slightly off. Randomising the simulator should fix that. The open question is how wide to randomise, because every plant you guard against has a price.

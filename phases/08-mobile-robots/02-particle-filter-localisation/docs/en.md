@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
 
+## In Plain Words
+
+During a blindfolded treasure hunt at school, you keep several guesses about where you stand. Distances to familiar landmarks favour
+some guesses over others. Keep more copies of the guesses that fit, then move them as you walk.
+
+A particle filter does this with possible robot poses. If someone moves you unexpectedly, copying only the old guesses may leave every
+guess wrong. Adding a few guesses from elsewhere gives new measurements a chance to find the real location.
+
 ## The Problem
 
 Odometry drifts, so a robot on a known map needs outside measurements to say where it is. One Gaussian cannot hold "I could be in either corridor". A cloud of guesses can. But the cloud has a failure of its own: it can become so sure of itself that it can never be corrected.

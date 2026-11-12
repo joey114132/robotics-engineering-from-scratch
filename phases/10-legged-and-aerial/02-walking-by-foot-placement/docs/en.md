@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 10/01 Inverted Pendulum and ZMP   **Time:** ~15 minutes
 
+## In Plain Words
+
+Walk across a playground and notice where your next foot lands relative to your moving body. Landing farther ahead gives the body more
+time behind its support, which can slow its forward motion.
+
+This walking model chooses that landing point from the body's current position and speed to reach the requested speed after the next
+stance. Shortening the calculated step leaves the body too far ahead and speed can grow each step. Overstretching it can slow the model
+into a reversal.
+
 ## The Problem
 
 You ask a walking model for 0.6 m/s and give it a fixed, plausible step length. For a few steps it looks fine, then each step is faster than the last until the body is far ahead of its feet. The step length was a little short, and a short step pumps energy in instead of slowing you down.

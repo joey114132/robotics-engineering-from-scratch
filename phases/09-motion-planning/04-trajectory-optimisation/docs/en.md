@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 09/03 Collision Checking   **Time:** ~15 minutes
 
+## In Plain Words
+
+Stretch a rubber band between fixed pins on a table with cups in the way. Tension pulls the band straighter, while the cups keep it
+from taking the direct route.
+
+Trajectory optimisation balances similar effects on path waypoints. Smoothness pulls each point toward its neighbours; an obstacle
+penalty pushes nearby points away from cup-shaped obstacles. Small adjustments can reduce the combined cost. Large adjustments may
+raise it, and checking waypoints alone still leaves the segments between them unchecked.
+
 ## The Problem
 
 A sampling planner hands you a path that avoids every obstacle but zigzags. Following it wastes time and shakes the arm. Straightening the zigzag by hand puts the path back inside an obstacle, so the two goals fight each other.

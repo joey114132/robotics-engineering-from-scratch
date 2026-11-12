@@ -7,5 +7,6 @@
     "hook": "부드러움은 제 경로를 곧게 당기고 장애물은 밀어냅니다. 저는 줄다리기에 끼인 고무줄이라 이길 수는 없고 균형만 맞춥니다.",
     "mission": "`code/main.py`의 `optimise(X0, obs, iters=4000)` 호출에 `wo=0.0`을 더하고 `python3 code/main.py`를 실행하세요. 장애물이 밀어내지 않으면 closest approach가 어떻게 될지 예측하세요."
   },
-  "toy": null
+  "toy": null,
+  "motion": "path-relax"
 }

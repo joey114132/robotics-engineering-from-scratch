@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
 
+## In Plain Words
+
+You and classmates each deliver a notebook to a different classroom. Taking your nearest room first may leave a classmate with a long
+walk. You could walk slightly farther instead and save them a much larger detour.
+
+Task allocation compares the full set of person-room costs and assigns each room once. The Hungarian method can revise earlier matches
+while finding the smallest total. A locally cheap choice need not give the group its cheapest set of walks.
+
 ## The Problem
 
 Ten robots and ten pick-up points. You let each robot grab the closest free point, and one robot ends up driving across the whole floor because everyone near its point was taken first. The fleet's total travel is larger than it needed to be, and no single decision looked wrong.

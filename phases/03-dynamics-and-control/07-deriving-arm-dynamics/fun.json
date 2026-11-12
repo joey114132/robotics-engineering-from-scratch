@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "I used to take M(q) on faith. Now I build it from kinetic energy, and if one sign is wrong my arm gains energy from nowhere.",
+  "mission": "In `code/main.py` double `m2` in the parameters of `energy_drift` and run it with `h_sign=1` and `h_sign=-1`. Which one stays near zero, and by how much does the other drift?"
+ },
+ "ko": {
+  "hook": "예전엔 M(q)를 그냥 믿었습니다. 이제는 운동에너지에서 만들고 부호 하나만 틀려도 제 팔은 공짜 에너지를 얻습니다.",
+  "mission": "`code/main.py`의 `energy_drift` 파라미터에서 `m2`를 두 배로 하고 `h_sign=1`과 `h_sign=-1`로 돌리세요. 어느 쪽이 0 근처에 머물고 다른 쪽은 얼마나 흔들리나요?"
+ },
+ "toy": "inertia-by-pose",
+ "motion": "free-motion-energy"
+}

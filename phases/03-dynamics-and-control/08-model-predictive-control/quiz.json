@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A controller's command is clipped to the torque limit and the arm overshoots. Why?",
+  "options": [
+   "The controller never knew about the limit",
+   "The motor is too weak",
+   "kp is too low"
+  ],
+  "answer": 0,
+  "explanation": "A gain computed without the limit assumes it can brake at full strength."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "What does MPC apply from each plan?",
+  "options": [
+   "Only the first input",
+   "The whole input sequence",
+   "The last input"
+  ],
+  "answer": 0,
+  "explanation": "The plan is rebuilt every tick from the new measurement."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "In the stacked form X = Phi x0 + Gam U, what is U?",
+  "options": [
+   "The inputs over the horizon",
+   "The states over the horizon",
+   "The cost weights"
+  ],
+  "answer": 0,
+  "explanation": "Stacking inputs makes the cost a quadratic in U and the limit a box on U."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "The input limit is a box on U. How is it enforced here?",
+  "options": [
+   "Clip back into the box after every gradient step",
+   "Delete the largest input",
+   "Lower R to zero"
+  ],
+  "answer": 0,
+  "explanation": "Projection onto a box is just clipping, so the result obeys the bound exactly."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "With a loose bound, what should MPC reproduce?",
+  "options": [
+   "The LQR action",
+   "Zero input",
+   "A bang-bang action"
+  ],
+  "answer": 0,
+  "explanation": "With terminal cost P and no active limit, the plan's first input is -Kx."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "What does a longer horizon cost you?",
+  "options": [
+   "More computation per tick",
+   "A worse model",
+   "A lower limit"
+  ],
+  "answer": 0,
+  "explanation": "The quadratic has more variables, so each solve takes longer."
+ }
+]

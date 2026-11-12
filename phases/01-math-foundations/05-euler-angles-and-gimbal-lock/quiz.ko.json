@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "도구가 수직을 매끄럽게 지나가는데 roll과 yaw가 180도 튑니다. 가장 가능성 높은 원인은?", "options": ["센서 고장", "Euler 각도가 두 번째 표기로 바뀜", "시계 drift"], "answer": 1, "explanation": "모든 자세에는 Euler 표기가 두 가지 있고 pitch 90도 근처에서 읽는 쪽이 표기를 바꿉니다."},
+  {"id": 2, "stage": "check", "question": "ZYX 순서에서 Euler rate를 각속도로 보내는 사상이 rank를 잃는 pitch는?", "options": ["0도", "45도", "90도"], "answer": 2, "explanation": "det E = cos(pitch)이고 90도에서 0입니다."},
+  {"id": 3, "stage": "check", "question": "gimbal lock에서 roll과 yaw 중 여전히 정해지는 것은?", "options": ["둘의 합 또는 차", "roll만", "yaw만"], "answer": 0, "explanation": "pitch +90도에서는 yaw - roll만, -90도에서는 yaw + roll만 회전을 정합니다."},
+  {"id": 4, "stage": "check", "question": "yaw 0에서 world-x 축으로 1 rad/s 회전합니다. pitch가 80도에서 89도로 가면 가장 큰 Euler rate는 어떻게 변하나요?", "options": ["그대로", "줄어듦", "대략 1 / cos(pitch)처럼 커짐"], "answer": 2, "explanation": "이 회전에서 roll_rate = 1 / cos(pitch)이고 yaw_rate = tan(pitch)입니다. roll_rate의 크기가 더 큽니다."},
+  {"id": 5, "stage": "post", "question": "자세를 저장하고 필터링하는 가장 좋은 방법은?", "options": ["roll, pitch, yaw", "회전행렬 또는 단위 quaternion", "필터 세 개를 따로 적용"], "answer": 1, "explanation": "이 둘에는 특이 자세가 없습니다. Euler 각도는 표시할 때만 변환합니다."},
+  {"id": 6, "stage": "post", "question": "R_to_euler가 locked=True를 돌려줍니다. 호출한 쪽은 어떻게 해야 하나요?", "options": ["roll과 yaw를 그대로 믿는다", "roll은 임의로 보고 +90도에서는 yaw - roll, -90도에서는 yaw + roll을 쓴다", "둘에 180도를 더한다"], "answer": 1, "explanation": "함수는 roll을 0으로 두고 합쳐진 각도를 yaw에 넣습니다. 양의 lock에서는 yaw - roll이고 음의 lock에서는 yaw + roll입니다."}
+]

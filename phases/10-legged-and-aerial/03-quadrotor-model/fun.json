@@ -8,5 +8,6 @@
   "mission": "`code/main.py`의 `hover_thrust(m), 0.002`에서 토크 `0.002`를 `0.004`로 바꾸고 `python3 code/main.py`를 실행하세요. 1초 뒤 pitch와 옆 이동을 예측하고 14.3도, 0.204 m와 비교하세요."
  },
  "toy": null,
- "motion": "quad-thrust"
+ "motion": "quad-thrust",
+  "three": "quad-differential-3d"
 }

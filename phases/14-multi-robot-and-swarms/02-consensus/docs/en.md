@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** eigenvalues of a symmetric matrix   **Time:** ~15 minutes
 
+## In Plain Words
+
+Classmates estimate how long a song lasts, but each can speak only to nearby classmates. Everyone repeatedly shifts their estimate a
+little toward their neighbours' estimates.
+
+With equal influence in both directions and a suitably small update, consensus preserves the group's average while shrinking
+disagreements. Connected classmates eventually share that initial average, which need not be the song's true length. Separate groups
+can settle on different answers, and overly large corrections can make estimates swing farther apart.
+
 ## The Problem
 
 Eight robots each measure the same quantity with a different error, and no robot can hear all the others. You want every robot to end up holding the group average, using only messages to its radio neighbours. Some layouts agree in a dozen ticks and some take hundreds. A split fleet never agrees at all.

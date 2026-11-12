@@ -7,5 +7,6 @@
     "hook": "깊이를 명령해서 힘을 얻는 건 메뉴 가격을 짐작해서 팁을 주는 것과 같습니다. 힘을 직접 재면 짐작은 필요 없어집니다.",
     "mission": "`code/main.py`에서 `5e3`을 `1e4`로 바꾸세요. position 모드의 힘을 먼저 예측한 뒤 `python3 code/main.py`를 실행해 force 모드가 여전히 10인지 확인하세요."
   },
-  "toy": null
+  "toy": null,
+  "motion": "force-loop-surface-swap"
 }

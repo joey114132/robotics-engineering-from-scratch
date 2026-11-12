@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 00/01 Python Env and numpy   **Time:** ~15 minutes
 
+## In Plain Words
+
+A playground swing trades height for speed as it falls, then speed for height as it rises. Without friction or
+another push, it should not climb higher on every trip.
+
+A simulation can invent that extra energy if it moves the swing using an old speed while updating speed
+separately. Updating speed first and using that new speed to move changes the result. The order of those
+updates changes how the simulated energy behaves over repeated swings.
+
 ## The Problem
 
 You copy a physics loop from a forum, run a pendulum, and watch it swing a little higher every cycle until it spins. Nothing crashed and the equations look right. The only thing wrong is the order of two lines in the time step.

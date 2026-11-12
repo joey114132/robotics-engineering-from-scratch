@@ -7,5 +7,7 @@
     "hook": "제 encoder는 정수 count로만 셉니다. 그래서 느리게 움직이면 속도가 들쭉날쭉하고 필터로 달래면 대신 늦어집니다. 공짜는 없습니다.",
     "mission": "`code/main.py`에서 `(1, 5, 20)`을 `(100,)`으로 바꾸세요. std와 lag가 오를지 내릴지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
-  "toy": null
+  "toy": "encoder-window",
+  "motion": "encoder-window",
+  "three": "encoder-disc-3d"
 }

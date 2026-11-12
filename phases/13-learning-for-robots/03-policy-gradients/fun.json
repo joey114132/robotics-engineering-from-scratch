@@ -7,5 +7,6 @@
     "hook": "에피소드 하나의 점수는 소음 섞인 소문입니다. 평균 소문을 빼면 쓸 만한 소문이 더 크게 들립니다.",
     "mission": "`code/main.py`의 `train(...)` 호출에 `batch=4,`를 추가하세요. baseline이 있는 run과 없는 run 중 어느 쪽이 더 흔들릴지 예측한 뒤 `python3 code/main.py`를 실행하세요."
   },
-  "toy": null
+  "toy": null,
+  "motion": "baseline-narrows-gradient"
 }

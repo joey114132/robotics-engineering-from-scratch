@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 00/04 ROS 2 in One Page   **Time:** ~15 minutes
 
+## In Plain Words
+
+A class needs notes delivered. A volunteer promises to try, but the teacher accepts only a service that
+guarantees delivery. They never agree to start. That differs from agreeing to a casual delivery and
+occasionally losing a note.
+
+With QoS matching, a reliable subscriber cannot match a best effort publisher, so nothing arrives. A publisher
+offering reliability can satisfy a subscriber asking for less. After a match, a slow callback can still
+overflow its queue; compatibility does not prevent that loss.
+
 ## The Problem
 
 A camera driver publishes images and a viewer subscribes, yet the viewer stays blank. Both ends exist, no node crashed, and no error scrolled by. The two sides asked for different delivery guarantees, so the middleware never connected them.

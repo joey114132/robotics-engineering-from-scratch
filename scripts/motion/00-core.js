@@ -51,10 +51,12 @@ window.MOTION = window.MOTION || {};
   let driver = 0, rafId = 0;     // 1 = requestAnimationFrame, 2 = gsap.ticker
   // ONE clock for every loop: performance.now(). The drivers (requestAnimationFrame, gsap.ticker) only decide WHEN to draw, so an animation
   // that moves from one driver to the other keeps its elapsed time (the two drivers' own timestamps have different origins).
+  // a widget leaving the document: stop its timeline and loop, then run the cleanups it registered with m.onDispose (observers, GL contexts)
+  const drop = w => { if (w.tl) w.tl.kill(); active.delete(w); live.delete(w); (w.disp || []).splice(0).forEach(f => f()); };
   function tick() {
     const now = performance.now();
     for (const w of active) {
-      if (!w.el.isConnected) { if (w.tl) w.tl.kill(); active.delete(w); live.delete(w); continue; }
+      if (!w.el.isConnected) { drop(w); continue; }
       if (document.hidden || reduceMq.matches) { w.last = 0; continue; }
       if (!w.t0) w.t0 = now;
       const dt = Math.min(.05, (now - (w.last || now)) / 1000); w.last = now;
@@ -92,7 +94,7 @@ window.MOTION = window.MOTION || {};
   const redraw = w => {
     if (w.tl) { if (reduceMq.matches && !w.once) { w.tl.pause().time(w.rest); w.draw && w.draw(w.rest); } else if (w.draw) w.draw(w.tl.time()); return; }
     if (w.loopFn) w.loopFn(reduceMq.matches ? w.rest : phase(w), 0); };
-  const refresh = () => live.forEach(w => { if (!w.el.isConnected) { live.delete(w); active.delete(w); return; } w.themeCbs.forEach(f => f()); redraw(w); });
+  const refresh = () => live.forEach(w => { if (!w.el.isConnected) { drop(w); return; } w.themeCbs.forEach(f => f()); redraw(w); });
   let wired = false;
   function wire() {              // shared listeners, installed once: no per-widget global listeners
     if (wired) return; wired = true;
@@ -104,7 +106,9 @@ window.MOTION = window.MOTION || {};
   }
 
   function build(el) {
-    const fn = window.MOTION[el.dataset.motion]; if (!fn || !el.isConnected) return;
+    const fn = window.MOTION[el.dataset.motion]; if (!el.isConnected) return;
+    // a 3D slot whose script did not arrive (offline, blocked): say so quietly instead of leaving an empty card
+    if (!fn) { if (el.classList.contains('three')) { el.classList.add('mnote'); el.textContent = root.lang === 'ko' ? '3D 화면을 불러오지 못했습니다. 연결을 확인한 뒤 새로고침하세요.' : 'The 3D view did not load. Check your connection and reload.'; } return; }
     if (fn.gsap && !window.gsap) { whenGsap(() => build(el), el); return; }
     if (el.dataset.nogsap) { delete el.dataset.nogsap; el.classList.remove('mnote'); el.textContent = ''; }
     const lp = el.closest('[data-f]') || root;
@@ -120,6 +124,7 @@ window.MOTION = window.MOTION || {};
       c: name => cs().getPropertyValue(name).trim(),
       fam: () => ({ f: cs().getPropertyValue('--pf').trim(), b: cs().getPropertyValue('--pb').trim(), l: cs().getPropertyValue('--pl').trim(), d: cs().getPropertyValue('--pd').trim() }),
       onTheme: f => themeCbs.push(f),
+      onDispose: f => (w.disp || (w.disp = [])).push(f),
       // svg(w,h,labelEn,labelKo): responsive svg inside a figure; returns {svg,g,W,H}
       svg(W, H, en, ko) {
         el.classList.add('motion-on');
@@ -203,7 +208,7 @@ window.MOTION = window.MOTION || {};
   // release the slots of a lesson that is leaving the document
   window.MOTION.__dispose = rootEl => rootEl.querySelectorAll('.motion[data-motion]').forEach(el => {
     if (ioNear) ioNear.unobserve(el); if (ioVis) ioVis.unobserve(el);
-    const w = byEl.get(el); if (w) { if (w.tl) w.tl.kill(); active.delete(w); live.delete(w); }
+    const w = byEl.get(el); if (w) drop(w);
   });
   // GSAP can arrive after the first loops started (it loads when the page is idle): hand the running driver over to gsap.ticker
   window.MOTION.__rehome = () => { if (driver === 1 && window.gsap) { if (rafId) cancelAnimationFrame(rafId); rafId = 0; driver = 2; gsap.ticker.add(gtick); } };

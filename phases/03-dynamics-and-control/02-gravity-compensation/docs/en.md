@@ -4,6 +4,12 @@
 
 **Type:** Build   **Prerequisites:** 01/02 Forward Kinematics   **Time:** ~15 minutes
 
+## In Plain Words
+
+Gravity compensation lets a motor carry an arm's weight, much as a friend helps you carry a tray. At the cafeteria serving counter, you lift a heavy tray while your friend supports most of its weight.
+
+Your friend's support is like gravity compensation. The position controller carries the remaining load. Its gain kp sets how strongly it pushes back for a given amount of sag. With a lower kp, the arm must sag farther to produce the same support.
+
 ## The Problem
 
 You lower the position gain `kp` to soften an arm so a person can push it. The arm now sags below its commanded pose, or floats above it, and the softer you go the worse it gets. Gravity compensation, a feedforward torque that cancels gravity, was supposed to prevent exactly this.

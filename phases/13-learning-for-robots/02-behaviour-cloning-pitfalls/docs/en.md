@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 13/01 Imitation from Demonstrations   **Time:** ~15 minutes
 
+## In Plain Words
+
+You learn cycling from examples that always begin in the middle of a lane. A wobble puts you near the edge, where none of those
+examples says how to recover. A guessed correction can put you farther out again.
+
+In behaviour cloning, actions change the states the learner sees next. DAgger lets the learner try, asks the expert for the right
+action at the positions the learner actually reached, and adds those recovery examples before fitting again.
+
 ## The Problem
 
 Your cloned policy scores well on held-out demonstration data, yet on the robot it drifts off the path and fails. The training loss never measured the states the policy creates by itself. Every small error moves it a little further from the data.

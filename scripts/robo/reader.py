@@ -10,6 +10,8 @@ from rich.syntax import Syntax
 from rich.table import Table
 from rich.text import Text
 
+from lesson_sections import split_plain_words
+
 from . import figures
 from . import progress as P
 from . import ui as U
@@ -138,6 +140,10 @@ def print_lesson(u, lesson, state, mode, root=None):
         for k, v in meta:
             m.append(k + " ", style="muted"), m.append(v.strip() + "   ")
         u.para(m)
+    before, plain, after = split_plain_words(body)
+    if plain:
+        u.print(Padding(make_markdown(u, plain), (0, 0, 0, 2)), width=w)
+        body = before + after
     hook = lesson.fun(u.lang).get("hook")
     if hook:
         u.print()

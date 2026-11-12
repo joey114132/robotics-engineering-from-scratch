@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Half the demos pass an obstacle on the left and half on the right. What does a mean-regression policy do at the start?",
+  "options": [
+   "Passes on the left",
+   "Heads straight at the obstacle",
+   "Picks randomly"
+  ],
+  "answer": 1,
+  "explanation": "The mean of left and right is straight ahead, which nobody demonstrated."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "At the shared starting observation, why does the mean policy already choose a wrong action?",
+  "options": [
+   "The data has two valid actions for one observation and regression averages them",
+   "Compounding error",
+   "The controller is too slow"
+  ],
+  "answer": 0,
+  "explanation": "The first action averages distinct valid modes. Compounding error instead concerns policy mistakes leading to unfamiliar states, and it can happen with deterministic errors too."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "What does a chunk sampler add over sampling a single action per step?",
+  "options": [
+   "It repeats the same action",
+   "It commits to one demonstration for H steps, so the mode does not flip each step",
+   "It removes the need for demos"
+  ],
+  "answer": 1,
+  "explanation": "Step-wise sampling can flip between modes and chatter; a chunk keeps one way round."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Two overlapping chunks pick opposite sides. What happens if you average the overlap?",
+  "options": [
+   "Nothing",
+   "The commands blend toward straight ahead",
+   "The robot stops"
+  ],
+  "answer": 1,
+  "explanation": "That is why each new chunk is chosen to agree with the committed actions."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "The demos split 5 to 1 over and under. What does the sampler do?",
+  "options": [
+   "Always goes over",
+   "Goes over about five times in six and under otherwise",
+   "Goes straight"
+  ],
+  "answer": 1,
+  "explanation": "Sampling keeps the data's proportions; it does not average them."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "What is the cost of a very long chunk?",
+  "options": [
+   "Higher jitter",
+   "Slower reaction to what happens while the chunk runs",
+   "More demos needed"
+  ],
+  "answer": 1,
+  "explanation": "The actions in a chunk are decided at its start, so the robot reacts late."
+ }
+]

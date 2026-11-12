@@ -1,5 +1,5 @@
-# 한 파일 판 빌더: site/ 의 67개 레슨을 hash 라우터가 있는 HTML 하나로 묶는다. 레슨은 inert 텍스트로 두고 열린 레슨만 DOM 으로 만든다
-import base64, io, os, re, sys
+# 한 파일 판 빌더: site/ 의 모든 레슨을 hash 라우터가 있는 HTML 하나로 묶는다. 레슨은 inert 텍스트로 두고 열린 레슨만 DOM 으로 만든다
+import base64, io, json, os, re, sys
 from pathlib import Path
 from PIL import Image
 
@@ -33,6 +33,14 @@ def fix(h: str) -> str:
 
 def part(h: str, tag: str) -> str:
     return re.search(rf"<{tag}[^>]*>(.*?)</{tag}>", h, re.S).group(1)
+
+
+def lesson_fragments(body: str) -> tuple[str, str, str]:
+    """The complete opening callout stays in the immediate fragment, before data-rest."""
+    match = re.search(r'^(.*?)<span hidden data-rest="a"></span>(.*)<span hidden data-rest="b"></span>(.*)$', body, re.S)
+    if match is None:
+        raise ValueError("lesson is missing deferred-body markers; rebuild the multi-page site first")
+    return match.groups()
 
 
 # The whole file is ASCII: a single non-ASCII byte sends Chrome's decoder down its slow path for the entire 8 MB (260 ms vs 80 ms at 4x CPU).
@@ -98,19 +106,19 @@ const tpl=document.createElement('template');tpl.innerHTML=html;const jobs=[];
 [...tpl.content.children].forEach(a=>{const shell=a.cloneNode(false);slot.before(shell);const k=[...a.childNodes],hid=getComputedStyle(shell).display==='none';for(let i=0;i<k.length;i+=hid?k.length:12)jobs.push([shell,k.slice(i,i+(hid?k.length:12))])});slot.remove();
 /* one chunk per frame: each frame paints what the last chunk added */
 (function step(){if(!sec.isConnected)return;const j=jobs.shift();if(!j)return done();j[0].append(...j[1]);j[1].forEach(n=>n.querySelectorAll&&pic(n));if(jobs.length)requestAnimationFrame(()=>setTimeout(step,0));else done()})()}
-function dispose(sec){sec.querySelectorAll('#quizbox').forEach(b=>{if(b._game)b._game.dispose()});const g=window.gsap;if(g)g.killTweensOf(sec.querySelectorAll('.q,.qres,.star,.bolt-svg'));if(window.MOTION)MOTION.__dispose(sec);if(window.TOYS)TOYS.__dispose(sec);RFSUI.revealClear();sec.remove()}
+function dispose(sec){sec.querySelectorAll('#quizbox').forEach(b=>{if(b._game)b._game.dispose()});disposeBolts(sec);const g=window.gsap;if(g)g.killTweensOf(sec.querySelectorAll('.q,.qres,.star,.bolt-svg'));if(window.MOTION)MOTION.__dispose(sec);if(window.TOYS)TOYS.__dispose(sec);RFSUI.revealClear();RFSUI.flowOff();sec.remove()}
 function route(){const raw=(location.hash||'#').slice(1),pid=document.getElementById('T-'+raw)?raw:'';
 const old=MAIN.querySelector('.lesson:not(#L-home)');
 if(old&&old.id!=='L-'+pid){if(window.CUR)RFSUI.UI.scroll(window.CUR,scrollY);dispose(old)}
 let el=pid?document.getElementById('L-'+pid):HOME;
 if(pid&&!el){el=inflate(pid);MAIN.appendChild(el)}
-HOME.hidden=!!pid;MAIN.classList.toggle('hm',!pid);window.CUR=pid||null;window.QUIZ=pid?quizOf(pid):null;
+HOME.hidden=!!pid;MAIN.classList.toggle('hm',!pid);MAIN.parentNode.classList.toggle('lpg',!!pid);window.CUR=pid||null;window.QUIZ=pid?quizOf(pid):null;
 document.querySelectorAll('aside a').forEach(a=>a.classList.toggle('cur',a.getAttribute('href')==='#'+window.CUR));
 if(pid){loadToys();window.__boot()}
-quiz();bindMissions();RFS.paint();document.documentElement.classList.remove('nav');
+quiz();bindMissions();RFS.paint();mountBolts(el);document.documentElement.classList.remove('nav');
 const rs=RFSUI.wantRestore(pid),y=pid&&RFSUI.UI.d.sc[pid];window.scrollTo(0,0);
 if(pid)RFSUI.UI.last(pid);
-if(pid&&el.querySelector('[data-slot]'))requestAnimationFrame(()=>setTimeout(()=>fill(el,pid,()=>{if(rs&&y>40)scrollTo(0,y);RFSUI.reveal()}),0));else RFSUI.reveal()}
+if(pid&&el.querySelector('[data-slot]'))requestAnimationFrame(()=>setTimeout(()=>fill(el,pid,()=>{if(rs&&y>40)scrollTo(0,y);RFSUI.flow();RFSUI.reveal()}),0));else{RFSUI.flow();RFSUI.reveal()}}
 addEventListener('hashchange',route);route();
 addEventListener('load',()=>setTimeout(()=>{loadGsap();setTimeout(loadToys,60)},0));
 """
@@ -118,15 +126,19 @@ addEventListener('load',()=>setTimeout(()=>{loadGsap();setTimeout(loadToys,60)},
 
 def main() -> int:
     idx = (SITE / "index.html").read_text()
-    head = head_ascii(re.search(r"<title>.*?</title><style>.*?</style>", idx, re.S).group(0))
+    head = head_ascii(re.search(r"<title>.*?</title>", idx, re.S).group(0) + "<style>" + (SITE / "app.css").read_text() + "</style>")  # the multi-page site links app.css and app.js; the single file inlines them
     sprite = re.search(r'<svg id="sprite".*?</svg>', idx, re.S).group(0)
     header = html_ascii(fix(re.search(r"<header>.*?</header>", idx, re.S).group(0)))
     aside = html_ascii(fix(part(idx, "aside")))
     home = html_ascii(fix(part(idx, "main")))
     scripts = re.findall(r"<script>(.*?)</script>", idx, re.S)
-    ph_script, js = js_ascii(scripts[0]), js_ascii(scripts[1])
-    toys = js_ascii((SITE / "toys.js").read_text() + "\n" + (SITE / "motion.js").read_text())
+    ph_script, js = js_ascii(scripts[0]), js_ascii((SITE / "app.js").read_text())
+    ph_script += js_ascii("window.GL=" + json.dumps({t["id"]: {"en": t["en"], "ko": t["ko"]} for t in json.loads((ROOT / "scripts" / "glossary.json").read_text())}, ensure_ascii=False, separators=(",", ":")) + ";")  # tooltips: the single file ships every definition once
+    cat = lambda d, pat: "".join("\n" + f.read_text() for f in sorted((ROOT / "scripts" / d).glob(pat)))
+    # every widget file, base groups first, then the per-phase files: the multi-page site loads a subset per lesson, the single file keeps them all as inert text
+    toys = js_ascii(cat("toys", "[0-9]*.js") + cat("toys", "p[0-9][0-9].js") + cat("motion", "[0-9]*.js") + cat("motion", "p[0-9][0-9].js") + cat("motion3d", "[0-9]*.js") + cat("motion3d", "p[0-9][0-9].js"))
     gsap = (ROOT / "scripts" / "vendor" / "gsap.min.js").read_text()
+    mascot = js_ascii((ROOT / "scripts" / "mascot3d.js").read_text())
     assert "</script" not in gsap.lower() and "</script" not in toys.lower() and "</script" not in js.lower()
     lessons, quizzes, imgs = [], [], []
     for f in sorted(SITE.glob("[0-9][0-9]-[0-9][0-9]-*.html")):
@@ -137,8 +149,7 @@ def main() -> int:
         body = re.sub(r"<script>window\.QUIZ=.*?</script>", "", part(h, "main"), flags=re.S)
         # the long articles after the playground ("rests") are a second inert block: the router paints the rest of the lesson first and
         # appends them in small chunks, so opening a lesson is never one big layout
-        sp = re.search(r'^(.*?)<span hidden data-rest="a"></span>(.*)<span hidden data-rest="b"></span>(.*)$', fix(body), re.S)
-        head_, rests_, tail_ = sp.groups()
+        head_, rests_, tail_ = lesson_fragments(fix(body))
         lessons.append(inert("text/plain", f"T-{pid}", html_ascii(head_ + '<span hidden data-slot></span>' + tail_)))
         lessons.append(inert("text/plain", f"R-{pid}", html_ascii(rests_)))
     imgs = [inert("text/plain", f"I{i}", d) for i, d in enumerate(IMGS)]
@@ -147,7 +158,7 @@ def main() -> int:
     main_html = f'<section class="lesson" id="L-home">{home}</section>'
     # page first, data after: the home page paints before the parser reaches the 8 MB of lessons and images; the router runs last
     body_html = lambda extra, store: (f'{sprite}{header}<div class="layout"><aside>{aside}</aside><main class="hm">{main_html}</main></div><div id="toast" role="status" aria-live="polite"></div>'
-                                      f'<script>{ph_script}</script><script>{js}</script>{extra}{store}<script>{ROUTER}</script>')
+                                      f'<script>{ph_script}</script><script>{js}</script><script data-bolt3d-source>{mascot}</script>{extra}{store}<script>{ROUTER}</script>')
     doc = (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">{head}</head><body>'
            f'{body_html(inert("text/plain", "gsap-src", gsap), store)}</body></html>')
     OUT.parent.mkdir(exist_ok=True)

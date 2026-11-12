@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 04/01 Motor and Gearbox, 03/01 The Sampling Limit   **Time:** ~15 minutes
 
+## In Plain Words
+
+Pour water slowly into a cup on a kitchen scale that shows only whole units. The true weight rises smoothly,
+but the display waits and jumps. Divide each jump by a very short time and the estimated filling rate spikes,
+even though your pouring stayed steady.
+
+Encoder counts do the same to velocity estimates. Faster sampling makes a single count jump represent a larger
+speed. Measuring across a longer window reduces the steps, but the result describes an earlier interval and
+follows speed changes late.
+
 ## The Problem
 
 You raise the loop rate to make a joint feel smoother, and at slow speed the velocity signal gets worse. It jumps between zero and a large value, and the damping term `kd * velocity` kicks the joint with every jump. You add a filter, the kicks stop, and the joint starts to oscillate because the velocity now arrives late.

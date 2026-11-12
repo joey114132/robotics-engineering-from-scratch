@@ -7,5 +7,7 @@
     "hook": "최소제곱 평면은 소문을 전부 믿는 친구입니다. RANSAC은 점 세 개만 뽑아 보고 다수결로 판단합니다.",
     "mission": "`code/main.py`의 `ransac_plane(P, 0.012, 150)`에서 `150`을 `3`으로 바꾸고 `python3 code/main.py`를 실행하세요. 최소제곱(4.8도 틀림)을 여전히 이길지 예측한 뒤 결과를 읽으세요."
   },
-  "toy": null
+  "toy": null,
+  "motion": "ransac-rounds",
+ "three": "depth-cloud-3d"
 }

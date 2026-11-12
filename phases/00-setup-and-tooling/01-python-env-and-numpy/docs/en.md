@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
+## In Plain Words
+
+A recipe says to add a spoonful of salt, but you read the amount as a cupful. The written amount has not
+changed; changing the unit changes what goes into the soup.
+
+Robot data can fail the same way. An angle in degrees means something different when read as radians. Arrays
+also need agreed shapes so each value keeps its intended role. Checking units and shapes catches mistakes that
+ordinary arithmetic accepts.
+
 ## The Problem
 
 An encoder driver reports a joint at `90`. You pass it to `np.cos`, and the link tip lands 0.45 of a link length away from where it should be, with no error and no warning. numpy treats every number as radians and every array as just numbers, so a unit mistake or a transposed array looks exactly like a correct run.

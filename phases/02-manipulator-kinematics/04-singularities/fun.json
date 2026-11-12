@@ -8,5 +8,6 @@
   "mission": "`code/main.py`의 damped 쪽 `0.05`를 `0.5`로 바꾸세요. q2=0.005에서 damped |qd|가 오를지 내릴지와 손끝이 무엇을 포기하는지 예측한 다음 실행하세요."
  },
  "toy": null,
- "motion": "singularity-fold"
+ "motion": "singularity-fold",
+  "three": "singular-reach-3d"
 }

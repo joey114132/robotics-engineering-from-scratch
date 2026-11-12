@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "I used to say it looked stable. Now I check every arrow in the phase plane. One pointing outward and I am out of excuses.",
+  "mission": "In `code/main.py` call `check` with `kd` of -0.2, -0.1 and 0.0 (c is 0.1). Predict the sign of the worst slope for each, then run and find the exact `kd` where it flips."
+ },
+ "ko": {
+  "hook": "예전엔 안정해 보인다고 말했습니다. 이제는 위상 평면의 화살표를 전부 확인합니다. 바깥을 향한 화살표가 하나만 있어도 변명할 수 없습니다.",
+  "mission": "`code/main.py`에서 `kd`를 -0.2, -0.1, 0.0으로 바꿔 `check`를 부르세요(c는 0.1입니다). 최악 기울기의 부호를 각각 예측하고 실행해서 부호가 바뀌는 정확한 `kd`를 찾으세요."
+ },
+ "toy": "lyapunov-arrows",
+ "motion": "energy-falls"
+}

@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 01/02 Forward Kinematics   **Time:** ~15 minutes
 
+## In Plain Words
+
+On a playground route, "turn, then walk" can end somewhere different from "walk, then turn." If the turn is
+absent, both instructions may appear to work, hiding the disagreement until the route bends.
+
+DH conventions likewise put fixed offsets and joint rotations in different orders. A table written for one
+convention needs conversion before the other can use it. A matching straight pose proves little; checking bent
+poses reveals whether both descriptions really represent the same arm.
+
 ## The Problem
 
 You copy a DH table from a textbook into your kinematics code. The zero pose looks right, so you move on. Weeks later the arm reaches the wrong point at every other pose, and nothing ever raised an error.

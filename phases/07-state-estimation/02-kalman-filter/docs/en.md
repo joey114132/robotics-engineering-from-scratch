@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 07/01 Bayes Filter   **Time:** ~15 minutes
 
+## In Plain Words
+
+At a skating rink, you estimate where a friend is from their last position and speed. A shouted position
+report arrives with some error. If the report is usually unreliable, you move your estimate toward it only a
+little; if your motion prediction is uncertain, you correct more.
+
+The Kalman gain sets that balance. The filter updates estimated position and velocity, while covariance tracks
+its remaining uncertainty. A corrected estimate is still a guess, and its uncertainty should match errors
+measured over repeated trials.
+
 ## The Problem
 
 A position sensor is off by about 2 m on every reading. Plotting its raw output makes the robot look as if it jitters, and differencing it for speed makes the jitter worse. Averaging the last few readings removes the jitter but lags behind every turn.

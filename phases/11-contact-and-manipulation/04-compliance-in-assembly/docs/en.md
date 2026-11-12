@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 11/01 Contact Models, 11/02 Force and Hybrid Control   **Time:** ~15 minutes
 
+## In Plain Words
+
+A tilted pencil can wedge in a snug holder. Holding its upper end rigidly to the side makes the pencil press hard against the walls.
+Those walls push back, and their friction opposes the downward insertion.
+
+Compliance lets the grip yield sideways, reducing the wall load so the pencil can straighten and slide deeper. The assembly model
+checks whether the contact forces can balance the wrist's push and twist. If they can, the peg can stay jammed instead of moving.
+
 ## The Problem
 
 A robot inserts a peg into a tight hole. With a fraction of a millimetre of misalignment the peg stops halfway, and pushing harder holds it more firmly.

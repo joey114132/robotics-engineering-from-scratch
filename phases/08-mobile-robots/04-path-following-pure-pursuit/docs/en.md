@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
 
+## In Plain Words
+
+On a bike, steer toward a point ahead on a painted path. A nearby point calls for a sharp turn when you drift sideways. If the bike
+responds late, you can cross the line before the correction takes effect, then overcorrect the other way.
+
+Pure pursuit steers a robot toward a point ahead. Looking farther ahead softens the corrections, but near a bend the target lies beyond
+the corner, so the robot cuts across it.
+
 ## The Problem
 
 You give a mobile robot a path with a right-angle corner. With a short look-ahead it snakes along the straight parts, and with a long one it sails across the corner and hits whatever is standing there.

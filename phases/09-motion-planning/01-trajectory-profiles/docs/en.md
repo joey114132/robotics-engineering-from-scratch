@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** high-school calculus   **Time:** ~15 minutes
 
+## In Plain Words
+
+An elevator can leave a floor without an instant jump in speed and still give you a jolt. The floor suddenly pushes harder upward on
+your feet because the elevator's acceleration changes abruptly.
+
+Trajectory profiles choose how a robot moves between positions. Reaching each end at rest does not stop acceleration from jumping
+there. A quintic profile also brings acceleration to zero at the ends, so the motor's effort need not jump when the move begins or
+ends.
+
 ## The Problem
 
 A joint moves between two poses along a smooth-looking curve and still knocks at the start. The curve reaches the right place with zero speed at both ends, so position and velocity are fine. Acceleration is the culprit: it jumps from zero to a large value in one control tick.

@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "6관절 팔에는 닫힌 형태의 IK가 없습니다. 보통 어떻게 하나요?", "options": ["각도를 손으로 추측한다", "끝점 오차가 작아질 때까지 Jacobian으로 관절 걸음을 반복한다", "표적을 거부한다"], "answer": 1, "explanation": "걸음마다 관절 움직임을 끝점 움직임으로 보내는 국소 선형 사상을 씁니다."},
+  {"id": 2, "stage": "check", "question": "Jacobian 풀이에 damping을 넣는 이유는?", "options": ["더 느리게 하려고", "쭉 펴지거나 접힌 팔에서 걸음을 유한하게 하려고", "관절 한계를 없애려고"], "answer": 1, "explanation": "singularity 근처에서는 일반 역행렬이 엄청나게 큰 걸음을 줍니다(02/04)."},
+  {"id": 3, "stage": "check", "question": "무작위 seed 두 개가 같은 표적에 서로 다른 팔꿈치 모양으로 끝납니다. 무엇을 뜻하나요?", "options": ["하나가 틀렸다", "표적에 해가 둘 이상 있다", "Jacobian이 고장났다"], "answer": 1, "explanation": "한 점에 여러 관절 조합으로 닿을 수 있고 시작점이 어느 것을 찾을지 정합니다."},
+  {"id": 4, "stage": "check", "question": "표적이 닿지 않는 곳입니다. solver는 무엇을 돌려줘야 하나요?", "options": ["예외만", "탐색 중 오차가 가장 작았던 자세와 converged=False", "converged=True인 임의 자세"], "answer": 1, "explanation": "가장 좋은 iterate를 보관하고 실패를 분명히 표시합니다. global minimum을 보장하지는 않습니다."},
+  {"id": 5, "stage": "post", "question": "q를 반복문 안에서 한계로 자르는 이유는?", "options": ["걸음마다 실제로 갈 수 있는 범위를 보게 됩니다", "더 빠르다", "한계는 중요하지 않다"], "answer": 0, "explanation": "마지막에 한 번 자르면 끝점이 표적에서 멀리 벗어날 수 있고 반복 중에 자르면 오차가 정직하게 남습니다."},
+  {"id": 6, "stage": "post", "question": "수렴한 해가 여러 개일 때 어떻게 고르나요?", "options": ["항상 첫 번째", "현재 관절각과의 거리 같은 비용으로", "q1이 가장 큰 것"], "answer": 1, "explanation": "가까운 해를 고르면 팔이 가장 적게 움직입니다."}
+]

@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "What does V(s) mean in an MDP?",
+  "options": [
+   "The reward of the next step",
+   "The expected discounted reward-to-go when the best actions are taken from s",
+   "The number of steps to the goal"
+  ],
+  "answer": 1,
+  "explanation": "It is the reward-to-go of 13/03 averaged over chance, under the best policy."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "One backup of V(s) uses which pieces?",
+  "options": [
+   "Reward now plus gamma times the value of the next state, maximised over actions",
+   "Only the reward now",
+   "The average over all actions without a max"
+  ],
+  "answer": 0,
+  "explanation": "The max over actions is what makes it the optimal value."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "With gamma = 0.9, how much does one sweep shrink the worst-case error at most?",
+  "options": [
+   "By a factor 0.9",
+   "By a factor 0.1",
+   "It does not shrink"
+  ],
+  "answer": 0,
+  "explanation": "The backup is a contraction with factor gamma."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "With 0 < gamma < 1, reward magnitudes at most 1 and V starting at 0, why is the sweep count bounded for a positive tolerance?",
+  "options": [
+   "The first change is at most 1 and each sweep multiplies the change by gamma or less",
+   "Sweeps stop after 10 by definition",
+   "The policy stops changing"
+  ],
+  "answer": 0,
+  "explanation": "Changes fall like gamma to the k, so they pass below any tolerance."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "A pit sits beside the short route and moves slip sideways. What does the greedy policy do at the start?",
+  "options": [
+   "Always takes the short route",
+   "May take a longer route that keeps away from the pit",
+   "Stops"
+  ],
+  "answer": 1,
+  "explanation": "The expected -1 from slipping into the pit outweighs the extra discount of a longer route."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "When can you not use value iteration?",
+  "options": [
+   "When the transition model and rewards are unknown",
+   "When there is a goal",
+   "When gamma is below 1"
+  ],
+  "answer": 0,
+  "explanation": "The sweep needs the full model, which is why sampling methods such as policy gradients exist."
+ }
+]

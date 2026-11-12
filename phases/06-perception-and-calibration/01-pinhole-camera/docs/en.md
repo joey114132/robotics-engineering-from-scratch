@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 01/01 Rotations and SE(3)   **Time:** ~15 minutes
 
+## In Plain Words
+
+Close one eye and line up your fingertip with a distant door handle. They share a viewing direction despite
+being at different distances. A pixel likewise identifies a ray, not a unique place.
+
+Depth, measured along the camera's forward axis here, selects a point on that ray. Using depth from behind the
+fingertip puts its estimated position too far away. Away from the image centre, that also moves the estimate
+sideways. The fingertip itself has not moved; the reconstructed point has.
+
 ## The Problem
 
 A vision system reports a cup at pixel (520, 240) and the planner reaches for it. The gripper closes a few centimetres to the side. The pixel was on the cup rim, but the depth value came from the table behind it, so the 3D point slid along the viewing ray.

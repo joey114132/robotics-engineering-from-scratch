@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 15/01 Failure Modes   **Time:** ~15 minutes
 
+## In Plain Words
+
+On a bike, waiting to hear a stop signal uses up road before you even brake. After braking starts, you still need distance to slow
+down. Stopping pedalling alone leaves you coasting.
+
+A watchdog waits for missing heartbeats before triggering a stop. Its timeout travel and braking travel must both fit before the joint
+limit. Faster motion uses up that room quickly because braking distance grows with the square of speed. A timeout must also allow
+normal message timing variation.
+
 ## The Problem
 
 The program that sends commands crashes, and the joint keeps executing the last velocity it was given. A watchdog notices the silence and stops the joint. But the stop takes time and distance, and some stops are not stops at all.

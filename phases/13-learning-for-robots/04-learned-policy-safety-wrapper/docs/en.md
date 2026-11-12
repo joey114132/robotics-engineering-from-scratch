@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 13/02 Behaviour Cloning Pitfalls   **Time:** ~15 minutes
 
+## In Plain Words
+
+A safety wrapper is like a filter on steering commands in a driving game. Even if a player jerks the stick, the filter can cap the
+steering and how quickly it changes.
+
+For a learned robot policy, this layer also checks whether the observation is fresh before calling the policy. A short gap holds the
+previous command; a longer gap moves toward a fallback. Invalid output is replaced too. These rules bound commands predictably, though
+they do not prove every resulting motion safe.
+
 ## The Problem
 
 A policy trained on demonstrations produces a command every tick, and nothing in training promised that the command is finite, small, smooth or based on a recent observation. One spike, one NaN or one frozen camera frame reaches the actuator at full speed. You cannot test a neural network into safety, but you can test a short deterministic layer.

@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "컨트롤러 명령을 토크 한계에서 잘랐더니 팔이 overshoot합니다. 왜일까요?",
+  "options": [
+   "컨트롤러가 한계를 몰랐다",
+   "모터가 약하다",
+   "kp가 낮다"
+  ],
+  "answer": 0,
+  "explanation": "한계 없이 계산한 게인은 최대 힘으로 제동할 수 있다고 가정합니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "MPC는 각 계획에서 무엇을 적용하나요?",
+  "options": [
+   "첫 입력만",
+   "입력 열 전체",
+   "마지막 입력"
+  ],
+  "answer": 0,
+  "explanation": "계획은 새 측정값으로 매 tick 다시 만듭니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "쌓은 형태 X = Phi x0 + Gam U에서 U는 무엇인가요?",
+  "options": [
+   "horizon 동안의 입력",
+   "horizon 동안의 상태",
+   "비용 가중치"
+  ],
+  "answer": 0,
+  "explanation": "입력을 쌓으면 비용이 U의 이차식이 되고 한계가 U의 상자가 됩니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "입력 한계는 U의 상자입니다. 여기서는 어떻게 지키나요?",
+  "options": [
+   "경사 한 걸음마다 상자 안으로 자른다",
+   "가장 큰 입력을 지운다",
+   "R을 0으로 낮춘다"
+  ],
+  "answer": 0,
+  "explanation": "상자로의 투영은 그냥 자르기이므로 결과가 한계를 정확히 지킵니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "한계가 넉넉할 때 MPC가 재현해야 하는 것은?",
+  "options": [
+   "LQR의 동작",
+   "영 입력",
+   "bang-bang 동작"
+  ],
+  "answer": 0,
+  "explanation": "종단 비용이 P이고 한계가 활성이 아니면 계획의 첫 입력은 -Kx입니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "horizon이 길면 무엇을 치르나요?",
+  "options": [
+   "tick당 계산량",
+   "나쁜 모델",
+   "낮은 한계"
+  ],
+  "answer": 0,
+  "explanation": "이차식의 변수가 늘어서 한 번 푸는 데 더 오래 걸립니다."
+ }
+]

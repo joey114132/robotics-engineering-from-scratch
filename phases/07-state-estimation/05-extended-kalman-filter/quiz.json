@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Why can the plain Kalman filter of 07/02 not track a turning robot?",
+  "options": [
+   "The motion model is nonlinear in heading",
+   "The sensor is too noisy",
+   "The covariance is too small"
+  ],
+  "answer": 0,
+  "explanation": "Heading sits inside cos and sin, so no constant F exists."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Where does an EKF evaluate its Jacobians?",
+  "options": [
+   "At the true state",
+   "At the current estimate",
+   "At the origin"
+  ],
+  "answer": 1,
+  "explanation": "The true state is unknown, so the estimate is the only choice."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "What must you do with a bearing innovation z - h(x)?",
+  "options": [
+   "Wrap it into [-pi, pi]",
+   "Square it",
+   "Drop it when it is negative"
+  ],
+  "answer": 0,
+  "explanation": "Angles that differ by 2 pi are the same direction."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "A consistent 3-state filter gives an average NEES near what?",
+  "options": [
+   "1",
+   "3",
+   "The number of landmarks"
+  ],
+  "answer": 1,
+  "explanation": "NEES averages to the state dimension when P is honest."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Which start diverges in this lesson?",
+  "options": [
+   "Four landmarks, 1.5 rad heading error",
+   "One landmark, 1.5 rad heading error",
+   "One landmark, exact heading"
+  ],
+  "answer": 1,
+  "explanation": "Too little information cannot pull a bad linearisation point back."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "The filter reports a tiny covariance but its error is large. What is this?",
+  "options": [
+   "Overconfidence, seen as a high NEES",
+   "Good tuning",
+   "A units mistake only"
+  ],
+  "answer": 0,
+  "explanation": "NEES far above the state dimension means P understates the error."
+ }
+]

@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 03/03 Impedance Control, 03/04 PID and Tuning   **Time:** ~15 minutes
 
+## In Plain Words
+
+Swing a schoolbag horizontally with your elbow bent, then with your arm extended. The same angular
+acceleration needs different shoulder torque because the load sits at a different distance. Moving the elbow
+also changes what the shoulder must do.
+
+Computed torque predicts these inertia and coupling effects from the arm's model before adding corrections for
+tracking error. With an exact model, the corrections act on a simpler system. Wrong masses leave some of those
+torques uncancelled.
+
 ## The Problem
 
 A joint-by-joint PD controller tracks a slow motion well. Make the same motion four times faster and the arm lags and wobbles, because the inertia and coupling torques that were small at low speed now dominate. Raising the gains runs into the limit of lesson 03/04.

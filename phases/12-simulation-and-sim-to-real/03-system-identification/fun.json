@@ -7,5 +7,6 @@
     "hook": "눈대중으로 시뮬레이터를 맞추는 건 한 입 먹고 레시피를 맞히는 일입니다. 풍부한 기록을 주면 재료가 드러납니다.",
     "mission": "`python3 code/main.py`를 실행하세요. 출력을 읽기 전에 `a=0.0`과 `a=1.0` 중 어느 쪽이 `b`를 맞힐지 짐작한 뒤 두 `cond` 값을 비교하세요."
   },
-  "toy": null
+  "toy": null,
+  "motion": "excitation-pins-down-b"
 }

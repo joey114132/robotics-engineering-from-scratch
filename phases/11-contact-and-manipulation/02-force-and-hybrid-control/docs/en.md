@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 11/01 Contact Models   **Time:** ~15 minutes
 
+## In Plain Words
+
+Wiping a desk with a sponge means guiding it across the desk while pressing downward. Pushing to a fixed depth gives different forces
+when the sponge or surface is softer than expected.
+
+Force control measures the push and moves deeper when it is too weak, or backs off when it is too strong. Hybrid control gives the
+sliding direction a position target and the pressing direction a force target. That lets the tool follow surface bumps while
+maintaining its push.
+
 ## The Problem
 
 A tool must press with 10 N. You command the depth that gives 10 N for the stiffness you assumed. If the real surface is softer you press with 1.6 N, and if it is stiffer you press with 40 N.

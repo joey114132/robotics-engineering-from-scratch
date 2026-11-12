@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 08/01 Differential Drive, 08/04 Pure Pursuit, 09/03 Collision Checking   **Time:** ~30 minutes
 
+## In Plain Words
+
+Your phone sketches your school walk from counted steps and turns. If those estimates drift, it may show you beside the right corridor
+while you are beside another. Following a good route from that wrong starting belief sends you the wrong way.
+
+This navigation system plans around obstacles, then steers using an estimated pose. Biased wheel readings separate that estimate from
+the real robot. Observing known landmarks corrects position and heading, so the same follower can use the route successfully again.
+
 ## The Problem
 
 The planner found a clean route and the follower tracks it well in tests. On a longer run the robot ends up metres from the goal, pressed against a wall, while its own display says it is on the path. The plan was fine. The belief was wrong.

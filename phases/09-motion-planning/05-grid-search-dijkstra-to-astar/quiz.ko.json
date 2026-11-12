@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "이 레슨에서 Dijkstra와 A*의 유일한 차이는 무엇입니까?",
+  "options": [
+   "A*는 목표까지 거리 추측을 우선순위에 더합니다",
+   "A*는 다른 격자를 씁니다",
+   "Dijkstra는 벽을 무시합니다"
+  ],
+  "answer": 0,
+  "explanation": "둘 다 우선순위가 가장 작은 칸을 확장합니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "맨해튼 거리를 쓴 A*가 Dijkstra와 같은 비용을 돌려주는 때는 언제입니까?",
+  "options": [
+   "가중치가 1보다 클 때",
+   "휴리스틱이 실제 비용을 과대추정하지 않을 때",
+   "격자가 비어 있을 때"
+  ],
+  "answer": 1,
+  "explanation": "admissible한 휴리스틱은 A*를 최적으로 지킵니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Dijkstra는 A*로 말하면 무엇입니까?",
+  "options": [
+   "w = 10인 A*",
+   "벽 없는 A*",
+   "h = 0인 A*"
+  ],
+  "answer": 2,
+  "explanation": "추측이 없으면 우선순위가 g뿐입니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "trap 지도에서 가중치 w = 4는 무엇을 합니까?",
+  "options": [
+   "칸을 덜 확장하지만 더 긴 경로를 돌려줍니다",
+   "칸을 더 확장합니다",
+   "손실 없이 더 빨리 최적을 찾습니다"
+  ],
+  "answer": 0,
+  "explanation": "가까운 틈이 싸 보이지만 비용이 26이 아니라 36입니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "가중 A*의 손해를 제한하는 것은 무엇입니까?",
+  "options": [
+   "격자 크기",
+   "경로 비용이 최적의 w배 이하입니다",
+   "없습니다"
+  ],
+  "answer": 1,
+  "explanation": "admissible한 휴리스틱에 w를 곱하면 w배의 상한이 생깁니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "빈 격자에서 A*는 몇 칸을 확장합니까?",
+  "options": [
+   "격자 전체",
+   "격자의 절반",
+   "최종 경로 위의 칸만"
+  ],
+  "answer": 2,
+  "explanation": "거기서는 맨해튼이 정확해서 경로 밖을 보지 않습니다."
+ }
+]

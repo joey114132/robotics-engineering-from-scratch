@@ -4,6 +4,12 @@
 
 **Type:** Build   **Prerequisites:** 01/01 Rotations and SE(3)   **Time:** ~15 minutes
 
+## In Plain Words
+
+Differential drive turns a robot by running its wheels at different speeds. Imagine walking a square but turning slightly less than [90°](https://mathworld.wolfram.com/RightAngle.html) at each corner. A notebook that records every turn as [90°](https://mathworld.wolfram.com/RightAngle.html) draws a closed square, although you miss the start.
+
+A robot can make the same mistake. Wheel radius and the distance between the wheels determine distances and turns from wheel rotations. If planning and odometry use the same wrong values, the recorded path can close while the robot misses the start.
+
 ## The Problem
 
 You drive a mobile robot around a 2 m square and the wheel odometry says it came back to the start. The tape measure says it stopped 18 cm away. The wheels turned exactly as commanded, so the motors are not at fault. The error is in two numbers you typed into a config file.

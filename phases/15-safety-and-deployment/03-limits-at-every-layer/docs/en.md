@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 15/02 Watchdogs and Stops   **Time:** ~15 minutes
 
+## In Plain Words
+
+A phone download can be capped by the app, the connection plan and the home router. Raising the app's cap does nothing if a later cap
+is lower. The slowest allowance still wins.
+
+Robot commands pass through limits in the planner, controller and drive in much the same way. A planner that expects more speed than
+the drive permits gets ahead of the real joint. Comparing matching limits across layers before motion reveals which layer will silently
+restrict the request.
+
 ## The Problem
 
 You raise the speed limit in the planner to 3 rad/s and the joint still crawls at half that. Nothing logged a clamp, because the drive quietly cut the speed. Position, velocity and torque are each clamped by the planner, the controller and the drive, and no one checks that the three sets agree.

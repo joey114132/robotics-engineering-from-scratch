@@ -9,6 +9,8 @@ import json, re, sys
 from collections import Counter
 from pathlib import Path
 
+from lesson_sections import headings
+
 ROOT = Path(__file__).resolve().parents[1]
 BK = ROOT / ".board" / "humanize-backup"
 DIGITS = re.compile(r"\d+(?:\.\d+)?")
@@ -40,7 +42,9 @@ def facts(prose):
 def cmp_md(old, new, tag, errs):
     fo, po = split_md(old); fn, pn = split_md(new)
     if fo != fn: errs.append(f"{tag}: fenced code changed")
-    ho = [l for l in po if l.startswith("#")]; hn = [l for l in pn if l.startswith("#")]
+    # Shared parser includes In Plain Words / 쉽게 말하면 and ignores headings in code.
+    # A structural rollout must refresh only that lesson's baseline before humanizing.
+    ho = [h[0] for h in headings(old)]; hn = [h[0] for h in headings(new)]
     if ho != hn: errs.append(f"{tag}: headings changed")
     io = [l for l in po if l.startswith("![")]; inn = [l for l in pn if l.startswith("![")]
     if io != inn: errs.append(f"{tag}: image lines changed")

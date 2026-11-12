@@ -1,0 +1,13 @@
+{
+ "en": {
+  "hook": "I know where the goal is, so I whisper its value to my neighbours, and they whisper it on. Each sweep carries the goal's value farther across the map.",
+  "mission": "In `code/main.py` change `slip=0.2` to `0.5` and run it. Guess whether the printed start value goes up or down, then check it."
+ },
+ "ko": {
+  "hook": "저는 목표가 어디인지 알아서 이웃에게 그 value를 속삭이고 이웃은 또 옆으로 전합니다. sweep마다 목표의 value가 지도에서 더 멀리 퍼집니다.",
+  "mission": "`code/main.py`에서 `slip=0.2`를 `0.5`로 바꿔 실행하세요. 출력되는 시작 칸의 value가 오를지 내릴지 예측한 뒤 확인하세요."
+ },
+ "toy": "value-spread",
+  "motion": "bellman-backup",
+  "three": "value-bars-3d"
+}

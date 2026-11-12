@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 03/01 The Sampling Limit, 03/02 Gravity Compensation   **Time:** ~15 minutes
 
+## In Plain Words
+
+Hold a spring-loaded gate open. The farther you turn it from its resting position, the more closing torque the
+spring applies to the gate. A damper opposes its movement and slows the swing.
+
+Impedance control gives a joint this spring-and-damper response. Stiffness sets the restoring torque for a
+given deflection. A larger stiffness needs less deflection to balance the same external torque. Damping
+changes how it settles, rather than the final deflection under a steady push.
+
 ## The Problem
 
 A stiff position loop fights every touch with maximum force. A robot that hands over a cup needs the opposite: a chosen stiffness and a chosen damping, so a push produces a predictable, bounded deflection instead of a fight.

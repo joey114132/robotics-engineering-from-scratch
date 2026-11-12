@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
 
+## In Plain Words
+
+Sketch your classroom from different seats. A clear sightline tells you the space before a chair is empty, the chair marks an obstacle,
+and what is behind it stays unknown. An occupancy grid collects that evidence in little map squares.
+
+Now record the wrong seat or facing direction. Even accurate distances put the chair in the wrong place, so repeated views smear the
+map. SLAM uses the developing map to correct the estimated pose before adding more observations.
+
 ## The Problem
 
 You drive a laser robot around a room once and the saved map shows every wall twice, slanted, with a ghost room beside it. The scanner was fine. The robot believed it was somewhere it was not, and drew each scan from that wrong place.

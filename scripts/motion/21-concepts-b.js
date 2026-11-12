@@ -129,6 +129,7 @@
   const path = i => {const x = []; for (let t = -.4; t < 2.41; t += .03) x.push(+t.toFixed(3)); x.push(...J[i]); x.sort((a,b) => a - b); return 'M' + x.flatMap(t => J[i].includes(t) ? [[t,a0(i,t - 1e-6)],[t,a0(i,t + 1e-6)]] :[[t,a0(i,t)]]).map(([t,a]) => px(t) + ' ' + py(a)).join('L');};
   const a0 = (i,t) => t < 0 || t > Tt ? 0 :AC[i](t);
   $(g,'line',{x1:30,y1:100,x2:462,y2:100,class:'s sl'}); [0,Tt].forEach(t => $(g,'line',{x1:px(t),y1:36,x2:px(t),y2:167,class:'s sl',[DA]:'3 6'}));
+  A(T(m,g,20,100,'acceleration','가속도','m','middle'),{transform:'rotate(-90 20 100)'});
   T(m,g,px(0),181,'t = 0','t = 0','m','middle'); T(m,g,px(Tt),181,'t = 2 s','t = 2초','m','middle');
   const cr = [0,1,2].map(i => {const r = $($(g,'clipPath',{id:'mbt' + i}),'rect',{y:0,height:270,width:px(-.4) - 4}); $(g,'path',{d:path(i),class:cls[i],'clip-path':`url(#mbt${i})`}); return r;});
   nm.forEach((n,i) => {const x = [16,118,250][i]; $(g,'path',{d:`M${x} 18h20`,class:cls[i]}); T(m,g,x + 26,23,n[0],n[1],'m');});
@@ -136,7 +137,16 @@
   const bk = $(g,'g',{}),bs = $(bk,'g',{}); RR(bs,47,203,26,22,7,'f s st'); const kn = T(m,bk,60,198,'knock','덜컥','g','middle'),nt = D(g,16,262,'g');
   gsap.set(kn,{autoAlpha:0});
   const msg = [['cubic: acceleration jumps at the start','3차: 시작할 때 가속도가 점프합니다'],['trapezoid: it jumps too, four times','사다리꼴: 네 번이나 점프합니다'],['quintic: starts at zero, no jump','5차: 0에서 시작해 점프가 없습니다']];
-  const draw = t => nt(t > 10.4 ? m.t('only the quintic is smooth at both ends','5차만 양 끝에서 매끄럽습니다') :m.t(...msg[t < ts[1] ? 0 :t < ts[2] ? 1 :2]));
+  // Same dt, endpoint padding and finite differences as 09/01 code/main.py.
+  const dt = .002,jerk = AC.map(a => {
+   const acc = [0,...Array.from({length:Tt / dt + 1},(_,i) => a(i * dt)),0];
+   return Math.max(...acc.slice(1).map((v,i) => Math.abs(v - acc[i]) / dt));
+  });
+  const peaks = D(g,16,242,'m');
+  const draw = t => {
+   nt(t > 10.4 ? m.t('only the quintic is smooth at both ends','5차만 양 끝에서 매끄럽습니다') :m.t(...msg[t < ts[1] ? 0 :t < ts[2] ? 1 :2]));
+   peaks(m.t('peak jerk: ','최대 저크: ') + jerk.map(j => j.toFixed(1)).join(' / '));
+  };
   const tl = m.timeline({repeatDelay:.3});
   fin(tl,g,12.2);
   [.3,ts[1],ts[2],10.4].forEach(t => tl.fromTo(nt.e,{autoAlpha:0},{autoAlpha:1,duration:.3},t));
@@ -208,4 +218,34 @@
    .to(pl,{rotation:0,svgOrigin:so,duration:1.4,ease:'sine.inOut'},10.2);
   m.play(tl,{rest:8.6,draw});
 });
+ // 03/08: kept with the older concepts so p03.js stays below 20 KB.
+ R.gs('replan-loop',(el,m) => {
+  const {S} = window.MB;
+  const poly = (pts,n,fx,fy) => pts.slice(0,n + 1).map((p,i) => `${i ? 'L' :'M'}${fx(p[0],i).toFixed(1)} ${fy(p[1],i).toFixed(1)}`).join('');
+  const g = stage(m,'Double integrator from 4 m, dt = 0.1, |u| <= 0.5. Each tick MPC plans N = 20 steps (2 s) ahead with the limit inside, applies only the first input, then plans again.','이중 적분기가 4 m에서 출발합니다(dt = 0.1, |u| <= 0.5). 매 tick MPC가 한계를 넣고 N = 20 step(2초) 앞을 계획하고 첫 입력만 쓴 뒤 다시 계획합니다.');
+  const dt = .1,N = 20,UM = .5,NT = 120,Q = [1,.1],R0 = .1;
+  // terminal cost P from the Riccati loop (lesson 03/06); plan = box-constrained quadratic by projected gradient with momentum
+  let P = [[1,0],[0,.1]],K; for (let i = 0; i < 2000; i++) {const a = P[0][0],b = P[0][1],c = P[1][1],S = R0 + dt * dt * dt * dt / 4 * a + dt ** 3 * b + dt * dt * c,PB = [a * dt * dt / 2 + b * dt,b * dt * dt / 2 + c * dt];
+   const BPA = [PB[0] + 0,0].map((_,j) => j ? dt * PB[0] + PB[1] : PB[0]); K = BPA.map(v => v / S);
+   const Ak = [[1 - dt * dt / 2 * K[0],dt - dt * dt / 2 * K[1]],[-dt * K[0],1 - dt * K[1]]],PA = [[a,a * dt + b],[b,b * dt + c]];
+   P = [0,1].map(r => [0,1].map(cc => (r === cc ? Q[r] :0) + [0,1].reduce((s,k) => s + (k ? PA[k][r] :PA[0][r]) * Ak[k][cc],0)));}
+  // x_i = [pos, vel]; pos_i = x0 + (i+1) dt v0 + sum_j g_pos(i-j) u_j, vel_i = v0 + sum dt u_j
+  const gp = k => dt * dt * (k + .5),H = []; for (let a = 0; a < N; a++) {H.push([]); for (let b = 0; b < N; b++) {let h = a === b ? R0 :0; for (let i = Math.max(a,b); i < N; i++) {const w = i === N - 1 ? [P[0][0],P[0][1],P[1][1]] :[Q[0],0,Q[1]]; h += w[0] * gp(i - a) * gp(i - b) + w[1] * (gp(i - a) * dt + dt * gp(i - b)) + w[2] * dt * dt;} H[a].push(h);}}
+  const L = (() => {let v = H.map((_,i) => 1 + i % 3 * .1); for (let it = 0; it < 60; it++) {const w = H.map(r => r.reduce((s,x,j) => s + x * v[j],0)),nn = Math.hypot(...w); v = w.map(z => z / nn);} return H.map(r => r.reduce((s,x,j) => s + x * v[j],0)).reduce((s,x,i) => s + x * v[i],0) * 1.05;})();
+  const plan = x => {const f = H.map((_,a) => {let s = 0; for (let i = a; i < N; i++) {const w = i === N - 1 ? [P[0][0],P[0][1],P[1][1]] :[Q[0],0,Q[1]],p0 = x[0] + (i + 1) * dt * x[1],v0 = x[1]; s += w[0] * gp(i - a) * p0 + w[1] * (gp(i - a) * v0 + dt * p0) + w[2] * dt * v0;} return s;});
+   let U = new Array(N).fill(0),Y = U,t = 1; for (let it = 0; it < 500; it++) {const Un = Y.map((y,a) => Math.max(-UM,Math.min(UM,y - (H[a].reduce((s,h,j) => s + h * Y[j],0) + f[a]) / L))),tn = (1 + Math.sqrt(1 + 4 * t * t)) / 2; Y = Un.map((u,a) => u + (t - 1) / tn * (u - U[a])); U = Un; t = tn;} return U;};
+  const X = [[4,0]],PL = [],US = []; for (let k = 0; k < NT; k++) {const x = X[k],U = plan(x); PL.push(U); US.push(U[0]); X.push([x[0] + dt * x[1] + dt * dt / 2 * U[0],x[1] + dt * U[0]]);}
+  const fx = k => 40 + k * 3.4,fy = v => 190 - v * 36;
+  T(m,g,16,24,'position (m)','위치 (m)','m'); $(g,'path',{d:'M40 44V190H460',class:'s n sm'}); $(g,'path',{d:`M40 ${fy(0)}H460`,class:'s n sm',[DA]:'3 5'});
+  const pa = $(g,'path',{class:'s n sf w3',[DA]:'5 4'}),tr = $(g,'path',{class:'s n sk w4'}),dot = CC(g,0,0,5,'g'),ub = RR(g,0,0,0,0,2,'f'),r1 = D(g,16,248,'g'),r2 = D(g,16,266,'m');
+  T(m,g,460,208,'u, limit ±0.5','u, 한계 ±0.5','m','end'); $(g,'path',{d:'M40 224H300',class:'s n sm'}); $(g,'path',{d:'M40 214v20M300 214v20',class:'s n sm',[DA]:'2 3'});
+  const draw = t => {
+   const k = Math.min(NT - 1,Math.round(S(t,.6,9.4) * (NT - 1))),x = X[k],U = PL[k]; let q = x.slice(),pts = [[k,x[0]]]; U.slice(0,NT - k).forEach((u,j) => {q = [q[0] + dt * q[1] + dt * dt / 2 * u,q[1] + dt * u]; pts.push([k + j + 1,q[0]]);});
+   A(tr,{d:poly(X.map((v,i) => [i,v[0]]),k,i => fx(i),fy)}); A(pa,{d:poly(pts,pts.length,i => fx(i),fy)}); A(dot,{cx:fx(k),cy:fy(x[0])});
+   A(ub,{x:170 + (US[k] < 0 ? US[k] * 260 :0),y:216,width:Math.abs(US[k]) * 260,height:16,class:Math.abs(US[k]) > UM - 1e-6 ? 'x' :'f'});
+   r1(`t = ${(k * dt).toFixed(1)} s | position ${x[0].toFixed(2)} m | u = ${US[k].toFixed(2)}`); r2(m.t(`dashed: plan for the next ${N * dt} s, only its first step is used`,`점선: 앞으로 ${N * dt}초 계획, 첫 step만 씁니다`));
+  };
+  const tl = m.timeline({repeatDelay:.3}); fin(tl,g,10.4); m.play(tl,{rest:6,draw});
+ });
+
 })();

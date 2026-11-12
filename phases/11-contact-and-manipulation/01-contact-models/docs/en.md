@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
 
+## In Plain Words
+
+Place an eraser on a textbook and slowly tilt the book. Gravity pulls the eraser downhill, while friction from the book acts uphill.
+Tilting more increases the downhill pull and reduces the force pressing the eraser into the book.
+
+A contact model limits friction according to that pressing force. Once the uphill friction needed to hold the eraser exceeds the limit,
+it slides. The model's small spring-like contact deformation supplies the supporting force; friction cannot grow without bound.
+
 ## The Problem
 
 Your gripper holds a part, you tilt the wrist a few degrees, and the part slides out. The same part held a little flatter would have stayed. Contact decides this. A rigid-body simulator gets it right only if its contact model has the same switch between sticking and sliding.

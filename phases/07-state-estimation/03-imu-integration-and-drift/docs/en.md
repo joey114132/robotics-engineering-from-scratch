@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 07/02 Kalman Filter   **Time:** ~15 minutes
 
+## In Plain Words
+
+Leave a phone still on a desk. A gyro that reports a tiny constant turn makes the estimated tilt keep growing
+when its readings are added over time. The phone itself has not tilted.
+
+That wrong tilt makes gravity subtraction leave a false horizontal acceleration. Adding it into velocity and
+then position produces roughly cubic position drift while the tilt error is small. A constant accelerometer
+bias alone produces quadratic position drift instead. Integrating small sensor errors repeatedly can create
+large apparent motion.
+
 ## The Problem
 
 A robot sits still on a bench with an IMU that reads close to zero turn rate and zero acceleration. You integrate both for 20 seconds and the robot has apparently turned 11 degrees and walked 10 meters. Nothing moved: a constant error of a few hundredths, integrated, kept growing.

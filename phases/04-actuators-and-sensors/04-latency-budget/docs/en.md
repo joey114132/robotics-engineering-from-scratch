@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 04/03 Encoders and Quantisation, 03/01 The Sampling Limit   **Time:** ~15 minutes
 
+## In Plain Words
+
+Steer a game cursor onto a target while the screen is delayed. You keep steering right because the picture
+still shows it left of the target. By the time you see the crossing, your correction has already sent it too
+far.
+
+Sensor, filter and communication delays add up in a robot loop. The same delay consumes more of a cycle when
+corrections happen faster. Increasing damping can raise that correction frequency enough to reduce delay
+tolerance, so gains must fit the whole latency budget.
+
 ## The Problem
 
 A joint is stable on the bench with `kd = 8` and starts to buzz once it is on the real controller. Nothing in the gains changed. What changed is that the command now takes a few milliseconds to travel from the sensor to the drive, and nobody added those milliseconds up.

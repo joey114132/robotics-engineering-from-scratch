@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "What is the only difference between Dijkstra and A* in this lesson?",
+  "options": [
+   "A* adds a goal-distance guess to the priority",
+   "A* uses a different grid",
+   "Dijkstra ignores walls"
+  ],
+  "answer": 0,
+  "explanation": "Both expand the cell with the smallest priority."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "When does A* with Manhattan distance return the same cost as Dijkstra?",
+  "options": [
+   "The weight is above 1",
+   "The heuristic never overestimates the true cost",
+   "The grid is empty"
+  ],
+  "answer": 1,
+  "explanation": "Admissible heuristics keep A* optimal."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "What does Dijkstra equal in A* terms?",
+  "options": [
+   "A* with w = 10",
+   "A* without walls",
+   "A* with h = 0"
+  ],
+  "answer": 2,
+  "explanation": "With no guess, priority is just g."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "A weight w = 4 on the trap map does what?",
+  "options": [
+   "Expands fewer cells but returns a longer path",
+   "Expands more cells",
+   "Finds the best path faster with no loss"
+  ],
+  "answer": 0,
+  "explanation": "The near gap looks cheap, and it costs 36 instead of 26."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "What bounds the damage of weighted A*?",
+  "options": [
+   "The grid size",
+   "The path costs at most w times the best",
+   "Nothing"
+  ],
+  "answer": 1,
+  "explanation": "Scaling an admissible heuristic by w gives a bound of w."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "On an empty grid, how many cells does A* expand?",
+  "options": [
+   "The whole grid",
+   "Half the grid",
+   "Only the cells on its final path"
+  ],
+  "answer": 2,
+  "explanation": "Manhattan is exact there, so it never looks off-path."
+ }
+]

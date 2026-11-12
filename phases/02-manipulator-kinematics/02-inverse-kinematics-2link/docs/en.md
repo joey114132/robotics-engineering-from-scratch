@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 01/02 Forward Kinematics, 02/01 DH vs URDF Origins   **Time:** ~15 minutes
 
+## In Plain Words
+
+Fix one end of a bendy straw to the table and aim its tip at a sticker. Turning around the fixed end and
+bending the flexible elbow can put the elbow on either side of the line to the sticker. Beyond the
+straightened straw's reach, neither bend works.
+
+Inverse kinematics finds those joint angles from the target. Link lengths set the reachable band, and the
+elbow choice selects a solution. Forward kinematics checks that the answer actually reaches the requested
+point.
+
 ## The Problem
 
 You ask the arm to touch a point and `acos` returns `nan`, or the arm folds the wrong way and hits the table. A target slightly past full stretch is easy to produce, and a solver that hides it moves the arm somewhere you did not ask for.

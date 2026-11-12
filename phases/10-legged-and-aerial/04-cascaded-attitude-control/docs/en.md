@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 10/03 Quadrotor Model   **Time:** ~15 minutes
 
+## In Plain Words
+
+Hold a game controller level while a friend keeps twisting it. If your counter-twist depends only on tilt and turning speed, a lasting
+tilt is needed to keep resisting once rotation stops.
+
+Cascaded attitude control first turns angle error into a requested turning speed, then uses an inner loop to produce torque. Splitting
+the loops alone still gives PD behaviour. Adding an integral to the rate loop builds a lasting counter-torque, so a steady disturbance
+can be resisted without a lasting tilt.
+
 ## The Problem
 
 A gust pushes the drone for a second. Your PD pitch loop holds a constant tilt for the whole second. Pitch sets sideways speed, so the drone slides off its spot. Raising `kp` shrinks the tilt, but it also raises the torque the loop asks for on every small error.

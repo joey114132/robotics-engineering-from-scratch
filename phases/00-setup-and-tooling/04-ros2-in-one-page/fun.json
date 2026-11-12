@@ -7,5 +7,6 @@
     "hook": "queue를 깊게 한다고 안전해지지 않습니다. 읽는 메시지만 점점 낡아져서 저는 묵은 소식만 읽게 됩니다.",
     "mission": "`code/main.py`에서 `(1, 10, 50)`을 `(5,)`로 바꾸세요. 출력될 last age를 10 ms 안으로 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
-  "toy": null
+  "toy": null,
+ "motion": "queue-depth"
 }

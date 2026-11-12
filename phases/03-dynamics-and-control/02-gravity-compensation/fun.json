@@ -7,5 +7,7 @@
     "hook": "관절이 부드러우면 정중하지만 중력 모델이 틀리면 저는 지친 화분처럼 처집니다. kp를 반으로 줄이면 처짐은 두 배입니다.",
     "mission": "`code/main.py`에서 `(200.0, 100.0, 50.0)`을 `(50.0, 25.0)`으로 바꾸세요. 둘째 sag가 첫째의 몇 배일지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
-  "toy": "grav-sag"
+  "toy": "grav-sag",
+  "motion": "sag-halves",
+  "three": "gravity-torque-3d"
 }

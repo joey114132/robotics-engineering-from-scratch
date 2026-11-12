@@ -4,6 +4,15 @@
 
 **Type:** Learn   **Prerequisites:** 00/01 Python Env and numpy   **Time:** ~15 minutes
 
+## In Plain Words
+
+Class chat messages arrive faster than you can read them. If you always read the oldest unread message, a
+larger inbox lets you spend longer catching up with news that is already out of date.
+
+A subscriber queue works like that inbox. With keep last, new messages evict the oldest when it fills.
+Increasing depth preserves more waiting messages, but it does not make a slow reader faster. Under a steady
+overload, the reader gets older data.
+
 ## The Problem
 
 Your controller reads joint states at 40 Hz while the driver publishes at 100 Hz. You raise the queue depth to 50 to stop losing messages, and the arm now reacts half a second late. The setting that looked like a safety margin turned old data into the thing you read.

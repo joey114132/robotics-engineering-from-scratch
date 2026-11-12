@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 03/04 PID and Tuning   **Time:** ~15 minutes
 
+## In Plain Words
+
+A bus brakes and your body keeps moving forward. Shifting pressure toward your toes can help with a small disturbance, but your feet
+have only so much room. A bigger disturbance makes you step.
+
+The inverted pendulum model captures this by keeping the body's height fixed. Its capture point lies farther ahead when forward speed
+increases. If that point is outside the foot, shifting the ground force within the foot cannot stop the fall; moving the foot there
+can.
+
 ## The Problem
 
 A biped is nudged from behind and its ankles push back as hard as they can, yet it keeps tipping forward. The ankles can only move the force point inside the foot, so a big enough push is beyond them. A model small enough to tell you, before the fall, whether a step is required and where is what you need.

@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "My map is only as honest as my linearisation point. Start me 1 rad off with one landmark and I lie with a straight face.",
+  "mission": "In `code/main.py` run `mean_nees(30, 0.6, lms=LMS[:1])`, then the same with `LMS[:2]`. Predict which one stays near 3 before you run it."
+ },
+ "ko": {
+  "hook": "제 지도는 선형화점만큼만 정직합니다. landmark 하나로 1 rad 틀리게 시작하면 저는 태연하게 거짓말을 합니다.",
+  "mission": "`code/main.py`에서 `mean_nees(30, 0.6, lms=LMS[:1])`을 돌리고 `LMS[:2]`로도 돌리세요. 어느 쪽이 3 근처에 머물지 실행 전에 예측하세요."
+ },
+ "toy": "ekf-consistency",
+  "motion": "ekf-stall"
+}

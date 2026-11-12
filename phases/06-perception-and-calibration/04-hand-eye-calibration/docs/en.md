@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 01/04 Frames and Transform Trees, 06/01 Pinhole Camera   **Time:** ~15 minutes
 
+## In Plain Words
+
+Strap a phone to your forearm and film a fixed poster while moving your arm. The arm and camera describe the
+same motion from different frames, linked by their fixed mounting offset.
+
+Hand-eye calibration finds that link. Panning only about a vertical axis leaves part of it unknown. Sliding
+the camera along that axis leaves those relative motions unchanged. Rotating about different axes supplies the
+missing clues, allowing the fixed camera-to-arm orientation and position to be recovered.
+
 ## The Problem
 
 The camera sees a cup 0.4 m ahead in its own frame, and the gripper must go there. Without the camera-to-gripper transform `X`, the target lands in the wrong place by exactly the unknown offset. You calibrate by waving the arm in front of a fixed target, but if every wave is a pan about one axis, the result looks fine and is wrong.

@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Why can ICP not know the right point pairs in advance?",
+  "options": [
+   "Pairs only exist in 3D",
+   "The scans are unlabelled clouds, so it guesses nearest points",
+   "The scanner hides them"
+  ],
+  "answer": 1,
+  "explanation": "With no labels, nearest neighbour is the only available guess."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "What does the SVD step solve?",
+  "options": [
+   "Which points are nearest",
+   "The sensor noise",
+   "The best rotation and shift for fixed pairs"
+  ],
+  "answer": 2,
+  "explanation": "Kabsch gives the optimal rigid fit for given correspondences."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Why force the last singular direction by the sign of a determinant?",
+  "options": [
+   "To forbid a mirror image",
+   "To speed up the SVD",
+   "To remove noise"
+  ],
+  "answer": 0,
+  "explanation": "An orthogonal fit may be a reflection, which is not a robot motion."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "ICP is started 100 degrees away from the right answer in this room. What is likely?",
+  "options": [
+   "A crash",
+   "A local minimum with a large error",
+   "Exact convergence"
+  ],
+  "answer": 1,
+  "explanation": "Nearest points are wrong partners, so the fit locks in a wrong pose."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Why does a single straight wall fail?",
+  "options": [
+   "The wall has too few points",
+   "Walls are not rigid",
+   "Every shift along the wall looks equally good"
+  ],
+  "answer": 2,
+  "explanation": "The fit has no information about the slide along the wall."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "What is the best way to widen ICP's success range?",
+  "options": [
+   "Start from the odometry guess",
+   "Add more iterations only",
+   "Use fewer points"
+  ],
+  "answer": 0,
+  "explanation": "A close start keeps nearest points as true partners."
+ }
+]

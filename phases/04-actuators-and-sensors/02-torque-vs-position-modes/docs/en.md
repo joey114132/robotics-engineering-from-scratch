@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 04/01 Motor and Gearbox, 03/03 Impedance Control   **Time:** ~15 minutes
 
+## In Plain Words
+
+Ask a friend to hold a ruler at a mark while you push it sideways. If you specify only the mark, your friend
+decides how hard to push back.
+
+Position mode likewise lets the drive's inner loop choose torque from position error. An outer stiffness
+request alone cannot change its gain. Torque mode lets your controller set that response; admittance instead
+measures the push and moves the position target.
+
 ## The Problem
 
 You write an impedance controller that should make a joint yield like a soft spring with `K = 20`. On the drive you have, the joint stays stiff and barely moves when you push it. The outer loop asked for softness, but the drive's own position loop was never told.

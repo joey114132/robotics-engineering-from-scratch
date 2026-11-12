@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Two knobs, Q and R, and I get a whole gain matrix. Cheap effort makes me twitchy. Costly effort makes me a sloth.",
+  "mission": "In `code/main.py` run `dare` with `r` set to 0.01, 1 and 100. Predict which K has the biggest first entry, then print `K` for each and check."
+ },
+ "ko": {
+  "hook": "손잡이는 Q와 R 두 개뿐인데 게인 행렬이 통째로 나옵니다. 노력이 싸면 저는 들썩이고 비싸면 나무늘보가 됩니다.",
+  "mission": "`code/main.py`에서 `r`을 0.01, 1, 100으로 바꿔 `dare`를 돌리세요. 첫 성분이 가장 큰 K가 어느 것일지 예측한 뒤 `K`를 출력해 확인하세요."
+ },
+ "toy": "lqr-tradeoff",
+ "motion": "riccati-converge"
+}

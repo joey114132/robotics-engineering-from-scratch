@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Why can't you adapt M(q) from a textbook to a new arm?",
+  "options": [
+   "You never saw where each term comes from",
+   "M is always constant",
+   "The formulas only work in simulation"
+  ],
+  "answer": 0,
+  "explanation": "Rebuilding it from energy shows what to change for a new arm."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "For T = 1/2 qd' M qd, how do unit velocities give M?",
+  "options": [
+   "T is exactly quadratic in qd, so T values at unit velocities are M entries",
+   "They are random samples",
+   "They give only the diagonal of gravity"
+  ],
+  "answer": 0,
+  "explanation": "The diagonals are 2T(e_i) and the off-diagonal is T(e0+e1) - T(e0) - T(e1)."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Why does a Coriolis term exist at all?",
+  "options": [
+   "M depends on the joint angles",
+   "Joints rotate",
+   "Gravity changes"
+  ],
+  "answer": 0,
+  "explanation": "If M were constant, d/dt(M qd) would have no velocity-squared term."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Two derivations give different torques at one state. What do you conclude?",
+  "options": [
+   "At least one has a bug",
+   "Both are right",
+   "The arm is not rigid"
+  ],
+  "answer": 0,
+  "explanation": "Lagrange and Newton-Euler describe the same rigid arm and must agree."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "With zero torque and no friction, what must stay constant in a horizontal-plane arm?",
+  "options": [
+   "Kinetic energy",
+   "Joint angles",
+   "Momentum of each link"
+  ],
+  "answer": 0,
+  "explanation": "There is no gravity or torque to change energy."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Flipping the sign of h in a free-motion simulation makes kinetic energy wander. What does this tell you?",
+  "options": [
+   "Energy conservation is a cheap test for Coriolis signs",
+   "h does not matter",
+   "RK4 is unstable"
+  ],
+  "answer": 0,
+  "explanation": "Correct h satisfies qd' h = 1/2 qd' Mdot qd, canceling the varying-inertia term in dT/dt during free motion. Flipping its sign breaks that cancellation; numerical integration can also cause small drift."
+ }
+]

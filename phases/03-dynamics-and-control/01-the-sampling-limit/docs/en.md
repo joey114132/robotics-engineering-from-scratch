@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
+## In Plain Words
+
+A friend tries to stop a sliding puck by checking its motion, then pushing against it until the next check. If
+the push lasts past the moment the puck stops, it sends the puck back the other way.
+
+A sampled damper can do the same to a joint. It holds torque based on an earlier velocity. Stronger damping, a
+longer hold, or smaller inertia makes reversal more likely. Push too hard for too long and the speed grows
+with each reversal instead of fading.
+
 ## The Problem
 
 You raise a damping gain `kd` so a joint stops oscillating, and the joint starts buzzing instead. The gain looked mild. The host computes a torque once per control period and holds it, so the damper pushes against a velocity that is already one tick old.

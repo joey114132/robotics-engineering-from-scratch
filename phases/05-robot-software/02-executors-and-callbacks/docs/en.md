@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 05/01 Publish-Subscribe and QoS Mismatch   **Time:** ~15 minutes
 
+## In Plain Words
+
+A kitchen helper starts a long chopping job. A quick request to pour a drink must wait because the helper can
+do only one job at a time. Another helper can take it, unless a rule forbids those jobs from overlapping in
+the shared workspace.
+
+Threads are the helpers and callback groups supply the rule. A long callback blocks a timer on a single
+thread. More threads help only when the group rules allow both callbacks to run at once.
+
 ## The Problem
 
 A node has a 100 Hz timer that sends a heartbeat and a subscription that does 60 ms of image work. The heartbeat stutters, and a watchdog elsewhere declares the node dead. Every callback is correct on its own, and the CPU is mostly idle.

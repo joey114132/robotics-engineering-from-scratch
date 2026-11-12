@@ -7,5 +7,6 @@
     "hook": "제 damper는 이미 한 tick 지난 속도를 보고 밉니다. 과거의 다정한 포옹도 저를 쓰러뜨릴 수 있습니다.",
     "mission": "`code/main.py`에서 `(10, 30, 50)`을 `(20,)`으로 바꾸세요. r = dt*kd/J로 한 tick 뒤의 속도를 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
-  "toy": "sampling-limit"
+  "toy": "sampling-limit",
+  "motion": "held-torque"
 }

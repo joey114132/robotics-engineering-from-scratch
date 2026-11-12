@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 01/01 Rotations and SE(3)   **Time:** ~15 minutes
 
+## In Plain Words
+
+A clock hand sits just past the top. You can reach it with a short clockwise turn or an almost complete
+counterclockwise turn. The destination alone does not choose the route.
+
+With quaternions, q and -q describe the same orientation. Interpolating toward the opposite sign can send a
+wrist the long way around. Slerp checks the dot product and flips the target sign when needed, keeping the
+orientation while choosing the shorter rotation.
+
 ## The Problem
 
 A wrist was told to correct a 0.1 rad error and instead spun almost a full turn the long way round. The target quaternion had arrived with the opposite sign, which names the same orientation. The interpolator trusted the sign and took the far side.

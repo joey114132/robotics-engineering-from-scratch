@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "You tune kp and kd by feel on a state-space model. What does LQR change?",
+  "options": [
+   "You pick two cost weights and the gain follows",
+   "It removes the need for a model",
+   "It guarantees no saturation"
+  ],
+  "answer": 0,
+  "explanation": "Q and R state the trade, and the Riccati recursion computes K."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "In LQR what does R price?",
+  "options": [
+   "Control effort",
+   "State error",
+   "Sample time"
+  ],
+  "answer": 0,
+  "explanation": "The cost is x'Qx + u'Ru. R multiplies the input."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "R is made ten times larger. What happens to the first push?",
+  "options": [
+   "It gets smaller",
+   "It gets larger",
+   "It does not change"
+  ],
+  "answer": 0,
+  "explanation": "Effort is more expensive, so the optimiser uses less of it and settles more slowly."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "The Riccati loop stops when...",
+  "options": [
+   "P stops changing",
+   "K reaches 1",
+   "x reaches 0"
+  ],
+  "answer": 0,
+  "explanation": "A steady P is the fixed point that defines the optimal gain."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "For the optimal K, what is the cost of the whole run from state x0?",
+  "options": [
+   "x0' P x0",
+   "x0' Q x0",
+   "K x0"
+  ],
+  "answer": 0,
+  "explanation": "P holds the cost-to-go of every state."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "For a specified start, the first LQR push is too large. Which is a sensible effort-reduction trial, without claiming a hard limit?",
+  "options": [
+   "Raise R, recompute K and check the full rollout",
+   "Clip the command and hope",
+   "Lower Q to zero"
+  ],
+  "answer": 0,
+  "explanation": "R penalizes effort, not a hard limit. Test the new gain for the specified starts; hard limits need explicit constraints or separately validated saturation handling."
+ }
+]

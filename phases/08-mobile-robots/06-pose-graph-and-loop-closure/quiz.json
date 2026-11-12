@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Why does overwriting only the last pose not fix a drifted map?",
+  "options": [
+   "The last pose is always correct",
+   "Loop closure is not a measurement",
+   "All earlier poses stay bent"
+  ],
+  "answer": 2,
+  "explanation": "The error accumulated along the whole path, not at one point."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "In a pose graph, what is an odometry edge?",
+  "options": [
+   "A spring between two neighbouring poses",
+   "A new robot",
+   "A landmark"
+  ],
+  "answer": 0,
+  "explanation": "It says where pose j should be seen from pose i."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Why hold pose 0 fixed?",
+  "options": [
+   "To save memory",
+   "Moving or rotating the whole map changes no residual",
+   "The robot never moves"
+  ],
+  "answer": 1,
+  "explanation": "Three gauge directions are otherwise undetermined."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "What happens to the cost between Gauss-Newton iterations here?",
+  "options": [
+   "It rises each time",
+   "It stays constant",
+   "It does not rise"
+  ],
+  "answer": 2,
+  "explanation": "Each step reduces the linearised cost in this well-posed graph."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "What does a wrong loop closure do?",
+  "options": [
+   "Bends the map worse than no closure",
+   "Nothing",
+   "Always improves the map"
+  ],
+  "answer": 0,
+  "explanation": "The solver trusts every edge, so a false one pulls the poses wrong."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Why does the correction reach old poses?",
+  "options": [
+   "The map is rebuilt from scratch",
+   "Every pose is a variable re-solved together",
+   "Old poses are copied from the last one"
+  ],
+  "answer": 1,
+  "explanation": "The solver changes all free poses at once."
+ }
+]

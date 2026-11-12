@@ -2,7 +2,7 @@
 
 Scope: general robotics, not one robot and not one company's stack. Manipulators, wheeled and legged robots, aerial vehicles, perception, planning, learning, fleets and safety.
 
-Status: all 17 phases are written, 67 lessons, each with code, tests, English and Korean docs, quizzes and a Ship It artifact.
+Status: all 17 phases are written, 81 lessons, each with code, tests, English and Korean docs, quizzes and a Ship It artifact.
 
 ## Sourcing rule
 
@@ -29,6 +29,7 @@ Status: all 17 phases are written, 67 lessons, each with code, tests, English an
 | [02 Forward Kinematics](phases/01-math-foundations/02-forward-kinematics/docs/en.md) · [한국어](phases/01-math-foundations/02-forward-kinematics/docs/ko.md) | Walk the chain: rotate about the joint, step along the link, repeat. |
 | [03 Axis-Angle and Quaternions](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/en.md) · [한국어](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/ko.md) | Every rotation has two quaternions, and an interpolator that ignores this can spin a wrist a full turn. |
 | [04 Frames and Transform Trees](phases/01-math-foundations/04-frames-and-transform-trees/docs/en.md) · [한국어](phases/01-math-foundations/04-frames-and-transform-trees/docs/ko.md) | Name every transform `T_to_from`, and let the tree find the path between any two frames. |
+| [05 Euler Angles and Gimbal Lock](phases/01-math-foundations/05-euler-angles-and-gimbal-lock/docs/en.md) · [한국어](phases/01-math-foundations/05-euler-angles-and-gimbal-lock/docs/ko.md) | Roll, pitch and yaw are three numbers in a fixed order, and near pitch 90 degrees that order has a hole. |
 
 ### Phase 02: manipulator kinematics
 
@@ -38,6 +39,7 @@ Status: all 17 phases are written, 67 lessons, each with code, tests, English an
 | [02 Inverse Kinematics of a Two-Link Arm](phases/02-manipulator-kinematics/02-inverse-kinematics-2link/docs/en.md) · [한국어](phases/02-manipulator-kinematics/02-inverse-kinematics-2link/docs/ko.md) | Reaching a point is a triangle with two valid answers and a hard edge, and the only honest test is to run FK on the answer. |
 | [03 The Jacobian: Joint Speeds, Tip Speeds and Forces](phases/02-manipulator-kinematics/03-jacobian-and-velocity/docs/en.md) · [한국어](phases/02-manipulator-kinematics/03-jacobian-and-velocity/docs/ko.md) | One matrix turns joint speeds into tip speed, and its transpose turns tip force into joint torque. |
 | [04 Singularities and Damped Least Squares](phases/02-manipulator-kinematics/04-singularities/docs/en.md) · [한국어](phases/02-manipulator-kinematics/04-singularities/docs/ko.md) | When the arm straightens, one direction of tip motion disappears, and the plain inverse answers with a joint speed that grows without limit. |
+| [05 Numerical Inverse Kinematics](phases/02-manipulator-kinematics/05-numerical-inverse-kinematics/docs/en.md) · [한국어](phases/02-manipulator-kinematics/05-numerical-inverse-kinematics/docs/ko.md) | With no formula for the joints, nudge them toward the target with the Jacobian, clamp to the limits, and try several starting points. |
 
 ### Phase 03: dynamics and control
 
@@ -48,6 +50,10 @@ Status: all 17 phases are written, 67 lessons, each with code, tests, English an
 | [03 Impedance Control](phases/03-dynamics-and-control/03-impedance-control/docs/en.md) · [한국어](phases/03-dynamics-and-control/03-impedance-control/docs/ko.md) | Impedance control does not track a position. It decides how the joint pushes back. |
 | [04 PID and Tuning](phases/03-dynamics-and-control/04-pid-and-tuning/docs/en.md) · [한국어](phases/03-dynamics-and-control/04-pid-and-tuning/docs/ko.md) | P pushes now, I remembers the past, D brakes. Each fixes one problem and causes another. |
 | [05 Computed Torque](phases/03-dynamics-and-control/05-computed-torque/docs/en.md) · [한국어](phases/03-dynamics-and-control/05-computed-torque/docs/ko.md) | If you know the arm's equations, use them to cancel the arm, then control what is left. |
+| [06 LQR: Gains from Cost, Not from Guessing](phases/03-dynamics-and-control/06-lqr/docs/en.md) · [한국어](phases/03-dynamics-and-control/06-lqr/docs/ko.md) | Say how much you hate error against effort, and the Riccati recursion hands back the gain. |
+| [07 Where M(q) Comes From: Deriving Arm Dynamics](phases/03-dynamics-and-control/07-deriving-arm-dynamics/docs/en.md) · [한국어](phases/03-dynamics-and-control/07-deriving-arm-dynamics/docs/ko.md) | Write the arm's kinetic energy once, and differentiation hands you the inertia matrix and every Coriolis term. |
+| [08 Model Predictive Control](phases/03-dynamics-and-control/08-model-predictive-control/docs/en.md) · [한국어](phases/03-dynamics-and-control/08-model-predictive-control/docs/ko.md) | Plan a short future with the limits written in, apply only the first command, then plan again. |
+| [09 Lyapunov Stability by Checking](phases/03-dynamics-and-control/09-lyapunov-stability/docs/en.md) · [한국어](phases/03-dynamics-and-control/09-lyapunov-stability/docs/ko.md) | A stable system has an energy-like number that never rises, and you can test that on a computer. |
 
 ### Phase 04: actuators and sensors
 
@@ -66,6 +72,8 @@ Status: all 17 phases are written, 67 lessons, each with code, tests, English an
 | [02 Executors and Callbacks](phases/05-robot-software/02-executors-and-callbacks/docs/en.md) · [한국어](phases/05-robot-software/02-executors-and-callbacks/docs/ko.md) | One thread runs one callback at a time, so a slow callback makes every other callback wait, whatever its period. |
 | [03 Control Loop Jitter](phases/05-robot-software/03-control-loop-jitter/docs/en.md) · [한국어](phases/05-robot-software/03-control-loop-jitter/docs/ko.md) | The average period of a loop can be perfect while one late wake-up in a few thousand breaks the controller. |
 | [04 Time Sync and Traces](phases/05-robot-software/04-time-sync-and-traces/docs/en.md) · [한국어](phases/05-robot-software/04-time-sync-and-traces/docs/ko.md) | Two clocks that disagree by a few milliseconds put sensor data in the wrong order, and a trace with before and after states shows where a run first went wrong. |
+| [05 Behaviour Trees and State Machines](phases/05-robot-software/05-behaviour-trees-and-state-machines/docs/en.md) · [한국어](phases/05-robot-software/05-behaviour-trees-and-state-machines/docs/ko.md) | A robot task is a tree that is ticked every cycle, and every node answers success, failure or running. |
+| [06 Transforms at a Time](phases/05-robot-software/06-transforms-at-a-time/docs/en.md) · [한국어](phases/05-robot-software/06-transforms-at-a-time/docs/ko.md) | A transform lookup is a question about one instant, so the buffer must interpolate between samples or refuse to answer. |
 
 ### Phase 06: perception and calibration
 
@@ -84,6 +92,7 @@ Status: all 17 phases are written, 67 lessons, each with code, tests, English an
 | [02 Kalman Filter](phases/07-state-estimation/02-kalman-filter/docs/en.md) · [한국어](phases/07-state-estimation/02-kalman-filter/docs/ko.md) | When a model and a noisy sensor disagree, the Kalman gain decides how far to move toward the sensor, and it also tells you how wrong the result still is. |
 | [03 IMU Integration and Drift](phases/07-state-estimation/03-imu-integration-and-drift/docs/en.md) · [한국어](phases/07-state-estimation/03-imu-integration-and-drift/docs/ko.md) | Integrating a sensor that has a tiny constant error turns that error into a line, a parabola or a cubic, and gravity is the channel that makes it cubic. |
 | [04 Complementary Filter](phases/07-state-estimation/04-complementary-filter/docs/en.md) · [한국어](phases/07-state-estimation/04-complementary-filter/docs/ko.md) | The gyro is right about fast changes and wrong about the long run, the accelerometer is the opposite, and one time constant decides who is believed when. |
+| [05 Extended Kalman Filter](phases/07-state-estimation/05-extended-kalman-filter/docs/en.md) · [한국어](phases/07-state-estimation/05-extended-kalman-filter/docs/ko.md) | Linearise the model at your current estimate and run a Kalman filter on that, which works only while the estimate is close enough to the truth. |
 
 ### Phase 08: mobile robots
 
@@ -93,6 +102,8 @@ Status: all 17 phases are written, 67 lessons, each with code, tests, English an
 | [02 Particle Filter Localisation](phases/08-mobile-robots/02-particle-filter-localisation/docs/en.md) · [한국어](phases/08-mobile-robots/02-particle-filter-localisation/docs/ko.md) | Keep many guesses of where you are, let the measurements kill the bad ones, and keep a few wild guesses for the day you are moved. |
 | [03 Occupancy Grid and the SLAM Idea](phases/08-mobile-robots/03-occupancy-grid-and-slam-idea/docs/en.md) · [한국어](phases/08-mobile-robots/03-occupancy-grid-and-slam-idea/docs/ko.md) | A map is only as good as the poses you drew it from, which is why mapping and localising have to be solved together. |
 | [04 Path Following with Pure Pursuit](phases/08-mobile-robots/04-path-following-pure-pursuit/docs/en.md) · [한국어](phases/08-mobile-robots/04-path-following-pure-pursuit/docs/ko.md) | Aim at a point a fixed distance ahead on the path, and let that one distance trade wobble against cut corners. |
+| [05 Scan Matching with ICP](phases/08-mobile-robots/05-icp-scan-matching/docs/en.md) · [한국어](phases/08-mobile-robots/05-icp-scan-matching/docs/ko.md) | To line up two scans, guess that each point's partner is its nearest neighbour, fit one rigid move, and repeat until the error stops falling. |
+| [06 Pose Graph and Loop Closure](phases/08-mobile-robots/06-pose-graph-and-loop-closure/docs/en.md) · [한국어](phases/08-mobile-robots/06-pose-graph-and-loop-closure/docs/ko.md) | Treat poses as unknowns and measurements as springs between them, and one late "we are back here" measurement bends the whole drifted trajectory shut. |
 
 ### Phase 09: motion planning
 
@@ -102,6 +113,7 @@ Status: all 17 phases are written, 67 lessons, each with code, tests, English an
 | [02 RRT](phases/09-motion-planning/02-rrt/docs/en.md) · [한국어](phases/09-motion-planning/02-rrt/docs/ko.md) | Grow a tree of short, collision-free steps from the start until a branch touches the goal, then straighten the result. |
 | [03 Collision Checking](phases/09-motion-planning/03-collision-checking/docs/en.md) · [한국어](phases/09-motion-planning/03-collision-checking/docs/ko.md) | A path that is checked only at sample points can tunnel through an obstacle thinner than the sample spacing. |
 | [04 Trajectory Optimisation](phases/09-motion-planning/04-trajectory-optimisation/docs/en.md) · [한국어](phases/09-motion-planning/04-trajectory-optimisation/docs/ko.md) | A planner's path is feasible but jagged. Gradient descent on a smoothness cost and an obstacle penalty turns it into a path a robot can follow. |
+| [05 Grid Search: Dijkstra to A*](phases/09-motion-planning/05-grid-search-dijkstra-to-astar/docs/en.md) · [한국어](phases/09-motion-planning/05-grid-search-dijkstra-to-astar/docs/ko.md) | A* is Dijkstra with a promise: a guess of the distance left that is never too big, which lets it skip cells that cannot be on the best path. |
 
 ### Phase 10: legged and aerial
 
@@ -138,6 +150,8 @@ Status: all 17 phases are written, 67 lessons, each with code, tests, English an
 | [02 Behaviour Cloning Pitfalls](phases/13-learning-for-robots/02-behaviour-cloning-pitfalls/docs/en.md) · [한국어](phases/13-learning-for-robots/02-behaviour-cloning-pitfalls/docs/ko.md) | A cloned policy is accurate where the expert drove and wrong one step later, because its own mistakes put it somewhere the expert never was. |
 | [03 Policy Gradients](phases/13-learning-for-robots/03-policy-gradients/docs/en.md) · [한국어](phases/13-learning-for-robots/03-policy-gradients/docs/ko.md) | Nudge the policy toward actions that scored above average, and the only price is noise, which a baseline cuts. |
 | [04 A Safety Wrapper for Learned Policies](phases/13-learning-for-robots/04-learned-policy-safety-wrapper/docs/en.md) · [한국어](phases/13-learning-for-robots/04-learned-policy-safety-wrapper/docs/ko.md) | A learned policy is a producer that can say anything. The layer after it must be deterministic and must not care what was said. |
+| [05 MDPs and Value Iteration](phases/13-learning-for-robots/05-mdps-and-value-iteration/docs/en.md) · [한국어](phases/13-learning-for-robots/05-mdps-and-value-iteration/docs/ko.md) | The value of a state is the best action's reward plus the discounted value of where it leads, and a few sweeps are enough to find it. |
+| [06 Multimodal Demonstrations and Action Chunks](phases/13-learning-for-robots/06-multimodal-demos-and-action-chunks/docs/en.md) · [한국어](phases/13-learning-for-robots/06-multimodal-demos-and-action-chunks/docs/ko.md) | When demonstrations disagree, a regression averages them into an action nobody demonstrated, and a short chunk of future actions commits to one. |
 
 ### Phase 14: multi robot and swarms
 

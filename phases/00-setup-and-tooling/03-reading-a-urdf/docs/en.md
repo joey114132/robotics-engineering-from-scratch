@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 00/01 Python Env and numpy   **Time:** ~15 minutes
 
+## In Plain Words
+
+Turn the lower section of a folding desk lamp, and the upper section moves with it. An offset described as
+"along the lower section" now points a different way across the desk.
+
+A URDF describes a robot as linked parts. Each joint origin is measured in its parent link's frame. Following
+the chain means rotating each offset into the accumulated frame before adding it. Adding every offset as if it
+already used the room's directions puts the hand in the wrong place.
+
 ## The Problem
 
 You read a robot description, add up the joint offsets to find where the hand sits, and the answer is far from what the viewer shows. The offsets were right. You read each one in the world frame, while the file writes it in the frame of the link before it.

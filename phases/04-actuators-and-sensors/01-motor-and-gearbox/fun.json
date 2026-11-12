@@ -7,5 +7,7 @@
     "hook": "100:1 gearbox를 달면 부하는 소문처럼 작아집니다. 제 motor는 제가 뭘 들고 있는지 거의 모릅니다.",
     "mission": "`code/main.py`에서 부하 관성 `2e-3`을 `2e-1`로 바꾸세요. N = 100의 값이 1 근처일지 2 근처일지 100일지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
-  "toy": null
+  "toy": null,
+  "motion": "reflected-load",
+  "three": "gearbox-shafts-3d"
 }

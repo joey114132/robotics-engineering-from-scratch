@@ -1,0 +1,74 @@
+[
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "A system is simulated once from rest and stays still. What can you conclude about stability?",
+  "options": [
+   "Nothing, it may be unstable",
+   "It is stable",
+   "It is asymptotically stable"
+  ],
+  "answer": 0,
+  "explanation": "An unstable equilibrium also keeps a state that starts exactly on it."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "What must hold for V to be a Lyapunov function candidate?",
+  "options": [
+   "V is zero at the goal and positive elsewhere",
+   "V equals the kinetic energy",
+   "V is constant"
+  ],
+  "answer": 0,
+  "explanation": "A positive-definite V is the energy-like quantity whose slope you check."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "For the PD pendulum, dV/dt equals -(c + kd) w^2. When is it never positive?",
+  "options": [
+   "When c + kd >= 0",
+   "When kp > 0",
+   "When w = 1"
+  ],
+  "answer": 0,
+  "explanation": "Only damping terms survive the cancellation."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Why does a sweep of sampled states beat one simulation?",
+  "options": [
+   "It covers many starts, including corners",
+   "It is faster",
+   "It solves the equations"
+  ],
+  "answer": 0,
+  "explanation": "A single start can miss where V rises. Seek the maximum vdot; a minimizer must minimize -vdot over the operating bounds."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Sampling finds no state with dV/dt > 0. What does that prove?",
+  "options": [
+   "No counterexample was found, not a proof",
+   "Stability is proven",
+   "The system is unstable"
+  ],
+  "answer": 0,
+  "explanation": "A finite sample can miss a small bad region."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Why can a late rate signal break a stable PD design?",
+  "options": [
+   "The controller acts on old information and adds energy",
+   "kp becomes negative",
+   "V stops being defined"
+  ],
+  "answer": 0,
+  "explanation": "A rate seen late can push in phase with the motion instead of against it."
+ }
+]

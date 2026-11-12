@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
 
+## In Plain Words
+
+Your room thermostat freezes below the target temperature. Following its display keeps the heater running
+even as the room gets hotter. A steady reading can hide a worsening situation.
+
+A robot controller can likewise keep driving when its sensor is stuck. This lesson injects faults and
+separately measures the true joint motion and what a monitor could detect from available signals. That
+separates how much damage a fault causes from how early it gives warning.
+
 ## The Problem
 
 A joint that tracked well all week suddenly slams into its stop, and the log shows no error. The controller did exactly what its inputs told it to. This lesson injects five faults into a small PD loop, then measures how much damage each does and how soon a cheap check could have noticed.

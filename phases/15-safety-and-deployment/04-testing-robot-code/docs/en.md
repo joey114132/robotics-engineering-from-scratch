@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 15/01 Failure Modes   **Time:** ~15 minutes
 
+## In Plain Words
+
+To test a timer app, give it a pretend clock and jump past the deadline. You can check its reaction immediately instead of waiting for
+real time to pass.
+
+Robot tests can control time the same way. A mock joint rejects invalid or excessive torque, and replay feeds recorded observations
+back through the controller to compare commands. Checking that motion approaches the target catches a reversed sign. Trying many
+unusual inputs tests rules such as keeping every command finite and within its limit.
+
 ## The Problem
 
 Robot code depends on a clock, a joint and inputs you cannot predict, so tests either sleep for seconds, need hardware, or check nothing. The wrong-sign fault from lesson 01 shows it. The code ran, the joint ran away, and a test that only checks "it returns a number" passes.

@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 12/01 What a Simulator Approximates   **Time:** ~15 minutes
 
+## In Plain Words
+
+A ball in a phone game bounces higher than its release point, although nothing gave it an extra push. The floor's upward force is being
+calculated in discrete steps. How the game updates speed and position can add energy that the physical model never supplied.
+
+Explicit Euler moves with the old speed; semi-implicit Euler uses the updated speed. That change improves energy behaviour, but an
+oversized timestep can still spoil a bounce. Smaller-step comparisons reveal whether the result is trustworthy.
+
 ## The Problem
 
 A robot link hits a stiff contact in simulation and bounces higher than it fell, or the arm jitters when you raise the time step to run faster. The physics is the same and only the numerical method changed. Unless you vary the step, you cannot tell a real effect from an integration artifact.

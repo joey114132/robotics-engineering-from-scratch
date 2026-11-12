@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 09/02 RRT   **Time:** ~15 minutes
 
+## In Plain Words
+
+Pause a toy-car video at widely spaced moments. The car is before a thin post in one frame and beyond it in the next. Neither still
+shows contact, even if the car struck the post between them.
+
+Collision checking has the same blind spot when it tests only sampled positions. Checking the whole connecting segment catches the
+crossing. Enlarging the obstacle in sampled checks can also cover the gaps, but may flag a route that would really clear it.
+
 ## The Problem
 
 The planner reports a collision-free path, and the robot hits a post on the way. Every pose on the path was checked and every one was free. The post is thinner than the distance the arm moves between two checks, so the arm jumped over it in the checker's eyes and went straight through it in the real world.

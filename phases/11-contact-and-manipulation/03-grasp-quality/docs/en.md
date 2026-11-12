@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 11/01 Contact Models   **Time:** ~15 minutes
 
+## In Plain Words
+
+Grasp quality asks whether your contacts can resist both a push and a twist. Pinch a small box between fingertips on opposite sides.
+Sliding a finger upward changes the torque those inward pushes create, even if you squeeze just as hard.
+
+Friction lets each fingertip also push along the box's surface, within a limit. If the available forces and torques cannot oppose every
+disturbance direction, the grasp lacks force closure. A grasp with little margin can lose closure after a small shift.
+
 ## The Problem
 
 Two fingers pinch a box. Slide one finger up a little and the box twists out, even though the squeeze force is the same. A grasp can fail without any contact losing grip, because the contacts together cannot resist some direction of load.

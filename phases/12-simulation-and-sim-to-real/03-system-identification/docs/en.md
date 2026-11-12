@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** 12/01 What a Simulator Approximates   **Time:** ~15 minutes
 
+## In Plain Words
+
+System identification learns a model from recorded motion. Suppose you measure the push needed to keep a bicycle moving. At a single
+steady speed, a fixed rubbing resistance and a resistance that grows with speed can add up to the same push.
+
+Change speed and accelerate, and their effects stop looking alike. The joint experiment does this with varied commands, letting the fit
+separate inertia, friction and motor lag. Matching one steady-speed recording can hide wrong parameters that fail on another motion.
+
 ## The Problem
 
 You copy inertia from CAD, guess a friction value and tune the simulator by eye until one trajectory matches. The next trajectory misses because that single run could not tell friction from damping. The fit looked good and the parameters were wrong.

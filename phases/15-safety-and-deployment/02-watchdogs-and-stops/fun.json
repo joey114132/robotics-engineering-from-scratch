@@ -7,6 +7,6 @@
   "hook": "늦게 짖는 watchdog은 시끄러운 목격자일 뿐입니다. timeout을 정하기 전에 멈추는 거리부터 계산하세요.",
   "mission": "0.5 rad 여유로 4 rad/s에서 a=8일 때 timeout이 가능한지 예측한 뒤 `cd code && python3 -c 'from main import max_timeout; print(max_timeout(0.5, 4.0, 8.0))'`를 실행하세요. 에러도 정답입니다."
  },
- "toy": null,
+ "toy": "watchdog-budget",
  "motion": "watchdog-stop"
 }

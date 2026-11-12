@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 02/01 DH vs URDF Origins, 02/02 Inverse Kinematics   **Time:** ~15 minutes
 
+## In Plain Words
+
+Open a door by its handle. For the same hinge rotation, the handle travels farther than a point near the
+hinge. A force on the door perpendicular to its face also produces more hinge torque when applied farther from
+the hinge.
+
+The Jacobian maps joint speeds to tip velocity at the arm's current pose. Its transpose maps a chosen tip
+force to joint torque, so the speed and force calculations agree on power.
+
 ## The Problem
 
 You want the tip to move in a straight line at 0.1 m/s, and the joints move at speeds that depend on the pose. You also want to know how hard each motor must push when the tip pushes on something. Both questions need the same matrix, and a Jacobian with one wrong sign passes every pose-only test.

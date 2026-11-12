@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 01/04 Frames and Transform Trees   **Time:** ~15 minutes
 
+## In Plain Words
+
+Walk along a school corridor with your eyes closed, counting steps. Uneven steps leave several possible
+locations. Opening your eyes and seeing a doorway favours places with doors, but cannot identify which door by
+itself.
+
+A Bayes filter keeps probabilities over those possibilities. Prediction shifts and spreads them according to
+uncertain movement. Update gives more weight to places that fit the new observation, then normalises the
+probabilities. These steps change the belief about your location, not the corridor or your actual position.
+
 ## The Problem
 
 A robot rolls down a corridor and counts its wheel turns to know where it is. Wheels slip a little, so after a hundred steps the count is a guess, and the robot walks into the wrong door. Throwing the count away is no better: one reading of "door" fits several places.

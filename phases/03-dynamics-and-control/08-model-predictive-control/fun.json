@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "I plan twenty steps ahead and then use exactly one. A clipped controller brakes late. I saw the wall coming.",
+  "mission": "In `code/main.py` run `simulate` with `N` = 2, 5 and 20 and `umax` = 0.5, starting at `[4.0, 0.0]`. Print the lowest position of each run and see which one overshoots most."
+ },
+ "ko": {
+  "hook": "스무 걸음 앞을 계획하고 딱 한 걸음만 씁니다. 잘린 컨트롤러는 늦게 브레이크를 밟지만 저는 벽이 오는 걸 봤습니다.",
+  "mission": "`code/main.py`에서 `[4.0, 0.0]`에서 출발해 `umax` 0.5로 `N`을 2, 5, 20으로 `simulate`를 돌리세요. 각 실행의 최저 위치를 출력해 어느 쪽이 가장 많이 넘치는지 보세요."
+ },
+ "toy": "mpc-horizon",
+ "motion": "replan-loop"
+}

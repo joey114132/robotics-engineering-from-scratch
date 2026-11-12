@@ -7,5 +7,7 @@
   "hook": "최종 보스입니다. IK와 trajectory와 gravity feedforward와 feedback이 한 팔에 모였습니다. 가장 조용한 부품을 빼고 누가 살아남는지 봅시다.",
   "mission": "마무리 과제입니다. `code/main.py`의 `(1.0, 0.0)`을 `(1.0, 0.9, 0.5, 0.0)`으로 바꾸세요. PASS가 FAIL로 뒤집히는 지점을 짐작한 뒤 `python3 code/main.py`를 실행하세요."
  },
- "toy": null
+ "toy": null,
+ "motion": "ff-sag-knob",
+  "three": "pick-place-arm-3d"
 }

@@ -8,6 +8,8 @@ import shutil
 import sys
 from pathlib import Path
 
+from lesson_sections import split_plain_words
+
 try:
     from pygments import highlight
     from pygments.formatters import HtmlFormatter
@@ -66,24 +68,35 @@ def ic(name: str, cls: str = "") -> str:
 
 
 def bolt_svg(mood: str = "idle", cls: str = "") -> str:
-    """Bolt: a friendly line-art robot. Eyes and antenna glow in the current phase colour; the mood decides which parts show."""
+    """Small Bolt: the hover toy's visor, cheeks and lightning bulb without a canvas."""
     return (
         f'<svg class="bolt-svg {cls}" data-mood="{mood}" viewBox="0 0 64 64" aria-hidden="true" focusable="false">'
-        '<g class="m-arms"><path class="m-idle m-no m-sleepy" d="M19 51c-6 1-9 5-9 9M45 51c6 1 9 5 9 9"/>'
-        '<path class="m-cheer" d="M19 50c-7-1-11-7-11-15M45 50c7-1 11-7 11-15"/></g>'
-        '<rect class="bl-fill" x="19" y="46" width="26" height="15" rx="6"/><circle class="bl-glow" cx="32" cy="53.500" r="2.600"/>'
-        '<path class="bl-line" d="M32 11V5"/><circle class="bl-glow bl-ant" cx="32" cy="4.500" r="3"/>'
-        '<rect class="bl-fill" x="4.500" y="22" width="6" height="11" rx="3"/><rect class="bl-fill" x="53.500" y="22" width="6" height="11" rx="3"/>'
-        '<rect class="bl-fill" x="10" y="11" width="44" height="34" rx="13"/><rect class="bl-visor" x="16" y="17" width="32" height="22" rx="9"/>'
-        '<g class="m-idle"><circle class="bl-glow" cx="26" cy="27" r="3.300"/><circle class="bl-glow" cx="38" cy="27" r="3.300"/>'
-        '<path class="bl-stroke" d="M28.500 33.500q3.500 2.800 7 0"/></g>'
-        '<g class="m-cheer"><path class="bl-stroke" d="M21.500 29q4.500-8 9 0M33.500 29q4.500-8 9 0"/><path class="bl-glow" d="M27 32.500q5 7.500 10 0z"/></g>'
-        '<g class="m-no"><circle class="bl-glow" cx="26" cy="27" r="4"/><circle class="bl-visor" cx="27" cy="28" r="1.600"/>'
-        '<circle class="bl-glow" cx="38" cy="27" r="4"/><circle class="bl-visor" cx="39" cy="28" r="1.600"/>'
-        '<path class="bl-stroke" d="M28.500 35.500q3.500-2.800 7 0"/><path class="bl-drop" d="M52 12c2 3 3 5 3 7a3 3 0 0 1-6 0c0-2 1-4 3-7z"/></g>'
-        '<g class="m-sleepy"><path class="bl-stroke" d="M21 28h9M34 28h9M29 34h6"/>'
-        '<path class="bl-stroke bl-z" d="M47 9h5l-5 6h5"/></g></svg>'
+        '<ellipse cx="32" cy="61" rx="15" ry="2" fill="#0e1a1f" opacity=".15"/>'
+        '<ellipse class="bl-glow" cx="32" cy="57" rx="12" ry="4"/>'
+        '<rect class="bl-fill" x="21" y="40" width="22" height="17" rx="9"/>'
+        '<circle class="bl-glow" cx="32" cy="49" r="3"/>'
+        '<g class="m-arms"><path class="m-idle m-no m-sleepy m-think" d="M20 46l-4 5M44 46l4 5"/>'
+        '<path class="m-cheer" d="M20 46l-7-8M44 46l7-8"/><path class="m-wave" d="M20 46l-7-8M44 46l4 5"/></g>'
+        '<path class="bl-line" d="M32 12V7"/><path class="bl-ant" d="m34 1-7 7h5l-1 5 7-8h-5z"/>'
+        '<rect class="bl-fill" x="8" y="12" width="48" height="32" rx="14"/>'
+        '<rect class="bl-visor" x="13" y="17" width="38" height="22" rx="10"/>'
+        '<path d="M19 20h17" stroke="#eaffff" stroke-width="1.5" stroke-linecap="round" opacity=".3"/>'
+        '<ellipse class="bl-cheek" cx="16" cy="37" rx="3" ry="1.8"/><ellipse class="bl-cheek" cx="48" cy="37" rx="3" ry="1.8"/>'
+        '<g class="m-idle m-wave m-think"><rect class="bl-glow" x="21" y="23" width="7" height="10" rx="3.5"/>'
+        '<rect class="bl-glow" x="36" y="23" width="7" height="10" rx="3.5"/></g>'
+        '<g class="m-cheer"><path class="bl-stroke" d="m21 29 4-5 4 5m6 0 4-5 4 5"/></g>'
+        '<g class="m-no"><path class="bl-stroke" d="M25 28c4-4-4-6-5-1s9 7 10 1M39 28c4-4-4-6-5-1s9 7 10 1"/></g>'
+        '<g class="m-sleepy"><path class="bl-stroke" d="M21 29q4 2 8 0m6 0q4 2 8 0"/>'
+        '<path class="bl-stroke bl-z" d="M49 7h5l-5 6h5"/></g></svg>'
     )
+
+
+def bolt_mount(mood: str = "idle", size: int = 88, cls: str = "", element_id: str = "") -> str:
+    """Reserve square layout space; the standalone renderer initializes on visibility."""
+    ident = f' id="{element_id}"' if element_id else ""
+    return (f'<span{ident} class="bolt3d {cls}" data-bolt3d data-mood="{mood}" '
+            f'data-size="{size}" role="img" aria-label="Bolt, a little robot" '
+            f'style="width:{size}px;height:{size}px"></span>')
 
 
 # ---- markdown -> html -------------------------------------------------------------------------------------------
@@ -153,6 +166,17 @@ def img_size(src: str) -> str:
 
 
 def md_to_html(text: str, img_base: str) -> tuple[str, str]:
+    before, plain, after = split_plain_words(text)
+    if plain:
+        title, prelude = md_to_html(before, img_base)
+        _, callout = md_to_html_plain(plain, img_base)
+        _, remainder = md_to_html(after, img_base)
+        callout = callout.replace("<h2>", '<h2 data-section="plain-words">', 1)
+        return title, prelude + '\n<section class="plain-words">' + callout + "</section>\n" + remainder
+    return md_to_html_plain(text, img_base)
+
+
+def md_to_html_plain(text: str, img_base: str) -> tuple[str, str]:
     lines, out, title, i = text.splitlines(), [], "", 0
     while i < len(lines):
         ln = lines[i]
@@ -203,6 +227,93 @@ def md_to_html(text: str, img_base: str) -> tuple[str, str]:
             out.append(f"<p>{inline(' '.join(para))}</p>")
         i += 1
     return title, "\n".join(out)
+
+
+def split_intro(h: str) -> tuple[str, str]:
+    """Keep the whole explainer before the playground and the single-file deferred body."""
+    if '<section class="plain-words">' in h:
+        i = h.index("</section>", h.index('<section class="plain-words">')) + len("</section>")
+    else:
+        i = h.find("<h2")
+        i = len(h) if i < 0 else i
+    return h[:i], h[i:]
+
+
+# ---- glossary: the first mention of a term in each h2 section becomes a tooltip trigger (scripts/glossary.json) -----------
+GLOSS = json.loads((ROOT / "scripts" / "glossary.json").read_text())
+_GL_TAG = re.compile(r"<(/?)([a-zA-Z][a-zA-Z0-9]*)([^>]*)>|<!--.*?-->", re.S)
+_GL_SKIP = {"a", "code", "pre", "h1", "h2", "h3", "h4", "h5", "h6", "figure", "figcaption", "th", "script", "style", "button"}
+_GL_RX: dict = {}
+_GL_FLAT = re.compile(r"[^a-z0-9가-힣]+")
+
+
+def _gl_rx(ids: frozenset):
+    if ids not in _GL_RX:
+        parts, owner = [], []
+        for t in GLOSS:
+            if t["id"] in ids:
+                owner += [(v, t["id"]) for v in t["match"]]
+        owner.sort(key=lambda x: -len(x[0]))
+        for k, (v, _) in enumerate(owner):
+            core = re.escape(v)
+            if v[0].isascii():
+                core = r"(?<![A-Za-z0-9_])" + core + r"(?![A-Za-z0-9_])"
+                if not (len(v) <= 2 or any(c.isupper() for c in v[1:])):
+                    core = "(?i:" + core + ")"
+            else:
+                core = r"(?<![가-힣A-Za-z0-9])" + core
+            parts.append(f"(?P<g{k}>{core})")
+        _GL_RX[ids] = (re.compile("|".join(parts)), [tid for _, tid in owner])
+    return _GL_RX[ids]
+
+
+def _gl_taught(t, spaced: str, squashed: str) -> bool:
+    """the lesson's own title or slug names this term: it is being taught here, so no tooltip"""
+    for w in t["match"] + t.get("skip", []):
+        f = _GL_FLAT.sub("", w.lower())
+        if len(f) >= 5 and f in squashed:
+            return True
+        if 2 <= len(f) < 5 and re.search(r"(?<![a-z0-9])" + re.escape(f) + r"(?![a-z0-9])", spaced):
+            return True
+    return False
+
+
+def gloss(h: str, ph, taught_in: str) -> str:
+    """Wrap the first mention per h2 section; never inside headings, links, code, figures, tables heads or the chips row. The text is unchanged."""
+    spaced = _GL_FLAT.sub(" ", taught_in.lower())
+    squashed = spaced.replace(" ", "")
+    ids = frozenset(t["id"] for t in GLOSS if (not t.get("only") or ph["num"] in t["only"]) and not _gl_taught(t, spaced, squashed))
+    rx, owner = _gl_rx(ids)
+    out, pos, depth, chips, used = [], 0, 0, False, set()
+
+    def sub(m):
+        tid = owner[int(m.lastgroup[1:])]
+        if tid in used:
+            return m.group(0)
+        used.add(tid)
+        return f'<span class="gl" tabindex="0" data-t="{tid}">{m.group(0)}</span>'
+
+    for m in _GL_TAG.finditer(h):
+        out.append(h[pos:m.start()] if depth or chips else rx.sub(sub, h[pos:m.start()]))
+        out.append(m.group(0))
+        pos = m.end()
+        name, close = (m.group(2) or "").lower(), m.group(1) == "/"
+        if name == "h2" and not close:
+            used.clear()
+        if name in _GL_SKIP:
+            depth = max(0, depth + (-1 if close else 1))
+        elif name == "div":
+            chips = False if close else ('class="chips"' in m.group(3) or chips)
+    out.append(h[pos:] if depth or chips else rx.sub(sub, h[pos:]))
+    return "".join(out)
+
+
+def gl_script(content: str) -> str:
+    """window.GL for one page: only the terms that page uses (the single-file build ships them all once)"""
+    ids = set(re.findall(r'class="gl" tabindex="0" data-t="([^"]+)"', content))
+    if not ids:
+        return ""
+    return "window.GL=" + json.dumps({t["id"]: {"en": t["en"], "ko": t["ko"]} for t in GLOSS if t["id"] in ids}, ensure_ascii=False, separators=(",", ":")) + ";"
 
 
 def load_lessons():
@@ -259,32 +370,43 @@ def page(ph, les, phases, flat):
         if q.exists():
             quiz[code] = json.loads(q.read_text())
     QUIZ_ALL[pid] = quiz
+    taught = " ".join(t for t, _ in langs.values()) + " " + les.name  # a term named in the lesson's own title or slug gets no tooltip there
+    langs = {c: (t, gloss(h, ph, taught)) for c, (t, h) in langs.items()}
     fun = json.loads((les / "fun.json").read_text()) if (les / "fun.json").exists() else {}
     hook, mission, toy = fun_html(fun, pid)
-    scene = f'<div class="motion scene" data-motion="scene-{ph["num"]}"></div>' if ph["lessons"].index(les) == 0 else ""
+    # 09/01 already has its profile comparison; the phase's RRT scene teaches 09/02.
+    scene = f'<div class="motion scene" data-motion="scene-{ph["num"]}"></div>' if ph["lessons"].index(les) == 0 and fun.get("motion") != "trapezoid-profile" else ""
     concept = f'<div class="motion concept" data-motion="{html.escape(fun["motion"])}"></div>' if fun.get("motion") else ""
+    three = f'<div class="motion three" data-motion="{html.escape(fun["three"])}"></div>' if fun.get("three") else ""
     idx = flat.index(pid)
     prev_, next_ = (flat[idx - 1] if idx else None), (flat[idx + 1] if idx + 1 < len(flat) else None)
     h1s, intros, rests = "", "", ""
     for c, (t, h) in langs.items():
-        i = h.find("<h2")
-        i = len(h) if i < 0 else i
+        intro, rest = split_intro(h)
         h1s += f'<h1 data-lang="{c}">{html.escape(t)}</h1>'
-        intros += f'<article data-lang="{c}">{h[:i]}</article>'
-        rests += f'<article data-lang="{c}">{h[i:]}</article>'
+        intros += f'<article data-lang="{c}">{intro}</article>'
+        rests += f'<article data-lang="{c}">{rest}</article>'
     n_in = len(ph["lessons"])
     k = ph["lessons"].index(les) + 1
     meta = (f'<div class="lmeta">{phase_chip(ph)}<span class="lno"><span data-lang="en">Lesson {k} of {n_in}</span>'
-            f'<span data-lang="ko">레슨 {k} / {n_in}</span></span>{dots(pid)}</div>')
+            f'<span data-lang="ko">레슨 {k} / {n_in}</span></span>{dots(pid)}{phase_map(ph, pid)}</div>')
     title = langs["en"][0]
     quiz_sec = ('<section id="quiz"><h2 data-lang="en">Check yourself</h2><h2 data-lang="ko">스스로 점검</h2>'
                 '<p class="qintro" data-lang="en">Six questions in three stages: warm-up, checks, boss round. Wrong answers cost nothing.</p>'
                 '<p class="qintro" data-lang="ko">여섯 문제를 세 단계(워밍업, 체크, 보스전)로 풉니다. 틀려도 잃는 것은 없습니다.</p>'
                 '<div id="quizbox"></div></section>')
     nav = f'<nav class="pager">{pager_card(prev_, "prev")}{pager_card(next_, "next")}</nav>'
-    body = (f'<div class="lp" data-f="{FAM[ph["num"]]}">{meta}{scene}{h1s}{hook}{intros}{concept}{toy}<span hidden data-rest="a"></span>{rests}<span hidden data-rest="b"></span>{mission}{quiz_sec}{nav}'
+    body = (f'<div class="lp" data-f="{FAM[ph["num"]]}">{meta}{h1s}{intros}{hook}{scene}{concept}{three}{toy}<span hidden data-rest="a"></span>{rests}<span hidden data-rest="b"></span>{mission}{quiz_sec}{nav}'
             f"<script>window.QUIZ={json.dumps(quiz, ensure_ascii=False).replace('</', '<\\/')};</script></div>")
-    return shell(f"{title} · Robotics from Scratch", body, phases, pid), pid
+    return shell(f"{title} · Robotics from Scratch", body, phases, pid, lay=" lpg"), pid
+
+
+def phase_map(ph, cur) -> str:
+    """one dot per lesson of the phase: done / current / not yet (the done class comes from the stored progress, like the sidebar and the home path)"""
+    dots_ = "".join(f'<a class="pmn{" cur" if pid_of(ph, l) == cur else ""}" data-pid="{pid_of(ph, l)}" href="{pid_of(ph, l)}.html"'
+                    f'{" aria-current=page" if pid_of(ph, l) == cur else ""}><i></i><span class="sr">{tt(l)}</span></a>' for l in ph["lessons"])
+    return ('<nav class="pmap" aria-labelledby="pml"><span class="sr" id="pml"><span data-lang="en">Lessons in this phase</span>'
+            f'<span data-lang="ko">이 phase 의 레슨</span></span>{dots_}</nav>')
 
 
 def fun_html(fun, pid=""):
@@ -296,7 +418,7 @@ def fun_html(fun, pid=""):
     for c in ("en", "ko"):
         f = fun.get(c)
         if f:
-            top += f'<div class="bolt" data-lang="{c}">{bolt_svg("idle", "hookbolt")}<p>{inline(f["hook"])}</p></div>'
+            top += f'<div class="bolt" data-lang="{c}">{bolt_mount("idle", 88, "hookbolt")}<p>{inline(f["hook"])}</p></div>'
     toy = f'<div class="toy" data-toy="{e(fun["toy"])}"></div>' if fun.get("toy") else ""
     bot = ""
     for c, lab in (("en", "Mission"), ("ko", "미션")):
@@ -330,13 +452,65 @@ HEADER = ('<header><a class="brand" href="index.html">' + bolt_svg("idle", "bran
           '<path d="M8 1.500a6.500 6.500 0 0 0 0 13z" fill="currentColor"/></svg></button></div></header>')
 
 
-def shell(title, content, phases, current=None, extra="", main_cls=""):
+# ---- widget scripts: a page loads only the motion and toy source files that define the widgets it uses -------------------
+def _wsrc(kind):
+    d = ROOT / "scripts" / kind
+    return sorted(d.glob("[0-9]*.js")) + sorted(d.glob("p[0-9][0-9].js"))  # core first, then the older groups, then the per-phase files
+
+
+_WTEXT: dict = {}
+
+
+def widget_files(kind: str, names) -> list:
+    """source files a page needs: the core, every file that registers one of `names`, and the files those read shared helpers from
+    (window.MB is defined in 20-scenes-b.js, MOTION.__h in 10-scenes-a.js; both are IIFE files, so the globals are the only link)"""
+    files = _wsrc(kind)
+    text = _WTEXT.setdefault(kind, {f: f.read_text() for f in files})
+    need = {files[0]}
+    for n in names:
+        hit = {f for f, t in text.items() if re.search(r"""['"`]%s['"`]""" % re.escape(n), t)}
+        m = re.fullmatch(r"scene-0(\d)", n)
+        if not hit and m:  # scenes 00-05 are registered by a template: 'scene-0'+n inside SC(n, ...)
+            hit = {f for f, t in text.items() if re.search(r"'scene-0'\s*\+", t) and re.search(r"\bSC\(%s\s*," % m.group(1), t)}
+        if not hit:
+            raise SystemExit(f"{kind} widget {n!r} is not registered by any file in scripts/{kind}/")
+        need |= hit
+    provides = {}
+    for f, t in text.items():
+        if re.search(r"\bwindow\.MB\s*=", t):
+            provides["MB"] = f
+        if re.search(r"\.__h\s*=", t):
+            provides["__h"] = f
+    for f in list(need):
+        t = text[f]
+        for sym, pat in (("MB", r"\bMB\b"), ("__h", r"\b__h\b")):
+            if sym in provides and provides[sym] != f and re.search(pat, t):
+                need.add(provides[sym])
+    return [f for f in files if f in need]
+
+
+def widget_scripts(content: str) -> str:
+    out = ""
+    if 'class="toy"' in content:
+        out += "".join(f'<script src="toys-{f.name}" defer></script>' for f in widget_files("toys", re.findall(r'<div class="toy" data-toy="([^"]+)"', content)))
+    if 'class="motion ' in content:  # 3D slots need the core too: MOTION.three is registered on it
+        out += "".join(f'<script src="motion-{f.name}" defer></script>' for f in widget_files("motion", re.findall(r'<div class="motion (?:scene|concept)" data-motion="([^"]+)"', content)))
+    return out
+
+
+def shell(title, content, phases, current=None, extra="", main_cls="", lay=""):
     ORDJSON = json.dumps([pid_of(ph, l) for ph in phases.values() for l in ph["lessons"]])
     PHJSON = json.dumps({ph["num"]: [pid_of(ph, l) for l in ph["lessons"]] for ph in phases.values()})
+    chunk = widget_scripts(content)
+    # 3D widgets (scripts/motion3d): the engine and the phase file load only on pages that have a "motion three" slot
+    if 'class="motion three"' in content:
+        chunk += '<script src="motion3d.js" defer></script>' + (f'<script src="motion3d-p{current[:2]}.js" defer></script>' if current and (ROOT / "scripts" / "motion3d" / f"p{current[:2]}.js").exists() else "")
+    if 'data-bolt3d' in content:
+        chunk += '<script data-bolt3d-source>' + MASCOT3D + '</script>'
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#f2f6f7">
-<title>{html.escape(title)}</title><style>{CSS}</style></head><body>{sprite()}{HEADER}
-<div class="layout"><aside>{sidebar(phases, current)}</aside><main{main_cls}>{content}</main></div><div id="toast" role="status" aria-live="polite"></div><script>window.PH={PHJSON};window.ORD={ORDJSON};window.FAM={json.dumps(FAM)};window.CUR={json.dumps(current)};</script><script>{JS}</script><script src="toys.js" defer></script><script src="motion.js" defer></script>{extra}</body></html>"""
+<title>{html.escape(title)}</title><link rel="stylesheet" href="app.css?v={ASSET_V}"></head><body>{sprite()}{HEADER}
+<div class="layout{lay}"><aside>{sidebar(phases, current)}</aside><main{main_cls}>{content}</main></div><div id="toast" role="status" aria-live="polite"></div><script>window.PH={PHJSON};window.ORD={ORDJSON};window.FAM={json.dumps(FAM)};window.CUR={json.dumps(current)};{gl_script(content)}</script><script src="app.js?v={ASSET_V}"></script>{chunk}{extra}</body></html>"""
 
 
 # ---- index: hero, HUD, daily 5, learning path, sync ---------------------------------------------------------------
@@ -379,18 +553,19 @@ def index(phases):
                   f'<span class="ring" data-ph="{ph["num"]}"></span></div><div class="trail" style="height:{h}px">'
                   f'<svg class="wire" width="224" height="{h}" viewBox="-112 0 224 {h}" aria-hidden="true"><path d="{d}"/></svg>{nodes}</div></section>')
     strip = "".join(f'<i data-f="{FAM[ph["num"]]}" data-pid="{pid_of(ph, l)}"></i>' for ph in phases.values() for l in ph["lessons"])
+    NL = sum(len(ph["lessons"]) for ph in phases.values())
     hero = f"""<section class="hero">
 <div class="hero-copy"><h1 data-lang="en">Robotics Engineering from Scratch</h1><h1 data-lang="ko">처음부터 배우는 로봇공학</h1>
 <p data-lang="en">Short, visual lessons. See the idea in pictures, build it in a few lines, check yourself.</p>
 <p data-lang="ko">짧고 그림 중심인 레슨입니다. 그림으로 개념을 보고 몇 줄로 직접 만든 다음 스스로 점검합니다.</p>
-<div class="cta"><a id="cont" class="go" href="#"></a><span class="meta"><span data-lang="en">67 lessons · English and Korean</span><span data-lang="ko">레슨 67개 · 영어와 한국어</span></span></div></div>
-<figure class="heroart" data-f="2">{hero_art()}<span class="mascot"><span id="hbolt">{bolt_svg("sleepy")}</span><span id="hsay" class="say"></span></span></figure>
+<div class="cta"><a id="cont" class="go" href="#"></a><span class="meta"><span data-lang="en">{NL} lessons · English and Korean</span><span data-lang="ko">레슨 {NL}개 · 영어와 한국어</span></span></div></div>
+<figure class="heroart" data-f="2">{hero_art()}<span class="mascot">{bolt_mount("sleepy", 88, element_id="hbolt")}<span id="hsay" class="say"></span></span></figure>
 <div id="stats" class="hud"><div class="hud-l"><div class="lv"><span class="lvn" id="h-lv"></span><b id="h-lvname"></b><span class="xpm" id="h-xpm"></span></div>
 <div class="xpbar"><i id="h-bar"></i></div></div>
 <div class="tiles"><div class="tile">{ic("bolt")}<b id="h-xp">0</b><span>XP</span></div>
 <div class="tile">{ic("flame")}<b id="h-st">0</b><span data-lang="en">day streak</span><span data-lang="ko">일 연속</span></div>
 <div class="tile">{ic("medal")}<b id="h-bd">0</b><span data-lang="en">badges</span><span data-lang="ko">배지</span></div>
-<div class="tile">{ic("check")}<b id="h-dn">0</b><span data-lang="en">of 67 done</span><span data-lang="ko">/ 67 완료</span></div></div>
+<div class="tile">{ic("check")}<b id="h-dn">0</b><span data-lang="en">of {NL} done</span><span data-lang="ko">/ {NL} 완료</span></div></div>
 <div class="strip" aria-hidden="true">{strip}</div></div></section>"""
     daily = f"""<section class="daily" id="daily" data-f="4"><div class="dhead"><span class="dic">{ic("cal")}</span><h3><span data-lang="en">Daily 5</span><span data-lang="ko">오늘의 5문제</span></h3></div>
 <div class="dsum"><p data-lang="en">Five quick questions from lessons you have started. +5 XP per correct answer, up to 25 XP a day.</p>
@@ -431,16 +606,23 @@ def main() -> int:
             doc, pid = page(ph, les, phases, flat)
             (SITE / f"{pid}.html").write_text(doc)
     (SITE / "index.html").write_text(index(phases))
+    (SITE / "app.css").write_text(CSS)
+    (SITE / "app.js").write_text(JS)
     (SITE / "quizzes.js").write_text("window.QUIZS=" + json.dumps(QUIZ_ALL, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + ";")
-    (SITE / "motion.js").write_text("\n".join(f.read_text() for f in sorted((ROOT / "scripts" / "motion").glob("*.js"))))
-    (SITE / "toys.js").write_text("\n".join(f.read_text() for f in sorted((ROOT / "scripts" / "toys").glob("*.js"))))
+    m3 = ROOT / "scripts" / "motion3d"
+    (SITE / "motion3d.js").write_text("\n".join(f.read_text() for f in sorted(m3.glob("[0-9]*.js"))))
+    for f in sorted(m3.glob("p[0-9][0-9].js")):
+        (SITE / f"motion3d-{f.name}").write_text(f.read_text())
+    for kind in ("motion", "toys"):
+        for f in _wsrc(kind):
+            (SITE / f"{kind}-{f.name}").write_text(f.read_text())
     pwa(flat)
     print(f"{len(flat)} lessons -> {SITE}/index.html")
     return 0
 
 
 # ---- offline cache: vendored GSAP, web app manifest, Bolt icons, service worker with a build-hash version -------------
-SHELL_FILES = ["toys.js", "motion.js", "quizzes.js", "assets.json", "vendor/gsap.min.js", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"]
+SHELL_FILES = sorted(f"{k}-{f.name}" for k in ("toys", "motion") for f in _wsrc(k)) + sorted(f"motion3d-{f.name}" for f in (ROOT / "scripts" / "motion3d").glob("p[0-9][0-9].js")) + ["motion3d.js", "app.css", "app.js", "quizzes.js", "assets.json", "vendor/gsap.min.js", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"]
 ICON_BG, ICON_FG, ICON_GLOW = (14, 26, 31), (242, 246, 247), (65, 200, 230)
 
 
@@ -587,6 +769,11 @@ h2::before{content:"";position:absolute;top:0;left:0;width:34px;height:5px;borde
 .idea{position:relative;font-size:1.15rem;line-height:1.55;margin:.4em 0 1.1em;padding:18px 20px 18px 66px;border-radius:20px;background:var(--pb);font-weight:600;max-width:none!important}
 .idea::before{content:"";position:absolute;left:18px;top:18px;width:32px;height:32px;border-radius:11px;background:var(--pf) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230e1a1f' d='M13.200 2 4.500 13.600c-.3.4 0 1 .5 1h5.300l-1 6.600c-.1.6.6.9 1 .4l8.600-11.800c.3-.4 0-1-.5-1h-5.100l.9-6c.1-.6-.7-.9-1-.4z'/%3E%3C/svg%3E") center/18px no-repeat}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 1.2em}.chips span{font-size:13px;line-height:1.4;padding:4px 13px;border-radius:99px;background:var(--card);border:1.5px solid var(--line);color:var(--mut)}.chips strong{color:var(--fg)}
+/* Opening explainer: existing accessible theme pairs, no motion or delayed reveal. */
+.plain-words{--plain-bg:var(--accbg);--plain-fg:var(--fg);--plain-edge:var(--acc);background:var(--plain-bg);color:var(--plain-fg);border:1px solid var(--line);border-inline-start:4px solid var(--plain-edge);border-radius:16px;padding:20px 16px;margin:1.2em 0;min-width:0;overflow-wrap:anywhere}
+.plain-words h2{font-size:1.15rem;margin:0 0 .7em;padding:0;color:var(--plain-fg)}.plain-words h2::before{display:none}
+.plain-words p{margin:.65em 0;max-width:68ch}.plain-words p:last-child{margin-bottom:0}
+.plain-words .gl{color:inherit;text-decoration-color:var(--plain-edge)}
 figure{counter-increment:fig;margin:1.6em 0;padding:10px 10px 0;background:var(--card);border:1.5px solid var(--line);border-radius:22px;box-shadow:var(--sh);overflow:hidden}
 figure img{display:block;width:100%;height:auto;border-radius:14px;background:#fff;padding:6px}
 figcaption{margin:0 -10px;padding:11px 16px 13px;font-size:14.5px;color:var(--mut);line-height:1.5;border-top:1.5px dashed var(--line);margin-top:10px}
@@ -604,14 +791,15 @@ a{color:var(--pt);text-underline-offset:3px}ul,ol{padding-left:1.4em}li{margin:.
 
 /* lesson header, hook, mission, playground, pager */
 .lmeta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 6px}
-.chip.ph{display:inline-flex;align-items:center;min-height:32px;padding:0 14px;border-radius:99px;background:var(--pf);color:var(--ink0);font-size:13px;font-weight:800;letter-spacing:.01em}
+.chip.ph{margin:0;display:inline-flex;align-items:center;min-height:32px;padding:0 14px;border-radius:99px;background:var(--pf);color:var(--ink0);font-size:13px;font-weight:800;letter-spacing:.01em}
 .lno{font:600 13px var(--mono);color:var(--mut)}
-.dots{display:inline-flex;gap:5px;margin-left:auto;align-items:center}.dots i{width:10px;height:10px;border-radius:50%;border:2px solid var(--pl);background:transparent;transition:background .2s,transform .2s var(--e)}
+.dots{display:inline-flex;gap:4px;margin-left:auto;align-items:center;order:5}.dots::before{content:"Quiz";margin-right:5px;font:700 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}html[lang=ko] .dots::before{content:"퀴즈";letter-spacing:0;text-transform:none}
+.dots i{width:16px;height:7px;border-radius:4px;border:2px solid var(--pl);background:transparent;transition:background .2s}
 .dots i.on{background:var(--pf);border-color:var(--pf)}.dots i.miss{border-style:dashed;border-color:var(--oops)}
-.dots i.dm{width:12px;height:12px;border-radius:4px;margin-left:5px;transform:rotate(45deg)}
+.dots i.dm{width:10px;height:10px;border-radius:3px;margin-left:5px;transform:rotate(45deg)}
 .dots i.dm.on{background:var(--pf);border-color:var(--pd)}
 .bolt{display:flex;gap:12px;align-items:flex-start;margin:0 0 1.3em}
-.hookbolt{width:58px;height:58px;flex:none;animation:bob 3.4s ease-in-out infinite}
+.hookbolt{width:88px;height:88px;flex:none}
 .bolt p{position:relative;margin:4px 0 0;padding:12px 16px;border-radius:20px 20px 20px 6px;background:var(--card);border:1.5px solid var(--line);font-size:1.05rem;font-weight:500;line-height:1.55;box-shadow:var(--sh)}
 .mission{position:relative;display:flex;gap:14px;align-items:flex-start;margin:2.4em 0 0;padding:18px 20px;border-radius:22px;border:2px solid var(--pl);background:var(--pb);cursor:pointer;transition:transform .15s var(--e),background .2s}
 .mission:active{transform:scale(.99)}
@@ -700,7 +888,7 @@ html:not(.gs) .j2{transform-origin:190px 162px;transform:rotate(78deg);animation
 html:not(.gs) .j3{transform-origin:190px 62px;transform:rotate(70deg);animation:j3 4.2s ease-in-out infinite alternate}
 @keyframes j1{from{transform:rotate(31deg)}to{transform:rotate(38deg)}}@keyframes j2{from{transform:rotate(74deg)}to{transform:rotate(84deg)}}@keyframes j3{from{transform:rotate(64deg)}to{transform:rotate(80deg)}}
 .mascot{position:absolute;left:14px;top:-30px;display:flex;align-items:flex-start;gap:8px;max-width:calc(100% - 28px)}
-#hbolt{display:block;width:88px;height:88px;flex:none;filter:drop-shadow(0 6px 8px rgb(14 26 31/.2))}#hbolt .bolt-svg{width:100%;height:100%}
+#hbolt{display:block;width:88px;height:88px;flex:none}
 .say{margin-top:40px;padding:7px 13px;border-radius:14px 14px 14px 4px;background:var(--card);border:1.5px solid var(--line);font-size:13px;font-weight:700;line-height:1.35;box-shadow:var(--sh)}.say:empty{display:none}
 .hud{padding:16px 18px 14px;border-radius:24px;background:var(--card);border:1.5px solid var(--line);box-shadow:var(--sh);font-family:var(--mono)}
 .lv{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.lvn{padding:3px 10px;border-radius:8px;background:var(--pf);color:var(--ink0);font-weight:800;font-size:13px}.lv b{font:800 18px var(--sans)}.xpm{margin-left:auto;font-size:12px;color:var(--mut)}
@@ -746,14 +934,16 @@ html:not(.gs) .j3{transform-origin:190px 62px;transform:rotate(70deg);animation:
 .node .you{display:block;top:-4px;left:50%;margin-left:calc(var(--o) + 18px);animation:bob 3s ease-in-out infinite}
 
 /* Bolt */
+.bolt3d{display:inline-block;vertical-align:middle;flex-shrink:0;line-height:0;touch-action:pan-y}.bolt3d canvas{display:block;width:100%;height:100%}
 .bolt-svg{display:block;overflow:visible}
-.bl-fill{fill:var(--card);stroke:var(--fg);stroke-width:2.5}.bl-line{stroke:var(--fg);stroke-width:2.5;stroke-linecap:round;fill:none}.bl-visor{fill:var(--ink0);stroke:none}
-.bl-glow{fill:var(--pf)}.bl-ant{stroke:var(--fg);stroke-width:2}.bl-stroke{fill:none;stroke:var(--pf);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.bl-drop{fill:oklch(.8 .1 235);stroke:var(--fg);stroke-width:1.6}.m-arms path{fill:none;stroke:var(--fg);stroke-width:2.8;stroke-linecap:round}
+.bl-fill{fill:#d8eef0;stroke:#176579;stroke-width:1.6}.bl-line{stroke:#227789;stroke-width:2.5;stroke-linecap:round;fill:none}.bl-visor{fill:var(--ink0);stroke:#78c5d3;stroke-width:1}
+.bl-glow{fill:#41c8e6}.bl-ant{fill:#ffcc70;stroke:#d58124;stroke-width:.7}.bl-cheek{fill:#ed9e9b}.bl-stroke{fill:none;stroke:#8ff8ed;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.m-arms path{fill:none;stroke:#41c8e6;stroke-width:6;stroke-linecap:round}
 .bolt-svg [class*=m-]{display:none}.bolt-svg .m-arms{display:inline}
 .bolt-svg[data-mood=idle] .m-idle,.bolt-svg[data-mood=cheer] .m-cheer,.bolt-svg[data-mood=oops] .m-no,.bolt-svg[data-mood=sleepy] .m-sleepy{display:inline}
+.bolt-svg[data-mood=wave] .m-wave,.bolt-svg[data-mood=think] .m-think{display:inline}
 .bolt-svg[data-mood=sleepy] .m-arms .m-sleepy,.bolt-svg[data-mood=oops] .m-arms .m-no,.bolt-svg[data-mood=idle] .m-arms .m-idle{display:inline}
-.bolt-svg[data-mood=sleepy] .bl-ant{fill:var(--line)}.bolt-svg[data-mood=sleepy] .bl-stroke{stroke:var(--mut)}
+.bolt-svg[data-mood=sleepy] .bl-ant{fill:#e2bd78}
 .bolt-svg[data-mood=cheer]{animation:hop .5s var(--e)}.bolt-svg[data-mood=oops]{animation:wob .5s var(--e)}
 .bl-z{stroke:var(--pt)!important}
 .bolt-svg[data-mood=sleepy] .bl-z{animation:zz 2.6s ease-in-out infinite}
@@ -794,6 +984,30 @@ pre.hl{content-visibility:auto;contain-intrinsic-block-size:auto var(--ih,240px)
 @media (max-width:560px){header{padding:6px 12px;gap:6px}.brand .bt{display:none}.tools{gap:5px}.tools button{padding:0 10px}#xp .hs,#xp .hx{display:none}.pager{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
 .mascot{left:8px}.heroart{margin-top:42px}.dots{margin-left:0}.opt{font-size:15px}.pn.next{text-align:left}.pn.next small{justify-content:flex-start}}
 @media (max-width:420px){main{padding-left:14px;padding-right:14px}.pbanner{margin-right:22px}.ph:nth-child(even) .pbanner{margin-left:22px}.pnum{font-size:34px}}
+
+/* reading flow: progress bar, section rail (desktop) / chip (phone), phase map, term tooltips */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#fbar{position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--pt);transform:scaleX(0);transform-origin:0 50%;pointer-events:none}
+.lp h2{scroll-margin-top:112px}
+#frail{display:none}
+#fchip{position:sticky;top:66px;z-index:4;width:max-content;max-width:100%;margin:0 0 10px}
+#fchip>button{display:flex;align-items:center;gap:8px;max-width:100%;min-height:36px;padding:0 14px;border:1.5px solid var(--line);border-radius:99px;background:var(--card);box-shadow:var(--sh);font:700 13px var(--sans);cursor:pointer}
+#fchip>button span{min-width:0;max-width:52vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#fchip>button b{flex:none;font:600 12px var(--mono);color:var(--pt)}
+#fpan{position:absolute;top:42px;left:0;z-index:5;width:min(300px,calc(100vw - 28px));margin:0;padding:6px;list-style:none;border:1.5px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--sh)}#fpan[hidden]{display:none}
+#fpan button{display:block;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:12px;background:none;color:var(--mut);font:600 14px var(--sans);text-align:left;cursor:pointer}#fpan button.on{background:var(--pb);color:var(--fg);font-weight:800}
+.pmap{flex:1 0 100%;order:9;display:flex;position:relative;margin:8px 0 0}
+.pmap::before{content:"";position:absolute;left:14px;right:14px;top:50%;height:2px;margin-top:-1px;background:var(--line)}
+.pmn{position:relative;flex:1 1 0;min-width:0;display:grid;place-items:center;min-height:34px;text-decoration:none}
+.pmn i{width:12px;height:12px;border-radius:50%;border:2px solid var(--pl);background:var(--bg)}
+.pmn.done i{background:var(--pf);border-color:var(--pf)}
+.pmn.cur i{width:22px;height:22px;border:4px solid var(--pf);background:var(--card);box-shadow:0 0 0 4px var(--pb)}.pmn.cur.done i{background:var(--pf);border-color:var(--pd)}
+.gl{text-decoration:underline dotted var(--pt);text-underline-offset:3px;cursor:help}
+#gltip{position:absolute;z-index:40;width:max-content;max-width:min(300px,calc(100vw - 16px));padding:9px 13px;border-radius:14px;background:var(--fg);color:var(--bg);font:500 14px/1.45 var(--sans);box-shadow:0 10px 30px -10px rgb(0 0 0/.5);pointer-events:none}#gltip[hidden]{display:none}
+@media (min-width:1100px){.layout.lpg{grid-template-columns:276px minmax(0,1fr) 176px}#fchip{display:none}.lp h2{scroll-margin-top:84px}
+#frail{display:block;position:sticky;top:84px;align-self:start;max-height:calc(100vh - 100px);overflow:auto;padding:34px 0 0 4px;font-size:13px}
+#frail ol{margin:0;padding:0;list-style:none;border-left:2px solid var(--line)}
+#frail button{display:block;width:100%;margin-left:-2px;padding:7px 8px 7px 12px;border:0;border-left:2px solid transparent;background:none;color:var(--mut);font:600 13px/1.3 var(--sans);text-align:left;cursor:pointer}
+#frail button:hover{color:var(--fg)}#frail button.on{border-left-color:var(--pt);color:var(--fg);font-weight:800}}
 """ + PYG
 
 JS = r"""
@@ -804,6 +1018,9 @@ const th=LS.get('theme');if(th)root.dataset.theme=th;
 const K=()=>root.lang==='ko',t=(en,ko)=>K()?ko:en,calm=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
 const ic=(n,c)=>'<svg class="ic'+(c?' '+c:'')+'" aria-hidden="true"><use href="#i-'+n+'"/></svg>';
 const BOLT=/*BOLT*/;const bolt=m=>BOLT.replace('data-mood="idle"','data-mood="'+m+'"');
+const bolt3d=m=>'<span class="bolt3d" data-bolt3d data-size="96" data-mood="'+m+'" role="img" aria-label="'+t('Bolt, a little robot','작은 로봇 Bolt')+'" style="width:96px;height:96px"></span>';
+const mountBolts=scope=>{if(window.BOLT3D)scope.querySelectorAll('[data-bolt3d]').forEach(el=>BOLT3D.mount(el))};
+const disposeBolts=scope=>{if(window.BOLT3D)scope.querySelectorAll('[data-bolt3d]').forEach(el=>BOLT3D.mount(el).destroy())};
 $('#menu').onclick=()=>{const o=root.classList.toggle('nav');$('#menu').setAttribute('aria-expanded',o)};
 $('#lang').onclick=()=>{root.lang=root.lang==='en'?'ko':'en';LS.set('lang',root.lang);quiz();DAILY.again()};
 $('#theme').onclick=()=>{const d=root.dataset.theme==='dark'||(!root.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);root.dataset.theme=d?'light':'dark';LS.set('theme',root.dataset.theme)};
@@ -826,7 +1043,7 @@ return r}
 const gsOn=()=>!!(window.gsap&&root.classList.contains('gs'));
 /* the first painted frame after a click shows the answer; XP, toast and tweens run right after it */
 const afterFrame=f=>requestAnimationFrame(()=>setTimeout(f,0));
-function react(b,m){if(!b)return;b.dataset.mood=m;if(!gsOn()||calm())return;afterFrame(()=>{const g=window.gsap;if(!g||!b.isConnected)return;
+function react(b,m){if(!b)return;if(b.matches('[data-bolt3d]')&&window.BOLT3D){BOLT3D.mount(b).setMood(m);return}b.dataset.mood=m;if(!gsOn()||calm())return;afterFrame(()=>{const g=window.gsap;if(!g||!b.isConnected)return;
 if(m==='cheer')g.fromTo(b,{y:0,scale:1},{keyframes:[{y:-10,scale:1.06,duration:.15},{y:0,scale:.97,duration:.15},{scale:1,duration:.2}],ease:'power2.out',overwrite:true,clearProps:'transform'});
 else if(m==='oops')g.fromTo(b,{rotation:0},{keyframes:[{rotation:-7,duration:.12},{rotation:5,duration:.18},{rotation:0,duration:.2}],ease:'power2.out',overwrite:true,clearProps:'transform'})})}
 /* ---- UI state: localStorage key rfs-ui (max 20 KB, memory fallback): last lesson, scroll per lesson, quiz round, Daily 5 draw, toy sliders. Nothing personal. ---- */
@@ -920,10 +1137,10 @@ const hb=$('#h-xp');if(hb){const set=(id,v)=>{const e=$('#'+id);if(e)e.textConte
 set('h-xpm',nx?s.xp+' / '+nx[0]+' XP':s.xp+' XP');$('#h-bar').style.width=(nx?Math.round(100*(s.xp-LV[L][0])/(nx[0]-LV[L][0])):100)+'%';
 $$('.strip i').forEach(i=>i.classList.toggle('d',!!this.lessonDone(s,i.dataset.pid)))}
 const c=$('#cont');if(c){c.href=window.SINGLE?'#'+next:next+'.html';c.dataset.f=window.FAM[next.slice(0,2)];c.dataset.to=next;c.innerHTML=(done||UI.d.last?(ko?'이어서 하기':'Continue'):(ko?'시작하기':'Start'))+ic('arrow')}
-const act=s.days.includes(td),hbolt=$('#hbolt .bolt-svg');if(hbolt&&!this._hold){hbolt.dataset.mood=act?'idle':'sleepy';const say=$('#hsay');if(say)say.textContent=act?(ko?'오늘도 진도를 나갔어요.':'Nice, you moved today.'):(ko?'쿨쿨... 문제 하나로 깨워 주세요.':'Zzz... wake me with one question.')}
+const act=s.days.includes(td),hbolt=$('#hbolt');if(hbolt&&!this._hold){hbolt.dataset.mood=act?'idle':'sleepy';const say=$('#hsay');if(say)say.textContent=act?(ko?'오늘도 진도를 나갔어요.':'Nice, you moved today.'):(ko?'쿨쿨... 문제 하나로 깨워 주세요.':'Zzz... wake me with one question.')}
 const used=s.rv[td]||0,dt=$('#dtoday');if(dt){dt.textContent=used+' / 25 XP';$$('.dpips i').forEach((i,k)=>i.classList.toggle('on',used>=(k+1)*5));const dl=$('#dlabel');if(dl)dl.textContent=used>=25?t('Play for fun','연습으로 풀기'):used>0?t('Play again','다시 하기'):t('Play','시작하기')}
 }};
-function bindMissions(){$$('.mchk').forEach(x=>{const pid=x.dataset.pid||window.CUR;x.checked=!!RFS.s.m[pid];x.onchange=()=>{$$('.mchk').forEach(y=>{if((y.dataset.pid||window.CUR)===pid)y.checked=x.checked});RFS.mission(pid,x.checked);const b=$('.lesson:not([hidden]) .hookbolt')||$('.hookbolt');if(b&&x.checked){react(b,'cheer');setTimeout(()=>b.dataset.mood='idle',1400)}}})}
+function bindMissions(){$$('.mchk').forEach(x=>{const pid=x.dataset.pid||window.CUR;x.checked=!!RFS.s.m[pid];x.onchange=()=>{$$('.mchk').forEach(y=>{if((y.dataset.pid||window.CUR)===pid)y.checked=x.checked});RFS.mission(pid,x.checked);const sel='.bolt[data-lang="'+root.lang+'"] .hookbolt',b=$('.lesson:not([hidden]) '+sel)||$(sel);if(b&&x.checked){react(b,'cheer');setTimeout(()=>b.dataset.mood='idle',1400)}}})}
 
 /* ---- quiz game: one question at a time; Bolt reacts; cosmetic combo; 1-3 stars; kind to wrong answers ---- */
 let QID=0;const freshSt=()=>({sel:[],ok:[],cur:0,combo:0,max:0,xp:0,res:false,cel:false,practice:false});
@@ -950,10 +1167,10 @@ if(ok){st.combo++;st.max=Math.max(st.max,st.combo)}else st.combo=0;
 mark(i);st.xp+=cfg.award(i,ok)||0;combo(true);if(i===st.cur){$h('.qsay').textContent=pickSay(SAY[ok?'ok':'no']);mood(ok?'cheer':'oops',1400);show(false);nx.focus({preventScroll:true})}else pips();save()}
 function results(){const ok=st.ok.filter(Boolean).length,stars=ok===n?3:ok>=Math.ceil(n*2/3)?2:1;
 const c=document.createElement('div');c.className='qres';
-c.innerHTML='<div class="rb">'+bolt(stars===3?'cheer':'idle')+'</div><h3 tabindex="-1"></h3><div class="stars" role="img"></div><div class="rscore"><b>'+ok+'</b> / '+n+'</div><p class="rline"></p><p class="rxp"></p><div class="ract"></div>';
+c.innerHTML='<div class="rb">'+bolt3d(stars===3?'cheer':'idle')+'</div><h3 tabindex="-1"></h3><div class="stars" role="img"></div><div class="rscore"><b>'+ok+'</b> / '+n+'</div><p class="rline"></p><p class="rxp"></p><div class="ract"></div>';
 c.querySelector('h3').textContent=stars===3?t('Perfect round','만점 라운드'):t('Round complete','라운드 완료');
 const sr=c.querySelector('.stars');sr.setAttribute('aria-label',stars+' / 3');sr.innerHTML=[0,1,2].map(i=>'<span class="star'+(i<stars?' on':'')+'" style="--i:'+i+'">'+ic(i<stars?'star':'star-o')+'</span>').join('');
-c.querySelector('.rline').textContent=stars===3?t('No misses. Bolt is doing a victory spin.','틀린 문제가 없습니다. Bolt가 신나서 한 바퀴 돕니다.'):stars===2?t('Good round. Read the hints above once more.','좋은 라운드입니다. 위의 힌트를 한 번 더 읽어 보세요.'):t('Some misses. Each hint above says why.','틀린 문제가 있습니다. 위의 힌트마다 이유가 적혀 있습니다.');
+c.querySelector('.rline').textContent=stars===3?t('No misses. Bolt is doing a happy hop.','틀린 문제가 없습니다. Bolt가 신나서 폴짝 뜁니다.'):stars===2?t('Good round. Read the hints above once more.','좋은 라운드입니다. 위의 힌트를 한 번 더 읽어 보세요.'):t('Some misses. Each hint above says why.','틀린 문제가 있습니다. 위의 힌트마다 이유가 적혀 있습니다.');
 c.querySelector('.rxp').innerHTML=st.xp>0?ic('bolt')+'+'+st.xp+' XP':(cfg.zero?cfg.zero():t('No new XP this round.','이번 라운드는 새 XP가 없습니다.'));
 const act=c.querySelector('.ract');act.innerHTML='<button type="button" class="btn" data-act="again">'+ic('refresh')+t('Try again','다시 도전')+'</button>'+(cfg.extra?cfg.extra():'');
 act.querySelector('[data-act=again]').onclick=()=>{if(cfg.reset()===true)return;save();render();foc(box.querySelector('.q:not([hidden]) .qt'))};
@@ -961,7 +1178,7 @@ const cl=act.querySelector('[data-act=close]');if(cl)cl.onclick=()=>cfg.close();
 if(!st.cel){st.cel=true;ct=setTimeout(()=>{if(dead)return;if(stars===3)RFS.burst(160,c);else if(stars===2)RFS.burst(34,c)},250)}
 const g=gsOn()&&window.gsap;if(g&&!calm()){g.from(c.querySelectorAll('.star.on'),{scale:.4,rotation:-30,autoAlpha:0,duration:.55,ease:'back.out(1.7)',stagger:.15,delay:.15,clearProps:'transform,opacity,visibility'});g.from(c,{autoAlpha:0,y:10,duration:.3,ease:'power3.out',clearProps:'transform,opacity,visibility'})}
 return c}
-function render(){box.innerHTML='';qs=[];
+function render(){disposeBolts(box);box.innerHTML='';qs=[];
 hud=document.createElement('div');hud.className='qhud';hud.innerHTML='<span class="qbolt">'+bolt(st.res?'cheer':'idle')+'</span><div class="qmeta"><div class="qline"><b class="qstage"></b><span class="qpos"></span><span class="qcombo" hidden></span></div><div class="qpips" role="progressbar" aria-valuemin="0">'+'<i></i>'.repeat(n)+'</div><div class="qsay" aria-live="polite"></div></div>';box.appendChild(hud);
 for(let i=0;i<n;i++){const q=cfg.q(i),d=document.createElement('div');d.className='q st-'+cfg.stage(i);const hid='qt'+(++QID)+'-'+i;d.innerHTML=(cfg.src?'<div class="qsrc"></div>':'')+'<div class="qlive" aria-live="polite"><p class="qt" id="'+hid+'" role="heading" aria-level="3" tabindex="-1"></p></div><div class="opts" role="group" aria-labelledby="'+hid+'"></div><div class="why" aria-live="polite" hidden></div>';
 if(cfg.src)d.querySelector('.qsrc').textContent=cfg.src(i);d.querySelector('.qt').textContent=q.question;const o=d.querySelector('.opts');
@@ -971,8 +1188,8 @@ nx=document.createElement('button');nx.type='button';nx.className='btn pri qnext
 const go=()=>{if(dead)return;const last=st.cur>=n-1;adv();if(!last){show(true);hud.scrollIntoView({block:'nearest'});foc(qs[st.cur].querySelector('.qt'))}else{render();box.scrollIntoView({block:'nearest'});foc(box.querySelector('.qres h3'))}};
 nx.onclick=()=>{if(busy)return;const g=gsOn()&&window.gsap,p=qs[st.cur];if(g&&!calm()&&p&&!p.hidden){busy=true;pending=adv;g.to(p,{autoAlpha:0,y:-8,duration:.1,ease:'power2.out',overwrite:true,clearProps:'transform,opacity,visibility',onComplete:()=>{busy=false;pending=null;go()}})}else go()};box.appendChild(nx);
 show(false);combo(false);
-if(st.res){const r=results();box.appendChild(r)}}
-function dispose(){if(dead)return;dead=true;clearTimeout(mt);clearTimeout(ct);const g=window.gsap;if(g)g.killTweensOf([...qs,...box.querySelectorAll('.qres,.star,.qbolt .bolt-svg,.qcombo')]);if(pending){const f=pending;pending=null;f()}}   /* a Next that was already clicked still counts, once */
+if(st.res){const r=results();box.appendChild(r);mountBolts(r)}}
+function dispose(){if(dead)return;dead=true;disposeBolts(box);clearTimeout(mt);clearTimeout(ct);const g=window.gsap;if(g)g.killTweensOf([...qs,...box.querySelectorAll('.qres,.star,.qbolt .bolt-svg,.qcombo')]);if(pending){const f=pending;pending=null;f()}}   /* a Next that was already clicked still counts, once */
 box._game={dispose};
 render()}
 const GS={};
@@ -1077,10 +1294,47 @@ addEventListener('load',()=>{if(window.SINGLE||window.gsap)return;const go=()=>l
 let rio=null,rels=[];
 function revealClear(){if(rio)rio.disconnect();rio=null;if(rels.length&&window.gsap){gsap.killTweensOf(rels);gsap.set(rels,{clearProps:'transform,opacity,visibility'})}rels=[]}   /* kill AND restore what reveal() set inline */
 matchMedia('(prefers-reduced-motion:reduce)').addEventListener('change',e=>{if(e.matches)revealClear()});
-/* cards below the fold slide in once; skipped for reduced motion and for automation (screenshots must see the whole page) */
-function reveal(){revealClear();const g=window.gsap;if(!g||!gsOn()||calm()||navigator.webdriver)return;const sc=$('.lesson:not([hidden])')||document,list=[...sc.querySelectorAll('.ph,.mission,.pn')];
+/* cards, figures, widgets, code blocks and section headings below the fold slide in once (18 px, 0.35 s, no stagger); skipped for reduced motion and for automation (screenshots must see the whole page) */
+function reveal(){revealClear();const g=window.gsap;if(!g||!gsOn()||calm()||navigator.webdriver)return;const sc=$('.lesson:not([hidden])')||document,list=[...sc.querySelectorAll('.ph,.mission,.pn,.lp figure,.lp .toy,.lp .motion,.lp pre.hl,.lp h2')];
 const below=list.filter(e=>e.getBoundingClientRect().top>innerHeight*.95);if(!below.length)return;rels=below;g.set(below,{autoAlpha:0,y:18});
 rio=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;rio.unobserve(en.target);g.to(en.target,{autoAlpha:1,y:0,duration:.35,ease:'power3.out',clearProps:'transform,opacity,visibility'})}),{rootMargin:'0px 0px -6% 0px'});below.forEach(e=>rio.observe(e))}
+/* ---- reading flow: progress bar + section rail (desktop) / chip (phone) + phase-map titles; one rAF-throttled passive scroll listener that does arithmetic on cached offsets, one ResizeObserver to re-measure ---- */
+const esc=s=>s.replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';');let FL=null;
+function flowOff(){const f=FL;if(!f)return;FL=null;f.ro.disconnect();removeEventListener('scroll',f.on);cancelAnimationFrame(f.raf);cancelAnimationFrame(f.mq);[f.bar,f.rail,f.chip].forEach(e=>e.remove());GLT.hide()}
+function flowInit(){flowOff();if(!window.CUR)return;const sc=$('.lesson:not([hidden])')||document,lp=sc.querySelector('.lp'),L=$('.layout');if(!lp||!L)return;
+const hs=['en','ko'].map(l=>[...lp.querySelectorAll('article[data-lang="'+l+'"] h2,#quiz h2[data-lang="'+l+'"]')]),N=hs[0].length;if(N<2)return;
+const H=()=>hs[K()&&hs[1].length?1:0],lab=(l,i)=>(hs[l][i]||hs[0][i]).textContent;
+const list=hs[0].map((_,i)=>'<li><button type="button" data-i="'+i+'"><span data-lang="en">'+esc(lab(0,i))+'</span><span data-lang="ko">'+esc(lab(1,i))+'</span></button></li>').join('');
+const bar=document.createElement('i'),rail=document.createElement('nav'),chip=document.createElement('div');
+bar.id='fbar';bar.setAttribute('role','progressbar');bar.setAttribute('aria-valuenow',0);
+rail.id='frail';rail.innerHTML='<ol>'+list+'</ol>';
+chip.id='fchip';chip.innerHTML='<button type="button" aria-expanded="false" aria-controls="fpan"><span></span><b></b></button><ol id="fpan" hidden>'+list+'</ol>';
+const cb=chip.firstChild,pan=chip.lastChild,f=FL={bar,rail,chip,pan,N,tops:[],max:0,a:-2,v:-1,raf:0,mq:0};
+const mark=()=>{[...rail.querySelectorAll('button'),...pan.querySelectorAll('button')].forEach(b=>{const on=+b.dataset.i===f.a;b.classList.toggle('on',on);if(on)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});cb.firstChild.textContent=f.a<0?t('Intro','시작'):lab(K()&&hs[1].length?1:0,f.a);cb.lastChild.textContent=(f.a+1)+' / '+N};
+const tick=()=>{f.raf=0;const y=scrollY;const p=f.max>0?Math.min(1,Math.max(0,y/f.max)):0,v=Math.round(p*100);bar.style.transform='scaleX('+p+')';if(v!==f.v){f.v=v;bar.setAttribute('aria-valuenow',v)}
+let a=-1;const line=y+Math.max(innerHeight/3,130);f.tops.forEach((x,i)=>{if(x<=line)a=i});if(f.max>0&&y>=f.max-2)a=N-1;if(a!==f.a){f.a=a;mark()}};
+f.meas=()=>{const y=scrollY;f.tops=H().map(h=>h.getBoundingClientRect().top+y);f.max=root.scrollHeight-innerHeight;tick()};
+f.label=()=>{rail.setAttribute('aria-label',t('Lesson sections','레슨 구성'));$$('.pmap a').forEach(a=>{const s=a.querySelector('[data-lang="'+root.lang+'"]');if(s)a.title=s.textContent});f.a=-2;f.meas()};
+f.on=()=>{if(!f.raf)f.raf=requestAnimationFrame(tick)};
+f.ro=new ResizeObserver(()=>{if(!f.mq)f.mq=requestAnimationFrame(()=>{f.mq=0;f.meas()})});
+const go=e=>{const b=e.target.closest('button[data-i]');if(!b)return;const h=H()[b.dataset.i]||hs[0][b.dataset.i];pan.hidden=true;cb.setAttribute('aria-expanded','false');h.tabIndex=-1;h.focus({preventScroll:true});h.scrollIntoView({behavior:calm()?'auto':'smooth',block:'start'})};
+rail.onclick=pan.onclick=go;cb.onclick=()=>{pan.hidden=!pan.hidden;cb.setAttribute('aria-expanded',!pan.hidden)};
+lp.querySelector('.lmeta').after(chip);L.append(rail);$('header').append(bar);addEventListener('scroll',f.on,{passive:true});f.ro.observe(lp);f.label()}
+/* ---- term tooltips: spans built into the page (class gl, data-t); one shared tooltip, delegated listeners installed once ---- */
+const GLT={e:null,s:null,t:0,
+show(s){const d=(window.GL||{})[s.dataset.t];if(!d||this.s===s)return;this.hide();let e=this.e;if(!e){e=this.e=document.createElement('div');e.id='gltip';e.setAttribute('role','tooltip');document.body.appendChild(e)}
+this.s=s;this.t=Date.now();e.textContent=d[K()?'ko':'en'];e.style.cssText='left:0;top:0;visibility:hidden';e.hidden=false;
+const r=s.getBoundingClientRect(),w=e.offsetWidth,h=e.offsetHeight,x=Math.max(8,Math.min(r.left,root.clientWidth-w-8)),up=r.bottom+h+10>innerHeight&&r.top>h+10;
+e.style.cssText='left:'+(x+scrollX)+'px;top:'+((up?r.top-h-6:r.bottom+6)+scrollY)+'px';s.setAttribute('aria-describedby','gltip')},
+hide(){const s=this.s;if(!s)return;this.s=null;s.removeAttribute('aria-describedby');this.e.hidden=true}};
+(function(){const gl=e=>e.target.closest&&e.target.closest('.gl');
+document.addEventListener('pointerover',e=>{const s=gl(e);if(s&&e.pointerType==='mouse')GLT.show(s)});
+document.addEventListener('pointerout',e=>{const s=gl(e);if(s&&e.pointerType==='mouse'&&!s.contains(e.relatedTarget)&&s!==document.activeElement)GLT.hide()});
+document.addEventListener('focusin',e=>{const s=gl(e);if(s)GLT.show(s)});document.addEventListener('focusout',e=>{if(gl(e))GLT.hide()});
+document.addEventListener('click',e=>{const s=gl(e);if(s&&e.pointerType!=='mouse'&&e.detail!==0&&Date.now()-GLT.t>400)GLT.s===s?GLT.hide():GLT.show(s)});
+document.addEventListener('pointerdown',e=>{if(!gl(e))GLT.hide();if(FL&&!FL.chip.contains(e.target)&&!FL.pan.hidden){FL.pan.hidden=true;FL.chip.firstChild.setAttribute('aria-expanded','false')}});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;GLT.hide();if(FL&&!FL.pan.hidden){FL.pan.hidden=true;FL.chip.firstChild.setAttribute('aria-expanded','false');FL.chip.firstChild.focus()}});
+$('#lang').addEventListener('click',()=>{GLT.hide();if(FL)FL.label()})})();
 function heroArm(){const g=window.gsap,arm=$('.harm');if(!g||!arm||window.__arm)return;
 const J=[['.j1',35,31,38,7,'190 262'],['.j2',78,74,84,5.6,'190 162'],['.j3',70,64,80,4.2,'190 62']];
 const mm=window.__arm=g.matchMedia();mm.add({go:'(prefers-reduced-motion: no-preference)',still:'(prefers-reduced-motion: reduce)'},ctx=>{const go=ctx.conditions.go;
@@ -1093,13 +1347,16 @@ function boot(){const g=window.gsap;
 /* after the first frame: layout is already done, so the hero arm and the reveal reads do not force one inside this task; html.gs flips in the same block as the hero tweens, so the arm never loses its pose */
 if(g&&!root.classList.contains('gs'))afterFrame(()=>{heroArm();const tz=$('#toast');if(tz)g.set(tz,{xPercent:-50,autoAlpha:0});root.classList.add('gs');if(window.MOTION&&MOTION.__rehome)MOTION.__rehome();afterFrame(reveal)});   /* tweens first, then the class: the CSS animation keeps the arm moving until then. reveal() reads layout, so it gets its own frame */
 const rs=wantRestore(window.CUR);if(window.CUR&&!window.SINGLE){UI.last(window.CUR);const y=UI.d.sc[window.CUR];if(rs&&y>40)restoreScroll(y)}
+if(window.CUR&&!window.SINGLE&&!FL)flowInit();
 DAILY.resume()}
-window.RFSUI={UI,reveal:()=>afterFrame(reveal),revealClear,wantRestore,boot};
+window.RFSUI={UI,reveal:()=>afterFrame(reveal),revealClear,wantRestore,boot,flow:flowInit,flowOff};
 if(document.readyState==='loading')addEventListener('DOMContentLoaded',boot);else boot();
 """
 
 CSS += (ROOT / "scripts" / "motion" / "motion.css").read_text()
+MASCOT3D = (ROOT / "scripts" / "mascot3d.js").read_text()
 JS = JS.replace("/*BOLT*/", json.dumps(bolt_svg("idle")))
+ASSET_V = hashlib.sha1((CSS + JS).encode()).hexdigest()[:8]  # the shared stylesheet and script are cached files; the query string makes a new build a new URL
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 05/02 Executors and Callbacks   **Time:** ~15 minutes
 
+## In Plain Words
+
+Skipping rope to a steady beat works until a jump comes late and your feet catch the rope. Catching up on the
+next beat can keep your average pace correct, but it cannot undo that missed jump.
+
+Control-loop jitter is the variation between scheduled and actual timing. Absolute deadlines prevent work time
+from accumulating into drift, yet rare late wake-ups still happen. Their effect can disappear in the mean.
+Check the worst delay and missed deadlines as well as the average period.
+
 ## The Problem
 
 A 1 kHz control loop reports a mean period of exactly 1.000 ms, and the arm twitches once every few seconds. The mean was computed over thousands of good cycles and a single bad one barely moves it. The twitch comes from the bad one.

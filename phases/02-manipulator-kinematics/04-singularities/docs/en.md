@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 02/03 The Jacobian   **Time:** ~15 minutes
 
+## In Plain Words
+
+With your shoulder fixed, a bent arm can move its fingertip outward by straightening. Near full stretch, much
+more joint motion is needed for the same outward tip speed. At full stretch, joint rotations give no
+instantaneous outward velocity.
+
+That is a singularity. Inverting the Jacobian nearby asks for huge joint speeds. Damped least squares limits
+that amplification, allowing some tip-speed error instead of demanding an impossible motion. More damping
+lowers joint speeds but leaves more tip-speed error.
+
 ## The Problem
 
 You command the tip to move straight outward at 0.1 m/s. As the arm nears full stretch, the controller asks the elbow for a hundred radians per second, the drive saturates, and the tip leaves the path. Nothing is broken. The Jacobian lost a direction and the controller still tried to invert it.

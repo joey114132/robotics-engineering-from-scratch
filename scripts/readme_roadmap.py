@@ -15,5 +15,5 @@ f = d.box("11-13  Act\ncontact, sim, learning", 1, 1, "purple", w=280, h=100, si
 g = d.box("14-16  Ship\nfleets, safety, builds", 0, 1, "green", w=280, h=100, size=21)
 for x, y in ((a, b), (b, c), (c, e), (e, f), (f, g)):
     d.arrow(x, y)
-d.note("67 lessons. Every one: pictures, a few lines of numpy, a quiz.", d.margin, d.margin + 60 + 2 * d.ch - 40, size=22)
+d.note("81 lessons. Every one: pictures, a few lines of numpy, a quiz.", d.margin, d.margin + 60 + 2 * d.ch - 40, size=22)
 d.save(pathlib.Path(__file__).resolve().parents[1] / "docs" / "img" / "roadmap.excalidraw")

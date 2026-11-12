@@ -7,5 +7,6 @@
     "hook": "목표점은 답이 둘인 삼각형입니다. 팔꿈치는 위일 수도 아래일 수도 있습니다. 닿지 않는 점에는 nan이 아니라 못 한다고 말해야 합니다.",
     "mission": "`code/main.py`에서 `(0.6, 0.3)`을 완전히 편 상태인 `(0.9, 0.0)`으로 바꾸세요. 두 elbow 답이 어떻게 비교될지 예측한 다음 `python3 code/main.py`를 실행하세요."
   },
-  "toy": "ik-2link"
+  "toy": "ik-2link",
+ "motion": "ik-reach-limit"
 }

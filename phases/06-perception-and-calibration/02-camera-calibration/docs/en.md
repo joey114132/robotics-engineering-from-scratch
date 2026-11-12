@@ -4,6 +4,17 @@
 
 **Type:** Build   **Prerequisites:** 06/01 Pinhole Camera   **Time:** ~15 minutes
 
+## In Plain Words
+
+Photograph squared paper straight on, then tilt it. The squares look narrower in one direction, but their
+real sides and right angles stay fixed. Those known relationships let you separate the camera's geometry
+from the paper's pose.
+
+Camera calibration uses tilted views to estimate focal lengths and the principal point, where the optical
+axis meets the image plane. Sliding the paper without changing its orientation repeats the same
+constraints, leaving some unknowns unresolved. Varied tilts provide new constraints; more useful views
+can also reduce the effect of noisy pixel measurements.
+
 ## The Problem
 
 You trust the focal length printed in a datasheet, unproject a pixel at the image edge, and the point is a few centimetres off. The real `fx` and `cx` differ from the nominal values, and nothing in the image tells you so. You need to measure them from a target whose geometry you know.

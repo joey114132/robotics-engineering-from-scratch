@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
+## In Plain Words
+
+Hold a book flat, tilt it around a fixed table edge, then turn it around the room's vertical axis. Reverse
+those actions and the cover can face a different way, because the first turn changes how the book faces before
+the second.
+
+A pose combines orientation and position. Transform multiplication keeps track of both, in order. Swapping
+transforms can therefore give a different location even though every individual rotation and distance is
+valid.
+
 ## The Problem
 
 A camera sees a cup at (0.2, 0, 0.5) in its own frame, and the arm needs the cup in the base frame. If you multiply two transforms in the wrong order, the result is still a valid-looking pose, just a wrong one. The arm reaches for a point that does not exist and nothing in the code complains.

@@ -16,7 +16,7 @@ def test_loads_phases_and_lessons(course):
 
 def test_phase_ko_titles_for_real_course():
     c = data.load_course(REAL_ROOT)
-    assert len(c.lessons) == 67 and len(c.phases) == 17
+    assert len(c.lessons) == 81 and len(c.phases) == 17
     assert c.phases[3].title("ko") == "동역학과 제어"
     assert c.phases[3].title("en") == "Dynamics and Control"
     assert c.phases[12].title("en") == "Simulation and Sim-to-Real"

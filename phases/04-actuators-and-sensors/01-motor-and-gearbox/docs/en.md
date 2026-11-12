@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
 
+## In Plain Words
+
+A bike's low gear makes the pedals turn farther for the same wheel movement. You need less pedal torque to
+move the load, while the wheel turns more slowly for a given pedalling speed.
+
+A motor gearbox makes that trade too. The load's inertia seen at the motor shrinks with the square of the
+reduction ratio, so the rotor's own inertia can dominate. The DC motor in this model also loses torque as it
+speeds up at fixed voltage, because back-EMF leaves less voltage to drive current.
+
 ## The Problem
 
 You pick a motor for a joint, add a 100:1 gearbox, and the joint moves fast and strong. Then you tune the drive with the arm empty and it behaves the same when the arm holds a heavy tool. The drive has no idea what is on the end of the arm. The cause is two lines of algebra.

@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** none beyond basic geometry   **Time:** ~15 minutes
 
+## In Plain Words
+
+Equipment blocks the straight walk across a gym. On a floor plan, start a route at the door, pick a random spot, and extend the nearest
+existing branch a short distance toward it. Keep the extension only if it clears the equipment.
+
+RRT repeats this until a branch reaches the destination, then follows the branch links back. The route may wander. Joining distant
+route points directly removes a detour only when the connecting segment is also clear.
+
 ## The Problem
 
 The straight line from the start pose to the goal pose passes through an obstacle, so you need a path around it. A hand-drawn detour does not carry over to the next scene. A random planner finds a path quickly, but the first path wanders and the arm would follow every detour.

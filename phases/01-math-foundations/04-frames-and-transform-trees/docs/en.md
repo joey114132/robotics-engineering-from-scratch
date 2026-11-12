@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 01/01 Rotations and SE(3)   **Time:** ~15 minutes
 
+## In Plain Words
+
+A sweet is inside a lunchbox on a desk. To describe it from the classroom door, you need both the desk's
+location and the box's placement and orientation. Turning the box changes the sweet's offset in room
+directions.
+
+A transform tree stores these parent-child relationships. To express a cup position measured by a camera in a
+robot tool's frame, follow both branches to a shared frame, then reverse the tool's branch. Matching frame
+names tells you which transforms can be chained.
+
 ## The Problem
 
 A camera sees a cup, and the base needs the cup. Someone writes `T_cam_cup @ T_base_cam`, or inverts the wrong matrix, because the names `cam` and `base` carry no direction. Both results are valid poses in the wrong place, and no error is raised.

@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Two scans, one room, zero labels. I guess nearest points, fit, and repeat until I stop improving or get stuck.",
+  "mission": "In `code/main.py` try start rotations 1.0, 1.2 and 1.4 rad in the demo loop. Find which one first ends with a final rms above 0.1 m."
+ },
+ "ko": {
+  "hook": "스캔 두 장에 방 하나, 라벨은 없습니다. 최근접점으로 짝을 추측하고 맞추기를 더 나아지지 않거나 갇힐 때까지 반복합니다.",
+  "mission": "`code/main.py`의 데모 반복문에서 시작 회전을 1.0, 1.2, 1.4 rad으로 바꿔 보세요. 어느 값부터 final rms가 0.1 m를 넘는지 찾으세요."
+ },
+ "toy": "icp-steps",
+ "motion": "icp-two-starts"
+}

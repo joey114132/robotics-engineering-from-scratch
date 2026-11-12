@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 06/01 Pinhole Camera   **Time:** ~15 minutes
 
+## In Plain Words
+
+Measure a desk surface with a ruler, but accidentally include readings from books sitting on it. A fit that
+believes every reading can tilt toward the books instead of following the desk.
+
+RANSAC tries planes from small random groups, counts nearby points, then refits the plane using its supporting
+points. That can separate the tabletop from the books and bad depth readings. A voxel grid first replaces
+points in each small spatial cell with their average, reducing the cloud before fitting.
+
 ## The Problem
 
 You fit a plane to the table in a depth image so the arm can place objects on it. A box sits on the table and a few pixels return garbage depth. The fitted plane tilts by a few degrees, and a "flat" place pose now leans.

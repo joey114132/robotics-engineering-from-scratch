@@ -7,5 +7,7 @@
     "hook": "가만히 앉아 있었는데도 10 m를 걸었습니다. 탓은 적분에 있습니다. 아주 작은 상수 오차도 적분하면 폭주합니다.",
     "mission": "`code/main.py`의 첫 `gyro_angle(...)` 호출에서 bias `0.01`을 `0.02`로 바꾸고 `python3 code/main.py`를 실행하세요. 10초 뒤 각도 오차를 먼저 예측하고 `b t`와 맞는지 확인하세요."
   },
-  "toy": null
+  "toy": null,
+  "motion": "gravity-leak",
+ "three": "imu-gravity-leak-3d"
 }

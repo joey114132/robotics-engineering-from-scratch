@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
 
+## In Plain Words
+
+A playground swing on a screen may keep moving longer than the real swing after the same timed pushes. Leaving out hinge friction
+removes a force that opposes motion. A delayed angle display causes a different mismatch: it shows an earlier position, even though the
+swing itself has already moved.
+
+This lesson replays identical commands while removing effects from a simulated joint. Comparing each result with the reference
+separates missing physics from delayed measurements and shows which omission matters most.
+
 ## The Problem
 
 A trajectory looks perfect in simulation and the real joint undershoots it, lags behind it and stops short. Nobody changed the command. The simulator quietly left out things the hardware does, and you do not know which of them matters most.

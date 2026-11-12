@@ -4,6 +4,12 @@
 
 **Type:** Build   **Prerequisites:** 10/01 Inverted Pendulum and ZMP   **Time:** ~15 minutes
 
+## In Plain Words
+
+A quadrotor model predicts motion from a drone's tilt and thrust, the push it gets from its propellers. You rinse the bath with a showerhead and feel it push your hand opposite the water flow. When you tilt the showerhead, the push changes direction too.
+
+An upright drone likewise pushes air down for upward thrust, then tilts to redirect that force. At the same total thrust, tilting reduces the upward force. How much more thrust does the drone need to stay at the same height?
+
 ## The Problem
 
 You command a drone to move 1 m to the right and at first it seems to ignore you. Then it tips, drifts and loses height. All of that comes from the vehicle having only two inputs, total thrust and one torque, and three things to move.

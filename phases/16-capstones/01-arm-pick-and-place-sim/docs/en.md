@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 02/02 Inverse Kinematics, 03/02 Gravity Compensation, 09/01 Trajectory Profiles   **Time:** ~30 minutes
 
+## In Plain Words
+
+Moving a cup from a table to a shelf combines several jobs: choose your arm angles, move without a sudden start, and keep supporting
+your arm's weight.
+
+This simulated arm joins IK, a quintic trajectory and a PD controller with gravity feedforward. Feedforward supplies the holding torque
+before a position error is needed. Remove it and the controller must let the arm sag to create enough corrective torque. The planned
+destination stays the same, but the actual tip can miss the placing point.
+
 ## The Problem
 
 Every earlier lesson passes its own test, yet the parts have never had to work together. A pick-and-place run needs all of them at once. A fault in one shows up as a miss at the end. Here you build the whole chain on a simulated planar arm and learn to read where a miss comes from.

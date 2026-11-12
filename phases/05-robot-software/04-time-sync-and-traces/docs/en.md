@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 05/03 Control Loop Jitter   **Time:** ~15 minutes
 
+## In Plain Words
+
+Students record a ball relay on separate watches. A watch running ahead can make an earlier handoff appear
+later. Correcting its offset restores the sequence; an exchange timed at both ends estimates that offset, with
+unequal travel delays leaving error.
+
+A robot has the same clock problem across computers. Its trace also needs the state before and after each
+action. Comparing those records with the intended handoffs reveals the first missing action, unchanged state,
+or wrong result.
+
 ## The Problem
 
 A fusion filter gets camera and IMU samples from two computers and behaves as if the robot jerks backwards. Every sample is correct, but the camera clock runs 30 ms ahead, so the filter sees events in the wrong order. When the run later fails, nobody can tell which step first went wrong.

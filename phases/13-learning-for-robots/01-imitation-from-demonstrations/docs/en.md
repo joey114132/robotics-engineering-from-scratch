@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
 
+## In Plain Words
+
+Watch a friend weave between playground cones, recording where they stand and which way they move next. Those paired examples can teach
+a rule for choosing a movement at your current position.
+
+Imitation learning fits that rule without needing a reward for every move. Nearby examples can preserve a local swerve, while a single
+linear rule can average different detours into a straight route through a cone. More demonstrations help only if the fit can express
+the behaviour.
+
 ## The Problem
 
 You can drive a robot around an obstacle by hand, but writing a controller that does it for every start position takes days. Writing a reward for a learning algorithm is no easier. Recording a few good runs and training on them is cheap. That leaves two questions: how many runs you need, and what kind of function to fit.

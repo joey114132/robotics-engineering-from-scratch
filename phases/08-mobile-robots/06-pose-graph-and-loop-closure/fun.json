@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Odometry says I walked a spiral. One 'hey, I've been here' edge and I snap back into a square. Springs are magic.",
+  "mission": "In `code/main.py` change `bias=0.02` to `0.04` and run it. Predict whether the closure still gets the rms error under 0.2 m, then check."
+ },
+ "ko": {
+  "hook": "오도메트리는 제가 나선을 그렸다고 합니다. '여기 와 본 적 있어' edge 하나면 저는 정사각형으로 돌아옵니다. 스프링은 마법입니다.",
+  "mission": "`code/main.py`에서 `bias=0.02`를 `0.04`로 바꿔 실행하세요. 폐쇄 뒤 rms 오차가 0.2 m 아래인지 예측한 다음 확인하세요."
+ },
+ "toy": "pose-graph-closure",
+ "motion": "loop-bend"
+}

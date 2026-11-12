@@ -4,6 +4,16 @@
 
 **Type:** Build   **Prerequisites:** 01/01 Rotations and SE(3)   **Time:** ~15 minutes
 
+## In Plain Words
+
+Join paper strips with drawing pins to make a flat arm on your desk. Turn the first strip and every strip
+after it swings around too. Turn a later strip at its pin and only the strips beyond that pin change
+direction.
+
+Forward kinematics follows those turns from the base to the tip. Each link's direction includes the earlier
+joint angles, so you add its length along that accumulated direction. Adding the resulting steps tells you
+where the tip lands.
+
 ## The Problem
 
 The controller knows joint angles, but the task lives in Cartesian space: put the gripper at (0.5, 0.3). Forward kinematics (FK) maps joint angles to the tip pose. Inverse kinematics, Jacobians and collision checks all sit on top of it, so an FK bug looks like a controller bug.

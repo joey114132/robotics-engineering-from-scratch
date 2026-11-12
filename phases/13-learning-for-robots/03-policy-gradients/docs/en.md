@@ -4,6 +4,15 @@
 
 **Type:** Build   **Prerequisites:** 13/01 Imitation from Demonstrations   **Time:** ~15 minutes
 
+## In Plain Words
+
+In a target game, you try slightly different joystick moves and score each round. Policy gradients change the rule so moves followed by
+better returns become more likely.
+
+Suppose every round also earns a large participation bonus. Weighting updates by the full score adds noise that hides small performance
+differences. A baseline from other rounds subtracts that common level, so the update responds to doing better or worse than expected.
+Subtracting this baseline reduces variation without changing the average learning direction.
+
 ## The Problem
 
 Sometimes there is no expert, only a reward, and the policy has to find its own way. You try random actions, keep score, and move toward what worked. The score of one episode is a noisy number, so two training runs with the same settings can look very different.

@@ -4,6 +4,14 @@
 
 **Type:** Build   **Prerequisites:** a graph as nodes and arrows   **Time:** ~15 minutes
 
+## In Plain Words
+
+Pupils squeeze through narrow classroom aisles. Each stands in a space the next pupil needs and waits for a space occupied by someone
+else. If those waits form a loop, being polite and waiting leaves everyone stuck.
+
+The traffic model calls this deadlock. Reserving a whole clear route before entering breaks the loop: pupils waiting outside hold no
+aisle space that another needs. It prevents this kind of blockage, but keeping routes reserved also limits how many can pass together.
+
 ## The Problem
 
 Four robots enter a small junction, each stopping on one intersection because the next one is taken. Each holds what the next robot needs, so none can move and the fleet's output drops to zero. Nothing is broken. Every robot did the polite thing and waited for a free cell.

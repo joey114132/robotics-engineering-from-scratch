@@ -14,7 +14,7 @@ from rich.padding import Padding
 from rich.table import Table
 from rich.text import Text
 
-from . import data, motion, progress as P, quiz as Qz, reader, scenes, toys, ui as U, views
+from . import data, motion, progress as P, quiz as Qz, scenes, toys, ui as U, views
 
 PROG = "robo"
 MIN_COLS = 60
@@ -50,7 +50,7 @@ def _validate_play(args, parsers):
             parsers["play"].error(f"argument --{name}: must be a finite number")
 COMMANDS = [
     ("home", "", "Progress, level and the next lesson (the default).", "진행 상황과 레벨, 다음 레슨 (기본 화면)."),
-    ("map", "", "All 67 lessons by phase, with done and next markers.", "단계별 전체 레슨과 완료/다음 표시."),
+    ("map", "", "All lessons by phase, with done and next markers.", "단계별 전체 레슨과 완료/다음 표시."),
     ("read", "<lesson>", "Read a lesson with figures, code and Bolt.", "그림과 코드, Bolt 와 함께 레슨 읽기."),
     ("quiz", "<lesson>", "A six-question game round for the lesson.", "레슨의 여섯 문제를 한 판의 게임으로."),
     ("mission", "<lesson> [--done]", "Show the lesson mission, or tick it for +20 XP.", "레슨 미션 보기, --done 으로 체크(+20 XP)."),
@@ -404,6 +404,7 @@ def dispatch(args, u):
         if les is None:
             return 2
         if cmd == "read":
+            from . import reader  # rich.markdown 과 pygments 는 read 에서만 쓰므로 여기서 불러 다른 명령의 시작을 줄인다
             mode = reader.figures.choose_mode(u.plain, u.console.color_system, args.figures)
             with_pager(u, args, lambda: reader.print_lesson(u, les, state, mode, course.root))
         elif cmd == "mission":

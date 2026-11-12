@@ -1,0 +1,12 @@
+{
+ "en": {
+  "hook": "Dijkstra checks every room. I only check rooms that point toward the goal. Ask me to overestimate and I get brave, then lost.",
+  "mission": "In `code/main.py` run the demo with `w` in `(0, 1, 6)`. Compare the cells expanded and the path cost, and say which weight stopped being safe."
+ },
+ "ko": {
+  "hook": "Dijkstra는 모든 방을 확인하고 저는 목표 쪽을 가리키는 방만 확인합니다. 과대추정을 시키면 용감해졌다가 길을 잃습니다.",
+  "mission": "`code/main.py` 데모를 `w`가 `(0, 1, 6)`일 때 돌려 보세요. 확장한 칸 수와 경로 비용을 비교하고 어느 가중치부터 안전하지 않은지 말해 보세요."
+ },
+ "toy": "astar-flood",
+ "motion": "astar-weight"
+}
