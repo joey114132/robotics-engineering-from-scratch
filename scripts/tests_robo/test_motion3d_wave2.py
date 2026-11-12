@@ -54,12 +54,14 @@ const model = name => scenes[name].spec.model;
 @pytest.mark.parametrize("phase,number,name", SCENES)
 def test_registration_and_backup(phase, number, name):
     folder = lesson(phase, number)
-    backup = ROOT / ".board/humanize-backup" / folder.relative_to(ROOT) / "fun.json"
     live = json.loads((folder / "fun.json").read_text())
-    saved = json.loads(backup.read_text())
-    assert live["three"] == saved["three"] == name
-    for key in ("toy", "motion", "three"):
-        assert live.get(key) == saved.get(key)
+    assert live["three"] == name
+    backup_root = ROOT / ".board/humanize-backup"
+    if backup_root.is_dir():  # git-ignored local guard: absent in clean checkouts and CI, so compare only when it exists
+        saved = json.loads((backup_root / folder.relative_to(ROOT) / "fun.json").read_text())
+        assert saved["three"] == name
+        for key in ("toy", "motion", "three"):
+            assert live.get(key) == saved.get(key)
     info = node(f"scenes[{json.dumps(name)}].spec")
     assert info["en"] and info["ko"]
     assert len(info["cap"]) == 2 and all(info["cap"])
