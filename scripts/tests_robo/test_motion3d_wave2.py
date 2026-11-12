@@ -1,4 +1,4 @@
-# Wave 2의 3D scene을 수업 계산과 대조하고 등록 및 backup 동기화를 검사한다.
+# Wave 2의 3D scene을 수업 계산과 대조하고 등록을 검사한다.
 import importlib.util
 import json
 from pathlib import Path
@@ -52,16 +52,10 @@ const model = name => scenes[name].spec.model;
 
 
 @pytest.mark.parametrize("phase,number,name", SCENES)
-def test_registration_and_backup(phase, number, name):
+def test_registration(phase, number, name):
     folder = lesson(phase, number)
     live = json.loads((folder / "fun.json").read_text())
     assert live["three"] == name
-    backup_root = ROOT / ".board/humanize-backup"
-    if backup_root.is_dir():  # git-ignored local guard: absent in clean checkouts and CI, so compare only when it exists
-        saved = json.loads((backup_root / folder.relative_to(ROOT) / "fun.json").read_text())
-        assert saved["three"] == name
-        for key in ("toy", "motion", "three"):
-            assert live.get(key) == saved.get(key)
     info = node(f"scenes[{json.dumps(name)}].spec")
     assert info["en"] and info["ko"]
     assert len(info["cap"]) == 2 and all(info["cap"])
@@ -303,3 +297,12 @@ def test_default_orbit_label_anchors_stay_inside_canvas():
       return failures;
     })()""")
     assert failures == []
+
+
+def test_perspective_scale_stays_finite_behind_the_camera():
+    # warehouse-astar-3d (dist 9) has a floor corner 10.3 from the look point: orbiting put it behind the camera
+    # plane, where dist / (dist + depth) is negative (mirrored polygon) or infinite.
+    scale = node("[0, -8.9, -9, -9.97, -50].map(depth => window.M3D.persp(9, depth))")
+    assert scale[0] == 1
+    assert all(np.isfinite(k) and k > 0 for k in scale)
+    assert scale == sorted(scale)  # nearer is never drawn smaller

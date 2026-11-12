@@ -21,7 +21,7 @@
     en: 'A constant-height centre of mass moves after a push. Its capture point lies beyond the foot, and a step brings the support underneath it',
     ko: '밀린 뒤 일정한 높이의 centre of mass가 움직입니다. capture point가 발 밖에 있으므로 step으로 support를 그 아래에 옮깁니다',
     cap: ['The lesson’s 0.4 m/s push, h=0.9 m and foot half-length 0.05 m. The shaded foot is the support region, the green dot is ZMP and the orange cross is ξ. The foot inset separates their symbols left/right; leaders show their positions in the foot plane. Without a step the ZMP stays at the foot edge and CoM diverges. A step at 0.1 s puts ZMP and ξ at the same position (p=ξ) and CoM slows. The line is a massless telescoping leg, not a fixed-length pendulum. Toggle the step to compare the first 0.6 s.',
-      'lesson의 조건은 초기 속도 0.4 m/s, h=0.9 m, 발 반길이 0.05 m입니다. 색칠한 발은 support region, 초록색 점은 ZMP, 주황색 십자는 ξ입니다. 발 inset에서는 두 표식을 좌우로 나누고 안내선으로 발 평면 위의 위치를 짚습니다. Step이 없으면 ZMP가 발 끝에 머물고 CoM은 멀어집니다. 0.1 s에 step하면 ZMP와 ξ가 같은 위치(p=ξ)에 놓이고 CoM이 느려집니다. 선은 질량이 없고 길이가 변하는 다리입니다. Step을 켜고 꺼서 처음 0.6 s를 비교할 수 있습니다.'],
+      '레슨의 조건은 초기 속도 0.4 m/s, h=0.9 m, 발 반길이 0.05 m입니다. 색칠한 발은 support region, 초록색 점은 ZMP, 주황색 십자는 ξ입니다. 발 inset에서는 두 표식을 좌우로 나누고 안내선으로 발 평면 위의 위치를 짚습니다. Step이 없으면 ZMP가 발 끝에 머물고 CoM은 멀어집니다. 0.1 s에 step하면 ZMP와 ξ가 같은 위치(p=ξ)에 놓이고 CoM이 느려집니다. 선은 질량이 없고 길이가 변하는 다리입니다. Step을 켜고 꺼서 처음 0.6 s를 비교할 수 있습니다.'],
     period: 12, rest: 10, H: 390, unit: 215, look: [.18, 0, .45], oy: 10,
     cam: {yaw: .35, pitch: .4, dist: 7},
     controls: [{id: 'time', en: 'model time', ko: '모델 시간', min: 0, max: .6, step: .001, dec: 3, unit: ' s', auto: t => .6 * clamp((t - 1) / 8)},
@@ -88,8 +88,8 @@
   window.MOTION.three('quad-differential-3d', {
     en: 'Four rotor thrust arrows on a schematic quadrotor. A thrust difference creates pitch torque, then tilt produces sideways acceleration',
     ko: 'quadrotor의 네 rotor thrust를 화살표로 나타냅니다. 추력 차이가 pitch torque를 만들고 기울어진 thrust가 옆 방향 가속도를 만듭니다',
-    cap: ['A geometric four-rotor schematic uses the lesson’s m=0.5 kg and I=0.004 kg m²; four equal point masses give arm=√(2I/m). Opposite thrusts change by ±ΔF, giving τ=2 arm ΔF while total thrust stays mg. Attitude and translation use the lesson’s full planar RK4 model, not the small-angle approximation. Height is relative to the start.',
-      'lesson의 m=0.5 kg와 I=0.004 kg m²로 구성한 기하 예입니다. 같은 질량 네 개를 배치하면 arm=√(2I/m)입니다. 마주 보는 rotor의 thrust를 ±ΔF만큼 바꾸면 τ=2 arm ΔF가 되고 총 thrust는 mg로 유지됩니다. 자세와 위치는 small-angle 근사 대신 lesson의 planar RK4 모델로 구합니다. 높이는 시작점을 기준으로 합니다.'],
+    cap: ['A geometric four-rotor schematic uses the lesson’s m=0.5 kg and I=0.004 kg m²; four equal point masses give arm=√(2I/m). Opposite thrusts change by ±ΔF, giving τ=2 arm ΔF while total thrust stays mg. Each arrow draws its rotor’s change from hover 50 times larger, because the real change is under 1%. Attitude and translation use the lesson’s full planar RK4 model, not the small-angle approximation. Height is relative to the start.',
+      '레슨의 m=0.5 kg와 I=0.004 kg m²로 구성한 기하 예입니다. 같은 질량 네 개를 배치하면 arm=√(2I/m)입니다. 마주 보는 rotor의 thrust를 ±ΔF만큼 바꾸면 τ=2 arm ΔF가 되고 총 thrust는 mg로 유지됩니다. 실제 변화는 1%가 안 되어서 화살표는 hover 대비 변화를 50배 키워 그렸습니다. 자세와 위치는 small-angle 근사 대신 레슨의 planar RK4 모델로 구합니다. 높이는 시작점을 기준으로 합니다.'],
     period: 12, rest: 10, H: 350, unit: 360, look: [.1, 0, .2], oy: 35,
     cam: {yaw: .45, pitch: .55, dist: 7},
     controls: [{id: 'delta', en: 'rotor ΔF', ko: 'rotor ΔF', min: -DELTA, max: DELTA, step: DELTA / 100, dec: 4, unit: ' N', val: DELTA},
@@ -106,7 +106,7 @@
       const p = R.add(centre, R.mv(rotation, local));
       s.line(centre, p, '--fg', 4);
       s.path(circle.map(q => R.add(p, R.mv(rotation, q))), '--pf', 2);
-      s.arrow(p, R.add(p, R.mul(normal, thrusts[i] / (TOTAL / 4) * ARM)), i < 2 ? '--pl' : '--ok', 3);
+      s.arrow(p, R.add(p, R.mul(normal, (1 + 50 * (thrusts[i] / (TOTAL / 4) - 1)) * ARM)), i < 2 ? '--pl' : '--ok', 3);   // the change from hover is under 1%, so it is drawn 50 times larger
     });
     s.dot(centre, '--fg', 4, {ring: true});
     s.text(14, 24, `ΣF = ${TOTAL.toFixed(3)} N; τ = ${s.model.torque.toFixed(4)} Nm`, '--fg', 15);
@@ -136,7 +136,7 @@
     en: 'A walker modelled as a point mass on a stiff leg picks each next foot spot. Step a little too short and its speed runs away instead of settling at the target',
     ko: '점 질량이 뻣뻣한 다리 위에 있는 보행자가 다음 발 자리를 정합니다. 걸음이 조금만 짧아도 속도가 목표에 수렴하지 않고 계속 커집니다',
     cap: ['Linear inverted pendulum with height h = 0.9 m, a stance of T = 0.4 s and a target speed of 0.6 m/s, started at x = -0.05 m and 0.3 m/s as in the lesson. At each touchdown the deadbeat foot (from next_foot) is scaled by the slider: 1.0 reaches 0.6 m/s after one correction, 0.6 ends at 9.85 m/s after 8 steps and 1.5 ends at 8.11 m/s while swinging sign. The camera follows the walker; the ground ticks are 0.5 m apart. The torso is just the point mass and the leg is a line; the swing leg is not drawn.',
-      '높이 h = 0.9 m의 선형 inverted pendulum이며 한 번의 stance는 T = 0.4초, 목표 속도는 0.6 m/s입니다. Lesson처럼 x = -0.05 m, 0.3 m/s에서 출발합니다. 발이 닿을 때마다 next_foot이 준 deadbeat 발 위치에 slider 값을 곱합니다. 1.0이면 한 번 보정한 뒤 0.6 m/s에 닿고 0.6이면 8걸음 뒤 9.85 m/s까지 커지며 1.5이면 부호를 바꿔 흔들리다 8.11 m/s가 됩니다. 카메라는 보행자를 따라가고 바닥 눈금은 0.5 m 간격입니다. 몸통은 점 질량이고 다리는 선이며 휘두르는 다리는 그리지 않았습니다.'],
+      '높이 h = 0.9 m의 선형 inverted pendulum이며 한 번의 stance는 T = 0.4초, 목표 속도는 0.6 m/s입니다. 레슨처럼 x = -0.05 m, 0.3 m/s에서 출발합니다. 발이 닿을 때마다 next_foot이 준 deadbeat 발 위치에 slider 값을 곱합니다. 1.0이면 한 번 보정한 뒤 0.6 m/s에 닿고 0.6이면 8걸음 뒤 9.85 m/s까지 커지며 1.5이면 부호를 바꿔 흔들리다 8.11 m/s가 됩니다. 카메라는 보행자를 따라가고 바닥 눈금은 0.5 m 간격입니다. 몸통은 점 질량이고 다리는 선이며 휘두르는 다리는 그리지 않았습니다.'],
     period: 24, rest: 3, H: 350, unit: 150, look, oy: 30,
     cam: {yaw: .45, pitch: .3, dist: 7},
     controls: [{id: 'scale', en: 'step length vs deadbeat', ko: '걸음 길이 / deadbeat 걸음', min: .5, max: 1.5, step: .05, dec: 2, unit: '×', auto: t => 1 + .5 * Math.cos(2 * PI * t / 24 + PI)}],
@@ -191,7 +191,7 @@
     en: 'Two identical flying bodies on a test stand take the same gust torque. The single PD loop is left leaning; the cascade with an integral term pushes back to level',
     ko: '같은 비행체 두 대를 시험대에 올리고 같은 돌풍 토크를 줍니다. PD 한 겹은 기운 채 남고 적분 항이 있는 cascade는 수평으로 되돌립니다',
     cap: ['Plant I theta-double-dot = tau + d with I = 0.004 kg m^2 and a 0.1 N m gust between 0.5 s and 1.5 s, simulated with the lesson\'s semi-implicit Euler at 1 ms. Left: PD with kp = 0.9, kd = 0.084. Right: angle P (kp / kd) feeding a rate PI (kd, ki). At ki = 0.5 the lesson gives a peak of 6.65 deg for PD against 3.93 deg for the cascade, and 6.37 deg against 0.05 deg at 1.5 s. At ki = 0 the cascade reduces to the PD loop, so both stands move together. The tilt of the bar is drawn 4x larger than real; the curves below each stand are the true angle against time, 3 s wide.',
-      '식은 I theta-double-dot = tau + d이며 I = 0.004 kg m^2이고 0.5초에서 1.5초 사이에 0.1 N m 돌풍이 들어옵니다. Lesson의 semi-implicit Euler를 1 ms로 돌렸습니다. 왼쪽은 kp = 0.9, kd = 0.084인 PD이고 오른쪽은 각도 P(kp / kd)가 속도 PI(kd, ki)를 구동하는 cascade입니다. ki = 0.5에서 lesson 값은 peak가 PD 6.65도, cascade 3.93도이고 1.5초에는 6.37도와 0.05도입니다. ki = 0이면 cascade가 PD와 같은 loop가 되어 두 시험대가 똑같이 움직입니다. 막대의 기울기는 실제의 4배로 그렸고 각 시험대 아래 곡선은 실제 각도를 시간에 따라 그린 것입니다(폭 3초).'],
+      '식은 I theta-double-dot = tau + d이며 I = 0.004 kg m^2이고 0.5초에서 1.5초 사이에 0.1 N m 돌풍이 들어옵니다. 레슨의 semi-implicit Euler를 1 ms로 돌렸습니다. 왼쪽은 kp = 0.9, kd = 0.084인 PD이고 오른쪽은 각도 P(kp / kd)가 속도 PI(kd, ki)를 구동하는 cascade입니다. ki = 0.5에서 레슨 값은 peak가 PD 6.65도, cascade 3.93도이고 1.5초에는 6.37도와 0.05도입니다. ki = 0이면 cascade가 PD와 같은 loop가 되어 두 시험대가 똑같이 움직입니다. 막대의 기울기는 실제의 4배로 그렸고 각 시험대 아래 곡선은 실제 각도를 시간에 따라 그린 것입니다(폭 3초).'],
     period: 12, rest: 1.4, H: 350, unit: 100, look: [0, 0, .2], oy: 30,
     cam: {yaw: .25, pitch: .25, dist: 7},
     controls: [{id: 'ki', en: 'integral gain ki', ko: '적분 gain ki', min: 0, max: 1.5, step: .05, dec: 2, auto: t => .75 - .75 * Math.cos(2 * PI * t / 12)}],

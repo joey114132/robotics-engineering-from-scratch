@@ -7,6 +7,9 @@
   const ry = a => [[cos(a), 0, sin(a)], [0, 1, 0], [-sin(a), 0, cos(a)]];
   const rz = a => [[cos(a), -sin(a), 0], [sin(a), cos(a), 0], [0, 0, 1]];
   const mv = (R, v) => [0, 1, 2].map(i => R[i][0] * v[0] + R[i][1] * v[1] + R[i][2] * v[2]);
+  // perspective scale of a point `depth` past the look point, seen from `dist` away. A point at or behind the camera
+  // plane is held at a tenth of dist in front of it, so an orbited floor corner runs off the canvas and never mirrors.
+  const persp = (dist, depth) => dist / Math.max(dist + depth, .1 * dist);
   const mm = (A, B) => A.map(r => [0, 1, 2].map(j => r[0] * B[0][j] + r[1] * B[1][j] + r[2] * B[2][j]));
   const LIGHT = [0.35, -0.45, 0.82];   // fixed in the world, so a face visibly changes shade as the body turns
   const CUBE = [[[1, 0, 0], [[1, -1, -1], [1, 1, -1], [1, 1, 1], [1, -1, 1]]], [[-1, 0, 0], [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]]],
@@ -31,7 +34,7 @@
       let S = 1, T = rest, Rv = null, items = [];
       // world -> screen: spin about z (yaw), tilt about x (pitch), then perspective divide; depth d grows away from the camera
       const L = spec.look || [0, 0, 0];   // spec.look: the world point shown at the centre of the view
-      const proj = p => { const q = mv(Rv, [p[0] - L[0], p[1] - L[1], p[2] - L[2]]), k = unit * base.dist / (base.dist + q[1]); return [W / 2 + k * q[0], H / 2 + (spec.oy != null ? spec.oy : 24) - k * q[2], q[1]]; };   // oy: the view centre sits a little low, under the text lines
+      const proj = p => { const q = mv(Rv, [p[0] - L[0], p[1] - L[1], p[2] - L[2]]), k = unit * persp(base.dist, q[1]); return [W / 2 + k * q[0], H / 2 + (spec.oy != null ? spec.oy : 24) - k * q[2], q[1]]; };   // oy: the view centre sits a little low, under the text lines
       const add = (d, fn) => items.push({ d, fn });
       const stroke = (c, w, o) => { ctx.strokeStyle = col(c); ctx.lineWidth = w || 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.setLineDash(o && o.dash || []); ctx.globalAlpha = o && o.a != null ? o.a : 1; ctx.stroke(); ctx.globalAlpha = 1; };
       const s = {
@@ -124,6 +127,6 @@
   };
   const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2], sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]], add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
   const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-  const M3D = window.M3D = { rx, ry, rz, mv, mm, eig3, dot, sub, add: add3, mul, cross, live: 0, ms: {} };
+  const M3D = window.M3D = { rx, ry, rz, mv, mm, eig3, dot, sub, add: add3, mul, cross, persp, live: 0, ms: {} };
   M.three = three;
 })();

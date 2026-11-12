@@ -1,6 +1,9 @@
 # Robotics Engineering from Scratch
 
-![Bolt, the course mascot, in a toy robotics workshop with a small arm, a drone and a blueprint wall](docs/img/hero-bolt.jpg)
+<picture>
+  <source srcset="docs/img/hero-bolt.webp" type="image/webp">
+  <img src="docs/img/hero-bolt.jpg" alt="Bolt, the course mascot, waves in a toy robotics workshop while a small arm lifts a hex nut and a drone drifts past">
+</picture>
 
 Learn how robots work by building the math and control yourself, in plain numpy, with tests. Then see what the production library does.
 
@@ -26,8 +29,6 @@ Learn how robots work by building the math and control yourself, in plain numpy,
 Every lesson is simulation only. Nothing sends a command to real hardware.
 
 ## 3D scenes
-
-<img src="docs/img/hero-bolt.gif" alt="Bolt waves while a small robot arm lifts a hex nut and a drone drifts past" align="right" width="46%">
 
 Every lesson has a 3D scene of something real: an arm holding itself up, a quadrotor, a robot finding its way back to the start. Drag to orbit it, move a slider, and watch the lesson's law happen.
 

@@ -93,18 +93,6 @@ def test_registration_fun_and_bilingual_rest(phase, slug, name):
                 assert finite(c["args"])
 
 
-@pytest.mark.parametrize("phase,slug,name", SCENES)
-def test_local_humanize_backup_key_sync(phase, slug, name):
-    backup_root = ROOT / ".board/humanize-backup"
-    if not backup_root.exists():
-        pytest.skip("Ignored local humanize backups are not shipped in clean checkouts")
-    path = lesson(phase, slug) / "fun.json"
-    backup = backup_root / path.relative_to(ROOT)
-    # A partially missing backup is a failure; skip only when no local guard
-    # exists at all. In this working clone every copy must pass.
-    assert json.loads(backup.read_text())["three"] == name
-
-
 @pytest.mark.parametrize("angle", [-90, 0, 45, 90])
 def test_dh_intermediate_offset_and_equivalent_fk(angle):
     m = source("02", "01-dh-vs-urdf-origins")

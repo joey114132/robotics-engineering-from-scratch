@@ -17,7 +17,7 @@
     en: 'A timestamped sensor point goes to two different places when the lookup time is wrong',
     ko: 'Sensor point의 timestamp와 다른 시각으로 transform을 조회하면 위치가 어긋납니다',
     cap: ['The buffer stores t=0 and t=1 s with p=(2t,0,0) and yaw=t rad, as in the lesson. Position uses lerp and orientation uses slerp. A unit point (1,0,0) in the sensor frame uses its own timestamp (green); using the newest pose puts it at the orange point. All lookups stay inside the stored interval.',
-      '수업처럼 buffer에 t=0과 t=1 s의 p=(2t,0,0), yaw=t rad를 저장합니다. 위치는 lerp, 방향은 slerp로 보간합니다. Sensor frame의 단위 점 (1,0,0)에 자신의 timestamp를 쓰면 초록색 위치가 됩니다. Latest pose를 쓰면 주황색 위치로 어긋납니다. 조회는 저장된 시간 범위 안에서만 합니다.'],
+      '레슨처럼 buffer에 t=0과 t=1 s의 p=(2t,0,0), yaw=t rad를 저장합니다. 위치는 lerp, 방향은 slerp로 보간합니다. Sensor frame의 단위 점 (1,0,0)에 자신의 timestamp를 쓰면 초록색 위치가 됩니다. Latest pose를 쓰면 주황색 위치로 어긋납니다. 조회는 저장된 시간 범위 안에서만 합니다.'],
     period: 12, rest: 6, H: 340, unit: 110, look: [1.3, .3, .05], oy: 45,
     cam: { yaw: .15, pitch: .65, dist: 8 }, model,
     controls: [{ id: 'stamp', en: 'point timestamp', ko: '점의 timestamp', min: 0, max: 1, step: .01, dec: 2, unit: '\u00a0s', auto: t => Math.min(1, Math.max(0, (t - 1) / 10)) }],
@@ -55,7 +55,7 @@
     en: 'A burst of 8 messages reaches a subscriber whose queue holds only a few; the oldest crates fall off the belt',
     ko: '메시지 8개가 한꺼번에 도착하는데 구독자 queue에 몇 개만 들어가면, 가장 오래된 상자부터 벨트 밖으로 떨어집니다',
     cap: ['Each crate is one message. The publisher sends 8 in a single tick, the subscriber takes one per tick (lesson run(Qos(), Qos(depth=d), [8] + [0]*9)). A keep-last queue of depth d keeps the newest d crates and drops 8 − d, so depth 1 delivers 1 and drops 7. The toggle shows a QoS mismatch (publisher best_effort, subscriber reliable): the pair never connects, nothing is delivered and nothing is reported. The belt and crates are a picture of the queue, not a transport model.',
-      '상자 하나가 메시지 하나입니다. Publisher가 한 tick에 8개를 보내고 subscriber는 tick마다 1개씩 꺼냅니다(수업의 run(Qos(), Qos(depth=d), [8] + [0]*9)). Depth d인 keep-last queue는 최신 d개만 남기고 8 − d개를 버리므로 depth 1이면 1개를 전달하고 7개를 버립니다. 토글은 QoS mismatch(publisher best_effort, subscriber reliable)를 보여 줍니다. 연결이 되지 않아 아무것도 전달되지 않고 아무 오류도 나오지 않습니다. 벨트와 상자는 queue를 그림으로 옮긴 것이며 실제 전송 모델이 아닙니다.'],
+      '상자 하나가 메시지 하나입니다. Publisher가 한 tick에 8개를 보내고 subscriber는 tick마다 1개씩 꺼냅니다(레슨의 run(Qos(), Qos(depth=d), [8] + [0]*9)). Depth d인 keep-last queue는 최신 d개만 남기고 8 − d개를 버리므로 depth 1이면 1개를 전달하고 7개를 버립니다. 토글은 QoS mismatch(publisher best_effort, subscriber reliable)를 보여 줍니다. 연결이 되지 않아 아무것도 전달되지 않고 아무 오류도 나오지 않습니다. 벨트와 상자는 queue를 그림으로 옮긴 것이며 실제 전송 모델이 아닙니다.'],
     period: 12, rest: 6, H: 320, unit: 58, look: [1.0, 0, .1], oy: 30, cam: {yaw: .3, pitch: .75, dist: 8},
     controls: [
       {id: 'depth', en: 'subscriber queue depth', ko: '구독자 queue depth', min: 1, max: 10, step: 1, auto: t => [1, 3, 8, 8][Math.floor(t / 3) % 4]},
@@ -109,7 +109,7 @@
     en: 'A slow callback blocks a 10 ms timer on one thread; a second thread in a different group lets the timer run on time',
     ko: 'Thread가 하나면 느린 callback이 10 ms timer를 막고, 다른 group의 thread가 하나 더 있으면 timer가 제때 돕니다',
     cap: ['Time runs along the floor (0 to 200 ms). Blue boxes are the 60 ms slow callback every 100 ms; thin boxes are the 1 ms timer every 10 ms (drawn wider than 1 ms so you can see them). Red lines on the back rail run from the moment a timer job is released to the moment it starts. With one thread the first timer waits 59 ms and the worst wait over 1000 ms is 59 ms with 60 late ticks; with two threads and separate mutually exclusive groups the worst wait is 0 ms (lesson simulate(), 1 ms steps).',
-      '시간은 바닥을 따라 0~200 ms로 흐릅니다. 파란 상자는 100 ms마다 도는 60 ms짜리 느린 callback이고 얇은 상자는 10 ms마다 도는 1 ms짜리 timer입니다(보이도록 1 ms보다 넓게 그렸습니다). 뒤쪽 레일의 빨간 선은 timer job이 release된 순간부터 시작되는 순간까지의 대기입니다. Thread가 하나면 첫 timer가 59 ms 기다리고 1000 ms 동안 최악 대기가 59 ms, 늦은 tick이 60번입니다. Thread가 둘이고 group이 서로 다른 mutually exclusive면 최악 대기는 0 ms입니다(수업의 simulate(), 1 ms 단위).'],
+      '시간은 바닥을 따라 0~200 ms로 흐릅니다. 파란 상자는 100 ms마다 도는 60 ms짜리 느린 callback이고 얇은 상자는 10 ms마다 도는 1 ms짜리 timer입니다(보이도록 1 ms보다 넓게 그렸습니다). 뒤쪽 레일의 빨간 선은 timer job이 release된 순간부터 시작되는 순간까지의 대기입니다. Thread가 하나면 첫 timer가 59 ms 기다리고 1000 ms 동안 최악 대기가 59 ms, 늦은 tick이 60번입니다. Thread가 둘이고 group이 서로 다른 mutually exclusive면 최악 대기는 0 ms입니다(레슨의 simulate(), 1 ms 단위).'],
     period: 12, rest: 3, H: 320, unit: 72, look: [1.9, 0, .1], oy: 30, cam: {yaw: .3, pitch: .6, dist: 8},
     controls: [{id: 'n', en: 'executor threads', ko: 'executor thread 수', min: 1, max: 2, step: 1, auto: t => t % 12 < 6 ? 1 : 2}],
   }, (s, t, m) => {
@@ -155,7 +155,7 @@
     en: 'A machine drops a crate every millisecond. The tall posts show how late each drop was; a sleep-after-work loop drifts further every cycle',
     ko: '기계가 1 ms마다 상자를 하나씩 떨어뜨립니다. 기둥은 각 상자가 얼마나 늦었는지 보여 주고, 일을 마친 뒤 쉬는 방식의 loop는 주기마다 더 밀립니다',
     cap: ['Each crate is one loop iteration; the post above it is how late it started compared with its slot i × 1 ms (1 unit of height = 1 ms, capped at 2.2). Model from the lesson: T = 1 ms, work 0.2 ms, wake-up latency exponential with scale 20 µs, and a rare spike of 0.5 to 1.5 periods. The slider is the spike chance per iteration; the lesson uses 0.002 to 0.003 over 5000 iterations, so this view goes up to 0.1 to make a spike appear in 40 iterations. Random numbers are a fixed JavaScript sequence, not the lesson’s numpy seed. The toggle sleeps T after the work (relative): the period becomes T + work and the lateness grows every cycle. Red dots mark an iteration that finishes after the next deadline.',
-      '상자 하나가 loop 한 번입니다. 위의 기둥은 그 상자가 자기 slot i × 1 ms보다 얼마나 늦게 시작했는지입니다(높이 1이 1 ms, 최대 2.2). 수업의 모델을 씁니다. T = 1 ms, 일 0.2 ms, 깨어나는 지연은 scale 20 µs의 지수분포이고 가끔 0.5~1.5 주기짜리 spike가 끼어듭니다. 슬라이더는 iteration마다 spike가 날 확률입니다. 수업은 5000번 도는 동안 0.002~0.003을 쓰므로, 여기서는 40번 안에 spike가 보이도록 0.1까지 올립니다. 난수는 수업의 numpy seed가 아니라 고정된 JavaScript 수열입니다. 토글을 켜면 일을 마친 뒤 T만큼 쉬는 방식(relative)이 되어 주기가 T + 일이 되고 늦음이 주기마다 쌓입니다. 빨간 점은 다음 deadline 뒤에 끝난 iteration입니다.'],
+      '상자 하나가 loop 한 번입니다. 위의 기둥은 그 상자가 자기 slot i × 1 ms보다 얼마나 늦게 시작했는지입니다(높이 1이 1 ms, 최대 2.2). 레슨의 모델을 씁니다. T = 1 ms, 일 0.2 ms, 깨어나는 지연은 scale 20 µs의 지수분포이고 가끔 0.5~1.5 주기짜리 spike가 끼어듭니다. 슬라이더는 iteration마다 spike가 날 확률입니다. 레슨은 5000번 도는 동안 0.002~0.003을 쓰므로, 여기서는 40번 안에 spike가 보이도록 0.1까지 올립니다. 난수는 레슨의 numpy seed가 아니라 고정된 JavaScript 수열입니다. 토글을 켜면 일을 마친 뒤 T만큼 쉬는 방식(relative)이 되어 주기가 T + 일이 되고 늦음이 주기마다 쌓입니다. 빨간 점은 다음 deadline 뒤에 끝난 iteration입니다.'],
     period: 12, rest: 5, H: 320, unit: 72, look: [2.1, 0, 1], oy: 25, cam: {yaw: .2, pitch: .35, dist: 8},
     controls: [
       {id: 'p', en: 'spike chance per iteration', ko: 'iteration당 spike 확률', min: 0, max: .1, step: .002, dec: 3, auto: t => .1 * (.5 - .5 * Math.cos(2 * Math.PI * t / 12))},
@@ -186,7 +186,7 @@
     en: 'Two wall clocks exchange one request and reply; unequal travel times make the offset estimate wrong by half the difference',
     ko: '벽시계 두 개가 요청과 응답을 한 번 주고받습니다. 가는 시간과 오는 시간이 다르면 offset 추정이 그 차이의 절반만큼 틀립니다',
     cap: ['Height is true time (1 unit = 40 ms). The server clock runs 0.123 s ahead of the client, and the reply takes 0.01 s as in the lesson’s exchange(0.123, 0.03, 0.01). The estimate ((t1 − t0) + (t2 − t3)) / 2 assumes both trips take the same time, so it puts the server’s reading at the midpoint of the round trip (red ring); the real moment is the green dot. The gap is (forward − back) / 2 and the round-trip delay is forward + back. The slider is the forward delay, 0.03 s is the lesson’s value. The processing time is 0 as in the lesson.',
-      '높이는 실제 시간입니다(1 단위 = 40 ms). 서버 시계는 client보다 0.123 s 앞서 있고, 응답에는 수업의 exchange(0.123, 0.03, 0.01)처럼 0.01 s가 걸립니다. 추정식 ((t1 − t0) + (t2 − t3)) / 2는 가는 시간과 오는 시간이 같다고 보고 서버가 읽힌 순간을 왕복의 한가운데(빨간 고리)에 놓습니다. 실제 순간은 초록 점입니다. 그 차이가 (forward − back) / 2이고 round-trip delay는 forward + back입니다. 슬라이더는 가는 시간이며 수업의 값은 0.03 s입니다. 처리 시간은 수업처럼 0입니다.'],
+      '높이는 실제 시간입니다(1 단위 = 40 ms). 서버 시계는 client보다 0.123 s 앞서 있고, 응답에는 레슨의 exchange(0.123, 0.03, 0.01)처럼 0.01 s가 걸립니다. 추정식 ((t1 − t0) + (t2 − t3)) / 2는 가는 시간과 오는 시간이 같다고 보고 서버가 읽힌 순간을 왕복의 한가운데(빨간 고리)에 놓습니다. 실제 순간은 초록 점입니다. 그 차이가 (forward − back) / 2이고 round-trip delay는 forward + back입니다. 슬라이더는 가는 시간이며 레슨의 값은 0.03 s입니다. 처리 시간은 레슨처럼 0입니다.'],
     period: 12, rest: 5, H: 340, unit: 64, look: [0, 0, 1.2], oy: 60, cam: {yaw: .45, pitch: .22, dist: 8},
     controls: [{id: 'df', en: 'forward delay', ko: '가는 시간', min: .01, max: .06, step: .005, dec: 3, unit: ' s', auto: t => .035 + .025 * Math.sin(2 * Math.PI * t / 12)}],
   }, (s, t, m) => {
@@ -232,7 +232,7 @@
     en: 'A floor robot ticks a behaviour tree: it drives to the object, fails to grasp twice, retries, then carries it to the bin',
     ko: 'Floor robot이 behaviour tree를 tick합니다. 물건까지 가고, grasp에 두 번 실패하고, 재시도한 뒤 상자로 옮깁니다',
     cap: ['Step through the six ticks of the lesson’s fetch tree. Sequence runs its children in order and resumes the child that said RUNNING; Retry(3) turns the first two grasp FAILUREs into RUNNING and lets the third SUCCESS through. The status lines on the left are the real log of run(fetch_task()[0]); a node that is not listed was not ticked on that tick. Robot position per tick is a picture (one third of the way to the object per RUNNING tick), not a measured path.',
-      '수업 fetch tree의 여섯 tick을 하나씩 따라갑니다. Sequence는 자식을 차례로 실행하고 RUNNING이라고 답한 자식에서 다시 시작합니다. Retry(3)는 grasp의 첫 두 FAILURE를 RUNNING으로 바꾸고 세 번째 SUCCESS는 통과시킵니다. 왼쪽 상태 줄은 run(fetch_task()[0])의 실제 log이며 목록에 없는 node는 그 tick에 실행되지 않은 것입니다. Tick마다의 robot 위치는 RUNNING 한 번에 물건까지의 3분의 1씩 가는 그림이며 측정한 경로가 아닙니다.'],
+      '레슨 fetch tree의 여섯 tick을 하나씩 따라갑니다. Sequence는 자식을 차례로 실행하고 RUNNING이라고 답한 자식에서 다시 시작합니다. Retry(3)는 grasp의 첫 두 FAILURE를 RUNNING으로 바꾸고 세 번째 SUCCESS는 통과시킵니다. 왼쪽 상태 줄은 run(fetch_task()[0])의 실제 log이며 목록에 없는 node는 그 tick에 실행되지 않은 것입니다. Tick마다의 robot 위치는 RUNNING 한 번에 물건까지의 3분의 1씩 가는 그림이며 측정한 경로가 아닙니다.'],
     period: 12, rest: 7, H: 360, unit: 76, look: [.15, 0, 0], oy: 100, cam: {yaw: .3, pitch: .5, dist: 8},
     controls: [{id: 'tick', en: 'tick', ko: 'tick', min: 1, max: 6, step: 1, auto: t => 1 + Math.floor(t / 2) % 6}],
   }, (s, t, m) => {

@@ -13,6 +13,8 @@ python -m pytest phases scripts/tests_robo -q
 python scripts/build_site.py && xdg-open site/index.html
 ```
 
+The tests for the 3D scenes run the scene code with Node.js, so `node` has to be on your PATH. On Windows, set `PYTHONUTF8=1` first, because the scripts read Korean text as UTF-8.
+
 The same two checks run on every push through GitHub Actions, so your fork tells you if something broke. To put your fork's site online, set Settings > Pages > Source to "GitHub Actions" and run the `site` workflow by hand.
 
 ## Ways to help

@@ -1,4 +1,4 @@
-// Phase 12: 수업의 두 Euler integrator로 진자 pose와 energy drift를 계산한다.
+// Phase 12: 레슨의 두 Euler integrator로 진자 pose와 energy drift를 계산한다.
 (() => {
   const I = [[1, 0, 0], [0, 1, 0], [0, 0, 1]], J = .05, K = .2, Q0 = 1, DURATION = 10;
   const energy = (q, w) => .5 * J * w * w + K * (1 - Math.cos(q));
@@ -28,7 +28,7 @@
     en: 'Two pendulums compare explicit and semi-implicit Euler as timestep grows',
     ko: '두 진자로 timestep에 따른 explicit Euler와 semi-implicit Euler의 차이를 봅니다',
     cap: ['Both start at q=1 rad, at rest, with J=0.05 kg m² and mgl=0.2 Nm from the lesson. Explicit Euler moves q with the old velocity; semi-implicit uses the updated velocity. The displayed maximum energy drift is computed up to the drawn step. Rod length is one drawing unit; it does not specify a physical length.',
-      '둘 다 수업의 J=0.05 kg m²와 mgl=0.2 Nm를 쓰며 q=1 rad에서 정지 상태로 출발합니다. Explicit Euler는 이전 velocity로 q를 갱신하고 semi-implicit은 새 velocity를 씁니다. 최대 energy drift는 화면에 그린 step까지 계산합니다. Rod 길이는 그림의 단위 길이이며 실제 길이를 뜻하지 않습니다.'],
+      '둘 다 레슨의 J=0.05 kg m²와 mgl=0.2 Nm를 쓰며 q=1 rad에서 정지 상태로 출발합니다. Explicit Euler는 이전 velocity로 q를 갱신하고 semi-implicit은 새 velocity를 씁니다. 최대 energy drift는 화면에 그린 step까지 계산합니다. Rod 길이는 그림의 단위 길이이며 실제 길이를 뜻하지 않습니다.'],
     period: 12, rest: 11, H: 390, unit: 78, look: [0, 0, .8], oy: 20,
     cam: { yaw: .1, pitch: .25, dist: 8 }, model,
     controls: [{ id: 'dt', en: 'timestep dt', ko: 'timestep dt', min: .005, max: .2, step: .005, dec: 3, unit: '\u00a0s', val: .05 },
@@ -93,7 +93,7 @@
     en: 'The same torque command drives a real swinging joint and a simulated copy missing one effect. The bars show how far each missing effect makes the copy drift',
     ko: '같은 토크 명령으로 실제 관절과, 효과 하나가 빠진 시뮬 복사본을 흔듭니다. 막대는 빠진 효과마다 복사본이 얼마나 어긋나는지 보여 줍니다',
     cap: ['The joint from lesson 12/01: J = 0.05, viscous b = 0.02, Coulomb friction c = 0.05 (slider), gravity term 0.2 sin q, motor lag 0.03 s and sensor delay 0.02 s, driven by two sines of 0.35 and 0.15 Nm. The solid arm is the real joint as the encoder reports it; the red ghost is the copy without the effect highlighted in the bar chart (it rotates through the four every 6 s). Bars are RMS angle error over 6 s. At c = 0.05 the lesson gives friction 0.545, motor lag 0.042, sensor delay 0.029 and all three 0.543 rad, so friction is the costly effect. The arm swings in a plane and the bars are scaled 1 rad to 1.4 units.',
-      'Lesson 12/01의 관절입니다. J = 0.05, 점성 b = 0.02, Coulomb 마찰 c = 0.05(slider), 중력항 0.2 sin q, 모터 지연 0.03초, 센서 지연 0.02초이고 0.35와 0.15 Nm인 두 sine으로 구동합니다. 실선 팔은 encoder가 보고하는 실제 관절이고 붉은 유령은 막대 그래프에서 강조한 효과를 뺀 복사본입니다(6초마다 네 가지를 차례로 돕니다). 막대는 6초 동안의 RMS 각도 오차입니다. c = 0.05에서 lesson 값은 마찰 0.545, 모터 지연 0.042, 센서 지연 0.029, 셋 모두 0.543 rad이므로 마찰이 비싼 효과입니다. 팔은 한 평면에서 흔들리고 막대는 1 rad을 1.4 단위로 그렸습니다.'],
+      '레슨 12/01의 관절입니다. J = 0.05, 점성 b = 0.02, Coulomb 마찰 c = 0.05(slider), 중력항 0.2 sin q, 모터 지연 0.03초, 센서 지연 0.02초이고 0.35와 0.15 Nm인 두 sine으로 구동합니다. 실선 팔은 encoder가 보고하는 실제 관절이고 붉은 유령은 막대 그래프에서 강조한 효과를 뺀 복사본입니다(6초마다 네 가지를 차례로 돕니다). 막대는 6초 동안의 RMS 각도 오차입니다. c = 0.05에서 레슨 값은 마찰 0.545, 모터 지연 0.042, 센서 지연 0.029, 셋 모두 0.543 rad이므로 마찰이 비싼 효과입니다. 팔은 한 평면에서 흔들리고 막대는 1 rad을 1.4 단위로 그렸습니다.'],
     period: 24, rest: 2, H: 340, unit: 100, look: [.6, 0, .45], oy: 24,
     cam: {yaw: .25, pitch: .15, dist: 7},
     controls: [{id: 'c', en: 'real Coulomb friction c', ko: '실제 Coulomb 마찰 c', min: 0, max: .1, step: .005, dec: 3, unit: ' Nm', auto: t => .05 + .045 * Math.sin(2 * PI * t / 24)}],
@@ -155,7 +155,7 @@
     en: 'A joint is shaken while its angle is recorded, then its inertia, damping and friction are fitted. A slow constant spin cannot tell them apart; a rich shake can',
     ko: '관절을 흔들면서 각도를 기록한 다음 관성, 감쇠, 마찰을 맞춥니다. 천천히 일정하게 돌리면 셋을 구별하지 못하고 풍부하게 흔들면 구별합니다',
     cap: ['Lesson 12/03: the lesson-12/01 joint under a speed loop around 0.3 rad/s plus a three-sine shake of size a, recorded at 500 Hz for 20 s with noise (0.01 rad/s on speed, 1e-4 rad on angle), then fitted by windowed least squares inside a grid search over the motor lag. The bars are the fitted value divided by the true one for J, b and c (grey = 1). The lesson reports condition number 330 and a nonsense b at a = 0 against 4 and a b within 8% at a = 1. The noise here comes from a small JavaScript generator, not numpy, so individual estimates differ from the lesson printout. Off-scale bars are clipped and marked with !. The wheel replays the recorded angle at 2x speed.',
-      'Lesson 12/03입니다. Lesson 12/01의 관절에 0.3 rad/s 주변의 speed loop와 크기 a의 세 sine 흔들기를 가해 20초 동안 500 Hz로 기록하고 잡음(속도 0.01 rad/s, 각도 1e-4 rad)을 더한 뒤 모터 지연에 대한 격자 탐색 안에서 구간별 최소제곱으로 맞춥니다. 막대는 J, b, c의 추정값을 참값으로 나눈 값입니다(회색 = 1). Lesson은 a = 0에서 조건수 330과 엉터리 b, a = 1에서 조건수 4와 8% 이내의 b를 보고합니다. 여기의 잡음은 numpy가 아니라 작은 JavaScript 난수 발생기에서 나오므로 개별 추정값은 lesson 출력과 조금 다릅니다. 범위를 넘는 막대는 잘라서 !로 표시합니다. 바퀴는 기록된 각도를 2배 속도로 다시 재생합니다.'],
+      '레슨 12/03입니다. 레슨 12/01의 관절에 0.3 rad/s 주변의 speed loop와 크기 a의 세 sine 흔들기를 가해 20초 동안 500 Hz로 기록하고 잡음(속도 0.01 rad/s, 각도 1e-4 rad)을 더한 뒤 모터 지연에 대한 격자 탐색 안에서 구간별 최소제곱으로 맞춥니다. 막대는 J, b, c의 추정값을 참값으로 나눈 값입니다(회색 = 1). 레슨은 a = 0에서 조건수 330과 엉터리 b, a = 1에서 조건수 4와 8% 이내의 b를 보고합니다. 여기의 잡음은 numpy가 아니라 작은 JavaScript 난수 발생기에서 나오므로 개별 추정값은 레슨 출력과 조금 다릅니다. 범위를 넘는 막대는 잘라서 !로 표시합니다. 바퀴는 기록된 각도를 2배 속도로 다시 재생합니다.'],
     period: 16, rest: 8, H: 340, unit: 105, look: [.5, 0, .3], oy: 24,
     cam: {yaw: .25, pitch: .2, dist: 7},
     controls: [{id: 'a', en: 'shake size a', ko: '흔드는 크기 a', min: 0, max: 1.5, step: .1, dec: 1, unit: ' rad/s', auto: t => .75 - .75 * Math.cos(2 * PI * t / 16)}],
@@ -202,7 +202,7 @@
     en: 'One fixed controller drives 24 slightly different copies of a joint to the same target. Gains tuned on a wider spread of copies hold up when the real joint is off',
     ko: '고정된 controller 하나가 조금씩 다른 관절 24개를 같은 목표로 보냅니다. 더 넓은 범위의 복사본으로 맞춘 gain이 실제 관절이 다를 때 더 잘 버팁니다',
     cap: ['Each thin arm is one random joint: every parameter of the lesson-12/01 joint (J, b, c, gravity, motor lag, sensor delay) is scaled by 1 + spread times a random number in -1 to 1, and all arms run the same PD with gravity feed-forward, torque limit 1 Nm, from rest to 1 rad. Green arms settle inside +-0.05 rad by 0.8 s without passing 1.05 rad; red arms do not. The four gain pairs are the lesson grid-search results for tuning widths 0, 0.15, 0.3 and 0.6, from running its tune with 40 plants. The 24 plants here come from a small JavaScript generator, so the success rate is a sample and differs from the lesson 300-plant figures (0.57, 0.88, 0.99, 1.00 at spread 0.3).',
-      '가는 팔 하나가 무작위 관절 하나입니다. Lesson 12/01 관절의 모든 parameter(J, b, c, 중력, 모터 지연, 센서 지연)에 1 + spread 곱하기 -1에서 1 사이 난수를 곱하고, 모든 팔이 같은 PD와 중력 feed-forward, 토크 제한 1 Nm로 정지 상태에서 1 rad까지 갑니다. 초록 팔은 0.8초 안에 +-0.05 rad 안에 들어와 머물고 1.05 rad를 넘지 않은 것이며 빨간 팔은 그렇지 못한 것입니다. 네 gain 쌍은 tuning 폭 0, 0.15, 0.3, 0.6에 대해 lesson의 tune을 plant 40개로 돌려 얻은 격자 탐색 결과입니다. 여기의 plant 24개는 작은 JavaScript 난수에서 나오므로 성공률은 표본이며 lesson의 300개 plant 수치(spread 0.3에서 0.57, 0.88, 0.99, 1.00)와 다릅니다.'],
+      '가는 팔 하나가 무작위 관절 하나입니다. 레슨 12/01 관절의 모든 parameter(J, b, c, 중력, 모터 지연, 센서 지연)에 1 + spread 곱하기 -1에서 1 사이 난수를 곱하고, 모든 팔이 같은 PD와 중력 feed-forward, 토크 제한 1 Nm로 정지 상태에서 1 rad까지 갑니다. 초록 팔은 0.8초 안에 +-0.05 rad 안에 들어와 머물고 1.05 rad를 넘지 않은 것이며 빨간 팔은 그렇지 못한 것입니다. 네 gain 쌍은 tuning 폭 0, 0.15, 0.3, 0.6에 대해 레슨의 tune을 plant 40개로 돌려 얻은 격자 탐색 결과입니다. 여기의 plant 24개는 작은 JavaScript 난수에서 나오므로 성공률은 표본이며 레슨의 300개 plant 수치(spread 0.3에서 0.57, 0.88, 0.99, 1.00)와 다릅니다.'],
     period: 16, rest: 2.5, H: 340, unit: 120, look: [.5, 0, .55], oy: 30,
     cam: {yaw: .15, pitch: .15, dist: 7},
     controls: [{id: 'tuned', en: 'gains tuned on spread: 0, .15, .3, .6', ko: 'gain을 맞춘 spread: 0, .15, .3, .6', min: 0, max: 3, step: 1, auto: t => Math.floor(t / 4) % 4},

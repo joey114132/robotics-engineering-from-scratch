@@ -1,4 +1,4 @@
-// 03단계 3D: lesson의 질량과 lever arm으로 gravity를 버티는 joint torque를 계산한다.
+// 03단계 3D: 레슨의 질량과 lever arm으로 gravity를 버티는 joint torque를 계산한다.
 (() => {
   const R = window.M3D, PI = Math.PI, G = 9.81;
   function pose(deg) {
@@ -24,7 +24,7 @@
     en: 'A two-link arm changes pose. Downward weight arrows and curved joint arrows show the torque needed to hold it still',
     ko: '두 link로 된 팔의 자세를 바꿉니다. 아래쪽 화살표는 무게이고 joint의 곡선 화살표는 팔을 가만히 버티는 데 필요한 torque입니다',
     cap: ['Weights are m1 g and m2 g at the centres of mass. Green arcs are the holding torques from gravity_torque, opposing gravity. Shaded solid links and joint housings show depth while arrows remain in the motion plane. The lesson uses m1=2, m2=1 kg, l1=0.4, lc1=lc2=0.2 m. Link 2 is drawn with its centre halfway along a 0.4 m link. The pose family is q2 = −q1/2.',
-      '무게는 각 centre of mass에 작용하는 m1 g와 m2 g입니다. 초록색 호는 gravity_torque로 구한 holding torque이며 gravity에 맞섭니다. Link와 joint housing의 음영으로 깊이를 보여 주며 화살표는 운동 평면에 둡니다. Lesson의 값은 m1=2, m2=1 kg, l1=0.4, lc1=lc2=0.2 m입니다. 두 번째 link는 길이 0.4 m의 가운데에 질량 중심을 둡니다. 자세는 q2 = −q1/2로 바뀝니다.'],
+      '무게는 각 centre of mass에 작용하는 m1 g와 m2 g입니다. 초록색 호는 gravity_torque로 구한 holding torque이며 gravity에 맞섭니다. Link와 joint housing의 음영으로 깊이를 보여 주며 화살표는 운동 평면에 둡니다. 레슨의 값은 m1=2, m2=1 kg, l1=0.4, lc1=lc2=0.2 m입니다. 두 번째 link는 길이 0.4 m의 가운데에 질량 중심을 둡니다. 자세는 q2 = −q1/2로 바뀝니다.'],
     period: 12, rest: 3, H: 350, unit: 200, look: [.32, 0, .05], oy: 28,
     cam: {yaw: .25, pitch: .4, dist: 7},
     controls: [{id: 'pose', en: 'q1 (q2 = −q1/2)', ko: 'q1 (q2 = −q1/2)', min: -60, max: 90, step: 1, unit: '°', auto: t => 60 * Math.cos(2 * PI * t / 12)}],
@@ -138,7 +138,7 @@
     en: 'A saturated motor drives a lever to a target while the integral term keeps piling up. Without anti-windup the lever overshoots far past the target',
     ko: '포화된 motor가 레버를 목표로 보내는 동안 적분 항은 계속 쌓입니다. Anti-windup이 없으면 레버가 목표를 크게 지나칩니다',
     cap: ['Lesson windup case: J = 1 kg m², friction b = 2, kp = 100, ki = 300, kd = 20, target 2 rad, motor limit 20 Nm, 1 ms steps. The ghost lever is the target. The curve is q(t) over 12 s; the dashed line is the target. Without anti-windup the integral term grows while the motor is saturated and the lever passes the target by about 1.5 rad; with it (clamping) the integrator stops while saturated. The scene alternates between the two. The red arc is the motor torque.',
-      'Lesson의 windup 경우입니다. J = 1 kg m², 마찰 b = 2, kp = 100, ki = 300, kd = 20, 목표 2 rad, motor 한계 20 Nm, 1 ms step입니다. 흐린 레버가 목표입니다. 곡선은 12초 동안의 q(t)이고 점선이 목표입니다. Anti-windup이 없으면 motor가 포화된 동안 적분 항이 커져서 레버가 목표를 약 1.5 rad 지나치고, anti-windup(clamping)을 쓰면 포화된 동안 적분을 멈춥니다. 두 경우를 번갈아 보여 줍니다. 빨간 호는 motor torque입니다.'],
+      '레슨의 windup 경우입니다. J = 1 kg m², 마찰 b = 2, kp = 100, ki = 300, kd = 20, 목표 2 rad, motor 한계 20 Nm, 1 ms step입니다. 흐린 레버가 목표입니다. 곡선은 12초 동안의 q(t)이고 점선이 목표입니다. Anti-windup이 없으면 motor가 포화된 동안 적분 항이 커져서 레버가 목표를 약 1.5 rad 지나치고, anti-windup(clamping)을 쓰면 포화된 동안 적분을 멈춥니다. 두 경우를 번갈아 보여 줍니다. 빨간 호는 motor torque입니다.'],
     period: 24, rest: 11.9, H: 350, unit: 105, look: [.45, 0, .1], oy: 30,
     cam: {yaw: .25, pitch: .2, dist: 7},
     controls: [
@@ -193,7 +193,7 @@
     en: 'Three copies of a two-link arm on a table follow a fast swing: the reference, an arm with plain PD, and an arm with computed torque. PD lags where the model is not used',
     ko: '탁자 위의 두 link 팔 세 개가 빠른 swing을 따라갑니다. 기준 궤적, 단순 PD 팔, computed torque 팔입니다. 모델을 쓰지 않는 PD가 뒤처집니다',
     cap: ['Lesson arm: m1 = m2 = 1 kg, l1 = 0.5 m, lc1 = lc2 = 0.25 m, I = 0.02, no gravity (horizontal plane), reference swing of 1.2 and 1.5 rad in 1 s, both controllers tuned to ω = 20 rad/s, simulated with RK4 at 1 ms. Faint grey is the reference; green is computed torque (the model supplies M and Coriolis); red is joint PD with gains fixed at the mean pose. Link 2 is drawn 0.5 m long (twice lc2), which the lesson does not state. The slider makes the controller\'s masses wrong by a percentage while the arm keeps the true ones.',
-      'Lesson의 팔은 m1 = m2 = 1 kg, l1 = 0.5 m, lc1 = lc2 = 0.25 m, I = 0.02이고 gravity가 없는(수평면) 경우입니다. 기준 swing은 1초 동안 1.2와 1.5 rad이며 두 controller 모두 ω = 20 rad/s로 맞추고 RK4 1 ms로 simulation합니다. 흐린 회색이 기준이고 초록은 computed torque(모델이 M과 Coriolis를 줍니다), 빨강은 평균 자세에서 gain을 고정한 joint PD입니다. Link 2는 lc2의 두 배인 0.5 m로 그렸으며 lesson에는 없는 값입니다. Slider는 controller가 아는 질량을 실제와 다르게 만들고 팔은 실제 질량을 유지합니다.'],
+      '레슨의 팔은 m1 = m2 = 1 kg, l1 = 0.5 m, lc1 = lc2 = 0.25 m, I = 0.02이고 gravity가 없는(수평면) 경우입니다. 기준 swing은 1초 동안 1.2와 1.5 rad이며 두 controller 모두 ω = 20 rad/s로 맞추고 RK4 1 ms로 simulation합니다. 흐린 회색이 기준이고 초록은 computed torque(모델이 M과 Coriolis를 줍니다), 빨강은 평균 자세에서 gain을 고정한 joint PD입니다. Link 2는 lc2의 두 배인 0.5 m로 그렸으며 레슨에는 없는 값입니다. Slider는 controller가 아는 질량을 실제와 다르게 만들고 팔은 실제 질량을 유지합니다.'],
     period: 2, rest: 1, H: 340, unit: 140, look: [.3, .4, 0], oy: 36,
     cam: {yaw: .1, pitch: 1.0, dist: 7},
     controls: [{id: 'err', en: 'model mass error', ko: '모델 질량 오차', min: -50, max: 50, step: 5, unit: '%', val: 0}],
@@ -237,7 +237,7 @@
     en: 'A cart on a rail is pulled back to the origin by the gain LQR computes. A cheap effort weight makes it brisk and a costly one makes it gentle',
     ko: '레일 위의 cart를 LQR이 계산한 gain으로 원점까지 끌어옵니다. 노력 가중치가 싸면 빠르고 비싸면 느긋합니다',
     cap: ['Double integrator with dt = 0.05 s (position and speed, the input is an acceleration held for one step) and Q = diag(1, 0.1), as in the lesson. The slider is the effort weight R from 0.01 to 1, the two values the lesson prints. K comes from the Riccati recursion and u = −Kx. The cart starts 1 m from the target at rest (a start the lesson does not give); the dots show where it has been and the green arrow is the push u (clipped for length). Cost is the sum of xᵀQx + uᵀRu over 5 s. No input limit, as in the lesson rollout.',
-      'Lesson과 같이 dt = 0.05 s의 double integrator(위치와 속도, 입력은 한 step 동안 붙드는 가속도)와 Q = diag(1, 0.1)입니다. Slider는 노력 가중치 R로 0.01부터 1까지이며 lesson이 출력하는 두 값을 포함합니다. K는 Riccati recursion으로 구하고 u = −Kx 입니다. Cart는 목표에서 1 m 떨어진 정지 상태에서 출발하며(lesson이 주지 않은 시작점) 점은 지나온 자리, 초록 화살표는 미는 힘 u입니다(길이는 잘랐습니다). Cost는 5초 동안 xᵀQx + uᵀRu의 합입니다. Lesson의 rollout처럼 입력 한계는 없습니다.'],
+      '레슨과 같이 dt = 0.05 s의 double integrator(위치와 속도, 입력은 한 step 동안 붙드는 가속도)와 Q = diag(1, 0.1)입니다. Slider는 노력 가중치 R로 0.01부터 1까지이며 레슨이 출력하는 두 값을 포함합니다. K는 Riccati recursion으로 구하고 u = −Kx 입니다. Cart는 목표에서 1 m 떨어진 정지 상태에서 출발하며(레슨이 주지 않은 시작점) 점은 지나온 자리, 초록 화살표는 미는 힘 u입니다(길이는 잘랐습니다). Cost는 5초 동안 xᵀQx + uᵀRu의 합입니다. 레슨의 rollout처럼 입력 한계는 없습니다.'],
     period: 14, rest: 13.9, H: 320, unit: 120, look: [0, 0, 0], oy: 20,
     cam: {yaw: .3, pitch: .35, dist: 7},
     controls: [{id: 'lr', en: 'effort weight R (log10)', ko: '노력 가중치 R (log10)', min: -2, max: 0, step: .1, dec: 1, val: -2, auto: t => t < 7 ? -2 : 0}],
@@ -289,7 +289,7 @@
     en: 'Two identical arms swing freely with no motor torque. One uses the derived Coriolis term, the other has its sign flipped, and only the first keeps its kinetic energy',
     ko: '모터 torque 없이 똑같은 팔 두 개가 자유롭게 휘두릅니다. 하나는 유도한 Coriolis 항을 쓰고 다른 하나는 부호를 뒤집었으며, 운동 energy를 지키는 것은 앞의 것뿐입니다',
     cap: ['Lesson arm (m1 = 1, m2 = 1.5 kg, l1 = 0.5, lc1 = 0.2, lc2 = 0.3 m, I1 = 0.03, I2 = 0.05) from q = (0.3, 1.0) rad at q̇ = (2, −1) rad/s, no torque, RK4 at 2 ms for 1 s, horizontal plane. Left: τ = M q̈ + h from the Lagrange route. Right: the same with the Coriolis sign flipped. Each bar is the kinetic energy relative to its start; free motion must not gain energy. The text line compares the Lagrange torque with the Newton–Euler torque at one state (q̈ = (1, −0.5)). Link 2 is drawn 0.6 m long (twice lc2), which the lesson does not state.',
-      'Lesson의 팔(m1 = 1, m2 = 1.5 kg, l1 = 0.5, lc1 = 0.2, lc2 = 0.3 m, I1 = 0.03, I2 = 0.05)이 q = (0.3, 1.0) rad, q̇ = (2, −1) rad/s에서 torque 없이 1초 동안 움직입니다. RK4 2 ms, 수평면입니다. 왼쪽은 Lagrange 방식의 τ = M q̈ + h를 쓰고, 오른쪽은 Coriolis 부호를 뒤집었습니다. 막대는 시작 값 대비 운동 energy이며 자유 운동에서 energy가 늘면 안 됩니다. 글줄은 한 상태(q̈ = (1, −0.5))에서 Lagrange torque와 Newton–Euler torque를 비교합니다. Link 2는 lc2의 두 배인 0.6 m로 그렸으며 lesson에는 없는 값입니다.'],
+      '레슨의 팔(m1 = 1, m2 = 1.5 kg, l1 = 0.5, lc1 = 0.2, lc2 = 0.3 m, I1 = 0.03, I2 = 0.05)이 q = (0.3, 1.0) rad, q̇ = (2, −1) rad/s에서 torque 없이 1초 동안 움직입니다. RK4 2 ms, 수평면입니다. 왼쪽은 Lagrange 방식의 τ = M q̈ + h를 쓰고, 오른쪽은 Coriolis 부호를 뒤집었습니다. 막대는 시작 값 대비 운동 energy이며 자유 운동에서 energy가 늘면 안 됩니다. 글줄은 한 상태(q̈ = (1, −0.5))에서 Lagrange torque와 Newton–Euler torque를 비교합니다. Link 2는 lc2의 두 배인 0.6 m로 그렸으며 레슨에는 없는 값입니다.'],
     period: 6, rest: 6, H: 340, unit: 130, look: [0, .35, 0], oy: 36,
     cam: {yaw: .1, pitch: 1.0, dist: 7},
     controls: [{id: 'time', en: 'time', ko: '시간', min: 0, max: 1, step: .01, dec: 2, unit: ' s', val: 1, auto: t => Math.min(1, t / 5)}],
@@ -336,7 +336,7 @@
     en: 'A cart on a rail plans a short run of pushes ahead, applies only the first, then plans again. A longer look-ahead brakes earlier, and a push limit forces it to plan around it',
     ko: '레일 위의 cart가 앞으로의 짧은 입력열을 계획하고 첫 입력만 적용한 뒤 다시 계획합니다. 더 멀리 내다보면 일찍 브레이크를 걸고, 입력 한계가 있으면 그것을 피해 계획합니다',
     cap: ['Receding-horizon plan for the lesson double integrator (dt = 0.1 s, Q = diag(1, 0.1), R = 0.1, terminal cost from the Riccati recursion), starting 4 m from the target at rest, 60 steps, each plan found by 800 projected-gradient iterations within |u| ≤ the limit. The orange dots are the positions the current plan predicts; the green arrow is the push actually applied. The lesson plan uses 15 steps and a limit of 1.0. A very short horizon or a tight limit overshoots or crawls. Changing a slider replans all 60 steps, which takes a moment.',
-      'Lesson의 double integrator(dt = 0.1 s, Q = diag(1, 0.1), R = 0.1, terminal cost는 Riccati recursion)를 receding horizon으로 계획합니다. 목표에서 4 m 떨어진 정지 상태에서 출발해 60 step을 가며, 각 계획은 |u| ≤ 한계 안에서 projected gradient 800번으로 풉니다. 주황 점은 현재 계획이 예측한 위치이고 초록 화살표는 실제로 적용한 입력입니다. Lesson은 15 step과 한계 1.0을 씁니다. 너무 짧은 horizon이나 빡빡한 한계는 overshoot하거나 기어갑니다. Slider를 바꾸면 60번의 계획을 다시 세우므로 잠시 걸립니다.'],
+      '레슨의 double integrator(dt = 0.1 s, Q = diag(1, 0.1), R = 0.1, terminal cost는 Riccati recursion)를 receding horizon으로 계획합니다. 목표에서 4 m 떨어진 정지 상태에서 출발해 60 step을 가며, 각 계획은 |u| ≤ 한계 안에서 projected gradient 800번으로 풉니다. 주황 점은 현재 계획이 예측한 위치이고 초록 화살표는 실제로 적용한 입력입니다. 레슨은 15 step과 한계 1.0을 씁니다. 너무 짧은 horizon이나 빡빡한 한계는 overshoot하거나 기어갑니다. Slider를 바꾸면 60번의 계획을 다시 세우므로 잠시 걸립니다.'],
     period: 8, rest: 8, H: 320, unit: 80, look: [2, 0, 0], oy: 20,
     cam: {yaw: .3, pitch: .4, dist: 7},
     controls: [
@@ -375,7 +375,7 @@
     en: 'A marble rolls in a bowl whose height is the energy-like function V. With enough damping it always runs downhill, and with negative damping or a late rate signal it climbs',
     ko: 'Bowl의 높이가 energy 같은 함수 V인 곳에서 구슬이 구릅니다. Damping이 충분하면 늘 내리막이고, 음의 damping이나 늦은 rate 신호가 있으면 오르막을 탑니다',
     cap: ['Pendulum with the lesson PD law: g/l = 9.81, friction c = 0.1, kp = 10, and V = ½ω² + (g/l)(1 − cos θ) + ½ kp θ². The bowl is V over the angle θ (−3 to 3 rad) and rate ω (−8 to 8 rad/s). The marble starts at θ = 2 rad at rest (the lesson samples random states instead) and follows the lesson simulation for 10 s. With no delay dV/dt = −(c + kd) ω², so the marble goes downhill when c + kd ≥ 0; the delay slider feeds the controller a rate that is that many seconds old, as the lesson does with 0.3 s.',
-      'Lesson의 PD 법칙을 쓰는 진자입니다. g/l = 9.81, 마찰 c = 0.1, kp = 10이고 V = ½ω² + (g/l)(1 − cos θ) + ½ kp θ² 입니다. Bowl은 각도 θ(−3~3 rad)와 속도 ω(−8~8 rad/s)에 대한 V입니다. 구슬은 θ = 2 rad의 정지 상태에서 출발하며(lesson은 무작위 상태를 뽑습니다) lesson simulation을 10초 따라갑니다. Delay가 없으면 dV/dt = −(c + kd) ω² 이므로 c + kd ≥ 0일 때 구슬은 내리막입니다. Delay slider는 controller가 그 시간만큼 옛 rate를 보게 하며 lesson은 0.3초를 씁니다.'],
+      '레슨의 PD 법칙을 쓰는 진자입니다. g/l = 9.81, 마찰 c = 0.1, kp = 10이고 V = ½ω² + (g/l)(1 − cos θ) + ½ kp θ² 입니다. Bowl은 각도 θ(−3~3 rad)와 속도 ω(−8~8 rad/s)에 대한 V입니다. 구슬은 θ = 2 rad의 정지 상태에서 출발하며(레슨은 무작위 상태를 뽑습니다) 레슨 simulation을 10초 따라갑니다. Delay가 없으면 dV/dt = −(c + kd) ω² 이므로 c + kd ≥ 0일 때 구슬은 내리막입니다. Delay slider는 controller가 그 시간만큼 옛 rate를 보게 하며 레슨은 0.3초를 씁니다.'],
     period: 10, rest: 10, H: 350, unit: 108, look: [0, 0, .1], oy: 30,
     cam: {yaw: .55, pitch: .55, dist: 7},
     controls: [

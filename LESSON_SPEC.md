@@ -14,6 +14,7 @@ phases/NN-slug/NN-lesson-slug/
   assets/                       generated .excalidraw, .svg, .png. Commit them.
   quiz.json  quiz.ko.json       6 questions: 1 pre, 3 check, 2 post; same ids, same answer index
   outputs/skill-<slug>.md       English harness file, front matter name and description (when to call it)
+  fun.json                      website extras: en and ko text, plus the names of the lesson's toy, motion and three (3D scene)
 ```
 
 ## Doc shape: at most 540 English words outside code blocks, at least 3 images
@@ -202,6 +203,7 @@ d.save(OUT / "diagram-name.excalidraw")
 - At most 8 boxes per diagram, 2 lines per box, short words. Colour carries meaning: blue input, yellow real world, red problem, purple transform, green result, gray neutral.
 - Data figures (matplotlib, Agg backend): 1200x675 px or smaller, English labels only, axis names with units, a title that states the takeaway, colour-blind-safe colours (`#0072B2` blue, `#D55E00` orange, `#555555` gray), seeded, no external data.
 - Captions live in each language's doc, so one image serves every language.
+- Every lesson has one 3D scene. `fun.json` names it (`"three": "<name>-3d"`), and `scripts/motion3d/pNN.js` for the lesson's phase registers it with `window.MOTION.three(name, spec, frame)`. The spec needs `en`, `ko` and a two-line `cap`. The scene computes the lesson's own formula, draws only with the engine in `scripts/motion3d/00-engine.js` (Canvas 2D, no library, no network), and each phase file stays under 45 KB. `scripts/tests_robo/test_motion3d_wave2.py` checks that the registered scenes and the `three` names match.
 - Look at every PNG with the Read tool before reporting. Check clipped or overlapping text, crossing arrows, and whether the picture shows what the caption claims. Fix and rebuild.
 
 ## Content rules

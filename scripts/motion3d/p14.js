@@ -1,4 +1,4 @@
-// 14단계 3D: lesson의 ring consensus를 세 좌표에 각각 적용하고 보존되는 평균을 표시한다.
+// 14단계 3D: 레슨의 ring consensus를 세 좌표에 각각 적용하고 보존되는 평균을 표시한다.
 (() => {
   const N = 8, X0 = [4, -1, 2, 7, 0, 3, -5, 1], MEAN = X0.reduce((a, b) => a + b, 0) / N;
   // Coordinate permutations turn the lesson's scalar fixture into a spatial cloud.
@@ -17,7 +17,7 @@
     en: 'Eight agents in three-dimensional state space average with their ring neighbours; every coordinate converges to the unchanged initial average',
     ko: '3차원 상태 공간의 agent 여덟 개가 ring 이웃과 값을 나눕니다. 모든 좌표가 처음 평균을 유지하며 그 값으로 모입니다',
     cap: ['Apply x ← (I − εL)x independently to each coordinate on the lesson’s eight-agent ring. Initial y and z are permutations of its x values, so all three averages are 11/8 = 1.375. Faint dots show the start; the small green cross marks the fixed average. The rest frame shows partial convergence, with current agents still separate from the cross. Playback spends more time on the early updates. The gain range 0…0.25 keeps ελmax ≤ 1 for this ring (λmax=4).',
-      'lesson의 여덟 agent ring에서 각 좌표에 x ← (I − εL)x를 적용합니다. 초기 y와 z는 x값의 순서만 바꿨으므로 세 좌표의 평균은 모두 11/8 = 1.375입니다. 흐린 점은 시작점이고 작은 초록색 십자는 고정된 평균입니다. 정지 화면은 수렴 중간을 보여 주므로 현재 agent 점들이 십자와 구분됩니다. 재생할 때는 초기 update를 더 천천히 보여 줍니다. Gain 범위 0…0.25에서는 이 ring의 ελmax가 1 이하입니다(λmax=4).'],
+      '레슨의 여덟 agent ring에서 각 좌표에 x ← (I − εL)x를 적용합니다. 초기 y와 z는 x값의 순서만 바꿨으므로 세 좌표의 평균은 모두 11/8 = 1.375입니다. 흐린 점은 시작점이고 작은 초록색 십자는 고정된 평균입니다. 정지 화면은 수렴 중간을 보여 주므로 현재 agent 점들이 십자와 구분됩니다. 재생할 때는 초기 update를 더 천천히 보여 줍니다. Gain 범위 0…0.25에서는 이 ring의 ελmax가 1 이하입니다(λmax=4).'],
     period: 12, rest: 3, H: 400, unit: 100, look: centre, oy: 20,
     cam: {yaw: -.3, pitch: .8, dist: 8},
     controls: [{id: 'gain', en: 'coupling ε', ko: 'coupling ε', min: 0, max: .25, step: .01, dec: 2, val: .05},
@@ -81,7 +81,7 @@
     en: 'Floor robots take the nearest free job one after another; the Hungarian assignment looks at every pairing and finishes with less total travel',
     ko: '바닥 로봇들이 차례로 가장 가까운 빈 일을 집습니다. Hungarian 배정은 모든 짝을 보고 총 이동 거리를 더 줄입니다',
     cap: ['Robots R0–R7 and jobs J0–J7 are the lesson’s 8 + 8 points in the unit square (numpy seed 0), cost = straight-line distance. Red lines are greedy: R0 first, each takes the nearest job still free. Green lines are the Hungarian optimum, lifted above the floor. The slider chooses how many robots and jobs take part (the first n of each); the second slider reveals the greedy picks one at a time. At n = 8 the lesson prints 2.2533 for greedy and 2.2334 for Hungarian, a small gap on this fixture. The square is drawn 2.4 times larger than the lesson’s unit. Playback shows n = 3 first, where the gap is wide, then the lesson’s n = 8.',
-      'R0–R7 로봇과 J0–J7 일은 lesson의 단위 정사각형 안 8 + 8개 점(numpy seed 0)이고 cost는 직선 거리입니다. 빨간 선은 greedy로 R0부터 차례로 아직 비어 있는 가장 가까운 일을 집습니다. 초록 선은 Hungarian 최적 배정이며 바닥에서 띄워 그렸습니다. 첫 슬라이더는 참여하는 로봇과 일의 수를 고르고(각각 앞의 n개) 둘째 슬라이더는 greedy가 고르는 순서를 하나씩 보여 줍니다. n = 8일 때 lesson은 greedy 2.2533, Hungarian 2.2334를 출력하며 이 fixture에서는 차이가 작습니다. 정사각형은 lesson의 단위보다 2.4배 크게 그렸습니다. 재생은 차이가 큰 n = 3을 먼저 보여 준 뒤 lesson의 n = 8을 보여 줍니다.'],
+      'R0–R7 로봇과 J0–J7 일은 레슨의 단위 정사각형 안 8 + 8개 점(numpy seed 0)이고 cost는 직선 거리입니다. 빨간 선은 greedy로 R0부터 차례로 아직 비어 있는 가장 가까운 일을 집습니다. 초록 선은 Hungarian 최적 배정이며 바닥에서 띄워 그렸습니다. 첫 슬라이더는 참여하는 로봇과 일의 수를 고르고(각각 앞의 n개) 둘째 슬라이더는 greedy가 고르는 순서를 하나씩 보여 줍니다. n = 8일 때 레슨은 greedy 2.2533, Hungarian 2.2334를 출력하며 이 fixture에서는 차이가 작습니다. 정사각형은 레슨의 단위보다 2.4배 크게 그렸습니다. 재생은 차이가 큰 n = 3을 먼저 보여 준 뒤 레슨의 n = 8을 보여 줍니다.'],
     period: 12, rest: 11.5, H: 340, unit: 120, look: [0, 0, 0], oy: 8, cam: {yaw: -.1, pitch: .9, dist: 7},
     controls: [{id: 'n', en: 'robots and jobs n', ko: '로봇과 일의 수 n', min: 3, max: 8, step: 1, auto: t => t < 6 ? 3 : 8},
       {id: 'reveal', en: 'greedy picks shown', ko: 'greedy가 고른 수', min: 0, max: 8, step: 1, auto: t => Math.floor(clamp((t % 6) / .6, 0, 8))}],
@@ -153,7 +153,7 @@
     en: 'Four floor robots on a 2 by 2 grid each wait for the robot ahead and none can move; reserving a whole route before entering breaks the circle',
     ko: '2 × 2 격자 위 바닥 로봇 넷이 각자 앞 로봇을 기다려 아무도 못 움직입니다. 들어가기 전에 경로 전체를 예약하면 그 고리가 풀립니다',
     cap: ['The four jobs are the lesson’s ring: (0,0)→(1,1), (1,0)→(1,1), (1,1)→(0,1), (0,1)→(0,0), each driving x first and then y. A grid node holds one robot at a time. Red arrows point from a robot to the robot it waits for; a closed loop of them is the lesson’s find_cycle result. The first switch is the lesson’s admission policy: naive admits a robot once its start node is free, reserve admits it only when its whole route is free and then holds the route. The slider K is how many robots may be on the grid at once. A blue tint on a pad marks a reserved route node. Robots that have finished sit in the row at the right.',
-      '네 작업은 lesson의 ring입니다. (0,0)→(1,1), (1,0)→(1,1), (1,1)→(0,1), (0,1)→(0,0)이고 모두 x를 먼저 간 뒤 y로 갑니다. 격자 node에는 한 번에 로봇 하나만 있을 수 있습니다. 빨간 화살표는 로봇이 기다리는 로봇을 가리키며 이 화살표가 닫힌 고리가 되면 lesson의 find_cycle 결과입니다. 첫 번째 스위치가 lesson의 admission policy입니다. naive는 출발 node가 비면 들여보내고 reserve는 경로 전체가 비어 있을 때만 들여보낸 뒤 경로를 잡아 둡니다. 슬라이더 K는 격자 위에 동시에 올라올 수 있는 로봇 수입니다. 패드의 파란 색조는 예약된 경로 node이고 일을 마친 로봇은 오른쪽 줄에 둡니다.'],
+      '네 작업은 레슨의 ring입니다. (0,0)→(1,1), (1,0)→(1,1), (1,1)→(0,1), (0,1)→(0,0)이고 모두 x를 먼저 간 뒤 y로 갑니다. 격자 node에는 한 번에 로봇 하나만 있을 수 있습니다. 빨간 화살표는 로봇이 기다리는 로봇을 가리키며 이 화살표가 닫힌 고리가 되면 레슨의 find_cycle 결과입니다. 첫 번째 스위치가 레슨의 admission policy입니다. naive는 출발 node가 비면 들여보내고 reserve는 경로 전체가 비어 있을 때만 들여보낸 뒤 경로를 잡아 둡니다. 슬라이더 K는 격자 위에 동시에 올라올 수 있는 로봇 수입니다. 패드의 파란 색조는 예약된 경로 node이고 일을 마친 로봇은 오른쪽 줄에 둡니다.'],
     period: 12, rest: 3, H: 340, unit: 98, look: [0, 0, 0], oy: 4, cam: {yaw: -.1, pitch: .85, dist: 7},
     controls: [{id: 'reserve', toggle: true, en: 'reserve the whole route', ko: '경로 전체를 예약', auto: t => t >= 6},
       {id: 'K', en: 'robots allowed on the grid K', ko: '격자에 올라올 수 있는 로봇 수 K', min: 1, max: 4, step: 1, val: 4}],

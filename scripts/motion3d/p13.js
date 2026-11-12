@@ -1,4 +1,4 @@
-// Phase 13: 수업 gridworld의 Bellman sweep마다 value bar와 greedy policy를 그린다.
+// Phase 13: 레슨 gridworld의 Bellman sweep마다 value bar와 greedy policy를 그린다.
 (() => {
   const I = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
   const layout = ['......G', '.##.##.', '...X...', '.#.##..', '.......'];
@@ -46,7 +46,7 @@
     en: 'Value iteration spreads the goal reward through a slippery gridworld',
     ko: '미끄러지는 gridworld에서 value iteration으로 goal의 보상이 퍼집니다',
     cap: ['The lesson map uses slip=0.2 and γ=0.9. Signed bar height is 0.65V(s); arrows above the bars show greedy actions for the displayed V and are drawn in front. Reward is paid on entering G (+1) or X (−1), so both terminal states have V=0. Walls block moves. Each sweep updates all states from the previous sweep.',
-      '수업 지도는 slip=0.2와 γ=0.9를 씁니다. Bar 높이는 부호를 포함한 0.65V(s)이며 bar 위의 화살표는 현재 V에서의 greedy action입니다. 화살표를 앞에 그려 가려지지 않게 합니다. G(+1)나 X(−1)에 들어갈 때 보상을 받으므로 두 terminal state의 V는 0입니다. Wall은 이동을 막으며 매 sweep은 이전 sweep의 값으로 모든 state를 갱신합니다.'],
+      '레슨 지도는 slip=0.2와 γ=0.9를 씁니다. Bar 높이는 부호를 포함한 0.65V(s)이며 bar 위의 화살표는 현재 V에서의 greedy action입니다. 화살표를 앞에 그려 가려지지 않게 합니다. G(+1)나 X(−1)에 들어갈 때 보상을 받으므로 두 terminal state의 V는 0입니다. Wall은 이동을 막으며 매 sweep은 이전 sweep의 값으로 모든 state를 갱신합니다.'],
     period: 12, rest: 7, H: 400, unit: 42, look: [0, 0, .15], oy: 3,
     cam: { yaw: .3, pitch: .9, dist: 20 }, model,
     controls: [{ id: 'sweep', en: 'Bellman sweep', ko: 'Bellman sweep', min: 0, max: sweeps, step: 1,
@@ -150,7 +150,7 @@
     en: 'A floor robot learns to drive around a post by copying demonstrations; more demonstrations make its 3-nearest-neighbour copy reach the goal',
     ko: '바닥 로봇이 기둥을 돌아 가는 시연을 따라 배웁니다. 시연이 늘어날수록 3-nearest-neighbour 복사본이 목표에 닿습니다',
     cap: ['Grey lines are expert demonstrations (n of them, 120 steps each) around a post of radius 0.3 m toward the goal at (1, 0). The robot replays the mean action of the 3 nearest stored states, as fit_knn does in the lesson. Green paths reached the goal within 0.1 m without touching the post; red ones did not. The success count is over 20 fixed test starts in the lesson’s start box, so it differs from the lesson’s printed rates because the starts are drawn by a different random generator.',
-      '회색 선은 expert 시연(n개, 각 120 step)이며 반지름 0.3 m 기둥을 돌아 (1, 0)의 목표로 갑니다. 로봇은 lesson의 fit_knn처럼 가장 가까운 저장 상태 3개의 평균 action을 따라 합니다. 초록 경로는 기둥을 건드리지 않고 목표 0.1 m 안에 닿은 경우이고 빨강은 실패한 경우입니다. 성공 횟수는 lesson의 시작 영역에서 고정한 test start 20개로 센 값이라 난수 생성기가 달라 lesson이 출력한 비율과는 다릅니다.'],
+      '회색 선은 expert 시연(n개, 각 120 step)이며 반지름 0.3 m 기둥을 돌아 (1, 0)의 목표로 갑니다. 로봇은 레슨의 fit_knn처럼 가장 가까운 저장 상태 3개의 평균 action을 따라 합니다. 초록 경로는 기둥을 건드리지 않고 목표 0.1 m 안에 닿은 경우이고 빨강은 실패한 경우입니다. 성공 횟수는 레슨의 시작 영역에서 고정한 test start 20개로 센 값이라 난수 생성기가 달라 레슨이 출력한 비율과는 다릅니다.'],
     period: 12, rest: 3, H: 340, unit: 128, look: [-.12, 0, 0], oy: 8, cam: {yaw: -.05, pitch: .8, dist: 7},
     controls: [{id: 'n', en: 'demonstrations n', ko: '시연 수 n', min: 1, max: 30, step: 1, auto: t => [1, 3, 10, 30][Math.floor(t / 3) % 4]}],
   }, (s, t, m) => {
@@ -198,8 +198,8 @@
   window.MOTION.three('bc-drift-3d', {
     en: 'A cloned floor robot is nudged by execution noise away from the demonstrated states; each DAgger round adds the states it wandered into',
     ko: '행동 복제된 바닥 로봇이 실행 noise에 밀려 시연한 상태에서 벗어납니다. DAgger를 한 라운드 돌릴 때마다 헤맨 상태가 데이터에 더해집니다',
-    cap: ['Grey dots are the 4 expert demonstrations (480 states); green dots are states the noisy learner visited and the expert relabelled, 5 rollouts per DAgger round. Velocity noise is 0.8 on the commanded velocity, as in the lesson. One data set is drawn, the one whose success without DAgger is closest to the 6-set average (8 of its 12 noisy test rollouts; green reached the goal within 0.15 m clear of the post, red did not). The success rate and the mean distance to the nearest stored state average 6 independent data sets, because 4 demonstrations vary a lot from set to set. The lesson prints 0.525, 0.9 and 0.933 at 0, 2 and 4 rounds; this picture’s random generator gives different numbers with the same trend.',
-      '회색 점은 expert 시연 4개(상태 480개)이고 초록 점은 noise가 낀 learner가 방문해 expert가 다시 label한 상태로 DAgger 라운드마다 rollout 5개입니다. 속도 noise는 lesson처럼 명령 속도에 0.8을 더합니다. 데이터 세트 하나만 그렸고 DAgger 없을 때 성공률이 6개 평균에 가장 가까운 세트입니다(noisy test rollout 12개 중 8개, 초록은 기둥을 피해 목표 0.15 m 안에 도착, 빨강은 실패) 성공률과 가장 가까운 저장 상태까지의 평균 거리는 독립 데이터 세트 6개의 평균입니다. 시연 4개는 세트마다 편차가 크기 때문입니다. Lesson은 0, 2, 4라운드에서 0.525, 0.9, 0.933을 출력하며 이 그림은 난수 생성기가 달라 숫자는 다르고 추세는 같습니다.'],
+    cap: ['Grey dots are the 4 expert demonstrations (480 states); green dots are states the noisy learner visited and the expert relabelled, 5 rollouts per DAgger round. Velocity noise is 0.8 on the commanded velocity, as in the lesson. One data set is drawn, the one whose success without DAgger is closest to the 6-set average (9 of its 12 noisy test rollouts; green reached the goal within 0.15 m clear of the post, red did not). The success rate and the mean distance to the nearest stored state average 6 independent data sets, because 4 demonstrations vary a lot from set to set. The lesson prints 0.525, 0.9 and 0.933 at 0, 2 and 4 rounds; this picture’s random generator gives different numbers with the same trend.',
+      '회색 점은 expert 시연 4개(상태 480개)이고 초록 점은 noise가 낀 learner가 방문해 expert가 다시 label한 상태로 DAgger 라운드마다 rollout 5개입니다. 속도 noise는 레슨처럼 명령 속도에 0.8을 더합니다. 데이터 세트 하나만 그렸고 DAgger 없을 때 성공률이 6개 평균에 가장 가까운 세트입니다(noisy test rollout 12개 중 9개, 초록은 기둥을 피해 목표 0.15 m 안에 도착, 빨강은 실패) 성공률과 가장 가까운 저장 상태까지의 평균 거리는 독립 데이터 세트 6개의 평균입니다. 시연 4개는 세트마다 편차가 크기 때문입니다. 레슨은 0, 2, 4라운드에서 0.525, 0.9, 0.933을 출력하며 이 그림은 난수 생성기가 달라 숫자는 다르고 추세는 같습니다.'],
     period: 12, rest: 9, H: 340, unit: 128, look: [-.12, 0, 0], oy: 8, cam: {yaw: -.05, pitch: .8, dist: 7},
     controls: [{id: 'r', en: 'DAgger rounds', ko: 'DAgger 라운드', min: 0, max: 4, step: 1, auto: t => Math.floor(t / 2.4) % 5}],
   }, (s, t, m) => {
@@ -238,7 +238,7 @@
     en: 'A cart on a rail is trained by sampled episodes; subtracting the average return of the other episodes tightens the spread of the gradient estimate',
     ko: '레일 위 수레를 sample한 episode로 학습시킵니다. 다른 episode들의 평균 return을 빼면 gradient 추정값의 퍼짐이 줄어듭니다',
     cap: ['Back wall: 8 sampled episodes of the lesson’s 1-D reach task at theta = (0, 0) (policy a ~ N(0, 0.5²), x′ = x + 0.2a, 15 steps, time upward); the cart replays the first one. Front: each dot is one estimate of the w-gradient from a batch of the chosen size, 40 batches per row. Top row has no baseline, bottom row subtracts the leave-one-out mean return-to-go. Both rows centre on the same value (the baseline stays unbiased); only the spread changes. The lesson’s reward includes a +3 per-step alive bonus, which is what makes the no-baseline spread large. Only the w part of the gradient is drawn.',
-      '뒤쪽 벽에는 lesson의 1차원 도달 과제를 theta = (0, 0)에서 sample한 episode 8개를 그렸습니다(policy a ~ N(0, 0.5²), x′ = x + 0.2a, 15 step, 위쪽이 시간). 수레는 첫 episode를 재생합니다. 앞쪽의 점 하나는 고른 크기의 batch로 구한 w-gradient 추정값 하나이며 한 줄에 batch 40개입니다. 위 줄은 baseline이 없고 아래 줄은 나머지 episode의 평균 return-to-go를 뺍니다. 두 줄은 같은 값을 중심으로 모이고(baseline은 unbiased) 퍼짐만 달라집니다. Lesson의 reward에는 step마다 +3인 alive bonus가 들어 있고 이것이 baseline이 없을 때 퍼짐을 키웁니다. Gradient 중 w 성분만 그렸습니다.'],
+      '뒤쪽 벽에는 레슨의 1차원 도달 과제를 theta = (0, 0)에서 sample한 episode 8개를 그렸습니다(policy a ~ N(0, 0.5²), x′ = x + 0.2a, 15 step, 위쪽이 시간). 수레는 첫 episode를 재생합니다. 앞쪽의 점 하나는 고른 크기의 batch로 구한 w-gradient 추정값 하나이며 한 줄에 batch 40개입니다. 위 줄은 baseline이 없고 아래 줄은 나머지 episode의 평균 return-to-go를 뺍니다. 두 줄은 같은 값을 중심으로 모이고(baseline은 unbiased) 퍼짐만 달라집니다. 레슨의 reward에는 step마다 +3인 alive bonus가 들어 있고 이것이 baseline이 없을 때 퍼짐을 키웁니다. Gradient 중 w 성분만 그렸습니다.'],
     period: 12, rest: 3, H: 360, unit: 105, look: [0, .5, .35], oy: 20, cam: {yaw: -.1, pitch: .5, dist: 7},
     controls: [{id: 'B', en: 'batch size', ko: 'batch 크기', min: 2, max: 32, step: 1, auto: t => Math.round(2 + 30 * (1 + Math.cos(2 * PI * t / 12)) / 2)}],
   }, (s, t, m) => {
@@ -284,7 +284,7 @@
     en: 'Two carts get the same flaky learned commands; the one behind the safety wrapper stays within 1.0 while the bare one runs off the rail',
     ko: '같은 불안정한 learned 명령을 받는 수레 둘 중 안전 wrapper 뒤의 수레는 1.0 안에 머물고 맨 수레는 레일 밖으로 달려갑니다',
     cap: ['Both carts start at x = 1 and should go to 0 with the policy u = −2x. Ticks 20–27 flip it to +8, tick 45 returns NaN, and ticks 70–84 drop the observation (15 ticks, longer than the 10-tick deadline). The near cart gets the raw command (NaN becomes 0, clipped at ±10). The far cart sits behind the lesson’s Wrapper: clip to ±1, change per tick at most the slider value, hold a stale observation, fall back to 0 after the deadline. The arrow on each cart is the command it executes. Height above each rail is time (140 ticks of 0.05 s). Counts are the wrapper’s interventions so far; at the end with 0.2 they are clip 20, rate 9, nonfinite 1, hold 10, fallback 5, the lesson’s printed log.',
-      '두 수레 모두 x = 1에서 출발해 policy u = −2x로 0에 가야 합니다. 20–27 tick에는 부호가 뒤집혀 +8이 되고 45 tick에는 NaN이 나오며 70–84 tick에는 관측이 끊깁니다(15 tick으로 10 tick deadline보다 깁니다). 가까운 수레는 raw 명령을 그대로 받습니다(NaN은 0, ±10에서 clip). 먼 수레는 lesson의 Wrapper 뒤에 있어서 ±1로 clip하고 tick당 변화량을 슬라이더 값 이하로 제한하며 오래된 관측은 hold하고 deadline이 지나면 0으로 fallback합니다. 수레의 화살표는 실제로 실행한 명령입니다. 각 레일 위쪽 높이는 시간입니다(0.05 s tick 140개). 개수는 wrapper가 지금까지 개입한 횟수이고 0.2로 끝까지 가면 clip 20, rate 9, nonfinite 1, hold 10, fallback 5로 lesson이 출력한 log와 같습니다.'],
+      '두 수레 모두 x = 1에서 출발해 policy u = −2x로 0에 가야 합니다. 20–27 tick에는 부호가 뒤집혀 +8이 되고 45 tick에는 NaN이 나오며 70–84 tick에는 관측이 끊깁니다(15 tick으로 10 tick deadline보다 깁니다). 가까운 수레는 raw 명령을 그대로 받습니다(NaN은 0, ±10에서 clip). 먼 수레는 레슨의 Wrapper 뒤에 있어서 ±1로 clip하고 tick당 변화량을 슬라이더 값 이하로 제한하며 오래된 관측은 hold하고 deadline이 지나면 0으로 fallback합니다. 수레의 화살표는 실제로 실행한 명령입니다. 각 레일 위쪽 높이는 시간입니다(0.05 s tick 140개). 개수는 wrapper가 지금까지 개입한 횟수이고 0.2로 끝까지 가면 clip 20, rate 9, nonfinite 1, hold 10, fallback 5로 레슨이 출력한 log와 같습니다.'],
     period: 12, rest: 5, H: 360, unit: 76, look: [1.1, 0, .35], oy: 22, cam: {yaw: -.05, pitch: .55, dist: 7.5},
     controls: [{id: 'step', en: 'max change per tick', ko: 'tick당 최대 변화', min: .02, max: .5, step: .01, dec: 2, val: .2},
       {id: 'tick', en: 'tick', ko: 'tick', min: 0, max: 139, step: 1, auto: t => Math.floor(clamp((t - .5) / 10, 0, 1) * 139)}],
@@ -361,7 +361,7 @@
     en: 'A floor robot has demonstrations passing left and right of a post; averaging them drives into the post, while sampling an overlapping chunk commits to one side',
     ko: '바닥 로봇은 기둥의 왼쪽과 오른쪽으로 지나간 시연을 가졌습니다. 평균을 내면 기둥에 부딪히고 겹치는 chunk를 sample하면 한쪽을 골라 끝까지 갑니다',
     cap: ['Grey curves are 12 demonstrations (6 over the post, 6 mirrored under it) from (−1, 0) to (1, 0), post radius 0.3 m. The red path is the lesson’s kernel-regression mean policy: the two sides cancel and it goes straight into the post. The coloured paths sample action chunks of length H, overlapping by H/2 as the lesson’s (8, 4) pair does, with the blend ramp of rollout_chunks. Clear rate and jitter are over 50 seeded runs per H. Jitter is the mean change of the action between steps; the lesson prints 0.0342 at H = 1 and 0.0108 at H = 8, and this picture’s random generator gives somewhat different values.',
-      '회색 곡선은 (−1, 0)에서 (1, 0)으로 가는 시연 12개(기둥 위쪽 6개와 거울상 아래쪽 6개)이고 기둥 반지름은 0.3 m입니다. 빨간 경로는 lesson의 kernel-regression 평균 policy로 양쪽이 서로 상쇄되어 기둥으로 곧장 갑니다. 색이 있는 경로는 길이 H인 action chunk를 sample하며 lesson의 (8, 4) 조합처럼 H/2만큼 겹치고 rollout_chunks의 blend ramp를 씁니다. 통과율과 jitter는 H마다 seed를 고정한 50번 실행으로 구했습니다. Jitter는 step 사이 action 변화의 평균이고 lesson은 H = 1에서 0.0342, H = 8에서 0.0108을 출력합니다. 이 그림은 난수 생성기가 달라 값이 조금 다릅니다.'],
+      '회색 곡선은 (−1, 0)에서 (1, 0)으로 가는 시연 12개(기둥 위쪽 6개와 거울상 아래쪽 6개)이고 기둥 반지름은 0.3 m입니다. 빨간 경로는 레슨의 kernel-regression 평균 policy로 양쪽이 서로 상쇄되어 기둥으로 곧장 갑니다. 색이 있는 경로는 길이 H인 action chunk를 sample하며 레슨의 (8, 4) 조합처럼 H/2만큼 겹치고 rollout_chunks의 blend ramp를 씁니다. 통과율과 jitter는 H마다 seed를 고정한 50번 실행으로 구했습니다. Jitter는 step 사이 action 변화의 평균이고 레슨은 H = 1에서 0.0342, H = 8에서 0.0108을 출력합니다. 이 그림은 난수 생성기가 달라 값이 조금 다릅니다.'],
     period: 12, rest: 4, H: 340, unit: 150, look: [0, 0, 0], oy: 8, cam: {yaw: -.05, pitch: .8, dist: 7},
     controls: [{id: 'H', en: 'chunk length H (overlap H/2)', ko: 'chunk 길이 H (겹침 H/2)', min: 1, max: 16, step: 1, auto: t => Math.round(1 + 15 * (1 - Math.cos(2 * PI * t / 12)) / 2)}],
   }, (s, t, m) => {

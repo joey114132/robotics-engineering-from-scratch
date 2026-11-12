@@ -1,4 +1,4 @@
-// 09단계 3D: lesson의 RRT extend와 segment 검사를 구와 3차원 거리로 확장한다.
+// 09단계 3D: 레슨의 RRT extend와 segment 검사를 구와 3차원 거리로 확장한다.
 (() => {
   const R = window.M3D, STEP = .4, SEED = 0;
   const obstacles = [[[5, 5, 5], 2], [[3, 7.5, 5], 1.2], [[7.5, 3, 5], 1.2]];
@@ -59,7 +59,7 @@
     en: 'A seeded RRT grows through a cube around spherical obstacles; short collision-free edges join the start to the goal',
     ko: 'seed를 고정한 RRT가 구형 장애물을 피해 정육면체 안에서 자랍니다. 충돌 없는 짧은 edge를 이어 start에서 goal로 갑니다',
     cap: ['The lesson’s nearest-node step, capped at 0.4, and closest-point segment collision test are extended from 2D circles to 3D spheres. The cube is [0,10]³; z coordinates lift the lesson’s start, goal and obstacle centres. Seed 0 fixes the samples. Dark branches show the search tree; shaded sphere faces obscure branches behind them and rear outlines fade. The green path appears only after the goal connects.',
-      'lesson의 nearest-node step을 최대 0.4로 제한하고 segment의 가장 가까운 점을 검사합니다. 2D 원을 3D 구로 확장한 예입니다. 영역은 [0,10]³이고 lesson의 start, goal, 장애물 중심에 z좌표를 더했습니다. Seed는 0입니다. 진한 가지는 탐색 tree입니다. 구의 음영 면은 뒤쪽 가지를 가리고 뒤쪽 윤곽선은 흐리게 표시합니다. Goal에 연결된 뒤에만 초록색 경로를 표시합니다.'],
+      '레슨의 nearest-node step을 최대 0.4로 제한하고 segment의 가장 가까운 점을 검사합니다. 2D 원을 3D 구로 확장한 예입니다. 영역은 [0,10]³이고 레슨의 start, goal, 장애물 중심에 z좌표를 더했습니다. Seed는 0입니다. 진한 가지는 탐색 tree입니다. 구의 음영 면은 뒤쪽 가지를 가리고 뒤쪽 윤곽선은 흐리게 표시합니다. Goal에 연결된 뒤에만 초록색 경로를 표시합니다.'],
     period: 12, rest: 10, H: 380, unit: 17, look: [5, 5, 5], oy: 10,
     cam: {yaw: .55, pitch: .45, dist: 30},
     controls: [{id: 'growth', en: 'tree fraction', ko: 'tree 진행 비율', min: 0, max: 1, step: .01, dec: 2, auto: t => Math.max(0, Math.min(1, (t - 1) / 8))}],
@@ -117,7 +117,7 @@
     en: 'Three carts travel the same 1 m in the same time; their acceleration curves show which start with a jump',
     ko: '같은 1 m를 같은 시간에 가는 카트 세 대입니다. 가속도 곡선으로 어느 쪽이 튀며 출발하는지 보입니다',
     cap: ['Each lane moves d = 1 m in T s (lesson formulas; trapezoid accelerates for T/4). The curve is acceleration against time, the arrow is acceleration now. Cubic and trapezoid jump at t = 0 (infinite jerk); quintic starts at 0, peak jerk 60 d/T^3 = 7.5 m/s^3 at T = 2.',
-      '세 lane은 lesson의 식대로 1 m를 T초에 이동합니다(trapezoid는 T/4 동안 가속). 곡선은 시간에 따른 가속도, 화살표는 지금의 가속도입니다. cubic과 trapezoid는 t = 0에서 튀고(jerk 무한대) quintic은 0에서 시작하며 T = 2에서 peak jerk 60 d/T^3 = 7.5 m/s^3입니다.'],
+      '세 lane은 레슨의 식대로 1 m를 T초에 이동합니다(trapezoid는 T/4 동안 가속). 곡선은 시간에 따른 가속도, 화살표는 지금의 가속도입니다. cubic과 trapezoid는 t = 0에서 튀고(jerk 무한대) quintic은 0에서 시작하며 T = 2에서 peak jerk 60 d/T^3 = 7.5 m/s^3입니다.'],
     period: 12, rest: 5, H: 350, unit: 230, look: [.5, 0, .15], oy: 26,
     cam: {yaw: .5, pitch: .38, dist: 7},
     controls: [{id: 'T', en: 'move time T', ko: '이동 시간 T', min: 1, max: 3, step: .1, dec: 1, unit: ' s', auto: t => 2 + .9 * Math.sin(2 * PI * t / 12)}],
@@ -154,7 +154,7 @@
     en: 'A robot is checked only at sample points along a corridor with one thin post; coarse samples step over it',
     ko: '복도의 sample 지점에서만 로봇을 검사하면 간격이 클 때 가는 기둥을 건너뜁니다',
     cap: ['Lesson line (0, 0) to (10, 0), post r = 0.1 at x = 5.5, top view at true scale. Dots are checked points (red inside the post); the dashed ring is the post padded by step/2. Plain sampling misses at step 1.0 and 0.4 and hits at 0.1; padding never misses. The robot is a point. The view crops the corridor to x = 2.7 to 8.3.',
-      'Lesson의 선분 (0, 0)~(10, 0)과 x = 5.5의 기둥(r = 0.1)을 실제 척도로 위에서 본 그림입니다. 점은 검사 지점(기둥 안이면 빨강), 점선 고리는 step/2만큼 부풀린 기둥입니다. 점만 검사하면 step 1.0과 0.4에서 놓치고 0.1에서 잡으며 부풀리면 놓치지 않습니다. 로봇은 점이며 화면은 복도의 x = 2.7~8.3만 보여 줍니다.'],
+      '레슨의 선분 (0, 0)~(10, 0)과 x = 5.5의 기둥(r = 0.1)을 실제 척도로 위에서 본 그림입니다. 점은 검사 지점(기둥 안이면 빨강), 점선 고리는 step/2만큼 부풀린 기둥입니다. 점만 검사하면 step 1.0과 0.4에서 놓치고 0.1에서 잡으며 부풀리면 놓치지 않습니다. 로봇은 점이며 화면은 복도의 x = 2.7~8.3만 보여 줍니다.'],
     period: 14, rest: 6, unit: 90, look: [5.5, 0, 0], oy: 8,
     cam: {yaw: .12, pitch: .95, dist: 9},
     controls: [{id: 'step', en: 'sample spacing', ko: 'sample 간격', min: .05, max: 1.2, step: .05, dec: 2, unit: ' m', auto: t => .65 + .55 * Math.cos(2 * PI * t / 14)}],
@@ -197,7 +197,7 @@
     en: 'A cable pulled tight past two posts: smoothness straightens it, the obstacle push keeps it off the posts',
     ko: '두 기둥 옆으로 팽팽히 당긴 줄입니다. 부드러움은 곧게 펴고 장애물의 밀어내는 힘은 기둥에서 떼어 놓습니다',
     cap: ['Top view of the lesson setup: 22 waypoints (0, 0) to (10, 0), radius-1 posts at (3.5, 0.3) and (7, -0.5), margin 0.4 m, 4000 gradient steps at rate 0.04 on smoothness plus wo times squared margin violation. At the lesson wo = 8 the closest approach is 0.388 m outside; at wo = 0 the cable passes through the posts.',
-      '위에서 본 lesson 설정입니다. waypoint 22개가 (0, 0)에서 (10, 0)까지 이어지고 반지름 1인 기둥이 (3.5, 0.3)과 (7, -0.5)에 있으며 margin은 0.4 m입니다. 부드러움 비용과 wo 곱하기 margin 침범 제곱을 gradient descent로 4000번 줄입니다. wo = 8에서 기둥 바깥 0.388 m까지 접근하고 wo = 0이면 기둥을 관통합니다.'],
+      '위에서 본 레슨 설정입니다. waypoint 22개가 (0, 0)에서 (10, 0)까지 이어지고 반지름 1인 기둥이 (3.5, 0.3)과 (7, -0.5)에 있으며 margin은 0.4 m입니다. 부드러움 비용과 wo 곱하기 margin 침범 제곱을 gradient descent로 4000번 줄입니다. wo = 8에서 기둥 바깥 0.388 m까지 접근하고 wo = 0이면 기둥을 관통합니다.'],
     period: 12, rest: 0, unit: 42, look: [5, 0, 0], oy: 10,
     cam: {yaw: .1, pitch: .95, dist: 9},
     controls: [{id: 'wo', en: 'obstacle push wo', ko: '장애물 밀어내는 힘 wo', min: 0, max: 12, step: .25, dec: 2, auto: t => 6 + 6 * Math.cos(2 * PI * t / 12)}],
@@ -241,7 +241,7 @@
     en: 'A floor robot plans through a warehouse; blue tiles are the cells the search opened',
     ko: '창고 바닥에서 로봇이 경로를 찾습니다. 파란 칸은 탐색이 열어 본 칸입니다',
     cap: ['Lesson search: 4-connected, unit cost, f = g + w x Manhattan distance. w = 0 is Dijkstra, 1 is A*, above 1 overestimates and can return a longer path. The floor is a hand-made 18 by 10 map, not the lesson random 40 by 40 grid, so counts differ. Darker tiles were opened later.',
-      'Lesson의 탐색입니다. 4방향, 칸당 비용 1, f = g + w 곱하기 Manhattan 거리입니다. w = 0이 Dijkstra, 1이 A*, 1보다 크면 과대 추정이라 더 긴 경로가 나올 수 있습니다. 바닥은 18 곱하기 10 수제 지도라서 칸 수가 lesson의 무작위 격자와 다릅니다. 진한 칸일수록 늦게 열렸습니다.'],
+      '레슨의 탐색입니다. 4방향, 칸당 비용 1, f = g + w 곱하기 Manhattan 거리입니다. w = 0이 Dijkstra, 1이 A*, 1보다 크면 과대 추정이라 더 긴 경로가 나올 수 있습니다. 바닥은 18 곱하기 10 수제 지도라서 칸 수가 레슨의 무작위 격자와 다릅니다. 진한 칸일수록 늦게 열렸습니다.'],
     period: 16, rest: 0, H: 340, unit: 15, look: [0, 0, 0], oy: 30,
     cam: {yaw: .15, pitch: .85, dist: 9},
     controls: [{id: 'w', en: 'heuristic weight w', ko: 'heuristic 가중치 w', min: 0, max: 6, step: .25, dec: 2, auto: t => 3 - 3 * Math.cos(2 * PI * t / 16)}],

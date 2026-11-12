@@ -26,7 +26,7 @@
     en: 'Three links and joint frames. Craig DH applies the axial offset after the joint turn; URDF folds that offset into the fixed joint origin',
     ko: '세 link와 각 joint의 frame입니다. Craig DH는 joint 회전 뒤에 축 방향 거리를 더하고 URDF는 그 거리를 고정된 joint origin에 넣습니다',
     cap: ['Hollow DH2 is the intermediate Craig frame before Tz(d); solid U2 is the URDF joint origin. Their separation is d along the same joint axis. Completed DH and URDF FK coincide. This spatial example adds a third link to the lesson geometry; x, y, z labels at the base identify the axes used at every joint.',
-      '빈 점 DH2는 Tz(d) 직전의 Craig 중간 frame이고 채운 점 U2는 URDF joint origin입니다. 두 점은 같은 joint 축 위에서 d만큼 떨어져 있습니다. 변환을 끝내면 두 FK는 같습니다. lesson의 기하에 세 번째 link를 더한 예입니다. base의 x, y, z 표시는 모든 joint에서 쓰는 축을 구분합니다.'],
+      '빈 점 DH2는 Tz(d) 직전의 Craig 중간 frame이고 채운 점 U2는 URDF joint origin입니다. 두 점은 같은 joint 축 위에서 d만큼 떨어져 있습니다. 변환을 끝내면 두 FK는 같습니다. 레슨의 기하에 세 번째 link를 더한 예입니다. base의 x, y, z 표시는 모든 joint에서 쓰는 축을 구분합니다.'],
     period: 12, rest: 5, H: 330, unit: 290, look: [.35, 0, .05], oy: 35,
     cam: {yaw: .2, pitch: .45, dist: 7},
     controls: [{id: 'q2', en: 'joint 2', ko: 'joint 2', min: -90, max: 90, step: 1, unit: '°', auto: t => 60 * Math.sin(2 * PI * t / 12)}],
@@ -70,9 +70,9 @@
   }
   window.MOTION.three('singular-reach-3d', {
     en: 'A two-link arm stretches to its maximum reach. The arrow marks the weakest tip-velocity direction, lost at full extension',
-    ko: '두 link로 된 팔을 끝까지 뻗습니다. 화살표는 tip 속도를 내기 가장 어려운 방향이며 완전 신전에서 이 방향을 잃습니다',
+    ko: '두 link로 된 팔을 끝까지 뻗습니다. 화살표는 tip 속도를 내기 가장 어려운 방향이며 팔을 완전히 뻗으면 이 방향을 잃습니다',
     cap: ['The cosine rule turns reach into joint angles for the lesson lengths 0.5 and 0.4 m. Shaded solid links and a blue elbow marker keep the two links distinct even when straight; the floor grid shows depth. The arrow is the smallest left singular vector of J. At 0.9 m reach it is radial and J has rank one; the arm cannot produce velocity along that arrow.',
-      'cosine rule로 reach를 joint 각도로 바꿉니다. Link 길이는 lesson의 0.5 m와 0.4 m입니다. 음영이 있는 link와 파란 elbow 표식으로 팔을 펼쳐도 두 link를 구분합니다. 바닥 grid는 깊이를 보여 줍니다. 화살표는 J의 가장 작은 left singular vector입니다. Reach가 0.9 m이면 이 방향은 팔을 따라 바깥쪽을 향하고 J의 rank는 1이 됩니다. 이때 화살표 방향의 속도를 낼 수 없습니다.'],
+      'cosine rule로 reach를 joint 각도로 바꿉니다. Link 길이는 레슨의 0.5 m와 0.4 m입니다. 음영이 있는 link와 파란 elbow 표식으로 팔을 펼쳐도 두 link를 구분합니다. 바닥 grid는 깊이를 보여 줍니다. 화살표는 J의 가장 작은 left singular vector입니다. Reach가 0.9 m이면 이 방향은 팔을 따라 바깥쪽을 향하고 J의 rank는 1이 됩니다. 이때 화살표 방향의 속도를 낼 수 없습니다.'],
     period: 12, rest: 10, H: 370, unit: 260, look: [.5, 0, -.05], oy: 10,
     cam: {yaw: .25, pitch: .45, dist: 7},
     controls: [{id: 'reach', en: 'reach', ko: 'reach', min: .65, max: .9, step: .001, dec: 3, unit: ' m', auto: t => .65 + .25 * ramp(t)}],
@@ -123,7 +123,7 @@
     en: 'A two-link arm is asked to put its tip on a target. Two elbow poses reach it, and a target outside the reachable band has no pose at all',
     ko: '두 link 팔이 tip을 목표에 놓도록 합니다. 두 가지 elbow 자세가 닿고 도달 가능한 띠 밖의 목표에는 자세가 아예 없습니다',
     cap: ['Link lengths 0.5 and 0.4 m and the law of cosines from the lesson. The lesson target (0.6, 0.3) m is the default: elbow-down (q2 ≥ 0, blue) and elbow-up (q2 ≤ 0, green) both put the tip exactly there. Reach is the band |l1 − l2| = 0.1 m to l1 + l2 = 0.9 m, the two dashed circles; outside it ik raises "unreachable" and no arm is drawn.',
-      'Link 길이 0.5와 0.4 m, 그리고 lesson의 law of cosines를 씁니다. 기본 목표는 lesson의 (0.6, 0.3) m이며 elbow-down(q2 ≥ 0, 파랑)과 elbow-up(q2 ≤ 0, 초록)이 모두 tip을 정확히 그 자리에 놓습니다. 도달 범위는 |l1 − l2| = 0.1 m부터 l1 + l2 = 0.9 m까지의 띠이며 점선 원 두 개입니다. 띠 밖에서는 ik가 "unreachable" 오류를 내므로 팔을 그리지 않습니다.'],
+      'Link 길이 0.5와 0.4 m, 그리고 레슨의 law of cosines를 씁니다. 기본 목표는 레슨의 (0.6, 0.3) m이며 elbow-down(q2 ≥ 0, 파랑)과 elbow-up(q2 ≤ 0, 초록)이 모두 tip을 정확히 그 자리에 놓습니다. 도달 범위는 |l1 − l2| = 0.1 m부터 l1 + l2 = 0.9 m까지의 띠이며 점선 원 두 개입니다. 띠 밖에서는 ik가 "unreachable" 오류를 내므로 팔을 그리지 않습니다.'],
     period: 12, rest: 5, H: 340, unit: 135, look: [0, 0, 0], oy: 40,
     cam: {yaw: .3, pitch: 1.0, dist: 7},
     controls: [
@@ -160,7 +160,7 @@
     en: 'A two-link arm moves its joints at fixed speeds. The Jacobian turns them into a tip velocity, and the same matrix turns a push on the tip into joint torques',
     ko: '두 link 팔이 joint를 정해진 속도로 움직입니다. Jacobian이 그 속도를 tip 속도로 바꾸고 같은 행렬이 tip에 가하는 힘을 joint torque로 바꿉니다',
     cap: ['Arm 0.5 and 0.4 m, q1 = 0.3 rad, joint speeds (0.5, −0.2) rad/s and a push of 10 N downward on the tip, all from the lesson example. Blue and teal arrows are the two Jacobian columns scaled by the joint speeds; their sum, the green arrow, is the tip velocity J q̇. The red arrow is the 10 N force (0.02 m per N) and the red arcs are the holding torques τ = Jᵀ F. Slide q2 toward 0 to straighten the arm. The lesson uses q2 = 0.8.',
-      'Arm은 0.5와 0.4 m이고 q1 = 0.3 rad, joint 속도 (0.5, −0.2) rad/s, tip 아래쪽 10 N 힘은 모두 lesson 예제의 값입니다. 파랑과 청록 화살표는 Jacobian의 두 column에 joint 속도를 곱한 것이고 둘의 합인 초록 화살표가 tip 속도 J q̇ 입니다. 빨간 화살표는 10 N 힘(N당 0.02 m)이고 빨간 호는 버티는 torque τ = Jᵀ F 입니다. q2를 0 쪽으로 밀어 팔을 펴 보세요. Lesson은 q2 = 0.8을 씁니다.'],
+      'Arm은 0.5와 0.4 m이고 q1 = 0.3 rad, joint 속도 (0.5, −0.2) rad/s, tip 아래쪽 10 N 힘은 모두 레슨 예제의 값입니다. 파랑과 청록 화살표는 Jacobian의 두 column에 joint 속도를 곱한 것이고 둘의 합인 초록 화살표가 tip 속도 J q̇ 입니다. 빨간 화살표는 10 N 힘(N당 0.02 m)이고 빨간 호는 버티는 torque τ = Jᵀ F 입니다. q2를 0 쪽으로 밀어 팔을 펴 보세요. 레슨은 q2 = 0.8을 씁니다.'],
     period: 12, rest: 4, H: 340, unit: 160, look: [.35, .15, 0], oy: 36,
     cam: {yaw: .3, pitch: 1.0, dist: 7},
     controls: [{id: 'q2', en: 'elbow q2', ko: 'elbow q2', min: .05, max: 3, step: .01, dec: 2, unit: ' rad', val: .8, auto: t => 1.5 + 1.35 * Math.cos(2 * PI * t / 12)}],
@@ -210,7 +210,7 @@
     en: 'A three-link arm closes in on a target one damped Newton step at a time, and a target beyond its reach never converges',
     ko: 'link 세 개의 팔이 damped Newton step을 한 번씩 밟으며 목표에 다가가고, 닿지 않는 목표에는 끝내 수렴하지 못합니다',
     cap: ['Link lengths 0.4, 0.3, 0.2 m, start pose (0.3, 0.3, 0.3) rad, damping λ = 0.05, joint step cap 0.3 rad and the limits of the lesson. Each step is Δq = Jᵀ(JJᵀ + λ²I)⁻¹ e; grey arms are earlier steps. With the target y fixed at 0.3 m, slide x: the arm converges in 6 to 12 steps up to a distance of about 0.9 m, and beyond that the error stays above zero.',
-      'Link 길이는 0.4, 0.3, 0.2 m이고 시작 자세 (0.3, 0.3, 0.3) rad, damping λ = 0.05, joint step 상한 0.3 rad과 limit은 lesson과 같습니다. 한 step은 Δq = Jᵀ(JJᵀ + λ²I)⁻¹ e 이며 회색 팔은 이전 step입니다. 목표 y를 0.3 m로 두고 x를 움직이면 약 0.9 m 거리까지는 6~12 step에 수렴하고 그 너머에서는 오차가 0이 되지 못합니다.'],
+      'Link 길이는 0.4, 0.3, 0.2 m이고 시작 자세 (0.3, 0.3, 0.3) rad, damping λ = 0.05, joint step 상한 0.3 rad과 limit은 레슨과 같습니다. 한 step은 Δq = Jᵀ(JJᵀ + λ²I)⁻¹ e 이며 회색 팔은 이전 step입니다. 목표 y를 0.3 m로 두고 x를 움직이면 약 0.9 m 거리까지는 6~12 step에 수렴하고 그 너머에서는 오차가 0이 되지 못합니다.'],
     period: 12, rest: 12, H: 340, unit: 125, look: [.3, .3, 0], oy: 36,
     cam: {yaw: .3, pitch: 1.0, dist: 7},
     controls: [
