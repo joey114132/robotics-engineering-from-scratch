@@ -16,6 +16,25 @@ Learn how robots work by building the math and control yourself, in plain numpy,
 
 Every lesson is simulation only. Nothing sends a command to real hardware.
 
+## 3D scenes
+
+Every lesson has a 3D scene of something real: an arm holding itself up, a quadrotor, a robot finding its way back to the start. Drag to orbit it, move a slider, and watch the lesson's law happen.
+
+![Six of the 81 3D scenes: a two-link arm holding against gravity, a Lyapunov bowl, camera calibration views, a quadrotor, a pose graph closing a loop, and action chunks around a post](docs/img/3d-gallery.png)
+
+<table>
+<tr>
+<td width="50%"><img src="docs/img/motion-3d-gravity.gif" alt="A two-link arm changes pose while the holding torque at each joint changes with it"></td>
+<td width="50%"><img src="docs/img/motion-3d-lipm.gif" alt="An inverted pendulum is pushed and its support point and capture point move"></td>
+</tr>
+<tr>
+<td><em>Lesson 03-02: the torque needed to hold the arm still.</em></td>
+<td><em>Lesson 10-01: push, support point and capture point.</em></td>
+</tr>
+</table>
+
+Each lesson also has a 2D animation, and some have a toy you can drag.
+
 <table>
 <tr>
 <td width="50%"><img src="docs/img/motion-scene.gif" alt="A damped pendulum arm settling while its angle trace shrinks into the target band"></td>
@@ -27,18 +46,24 @@ Every lesson is simulation only. Nothing sends a command to real hardware.
 </tr>
 </table>
 
+## On a phone and in the terminal
+
 <table>
 <tr>
-<td width="25%"><img src="docs/img/index-phone.png" alt="The course home page on a phone: Start button, mascot, level and XP"></td>
-<td width="25%"><img src="docs/img/03-02-gravity-compensation-phone.png" alt="A lesson on a phone: data figures with captions, then the Build It code"></td>
-<td width="50%"><img src="docs/img/cli-home.png" alt="The robo terminal home screen listing the 17 phases and the next lesson"></td>
+<td width="33%"><img src="docs/img/index-phone.png" alt="The course home page on a phone: Start button, Bolt the 3D mascot, level and XP"></td>
+<td width="33%"><img src="docs/img/plain-words-phone.png" alt="A lesson on a phone: title, a one-line idea, and the In Plain Words box with a cafeteria tray analogy"></td>
+<td width="33%"><img src="docs/img/03-02-gravity-compensation-phone.png" alt="A lesson on a phone: data figures with captions, then the Build It code"></td>
 </tr>
 <tr>
-<td><em>Website home on a phone.</em></td>
+<td><em>Home, with Bolt.</em></td>
+<td><em>Every lesson starts in plain words.</em></td>
 <td><em>Figures first, then a few lines of code.</em></td>
-<td><em><code>robo</code> in the terminal, same lessons and progress.</em></td>
 </tr>
 </table>
+
+![The robo terminal home screen listing the 17 phases and the next lesson](docs/img/cli-home.png)
+
+*`robo` in the terminal: same lessons and progress.*
 
 ## Start
 
@@ -74,4 +99,4 @@ Forks and pull requests are welcome, from a typo to a whole new lesson. Run the 
 
 MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The animations use GSAP 3.15.0, which keeps its own terms in `scripts/vendor/GSAP-LICENSE.txt`.
 
-To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs site|cli|gif` after building the site.
+To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs site|cli|gif|gif3d|gallery3d` after building the site.
