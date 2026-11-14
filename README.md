@@ -1,11 +1,10 @@
 # Robotics Engineering from Scratch
 
-<picture>
-  <source srcset="docs/img/hero-bolt.webp" type="image/webp">
-  <img src="docs/img/hero-bolt.jpg" alt="Bolt, the course mascot, waves in a toy robotics workshop while a small arm lifts a hex nut and a drone drifts past">
-</picture>
-
 Learn how robots work by building the math and control yourself, in plain numpy, with tests. Then see what the production library does.
+
+![Six lesson clips playing at once: a three-ring gimbal whose reported angles flip at 90 degrees, two arms tracing tip loops of different width, two cars braking to a stop line (MPC overshoots less than clipped LQR), two drones riding out a gust, two grippers under the same twist (one box turns), and robots at a crossing (one group deadlocks, the other finishes)](docs/img/hero-clips.gif)
+
+*Six of the 81 lesson clips. Every motion is computed by that lesson's own code.*
 
 81 lessons, 17 phases, English and Korean. Arms, wheeled and legged robots, drones, perception, planning, learning, fleets and safety. About 15 minutes each. The full list is in [ROADMAP.md](ROADMAP.md).
 
@@ -43,6 +42,10 @@ Each lesson opens with a short clip rendered in Blender. The motion comes from t
 </tr>
 </table>
 
+![One frame from each of the 81 lesson clips in a 9 by 9 grid: arms, toy cars, drones, legged robots, grippers, rovers and swarms](docs/img/all-clips.jpg)
+
+*All 81 lesson clips, one frame each, labelled by lesson number.*
+
 ## In the terminal
 
 ![The robo terminal home screen listing the 17 phases and the next lesson](docs/img/cli-home.png)
@@ -79,6 +82,10 @@ Forks and pull requests are welcome, from a typo to a whole new lesson. Run the 
 
 ## License and credits
 
-MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The banner, the 17 phase covers, the social card background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures are drawn in code, not generated.
+MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The Bolt mascot picture below, the 17 phase covers, the social card background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures are drawn in code, not generated.
 
 To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs cli`.
+
+<img src="docs/img/hero-bolt.jpg" width="360" alt="Bolt, the course mascot, waves in a toy robotics workshop while a small arm lifts a hex nut and a drone drifts past">
+
+If the course helps you, a star helps other learners find it.
