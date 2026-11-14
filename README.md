@@ -2,6 +2,8 @@
 
 Learn how robots work by building the math and control yourself, in plain numpy, with tests. Then see what the production library does.
 
+**[Read it online](https://robotics-from-scratch.robotics-site.workers.dev)**: every lesson, clip and quiz in the browser, in English or Korean, with progress saved on your device. No install. Or run it locally with the `robo` CLI below.
+
 ![Six lesson clips playing at once: a three-ring gimbal whose reported angles flip at 90 degrees, two arms tracing tip loops of different width, two cars braking to a stop line (MPC overshoots less than clipped LQR), two drones riding out a gust, two grippers under the same twist (one box turns), and robots at a crossing (one group deadlocks, the other finishes)](docs/img/hero-clips.gif)
 
 *Six of the 81 lesson clips. Every motion is computed by that lesson's own code.*
@@ -53,6 +55,8 @@ Each lesson opens with a short clip rendered in Blender. The motion comes from t
 *`robo` in the terminal: lessons, quizzes, clip posters and your progress.*
 
 ## Start
+
+The quickest start is the [website](https://robotics-from-scratch.robotics-site.workers.dev). To work with the code:
 
 ```bash
 cd robotics-engineering-from-scratch
