@@ -9,32 +9,30 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def one_step():
-    d = Diagram(cell=(280, 170))
+    d = Diagram(numbered=True)
     d.title("One physics step")
-    a = d.box("State\ntheta, omega", 0, 0.5, "blue", w=190)
-    b = d.box("Force to\nacceleration", 1, 0.5, "purple", w=210)
-    c = d.box("omega += a * dt", 2, 0, "purple", w=210)
-    e = d.box("theta += omega * dt\n(NEW omega)", 2, 1, "purple", w=230)
-    f = d.box("State at\nt + dt", 3, 0.5, "green", w=190)
-    d.arrow(a, b)
-    d.arrow(b, c)
-    d.arrow(c, e)
-    d.arrow(e, f)
-    d.note("Repeat every dt. Order matters: velocity first, then position.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=20)
+    a = d.box("Start\n0.5 rad", color="blue")
+    b = d.box("Gravity\na = -4.7", color="yellow")
+    c = d.box("New speed\nv += a * dt", color="purple")
+    e = d.box("Move ball\nby NEW v", color="purple")
+    f = d.box("State at\nt + dt", color="green")
+    for s, t in ((a, b), (b, c), (c, e), (e, f)):
+        d.arrow(s, t)
+    d.note("Explicit Euler uses the OLD v here", near=e, side="b")
     d.save(OUT / "diagram-physics-step.excalidraw")
 
 
 def two_paths():
-    d = Diagram(cell=(310, 170))
+    d = Diagram()
     d.title("Same pendulum, two solvers")
-    p = d.box("Pendulum\nL, g, theta0", 0, 0.5, "blue", w=210)
-    n = d.box("numpy loop\nsemi-implicit Euler", 1, 0, "purple", w=250)
-    j = d.box("MuJoCo\nMJCF string + mj_step", 1, 1, "purple", w=250)
-    r1 = d.box("Period\n2.006 s", 2, 0, "green", w=190)
-    r2 = d.box("Period\n2.006 s", 2, 1, "green", w=190)
+    p = d.box("Pendulum\nL = 1 m", col=0, row=0.5, color="blue")
+    n = d.box("Our numpy\nloop", col=1, row=0, color="purple")
+    j = d.box("MuJoCo\nmj_step", col=1, row=1, color="purple")
+    r1 = d.box("Period\n2.006 s", col=2, row=0, color="green")
+    r2 = d.box("Period\n2.006 s", col=2, row=1, color="green")
     for s, t in ((p, n), (p, j), (n, r1), (j, r2)):
         d.arrow(s, t)
-    d.note("Both agree with 2 pi sqrt(L/g) for a small swing.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=20)
+    d.note("Formula 2 pi sqrt(L/g) = 2.006 s", near=r2, side="b")
     d.save(OUT / "diagram-two-solvers.excalidraw")
 
 

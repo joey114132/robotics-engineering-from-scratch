@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A tiny constant error, integrated, becomes a runaway. I sat perfectly still and still walked ten meters. Blame the math.",
-    "mission": "In the first `gyro_angle(...)` call in `code/main.py` change the bias `0.01` to `0.02` and run `python3 code/main.py`. Predict the angle error after 10 s, then check it against `b t`."
+    "mission": "In the first `gyro_angle(...)` call in `code/main.py` change the bias `0.01` to `0.02` and run `python3 code/main.py`. Predict the angle error after 10 s, then check it against `b t`.",
+    "clip": "A robot sits still on the floor (green) while two see-through copies show where an IMU would say it is. The blue copy integrates a constant accelerometer bias of 0.05 m/s^2 twice, so its error grows with the square of time. The amber copy comes from a gyro bias of 0.01 rad/s, whose tilt error leaks gravity into position, so its error grows with the cube of time and passes the blue one after about 1.5 s. Values come from this lesson's `accel_position()` and `leaked_position()`, in real time, 1 m drawn as 1 m."
   },
   "ko": {
     "hook": "가만히 앉아 있었는데도 10 m를 걸었습니다. 탓은 적분에 있습니다. 아주 작은 상수 오차도 적분하면 폭주합니다.",
-    "mission": "`code/main.py`의 첫 `gyro_angle(...)` 호출에서 bias `0.01`을 `0.02`로 바꾸고 `python3 code/main.py`를 실행하세요. 10초 뒤 각도 오차를 먼저 예측하고 `b t`와 맞는지 확인하세요."
+    "mission": "`code/main.py`의 첫 `gyro_angle(...)` 호출에서 bias `0.01`을 `0.02`로 바꾸고 `python3 code/main.py`를 실행하세요. 10초 뒤 각도 오차를 먼저 예측하고 `b t`와 맞는지 확인하세요.",
+    "clip": "로봇은 바닥에 가만히 서 있고(초록) 투명한 복사본 둘은 IMU가 말하는 위치를 보여 줍니다. 파란 복사본은 일정한 가속도계 bias 0.05 m/s^2를 두 번 적분해서 오차가 시간의 제곱에 비례해 커집니다. 호박색 복사본은 gyro bias 0.01 rad/s의 기울기 오차가 중력을 위치로 새게 해서 시간의 세제곱으로 커지고 약 1.5초 뒤에 파란 복사본을 추월합니다. 값은 이 레슨의 `accel_position()`과 `leaked_position()`에서 가져왔고 실제 속도로 재생했으며 1 m를 1 m로 그렸습니다."
   },
   "toy": null,
-  "motion": "gravity-leak",
- "three": "imu-gravity-leak-3d"
+  "three": "imu-gravity-leak-3d"
 }

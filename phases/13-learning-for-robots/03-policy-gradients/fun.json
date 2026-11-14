@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "One episode's score is noisy gossip. Subtract the average gossip and the useful rumours get louder.",
-    "mission": "Add `batch=4,` to the `train(...)` call in `code/main.py`. Predict which run gets shakier, with or without the baseline, then run `python3 code/main.py`."
+    "mission": "Add `batch=4,` to the `train(...)` call in `code/main.py`. Predict which run gets shakier, with or without the baseline, then run `python3 code/main.py`.",
+    "clip": "Two toy cars were trained for 40 iterations from the same seed, and now drive from the same start to the amber mark where the reward is highest. The green car trained with the leave-one-out baseline and stops on the mark. The blue car trained on the raw return, its policy drifted, and it stops about half a metre past the mark. This is one seed. Policies come from this lesson's `grad_estimate()`, the drive from `episode()` without exploration noise, and one state unit is drawn as one metre."
   },
   "ko": {
     "hook": "에피소드 하나의 점수는 소음 섞인 소문입니다. 평균 소문을 빼면 쓸 만한 소문이 더 크게 들립니다.",
-    "mission": "`code/main.py`의 `train(...)` 호출에 `batch=4,`를 추가하세요. baseline이 있는 run과 없는 run 중 어느 쪽이 더 흔들릴지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`의 `train(...)` 호출에 `batch=4,`를 추가하세요. baseline이 있는 run과 없는 run 중 어느 쪽이 더 흔들릴지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "장난감 자동차 두 대를 같은 seed로 40번 학습시킨 뒤 같은 출발점에서 reward가 가장 큰 주황색 표시선까지 달리게 했습니다. 초록 자동차는 leave-one-out baseline으로 학습해서 표시선 위에 섭니다. 파랑 자동차는 raw return으로 학습했고 policy가 한쪽으로 치우쳐서 표시선을 약 0.5 m 지나 섭니다. seed 하나의 결과입니다. policy는 이 레슨의 `grad_estimate()`로, 주행은 탐험 noise 없는 `episode()`로 계산했고 상태 1을 1 m로 그렸습니다."
   },
   "toy": null,
-  "motion": "baseline-narrows-gradient",
   "three": "baseline-spread-3d"
 }

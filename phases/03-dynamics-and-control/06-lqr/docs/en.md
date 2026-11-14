@@ -6,33 +6,35 @@
 
 ## In Plain Words
 
-In a game, you must stop a drifting spaceship at a marker. Strong thrust corrects its position quickly but
-uses more fuel; gentle thrust saves fuel and takes longer. Its current speed matters too, because thrust now
-changes where it goes later.
+Imagine pushing a toy car to a stop line. A hard push gets it there quickly but costs effort. A gentle push saves effort but takes longer.
 
-LQR uses a motion model to balance state error against control effort over time. Q weights the errors and R
-weights effort. Raising R makes large commands more costly, usually softening the response; it does not impose
-a hard thrust limit.
+LQR uses a model of the car to weigh error against effort. Q says how much error hurts and R says how much effort hurts. A larger R makes big pushes costly, which softens the response. It is not a hard limit.
 
 ## The Problem
 
-You have a state-space model and you tune `kp` and `kd` by feel. The result is either slow or violent, and you cannot say why those numbers and not others. For one input, two states need two gains to guess. Six states need six.
+You have a state-space model (the state is what predicts the motion, like position and speed) and tune `kp` and `kd` by feel. The result is slow or violent, and you cannot say why. For one input, two states need two gains to guess. Six states need six.
 
 ## The Concept
 
-![From two weights to a full gain](../assets/diagram-lqr-flow.png)
+![Weights to a gain](../assets/diagram-lqr-flow.png)
 
-*You supply the model and two cost weights. The Riccati loop returns every entry of K.*
+*You supply the model and two cost weights. The Riccati loop (repeat below) returns every entry of K.*
 
-The cost is the sum over time of `x'Qx + u'Ru`. `Q` prices error and `R` prices effort. Start with `P = Q` and repeat `K = (R + B'PB)^-1 B'PA`, then `P = Q + A'P(A - BK)`. When `P` stops changing, `u = -Kx` is the cheapest feedback for that cost, and the cost from state `x0` is `x0'P x0`.
+The cost is the sum over time of `x'Qx + u'Ru`, where `x` is the state, `u` the push, and the car model is `x+ = A x + B u`. `Q` prices error and `R` prices effort. Start with `P = Q` and repeat `K = (R + B'PB)^-1 B'PA`, then `P = Q + A'P(A - BK)`. When `P` (the cost still to come from each state) stops changing, `u = -Kx` is the cheapest feedback for that cost. The cost from state `x0` is then `x0'P x0`.
 
 ![R sets the trade](../assets/diagram-lqr-tradeoff.png)
 
-*Raising R does not break anything. It tells the optimiser that big pushes cost more.*
+*Raising R breaks nothing. Big pushes cost more.*
 
-![Four values of R on the same start](../assets/fig-lqr-r-sweep.png)
+![Four values of R](../assets/fig-lqr-r-sweep.png)
 
-*A double integrator starting 1 m away. R = 0.01 settles fastest and pushes 8.7 m/s^2 at the first tick. R = 10 pushes 0.3 and takes much longer.*
+*A double integrator (a car steered by acceleration) starting 1 m away. R = 0.01 settles fastest with an 8.7 m/s^2 first push. R = 10 pushes 0.3, slowly.*
+
+Example: stopping early gives a weak gain. With `R = 1`, `Q = diag(1, 0.1)` and `dt = 0.05`, a car 1 m from the line gets `K = [0.005, 0.010]` (position gain, speed gain) after 1 loop and moves 0.09 m in 6 s. After 10 loops `K = [0.15, 0.11]` and it swings across the line at about 4.5 s. With a steady `P`, `K = [0.96, 1.42]` and the car is within 0.05 m of the line at 3 s.
+
+![More loops](../assets/clip-example.mp4)
+
+*Same car, `R = 1`, `K` from 1 loop, 10 loops and a steady `P`. The first car barely creeps, the second swings across the line, the green one settles.*
 
 ## Build It
 
@@ -41,7 +43,7 @@ K = np.linalg.solve(R + B.T @ P @ B, B.T @ P @ A)
 P = Q + A.T @ P @ (A - B @ K)      # repeat until P is steady
 ```
 
-`dare()` loops these two lines. `rollout()` runs `u = -Kx`, optionally clipped, and adds up the cost. Tests check that the closed-loop eigenvalues are inside the unit circle, that `K` and `P` satisfy their own equations, that simulated cost equals `x0'P x0`, that a hand-picked PD costs more, and that a larger `R` lowers the peak input.
+`dare()` loops these two lines, and `dare(max_iter=n)` stops after `n` loops. `rollout()` runs `u = -Kx` and adds up the cost. Tests check that the closed-loop eigenvalues are inside the unit circle, that `K` and `P` satisfy their equations, and that a larger `R` lowers the peak input.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -51,7 +53,7 @@ python3 phases/03-dynamics-and-control/06-lqr/code/figure.py
 
 ## Use It
 
-SciPy's `scipy.linalg.solve_discrete_are` solves the same equation directly, so use it to cross-check `P`. Real systems rarely use the optimum blindly. Raising `R` can reduce effort for the tested starts; check the full rollout. Hard actuator limits need explicit constraints or separately validated saturation handling.
+SciPy's `scipy.linalg.solve_discrete_are` solves the same equation directly, so use it to cross-check `P`. Raising `R` can reduce effort for the tested starts; check the full rollout. Hard actuator limits need explicit constraints or separately validated saturation handling.
 
 ## Ship It
 

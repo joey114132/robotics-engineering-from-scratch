@@ -21,72 +21,43 @@ Learn how robots work by building the math and control yourself, in plain numpy,
 ## What a lesson gives you
 
 - A short "In Plain Words" opening in everyday terms, before any math
-- An animation and a 3D scene you can orbit, and for some lessons a toy you can drag
+- A short rendered clip of a real object (a toy car, a bench arm, a rover, a drone) that acts out the lesson, computed by the lesson's own code
 - Diagrams and data figures
 - Code that runs, with tests
 - A six-question quiz and a one-page checklist you can reuse
 
 Every lesson is simulation only. Nothing sends a command to real hardware.
 
-## 3D scenes
+## Clips
 
-Every lesson has a 3D scene of something real: an arm holding itself up, a quadrotor, a robot finding its way back to the start. Drag to orbit it, move a slider, and watch the lesson's law happen.
-
-![Six of the 81 3D scenes: a two-link arm holding against gravity, a Lyapunov bowl, camera calibration views, a quadrotor, a pose graph closing a loop, and action chunks around a post](docs/img/3d-gallery.png)
+Each lesson opens with a short clip rendered in Blender. The motion comes from the lesson's `code/main.py`, so what you see is the lesson's result, not an illustration of it. Blue is the plain or failing case, green the fixed one. Many lessons have a second clip next to their worked example.
 
 <table>
 <tr>
-<td width="50%"><img src="docs/img/motion-3d-gravity.gif" alt="A two-link arm changes pose while the holding torque at each joint changes with it"></td>
-<td width="50%"><img src="docs/img/motion-3d-lipm.gif" alt="An inverted pendulum is pushed and its support point and capture point move"></td>
+<td width="50%"><img src="docs/img/clip-pid.gif" alt="Two toy cars drive to a stop line with the same PID; the blue one rolls past the line, the green one with anti-windup settles near it"></td>
+<td width="50%"><img src="docs/img/clip-quadrotor.gif" alt="Two quadrotors: the blue one gets more thrust and only climbs, the green one gets a small pitch torque, tilts first and then moves sideways"></td>
 </tr>
 <tr>
-<td><em>Lesson 03-02: the torque needed to hold the arm still.</em></td>
-<td><em>Lesson 10-01: push, support point and capture point.</em></td>
+<td><em>Lesson 03-04: integral windup, and the clamp that fixes it.</em></td>
+<td><em>Lesson 10-03: a drone must tilt before it can move sideways.</em></td>
 </tr>
 </table>
 
-Each lesson also has a 2D animation, and some have a toy you can drag.
-
-<table>
-<tr>
-<td width="50%"><img src="docs/img/motion-scene.gif" alt="A damped pendulum arm settling while its angle trace shrinks into the target band"></td>
-<td width="50%"><img src="docs/img/motion-singularity.gif" alt="A two-link arm stretching out while the plain inverse joint speed blows up and the damped one stays bounded"></td>
-</tr>
-<tr>
-<td><em>Phase 3 opener: a damped swing settles.</em></td>
-<td><em>Lesson 02-04: near full stretch the plain inverse blows up, damped least squares stays bounded.</em></td>
-</tr>
-</table>
-
-## On a phone and in the terminal
-
-<table>
-<tr>
-<td width="33%"><img src="docs/img/index-phone.png" alt="The course home page on a phone: Start button, Bolt the 3D mascot, level and XP"></td>
-<td width="33%"><img src="docs/img/plain-words-phone.png" alt="A lesson on a phone: title, a one-line idea, and the In Plain Words box with a cafeteria tray analogy"></td>
-<td width="33%"><img src="docs/img/03-02-gravity-compensation-phone.png" alt="A lesson on a phone: data figures with captions, then the Build It code"></td>
-</tr>
-<tr>
-<td><em>Home, with Bolt.</em></td>
-<td><em>Every lesson starts in plain words.</em></td>
-<td><em>Figures first, then a few lines of code.</em></td>
-</tr>
-</table>
+## In the terminal
 
 ![The robo terminal home screen listing the 17 phases and the next lesson](docs/img/cli-home.png)
 
-*`robo` in the terminal: same lessons and progress.*
+*`robo` in the terminal: lessons, quizzes, clip posters and your progress.*
 
 ## Start
 
 ```bash
 cd robotics-engineering-from-scratch
-python3 scripts/build_site.py      # build the website
-xdg-open site/index.html           # read it (English/Korean, dark mode, quizzes)
-python3 scripts/robo.py            # or read in the terminal (needs rich)
+pip install -r requirements.txt
+python3 scripts/robo.py            # read in the terminal (needs rich)
 ```
 
-In the terminal, `robo read 03-02` opens a lesson, `robo quiz 03-02` runs a quiz and `robo daily` is a five-question review. Add `--lang ko` for Korean. Progress carries between the terminal and the website with a progress code on the home page.
+In the terminal, `robo read 03-02` opens a lesson, `robo quiz 03-02` runs a quiz and `robo daily` is a five-question review. Add `--lang ko` for Korean.
 
 ## Check the code
 
@@ -95,12 +66,11 @@ python3 -m pytest phases scripts/tests_robo -q
 python3 scripts/check_lessons.py
 ```
 
-`python3 scripts/build_single.py` bundles everything into one file, `site-single/robotics-from-scratch.html`, for a phone or for sharing. The lesson format is in [LESSON_SPEC.md](LESSON_SPEC.md).
+The lesson format is in [LESSON_SPEC.md](LESSON_SPEC.md).
 
 ## Limits
 
 - The Korean text was drafted and checked with tooling. No native editor has reviewed it, so corrections are welcome.
-- The site caches pages for offline use through a service worker. The one-file bundle cannot, so it relies on the browser cache.
 - Two `robo` quiz processes at the same moment can undercount XP.
 
 ## Contribute
@@ -109,6 +79,6 @@ Forks and pull requests are welcome, from a typo to a whole new lesson. Run the 
 
 ## License and credits
 
-MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The banner, the 17 phase covers, the social card background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures and 3D scenes are drawn in code, not generated. The animations use GSAP 3.15.0, which keeps its own terms in `scripts/vendor/GSAP-LICENSE.txt`.
+MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The banner, the 17 phase covers, the social card background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures are drawn in code, not generated.
 
-To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs site|cli|gif|gif3d|gallery3d` after building the site.
+To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs cli`.

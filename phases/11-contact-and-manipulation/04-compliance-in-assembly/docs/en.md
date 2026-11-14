@@ -6,15 +6,13 @@
 
 ## In Plain Words
 
-A tilted pencil can wedge in a snug holder. Holding its upper end rigidly to the side makes the pencil press hard against the walls.
-Those walls push back, and their friction opposes the downward insertion.
+A robot arm pushes a thin peg into a tight hole, starting a little off to one side.
 
-Compliance lets the grip yield sideways, reducing the wall load so the pencil can straighten and slide deeper. The assembly model
-checks whether the contact forces can balance the wrist's push and twist. If they can, the peg can stay jammed instead of moving.
+A rigid wrist holds the peg's top where the tool says and fights any offset, so it shoves the peg sideways into the walls. The walls push back, and their friction resists the downward push. A wrist that gives way sideways, called compliance, lets the peg straighten and slide in.
 
 ## The Problem
 
-A robot inserts a peg into a tight hole. With a fraction of a millimetre of misalignment the peg stops halfway, and pushing harder holds it more firmly.
+Misaligned by a millimetre or less, the peg stops halfway, and pushing harder holds it more firmly.
 
 ## The Concept
 
@@ -26,7 +24,11 @@ A robot inserts a peg into a tight hole. With a fraction of a millimetre of misa
 
 *A soft wrist makes a small side force, so the peg slides down and its tilt shrinks.*
 
-The tilted peg has its tip on one wall and touches the hole edge on the other, so one number, the tip depth, fixes its pose. At each depth the wrist applies a wrench. The peg jams if forces inside the two friction cones can cancel it.
+The peg's tip rests on one hole wall and its side on the hole edge, so the tip depth (how far the tip is below the hole mouth) fixes its pose, and at each depth the wrist pushes and twists it. Stiffness `kx` is sideways force per metre of stretch. With a 1 mm offset and a 5 N push, the tilted peg swings its top about 2.1 mm from the hole centre while the tool holds it 1 mm, so the wrist stretches about 1.1 mm: 1e5 N/m gives 112 N sideways, 1e3 N/m gives 1.1 N and slides in. Deeper, the peg straightens and the side force shrinks. At 34.6 mm the forces inside the two friction cones cancel the wrist's push and twist, so the stiff peg locks.
+
+![Two wrists](../assets/clip-example.mp4)
+
+*Red arrows: the wrist's sideways push. The blue peg stops at 34.6 mm, the green goes in. Depth drawn 9 times larger.*
 
 ![Jam map over wrist stiffness and offset](../assets/fig-jam-map.png)
 
@@ -56,9 +58,9 @@ python3 phases/11-contact-and-manipulation/04-compliance-in-assembly/code/main.p
 
 ## Use It
 
-Real cells use a remote center compliance device or software compliance. Compare your wrist's lateral stiffness with a jam map for your clearance and `mu`.
+Real cells use a remote center compliance device or software compliance. Compare your wrist's stiffness with a jam map for your clearance and `mu`.
 
-Sources: Wikipedia, "Remote center compliance" (opened 2026-11-09): a misaligned peg takes a side force and rotates until insertion stalls, and a compliant device corrects it.
+Sources: Wikipedia, "Remote center compliance" (opened 2026-11-09): a misaligned peg stalls under side force, and a compliant device corrects it.
 
 ## Ship It
 

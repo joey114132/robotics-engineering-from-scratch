@@ -6,33 +6,37 @@
 
 ## In Plain Words
 
-On a bike, steer toward a point ahead on a painted path. A nearby point calls for a sharp turn when you drift sideways. If the bike
-responds late, you can cross the line before the correction takes effect, then overcorrect the other way.
+A toy car follows a painted line by steering toward a point on the line a fixed distance ahead. This is pure pursuit, and that distance is the lookahead. If the point is close, a small sideways drift makes the car swing hard, and because its wheels respond late it crosses the line and swings back.
 
-Pure pursuit steers a robot toward a point ahead. Looking farther ahead softens the corrections, but near a bend the target lies beyond
-the corner, so the robot cuts across it.
+If the point is far, the corrections are gentle. But near a bend the point lies beyond the corner, so the car cuts across it.
 
 ## The Problem
 
-You give a mobile robot a path with a right-angle corner. With a short look-ahead it snakes along the straight parts, and with a long one it sails across the corner and hits whatever is standing there.
+You give a mobile robot a path with a right-angle corner. With a short lookahead it snakes along the straight parts, and with a long one it sails across the corner and hits whatever is standing there.
 
 ## The Concept
 
 ![One step of pure pursuit](../assets/diagram-pp-step.png)
 
-*Pick the path point `Ld` ahead, measure how far it sits to the side of the robot, and steer along the circle that reaches it.*
+*Pick the path point `Ld` ahead, measure its side offset, and steer along the circle that reaches it.*
 
-Put the target in the robot frame, with side offset `y` and distance `d`. The circle that starts along the heading and passes through it has curvature `k = 2 y / d^2`, which a test checks against `2 sin(a) / d`. The turn rate is `w = v k`. The drive follows `w` through a first-order lag, because a real base cannot turn instantly. The 0.4 s time constant is our assumption, not a measurement.
+In the robot frame (x forward, y left), the target is `d` away and `y` to the left, (negative: right). The circle that starts along the heading and passes through it has curvature `k = 2 y / d^2`, because `d^2 = 2 y R` for radius `R`. Curvature is `1 / R`, so a bigger `|k|` is a tighter turn. The turn rate is `w = v k` for forward speed `v`. It reaches `w` gradually, closing about two thirds of the gap every 0.4 s, our assumption, not a measurement.
+
+Start 0.6 m left of the path, pointing along it, so `y = -0.6`. With `Ld = 0.4 m` no path point is that close, so the nearest one is the target: `d = 0.6` and `k = 2 * -0.6 / 0.6^2 = -3.3`, a circle of radius 0.3 m. With `Ld = 1.5 m`, `d = 1.5` and `k = 2 * -0.6 / 1.5^2 = -0.53`, radius 1.9 m.
+
+![Tight and gentle first steering circles](../assets/clip-example.mp4)
+
+*The thin arcs are the first steering circles. Blue (`Ld = 0.4`) is across the line after 1.0 s, green (`Ld = 1.5`) after 2.8 s.*
 
 ![One knob, two failures](../assets/diagram-pp-tradeoff.png)
 
-*A short `Ld` steers hard at a nearby point. A long `Ld` aims at a point that is far off the path near a corner.*
+*A short `Ld` steers hard at a nearby point. A long `Ld` aims far off the path near a corner.*
 
-![Three look-ahead distances on the same path](../assets/fig-lookahead-paths.png)
+![Three lookahead distances on the same path](../assets/fig-lookahead-paths.png)
 
-*The robot starts 0.6 m left of the path at 1 m/s. At `Ld = 0.4 m` it crosses the line 10 times on the first straight and passes within 0.17 m of the corner. At 1.5 m it settles and passes 0.41 m away. At 4 m it has not settled by the corner and passes 1.37 m away.*
+*Same start; the distance to the corner is the corner cut. `Ld = 0.4 m` crosses the line 10 times but hugs the corner (0.17 m). 1.5 m settles and misses it by 0.41 m, 4 m by 1.37 m.*
 
-A test shows that the short look-ahead does not wobble without the lag, so the wobble is high gain meeting drive delay.
+A test shows the short lookahead does not wobble without the lag, so the wobble is strong correction (high gain) meeting a slow drive.
 
 ## Build It
 
@@ -58,7 +62,7 @@ python3 phases/08-mobile-robots/04-path-following-pure-pursuit/code/main.py
 
 ## Use It
 
-Nav2's regulated pure pursuit controller uses the same idea: it finds a point on the path in front of the robot and drives toward it. Its README says the choice of look-ahead depends on robot size, responsiveness, update rate and speed, and it offers a velocity-scaled look-ahead.
+Nav2's regulated pure pursuit controller steers toward a point ahead on the path. Its README says the right lookahead depends on robot size, responsiveness, update rate and speed, and offers a velocity-scaled one.
 
 Sources: Nav2 `nav2_regulated_pure_pursuit_controller` README, github.com/ros-navigation/navigation2, opened 2026-11-09.
 
@@ -69,5 +73,5 @@ Sources: Nav2 `nav2_regulated_pure_pursuit_controller` README, github.com/ros-na
 ## Exercises
 
 1. Scale `Ld` with speed and compare the wobble at 0.5 and 2 m/s.
-2. Round the corner with a short arc in the path and measure the cut again.
+2. Round the corner with a short arc and measure the cut again.
 3. Find the smallest `Ld` with at most 2 line crossings for a lag of 0.2 s.

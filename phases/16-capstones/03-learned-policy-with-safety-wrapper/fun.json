@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Last boss: a learned policy that is allowed to be wrong, and three plain rules that make wrong harmless. Prove the rules.",
-  "mission": "Victory lap: in `code/main.py` change `Safety()` to `Safety(max_age=30)`. Predict the `hold` count and peak q of the lost-observation run, then run `python3 code/main.py`."
- },
- "ko": {
-  "hook": "마지막 보스입니다. 틀려도 되는 learned policy 하나와 틀림을 무해하게 만드는 평범한 규칙 세 개가 있습니다. 그 규칙을 증명해 봅시다.",
-  "mission": "마무리 과제입니다. `code/main.py`에서 `Safety()`를 `Safety(max_age=30)`으로 바꾸세요. lost-observation run의 `hold` 횟수와 peak q를 예측한 뒤 `python3 code/main.py`를 실행하세요."
- },
- "toy": null,
- "motion": "spike-wrapper",
- "three": "wrapped-policy-arms-3d"
+  "en": {
+    "hook": "Last boss: a learned policy that is allowed to be wrong, and three plain rules that make wrong harmless. Prove the rules.",
+    "mission": "Victory lap: in `code/main.py` change `Safety()` to `Safety(max_age=30)`. Predict the `hold` count and peak q of the lost-observation run, then run `python3 code/main.py`.",
+    "clip": "Two arms reach for the same target while the camera feed drops out for 0.5 s and its lamp goes grey. The blue arm has no safety wrapper, so it keeps pushing on the last image it saw and swings past the red joint limit. The green arm commands zero torque once the image is stale and settles on the target below the limit. The motion comes from this lesson's `rollout()` with and without `Safety()`, played at half speed."
+  },
+  "ko": {
+    "hook": "마지막 보스입니다. 틀려도 되는 learned policy 하나와 틀림을 무해하게 만드는 평범한 규칙 세 개가 있습니다. 그 규칙을 증명해 봅시다.",
+    "mission": "마무리 과제입니다. `code/main.py`에서 `Safety()`를 `Safety(max_age=30)`으로 바꾸세요. lost-observation run의 `hold` 횟수와 peak q를 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 팔이 같은 목표로 움직이는 동안 카메라 화면이 0.5초 끊기고 카메라의 램프가 회색이 됩니다. 파란 팔에는 안전 wrapper가 없어서 마지막으로 본 화면만 믿고 계속 힘을 주다가 빨간 joint limit을 넘어 흔들립니다. 초록 팔은 화면이 낡았다고 판단하면 토크를 0으로 두고 limit 아래에서 목표에 멈춥니다. 움직임은 이 레슨의 `rollout()`을 `Safety()`가 있을 때와 없을 때로 돌린 결과이고 절반 속도로 재생합니다."
+  },
+  "toy": null,
+  "three": "wrapped-policy-arms-3d"
 }

@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "P shoves, I holds a grudge, D hits the brakes. Turn all three up and I hum like a fridge.",
-    "mission": "In `code/main.py` change `(2.0, 30.0)` to `(40.0,)`. Is the spectral radius above or below 1? Predict, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `(2.0, 30.0)` to `(40.0,)`. Is the spectral radius above or below 1? Predict, then run `python3 code/main.py`.",
+    "clip": "Two toy cars use the same PID to reach the stop line; both motors are at their limit on the way. The blue car keeps adding to its integral term and rolls about 1.5 m past the line. The green car stops adding while its motor is at the limit (anti-windup) and settles near the line. Rendered from this lesson's `simulate()` at half speed, with the lesson's 1 rad drawn as 1 m."
   },
   "ko": {
     "hook": "P는 밀고 I는 원한을 쌓고 D는 브레이크를 밟습니다. 셋을 다 올리면 저는 냉장고처럼 웅웅거립니다.",
-    "mission": "`code/main.py`에서 `(2.0, 30.0)`을 `(40.0,)`으로 바꾸세요. spectral radius가 1보다 클지 작을지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `(2.0, 30.0)`을 `(40.0,)`으로 바꾸세요. spectral radius가 1보다 클지 작을지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "장난감 자동차 두 대가 같은 PID로 정지선까지 갑니다. 가는 동안 두 차 모두 motor가 한계에 있습니다. 파란 차는 적분 항을 계속 쌓아서 정지선을 약 1.5 m 지나칩니다. 초록 차는 motor가 한계인 동안 적분을 멈추고(anti-windup) 정지선 근처에 섭니다. 이 레슨의 `simulate()` 결과를 절반 속도로 렌더했고 레슨의 1 rad를 1 m로 그렸습니다."
   },
   "toy": "pd-step",
-  "motion": "windup-race",
-  "three": "pid-windup-lever-3d"
+  "three": "pid-windup-car-3d"
 }

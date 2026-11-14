@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Dijkstra checks every room. I only check rooms that point toward the goal. Ask me to overestimate and I get brave, then lost.",
-  "mission": "In `code/main.py` run the demo with `w` in `(0, 1, 6)`. Compare the cells expanded and the path cost, and say which weight stopped being safe."
- },
- "ko": {
-  "hook": "Dijkstra는 모든 방을 확인하고 저는 목표 쪽을 가리키는 방만 확인합니다. 과대추정을 시키면 용감해졌다가 길을 잃습니다.",
-  "mission": "`code/main.py` 데모를 `w`가 `(0, 1, 6)`일 때 돌려 보세요. 확장한 칸 수와 경로 비용을 비교하고 어느 가중치부터 안전하지 않은지 말해 보세요."
- },
- "toy": "astar-flood",
- "motion": "astar-weight",
- "three": "warehouse-astar-3d"
+  "en": {
+    "hook": "Dijkstra checks every room. I only check rooms that point toward the goal. Ask me to overestimate and I get brave, then lost.",
+    "mission": "In `code/main.py` run the demo with `w` in `(0, 1, 6)`. Compare the cells expanded and the path cost, and say which weight stopped being safe.",
+    "clip": "Dijkstra (blue) and A* (green) search the same grid map, expanding 64 cells a second, and each coloured tile is a cell already expanded. Both find the 26-step path, but A* expands 115 cells against Dijkstra's 153, so its rover leaves sooner. The tiles come from `search()` with `w = 0` and `w = 1`, and each cell is drawn 0.26 m wide."
+  },
+  "ko": {
+    "hook": "Dijkstra는 모든 방을 확인하고 저는 목표 쪽을 가리키는 방만 확인합니다. 과대추정을 시키면 용감해졌다가 길을 잃습니다.",
+    "mission": "`code/main.py` 데모를 `w`가 `(0, 1, 6)`일 때 돌려 보세요. 확장한 칸 수와 경로 비용을 비교하고 어느 가중치부터 안전하지 않은지 말해 보세요.",
+    "clip": "Dijkstra(파랑)와 A*(초록)가 같은 격자 지도를 초당 64칸씩 확장합니다. 색칠된 타일은 이미 확장한 칸입니다. 둘 다 26걸음 경로를 찾지만 A*는 115칸, Dijkstra는 153칸을 확장해서 A*의 로봇이 먼저 출발합니다. 타일은 `search()`를 `w = 0`과 `w = 1`로 돌린 결과이고 칸 하나를 0.26 m로 그렸습니다."
+  },
+  "toy": "astar-flood",
+  "three": "warehouse-astar-3d"
 }

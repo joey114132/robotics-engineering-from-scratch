@@ -9,33 +9,31 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def loop():
-    d = Diagram(cell=(360, 170))
+    d = Diagram(numbered=True)
     d.title("One step of numerical IK")
-    a = d.box("Error\ne = target - fk(q)", 0, 0, "red", w=240)
-    b = d.box("Damped solve\ndq = J^T (J J^T + lam^2 I)^-1 e", 1, 0, "purple", w=330, size=18, dx=-10)
-    c = d.box("Clamp to\njoint limits", 2, 0, "yellow", w=220, dx=20)
-    e = d.box("Forward kinematics\nof the new q", 1.5, 1.3, "blue", w=260)
-    f = d.box("|e| < tol:\nreturn q", 3, 1.3, "green", w=220)
+    a = d.box("Error: target\nminus fk(q)", col=0, row=0, color="red", step=1)
+    b = d.box("Damped solve\nfor a small dq", col=1, row=0, color="purple", step=2)
+    c = d.box("Clamp to\njoint limits", col=2, row=0, color="yellow", step=3)
+    e = d.box("Forward kinematics\nof the new q", col=2, row=1, color="blue", step=4)
+    f = d.box("Error tiny:\nreturn q", col=1, row=1, color="green", step=5)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.arrow(e, a, label="repeat", route="below")
-    d.arrow(e, f)
+    d.arrow(e, f, label="done")
+    d.arrow(e, a, label="repeat")
     d.save(OUT / "diagram-ik-loop.excalidraw")
 
 
 def restarts():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("Many seeds, several answers")
-    s = d.box("Random seeds\ninside the limits", 0, 0.5, "gray", w=240)
-    a = d.box("Elbow up\nsolution", 1, 0, "blue", w=220)
-    b = d.box("Elbow down\nsolution", 1, 1, "blue", w=220)
-    x = d.box("Stuck at a limit\nconverged = False", 1, 2, "red", w=250)
-    p = d.box("Pick by cost:\nclosest to now", 2, 0.5, "green", w=240)
-    for t in (a, b, x):
-        d.arrow(s, t)
-    d.arrow(a, p)
-    d.arrow(b, p)
+    s = d.box("20 random\nstart poses", col=0, row=0, color="gray")
+    r = d.box("Run solve_ik\nfrom each seed", col=0, row=1, color="purple")
+    ok = d.box("17 converge:\nelbow up or down", col=0, row=2, color="blue")
+    p = d.box("Pick the one\nclosest to now", col=0, row=3, color="green")
+    for a, b in ((s, r), (r, ok), (ok, p)):
+        d.arrow(a, b)
+    d.note("3 stuck at a limit:\nconverged = False", near=r, side="r")
     d.save(OUT / "diagram-ik-restarts.excalidraw")
 
 

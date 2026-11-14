@@ -6,36 +6,41 @@
 
 ## In Plain Words
 
-A recipe says to add a spoonful of salt, but you read the amount as a cupful. The written amount has not
-changed; changing the unit changes what goes into the soup.
+A small arm on a bench has an encoder, a sensor in its joint, that reports the elbow angle as ninety. In degrees a full turn is three hundred sixty, so ninety is a quarter turn and the arm stands up. In radians a full turn is about six point three, so ninety is over fourteen turns.
 
-Robot data can fail the same way. An angle in degrees means something different when read as radians. Arrays
-also need agreed shapes so each value keeps its intended role. Checking units and shapes catches mistakes that
-ordinary arithmetic accepts.
+numpy always assumes radians and never asks. A wrong array shape (its rows and columns) fails the same way: the math still runs. Only a check at the data's entry catches it.
 
 ## The Problem
 
-An encoder driver reports a joint at `90`. You pass it to `np.cos`, and the link tip lands 0.45 of a link length away from where it should be, with no error and no warning. numpy treats every number as radians and every array as just numbers, so a unit mistake or a transposed array looks exactly like a correct run.
+Your arm code finds how far the link tip reaches with `length * np.cos(q)`, where `q` is the joint angle. The encoder driver reports `90` and you pass it straight in. The tip lands 0.45 of a link length from where it should be, with no error. Neither a wrong unit nor a transposed array (rows and columns swapped) stops numpy.
 
 ## The Concept
 
-![Degrees fed to np.cos](../assets/diagram-degrees-bug.png)
+Follow the red box. `np.cos(90)` reads radians: 90 minus fourteen full turns leaves 2.04 radians, about 117 degrees, whose cosine is -0.448 instead of 0. Nothing complains.
 
-*The sensor says 90 degrees, `np.cos` reads 90 radians. A guard at the boundary turns the silent error into a loud one.*
+![Degrees bug](../assets/diagram-degrees-bug.png)
 
-Robot data has two things numpy cannot see: a unit (radians, metres) and a meaning for each axis. We store points as rows, shape `(N, 3)`, so a rotation is applied as `points @ R.T`.
+*The sensor says 90 degrees but `np.cos` reads 90 radians. A guard, a check where data enters your code, turns the silent error into a loud one.*
+
+Robot data has two things numpy cannot see: a unit and a meaning for each axis. We store N points as rows, shape `(N, 3)`, meaning N rows of x, y, z. A rotation matrix `R` turns one point `p` as `R @ p`. Points stored as rows need `points @ R.T`, where `.T` swaps rows and columns of `R`, because that gives the same numbers.
 
 ![Points are rows](../assets/diagram-shape-flow.png)
 
 *Forgetting `.T` does not crash. It rotates the points the other way.*
 
-![Wrong unit, wild answer](../assets/fig-degrees-vs-radians.png)
+Turn `(1, 0, 0)`, a point on the x axis, by +90 degrees about z. Seen from above, x lands on y, so expect `(0, 1, 0)`. `rotate_z`, which uses `.T`, gives that. `points @ R` gives `(0, -1, 0)`. Both run, and numpy raises nothing.
 
-*Same readings, two interpretations. The wrong one swings the tip of a 0.4 m link by almost 0.8 m.*
+![Two arms turn](../assets/clip-example.mp4)
+
+*Two arms turn a hand 90° about z toward the amber post. Green uses `rotate_z` and reaches it. Blue leaves out `.T` and swings away.*
+
+![Wrong unit](../assets/fig-degrees-vs-radians.png)
+
+*Left: tip position against the reading in degrees. Blue reads degrees correctly, orange reads them as radians. Right: the orange error swings the tip of a 0.4 m link by almost 0.8 m.*
 
 ## Build It
 
-Three small guards. Each one fails with a message that names the argument.
+`check_shape` stops with a message naming the argument. `looks_like_degrees` is true when any value is above `2 * pi`, about 6.28, one full turn in radians.
 
 ```python
 def check_shape(x, shape, name="array"):
@@ -48,7 +53,7 @@ def looks_like_degrees(q, limit=2 * np.pi):
     return bool(np.max(np.abs(q)) > limit)
 ```
 
-`joint_angles(q)` calls both and refuses a vector that looks like degrees. `rotate_z(points, theta)` checks `(N, 3)` first. A continuous joint can pass `2 * pi`, so raise `limit` for those joints.
+`joint_angles(q)` calls both and refuses degree-looking values. `rotate_z(points, theta)` checks `(N, 3)` first. A continuous joint, one that can spin past a full turn, needs a larger `limit`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -58,7 +63,7 @@ python3 phases/00-setup-and-tooling/01-python-env-and-numpy/code/main.py
 
 ## Use It
 
-Create the environment with `python3 -m venv .venv`, the command and directory name the Python venv page documents. The rest is this lesson's own advice: one environment per project, versions recorded with `pip freeze`, `np.testing.assert_allclose` in tests, and units in variable names (`q_rad`, `p_m`).
+`python3 -m venv .venv` creates a venv, a private folder of packages for one project. Our own advice: one environment per project, versions recorded with `pip freeze`, `np.testing.assert_allclose` in tests, and units in variable names (`q_rad`, `p_m`).
 
 Sources: https://docs.python.org/3/library/venv.html (only `python3 -m venv .venv` and the `.venv` convention), https://numpy.org/doc/stable/user/basics.broadcasting.html (only broadcasting).
 

@@ -16,7 +16,7 @@ except ImportError:            # Windows 등: 잠금 없이 동작한다
 
 LEVELS = [(0, "Loose Bolt", "헐거운 볼트"), (60, "Servo", "서보"), (180, "Gripper", "그리퍼"),
           (350, "Joint", "관절"), (600, "Arm", "로봇 팔"), (1000, "Rover", "로버"),
-          (1600, "Walker", "보행 로봇"), (2500, "Roboticist", "로보티시스트"),
+          (1600, "Walker", "보행 로봇"), (2500, "Roboticist", "로봇공학자"),
           (4000, "Robot Whisperer", "로봇 조련사")]
 XP_PER_ANSWER, XP_PER_MISSION = 10, 20
 DAILY_COUNT, DAILY_PER, DAILY_CAP = 5, 5, 25

@@ -9,33 +9,29 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def update():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("What one laser beam tells the grid")
-    a = d.box("Beam starts\nat the robot", 0, 0.5, "blue", w=220)
-    b = d.box("Cells it crossed\nlog-odds goes down", 1, 0, "green", w=270)
-    c = d.box("Cell where it ended\nlog-odds goes up", 1, 1, "red", w=270)
-    e = d.box("Cells behind the hit\nnot touched", 2, 0.5, "gray", w=250)
-    d.arrow(a, b)
-    d.arrow(a, c)
-    d.arrow(b, e)
-    d.arrow(c, e)
-    d.note("Add the numbers beam after beam. Probability = 1 - 1 / (1 + exp(L)).", d.margin, d.margin + 60 + 2 * d.ch + 10, size=20)
+    a = d.box("Beam leaves\nthe rover", 0, 1, "blue")
+    b = d.box("Cells it crossed:\nL goes down by 0.4", 1, 0, "green")
+    c = d.box("Cell where it ended:\nL goes up by 0.85", 1, 1, "red")
+    e = d.box("Cells behind the hit:\nnot touched", 1, 2, "gray")
+    for t in (b, c, e):
+        d.arrow(a, t)
     d.save(OUT / "diagram-beam-update.excalidraw")
 
 
 def slam():
-    d = Diagram(cell=(330, 170))
-    d.title("Why mapping needs the pose and the pose needs the map")
-    p = d.box("Robot pose\n(from odometry)", 0, 0, "yellow", w=240)
-    m = d.box("Map built\nfrom scans", 1, 0.5, "purple", w=240)
-    e = d.box("Pose error shifts\nevery wall it draws", 2, 0, "red", w=270)
-    f = d.box("Smeared, doubled\nwalls", 2, 1, "red", w=270)
-    g = d.box("Match scans to the map\nto fix the pose", 1, 2, "green", w=280)
+    d = Diagram(numbered=True)
+    d.title("Mapping needs pose, pose needs map")
+    p = d.box("Pose from odometry\n(a little off)", 0, 0, "yellow", step=1)
+    m = d.box("Draw the scan\ninto the map", 1, 0, "purple", step=2)
+    g = d.box("Match the next scan\nto the map so far", 1, 1, "green", step=3)
+    f = d.box("Corrected pose", 0, 1, "green", step=4)
     d.arrow(p, m)
-    d.arrow(m, e)
-    d.arrow(e, f)
-    d.arrow(f, g)
-    d.arrow(g, p, route="below")
+    d.arrow(m, g)
+    d.arrow(g, f)
+    d.arrow(f, p)
+    d.note("wrong pose = smeared walls", near=p, side="t")
     d.save(OUT / "diagram-slam-loop.excalidraw")
 
 

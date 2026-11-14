@@ -6,47 +6,52 @@
 
 ## In Plain Words
 
-Classmates estimate how long a song lasts, but each can speak only to nearby classmates. Everyone repeatedly shifts their estimate a
-little toward their neighbours' estimates.
+Eight toy cars each point a different way and see only their neighbours. Every tick, a car turns a little toward the headings it sees. Two cars pull on each other equally, so whatever one gains the other loses, and the average heading never changes.
 
-With equal influence in both directions and a suitably small update, consensus preserves the group's average while shrinking
-disagreements. Connected classmates eventually share that initial average, which need not be the song's true length. Separate groups
-can settle on different answers, and overly large corrections can make estimates swing farther apart.
+Connected cars settle on that starting average. Separate groups settle on different headings. A turn that is too big overshoots the neighbour's heading by more than the original gap, so the difference grows.
 
 ## The Problem
 
-Eight robots each measure the same quantity with a different error, and no robot can hear all the others. You want every robot to end up holding the group average, using only messages to its radio neighbours. Some layouts agree in a dozen ticks and some take hundreds. A split fleet never agrees at all.
+Eight robots each measure the same quantity with a different error, and none can hear all the others. With messages only to radio neighbours, every robot should end up at the group average. Some layouts agree fast, some crawl, and a split fleet never agrees.
 
 ## The Concept
 
-![One consensus update](../assets/diagram-consensus-update.png)
+![Update](../assets/diagram-consensus-update.png)
 
-*Each robot moves a small step toward the average of its neighbours, every tick.*
+*Each robot steps a little toward its neighbours' average every tick.*
 
-![Modes decay at different speeds](../assets/diagram-consensus-modes.png)
+![Modes decay](../assets/diagram-consensus-modes.png)
 
-*Disagreement splits into modes. Fast ones vanish, the slowest one sets the pace, and a zero eigenvalue means that mode never decays.*
+*Disagreement splits into modes that each shrink at their own speed. Fast ones vanish, the slowest sets the pace, and a zero eigenvalue never decays.*
 
-![States converging on three graphs](../assets/fig-consensus-states.png)
+![Three graphs](../assets/fig-consensus-states.png)
 
-*The ring crawls to the average, the complete graph is there in about ten steps, and two disconnected groups settle on two different values.*
+*The ring crawls to the average, the complete graph needs about ten ticks, and two disconnected groups settle on different values.*
 
-![Measured rate against eps times lambda2](../assets/fig-rate-vs-lambda2.png)
+![Decay rate](../assets/fig-rate-vs-lambda2.png)
 
-*Ring, complete, path and star graphs of several sizes all fall on the line y = x, so the measured decay rate is eps times lambda2.*
+*Ring, complete, path and star graphs all fall on y = x, so the measured decay rate is eps times lambda2.*
 
-With `L = D - A`, the update is `x <- (I - eps L) x`. `L` is symmetric and its rows sum to zero, so the all-ones vector has eigenvalue 0 and the average never changes. Every other eigenvector `v_k` is multiplied by `1 - eps * lambda_k` each step. The error is stable when `eps * lambda_max < 2`. When `eps` is small enough that no factor goes negative, the slowest decay is `1 - eps * lambda2`. The second eigenvalue is above zero exactly when the graph is connected.
+Let `x_i` be car `i`'s heading. One tick moves every car by `eps * sum_j (x_j - x_i)` over its neighbours `j`, with `eps` a small step size. For all cars at once, `x <- (I - eps L) x`, where `I` is the identity matrix and `L = D - A` the graph Laplacian (`A` marks neighbours, `D` counts them). `L` is symmetric and its rows sum to zero, so the all-ones vector has eigenvalue 0 and the average never changes. Every other eigenvector `v_k` (a mode, an independent pattern of disagreement) shrinks by `1 - eps * lambda_k` each tick.
+
+With `eps = 0.05` on a ring, the car at x = 7 sees neighbours 2 and 0, so one tick gives 7 + 0.05 * ((2 - 7) + (0 - 7)) = 6.4.
+
+![Car clip](../assets/clip-example.mp4)
+
+*Green car at x = 7 (1 unit drawn as 0.25 rad; grey arrow = first heading). The first tick, slowed to 0.8 s, turns it about 9 degrees; 19 more play fast.*
+
+The error is stable when `eps * lambda_max < 2`. When `eps` is small enough that no factor goes negative, the slowest decay is `1 - eps * lambda2`.
 
 ## Build It
 
-`laplacian()` builds `D - A`, `lambda2()` takes the second sorted eigenvalue, `run()` iterates the update.
+`laplacian()` builds `D - A`, `lambda2()` takes the second eigenvalue, `run()` iterates the update.
 
 ```python
 M = np.eye(len(A)) - eps * laplacian(A)
 out.append(M @ out[-1])
 ```
 
-Tests check the average is preserved, the per-step contraction equals `1 - eps * lambda2`, and a step above `2 / lambda_max` diverges.
+Tests check the average is preserved, the per-tick contraction equals `1 - eps * lambda2`, and a step size above `2 / lambda_max` diverges.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -60,10 +65,10 @@ Cross-check `lambda2` with `numpy.linalg.eigvalsh` on a graph from your own radi
 
 ## Ship It
 
-`outputs/skill-consensus.md` checks a communication graph and a step size before a fleet runs consensus.
+`outputs/skill-consensus.md` checks a communication graph and step size before a fleet runs consensus.
 
 ## Exercises
 
-1. Add one long-range link to the ring and measure how much `lambda2` and the step count change.
-2. Drop each edge with probability 0.2 every tick and plot the mean steps to agree.
-3. Give robot 0 a fixed value and show everyone converges to it.
+1. Add one long-range link to the ring and measure how much `lambda2` and the tick count change.
+2. Drop each edge with probability 0.2 every tick and plot the mean ticks to agree.
+3. Fix robot 0's value and show everyone converges to it.

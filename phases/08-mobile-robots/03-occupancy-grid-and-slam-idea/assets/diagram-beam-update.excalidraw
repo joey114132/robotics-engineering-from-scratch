@@ -4,48 +4,12 @@
  "source": "robotics-engineering-from-scratch",
  "elements": [
   {
-   "type": "text",
-   "id": "e1",
-   "x": 40,
-   "y": 30,
-   "width": 561,
-   "height": 38,
-   "angle": 0,
-   "strokeColor": "#1e1e1e",
-   "backgroundColor": "transparent",
-   "fillStyle": "solid",
-   "strokeWidth": 1,
-   "strokeStyle": "solid",
-   "roughness": 1,
-   "opacity": 100,
-   "groupIds": [],
-   "frameId": null,
-   "roundness": null,
-   "seed": 1007,
-   "version": 1,
-   "versionNonce": 1,
-   "isDeleted": false,
-   "boundElements": null,
-   "updated": 1,
-   "link": null,
-   "locked": false,
-   "text": "What one laser beam tells the grid",
-   "originalText": "What one laser beam tells the grid",
-   "fontSize": 30,
-   "fontFamily": 1,
-   "textAlign": "left",
-   "verticalAlign": "top",
-   "containerId": null,
-   "lineHeight": 1.25,
-   "autoResize": true
-  },
-  {
    "type": "rectangle",
-   "id": "e2",
-   "x": 40,
-   "y": 185.0,
-   "width": 220,
-   "height": 88,
+   "id": "box1",
+   "x": 8.0,
+   "y": 218.5,
+   "width": 268.0,
+   "height": 93.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "#a5d8ff",
@@ -59,21 +23,25 @@
    "roundness": {
     "type": 3
    },
-   "seed": 1014,
+   "seed": 1007,
    "version": 1,
-   "versionNonce": 2,
+   "versionNonce": 1,
    "isDeleted": false,
    "boundElements": [
     {
-     "id": "e3",
+     "id": "e2",
      "type": "text"
     },
     {
-     "id": "e10",
+     "id": "arrow5",
      "type": "arrow"
     },
     {
-     "id": "e11",
+     "id": "arrow6",
+     "type": "arrow"
+    },
+    {
+     "id": "arrow7",
      "type": "arrow"
     }
    ],
@@ -83,47 +51,47 @@
   },
   {
    "type": "text",
-   "id": "e3",
-   "x": 50,
-   "y": 204.0,
-   "width": 200,
-   "height": 50,
+   "id": "e2",
+   "x": 20.0,
+   "y": 232.5,
+   "width": 244.0,
+   "height": 65,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
    "roundness": null,
-   "seed": 1021,
+   "seed": 1014,
    "version": 1,
-   "versionNonce": 3,
+   "versionNonce": 2,
    "isDeleted": false,
    "boundElements": null,
    "updated": 1,
    "link": null,
    "locked": false,
-   "text": "Beam starts\nat the robot",
-   "originalText": "Beam starts\nat the robot",
-   "fontSize": 20,
-   "fontFamily": 1,
+   "text": "Beam leaves\nthe rover",
+   "originalText": "Beam leaves\nthe rover",
+   "fontSize": 26,
+   "fontFamily": 6,
    "textAlign": "center",
    "verticalAlign": "middle",
-   "containerId": "e2",
+   "containerId": "box1",
    "lineHeight": 1.25,
    "autoResize": false
   },
   {
    "type": "rectangle",
-   "id": "e4",
-   "x": 370,
-   "y": 100,
-   "width": 270,
-   "height": 88,
+   "id": "box2",
+   "x": 328.0,
+   "y": 67.5,
+   "width": 268.0,
+   "height": 93.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "#b2f2bb",
@@ -137,21 +105,17 @@
    "roundness": {
     "type": 3
    },
-   "seed": 1028,
+   "seed": 1021,
    "version": 1,
-   "versionNonce": 4,
+   "versionNonce": 3,
    "isDeleted": false,
    "boundElements": [
     {
-     "id": "e5",
+     "id": "e4",
      "type": "text"
     },
     {
-     "id": "e10",
-     "type": "arrow"
-    },
-    {
-     "id": "e12",
+     "id": "arrow5",
      "type": "arrow"
     }
    ],
@@ -161,47 +125,47 @@
   },
   {
    "type": "text",
-   "id": "e5",
-   "x": 380,
-   "y": 119.0,
-   "width": 250,
-   "height": 50,
+   "id": "e4",
+   "x": 340.0,
+   "y": 81.5,
+   "width": 244.0,
+   "height": 65,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
    "roundness": null,
-   "seed": 1035,
+   "seed": 1028,
    "version": 1,
-   "versionNonce": 5,
+   "versionNonce": 4,
    "isDeleted": false,
    "boundElements": null,
    "updated": 1,
    "link": null,
    "locked": false,
-   "text": "Cells it crossed\nlog-odds goes down",
-   "originalText": "Cells it crossed\nlog-odds goes down",
-   "fontSize": 20,
-   "fontFamily": 1,
+   "text": "Cells it crossed:\nL goes down by 0.4",
+   "originalText": "Cells it crossed:\nL goes down by 0.4",
+   "fontSize": 26,
+   "fontFamily": 6,
    "textAlign": "center",
    "verticalAlign": "middle",
-   "containerId": "e4",
+   "containerId": "box2",
    "lineHeight": 1.25,
    "autoResize": false
   },
   {
    "type": "rectangle",
-   "id": "e6",
-   "x": 370,
-   "y": 270,
-   "width": 270,
-   "height": 88,
+   "id": "box3",
+   "x": 328.0,
+   "y": 218.5,
+   "width": 268.0,
+   "height": 93.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "#ffc9c9",
@@ -215,21 +179,17 @@
    "roundness": {
     "type": 3
    },
-   "seed": 1042,
+   "seed": 1035,
    "version": 1,
-   "versionNonce": 6,
+   "versionNonce": 5,
    "isDeleted": false,
    "boundElements": [
     {
-     "id": "e7",
+     "id": "e6",
      "type": "text"
     },
     {
-     "id": "e11",
-     "type": "arrow"
-    },
-    {
-     "id": "e13",
+     "id": "arrow6",
      "type": "arrow"
     }
    ],
@@ -239,47 +199,47 @@
   },
   {
    "type": "text",
-   "id": "e7",
-   "x": 380,
-   "y": 289.0,
-   "width": 250,
-   "height": 50,
+   "id": "e6",
+   "x": 340.0,
+   "y": 232.5,
+   "width": 244.0,
+   "height": 65,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
    "roundness": null,
-   "seed": 1049,
+   "seed": 1042,
    "version": 1,
-   "versionNonce": 7,
+   "versionNonce": 6,
    "isDeleted": false,
    "boundElements": null,
    "updated": 1,
    "link": null,
    "locked": false,
-   "text": "Cell where it ended\nlog-odds goes up",
-   "originalText": "Cell where it ended\nlog-odds goes up",
-   "fontSize": 20,
-   "fontFamily": 1,
+   "text": "Cell where it ended:\nL goes up by 0.85",
+   "originalText": "Cell where it ended:\nL goes up by 0.85",
+   "fontSize": 26,
+   "fontFamily": 6,
    "textAlign": "center",
    "verticalAlign": "middle",
-   "containerId": "e6",
+   "containerId": "box3",
    "lineHeight": 1.25,
    "autoResize": false
   },
   {
    "type": "rectangle",
-   "id": "e8",
-   "x": 700,
-   "y": 185.0,
-   "width": 250,
-   "height": 88,
+   "id": "box4",
+   "x": 328.0,
+   "y": 369.5,
+   "width": 268.0,
+   "height": 93.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "#e9ecef",
@@ -293,21 +253,17 @@
    "roundness": {
     "type": 3
    },
-   "seed": 1056,
+   "seed": 1049,
    "version": 1,
-   "versionNonce": 8,
+   "versionNonce": 7,
    "isDeleted": false,
    "boundElements": [
     {
-     "id": "e9",
+     "id": "e8",
      "type": "text"
     },
     {
-     "id": "e12",
-     "type": "arrow"
-    },
-    {
-     "id": "e13",
+     "id": "arrow7",
      "type": "arrow"
     }
    ],
@@ -317,18 +273,54 @@
   },
   {
    "type": "text",
-   "id": "e9",
-   "x": 710,
-   "y": 204.0,
-   "width": 230,
-   "height": 50,
+   "id": "e8",
+   "x": 340.0,
+   "y": 383.5,
+   "width": 244.0,
+   "height": 65,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
+   "opacity": 100,
+   "groupIds": [],
+   "frameId": null,
+   "roundness": null,
+   "seed": 1056,
+   "version": 1,
+   "versionNonce": 8,
+   "isDeleted": false,
+   "boundElements": null,
+   "updated": 1,
+   "link": null,
+   "locked": false,
+   "text": "Cells behind the hit:\nnot touched",
+   "originalText": "Cells behind the hit:\nnot touched",
+   "fontSize": 26,
+   "fontFamily": 6,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "box4",
+   "lineHeight": 1.25,
+   "autoResize": false
+  },
+  {
+   "type": "arrow",
+   "id": "arrow5",
+   "x": 142.0,
+   "y": 218.5,
+   "width": 186.0,
+   "height": 104.5,
+   "angle": 0,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "transparent",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "strokeStyle": "solid",
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
@@ -341,36 +333,53 @@
    "updated": 1,
    "link": null,
    "locked": false,
-   "text": "Cells behind the hit\nnot touched",
-   "originalText": "Cells behind the hit\nnot touched",
-   "fontSize": 20,
-   "fontFamily": 1,
-   "textAlign": "center",
-   "verticalAlign": "middle",
-   "containerId": "e8",
-   "lineHeight": 1.25,
-   "autoResize": false
+   "points": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     -104.5
+    ],
+    [
+     186.0,
+     -104.5
+    ]
+   ],
+   "startArrowhead": null,
+   "endArrowhead": "triangle",
+   "lastCommittedPoint": null,
+   "elbowed": false,
+   "startBinding": {
+    "elementId": "box1",
+    "focus": 0,
+    "gap": 1
+   },
+   "endBinding": {
+    "elementId": "box2",
+    "focus": 0,
+    "gap": 1
+   }
   },
   {
    "type": "arrow",
-   "id": "e10",
-   "x": 266,
-   "y": 229.0,
-   "width": 98,
-   "height": 85,
+   "id": "arrow6",
+   "x": 276.0,
+   "y": 265.0,
+   "width": 52.0,
+   "height": 0.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 2,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
-   "roundness": {
-    "type": 2
-   },
+   "roundness": null,
    "seed": 1070,
    "version": 1,
    "versionNonce": 10,
@@ -381,49 +390,47 @@
    "locked": false,
    "points": [
     [
-     0,
-     0
+     0.0,
+     0.0
     ],
     [
-     98,
-     -85
+     52.0,
+     0.0
     ]
    ],
    "startArrowhead": null,
-   "endArrowhead": "arrow",
+   "endArrowhead": "triangle",
+   "lastCommittedPoint": null,
+   "elbowed": false,
    "startBinding": {
-    "elementId": "e2",
+    "elementId": "box1",
     "focus": 0,
-    "gap": 6
+    "gap": 1
    },
    "endBinding": {
-    "elementId": "e4",
+    "elementId": "box3",
     "focus": 0,
-    "gap": 6
-   },
-   "lastCommittedPoint": null,
-   "elbowed": false
+    "gap": 1
+   }
   },
   {
    "type": "arrow",
-   "id": "e11",
-   "x": 266,
-   "y": 229.0,
-   "width": 98,
-   "height": 85,
+   "id": "arrow7",
+   "x": 142.0,
+   "y": 311.5,
+   "width": 186.0,
+   "height": 104.5,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 2,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
-   "roundness": {
-    "type": 2
-   },
+   "roundness": null,
    "seed": 1077,
    "version": 1,
    "versionNonce": 11,
@@ -434,49 +441,51 @@
    "locked": false,
    "points": [
     [
-     0,
-     0
+     0.0,
+     0.0
     ],
     [
-     98,
-     85
+     0.0,
+     104.5
+    ],
+    [
+     186.0,
+     104.5
     ]
    ],
    "startArrowhead": null,
-   "endArrowhead": "arrow",
+   "endArrowhead": "triangle",
+   "lastCommittedPoint": null,
+   "elbowed": false,
    "startBinding": {
-    "elementId": "e2",
+    "elementId": "box1",
     "focus": 0,
-    "gap": 6
+    "gap": 1
    },
    "endBinding": {
-    "elementId": "e6",
+    "elementId": "box4",
     "focus": 0,
-    "gap": 6
-   },
-   "lastCommittedPoint": null,
-   "elbowed": false
+    "gap": 1
+   }
   },
   {
-   "type": "arrow",
+   "type": "text",
    "id": "e12",
-   "x": 646,
-   "y": 144.0,
-   "width": 48,
-   "height": 85,
+   "x": 8.0,
+   "y": 8.0,
+   "width": 476.5,
+   "height": 38,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
-   "strokeWidth": 2,
+   "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
-   "roundness": {
-    "type": 2
-   },
+   "roundness": null,
    "seed": 1084,
    "version": 1,
    "versionNonce": 12,
@@ -485,119 +494,18 @@
    "updated": 1,
    "link": null,
    "locked": false,
-   "points": [
-    [
-     0,
-     0
-    ],
-    [
-     48,
-     85
-    ]
-   ],
-   "startArrowhead": null,
-   "endArrowhead": "arrow",
-   "startBinding": {
-    "elementId": "e4",
-    "focus": 0,
-    "gap": 6
-   },
-   "endBinding": {
-    "elementId": "e8",
-    "focus": 0,
-    "gap": 6
-   },
-   "lastCommittedPoint": null,
-   "elbowed": false
-  },
-  {
-   "type": "arrow",
-   "id": "e13",
-   "x": 646,
-   "y": 314.0,
-   "width": 48,
-   "height": 85,
-   "angle": 0,
-   "strokeColor": "#1e1e1e",
-   "backgroundColor": "transparent",
-   "fillStyle": "solid",
-   "strokeWidth": 2,
-   "strokeStyle": "solid",
-   "roughness": 1,
-   "opacity": 100,
-   "groupIds": [],
-   "frameId": null,
-   "roundness": {
-    "type": 2
-   },
-   "seed": 1091,
-   "version": 1,
-   "versionNonce": 13,
-   "isDeleted": false,
-   "boundElements": null,
-   "updated": 1,
-   "link": null,
-   "locked": false,
-   "points": [
-    [
-     0,
-     0
-    ],
-    [
-     48,
-     -85
-    ]
-   ],
-   "startArrowhead": null,
-   "endArrowhead": "arrow",
-   "startBinding": {
-    "elementId": "e6",
-    "focus": 0,
-    "gap": 6
-   },
-   "endBinding": {
-    "elementId": "e8",
-    "focus": 0,
-    "gap": 6
-   },
-   "lastCommittedPoint": null,
-   "elbowed": false
-  },
-  {
-   "type": "text",
-   "id": "e14",
-   "x": 40,
-   "y": 450,
-   "width": 748,
-   "height": 25,
-   "angle": 0,
-   "strokeColor": "#495057",
-   "backgroundColor": "transparent",
-   "fillStyle": "solid",
-   "strokeWidth": 1,
-   "strokeStyle": "solid",
-   "roughness": 1,
-   "opacity": 100,
-   "groupIds": [],
-   "frameId": null,
-   "roundness": null,
-   "seed": 1098,
-   "version": 1,
-   "versionNonce": 14,
-   "isDeleted": false,
-   "boundElements": null,
-   "updated": 1,
-   "link": null,
-   "locked": false,
-   "text": "Add the numbers beam after beam. Probability = 1 - 1 / (1 + exp(L)).",
-   "originalText": "Add the numbers beam after beam. Probability = 1 - 1 / (1 + exp(L)).",
-   "fontSize": 20,
-   "fontFamily": 1,
+   "text": "What one laser beam tells the grid",
+   "originalText": "What one laser beam tells the grid",
+   "fontSize": 30,
+   "fontFamily": 6,
    "textAlign": "left",
    "verticalAlign": "top",
    "containerId": null,
    "lineHeight": 1.25,
-   "autoResize": true
+   "autoResize": true,
+   "customData": {
+    "role": "title"
+   }
   }
  ],
  "appState": {

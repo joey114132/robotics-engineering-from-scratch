@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "My map is only as honest as my linearisation point. Start me 1 rad off with one landmark and I lie with a straight face.",
-  "mission": "In `code/main.py` run `mean_nees(30, 0.6, lms=LMS[:1])`, then the same with `LMS[:2]`. Predict which one stays near 3 before you run it."
- },
- "ko": {
-  "hook": "제 지도는 선형화점만큼만 정직합니다. landmark 하나로 1 rad 틀리게 시작하면 저는 태연하게 거짓말을 합니다.",
-  "mission": "`code/main.py`에서 `mean_nees(30, 0.6, lms=LMS[:1])`을 돌리고 `LMS[:2]`로도 돌리세요. 어느 쪽이 3 근처에 머물지 실행 전에 예측하세요."
- },
- "toy": "ekf-consistency",
-  "motion": "ekf-stall",
+  "en": {
+    "hook": "My map is only as honest as my linearisation point. Start me 1 rad off with one landmark and I lie with a straight face.",
+    "mission": "In `code/main.py` run `mean_nees(30, 0.6, lms=LMS[:1])`, then the same with `LMS[:2]`. Predict which one stays near 3 before you run it.",
+    "clip": "A robot drives a circle and measures range and bearing to three posts (amber lines). Both ghosts start with a wrong idea of where the robot is, because its true heading is 0.6 rad off. The blue ghost only dead-reckons and drifts further away, while the green ghost corrects itself with the posts through the EKF and ends up on the robot. Everything comes from this lesson's `run()`, and 8 s of motion are played at 1.5 times speed."
+  },
+  "ko": {
+    "hook": "제 지도는 선형화점만큼만 정직합니다. landmark 하나로 1 rad 틀리게 시작하면 저는 태연하게 거짓말을 합니다.",
+    "mission": "`code/main.py`에서 `mean_nees(30, 0.6, lms=LMS[:1])`을 돌리고 `LMS[:2]`로도 돌리세요. 어느 쪽이 3 근처에 머물지 실행 전에 예측하세요.",
+    "clip": "로봇이 원을 그리며 달리고 기둥 세 개까지의 거리와 방향을 잽니다(호박색 선). 두 유령 모두 로봇이 바라보는 방향(heading)을 0.6 rad 틀리게 알고 시작합니다. 파란 유령은 dead reckoning만 해서 점점 멀어지고 초록 유령은 EKF로 기둥 측정을 반영해서 로봇 위에 겹칩니다. 모든 값은 이 레슨의 `run()`에서 나왔고 8초 분량을 1.5배 속도로 재생했습니다."
+  },
+  "toy": "ekf-consistency",
   "three": "ekf-circle-3d"
 }

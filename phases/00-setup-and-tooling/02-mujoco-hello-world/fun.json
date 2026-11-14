@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A pendulum that gains energy on its own sounds like a free lunch. It is just two lines in the wrong order.",
-    "mission": "Run `cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`. Predict which scheme ends with more energy before you look."
+    "mission": "Run `cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`. Predict which scheme ends with more energy before you look.",
+    "clip": "Two identical pendulums start from rest at 0.5 rad, and the amber line marks that starting height. The green one is stepped with semi-implicit Euler and never rises above the line. The blue one is stepped with explicit Euler and climbs higher with every swing. Both come from the lesson's `simulate()` with `dt` = 0.04 s, the largest time step the lesson tries, played at about real time."
   },
   "ko": {
     "hook": "혼자 에너지가 불어나는 진자는 공짜 점심 같습니다. 알고 보면 코드 두 줄의 순서가 틀렸을 뿐입니다.",
-    "mission": "`cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`를 실행하기 전에 어느 scheme이 에너지가 더 많이 남을지 예측해 보세요."
+    "mission": "`cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`를 실행하기 전에 어느 scheme이 에너지가 더 많이 남을지 예측해 보세요.",
+    "clip": "똑같은 진자 두 개가 0.5 rad에서 가만히 출발하고, 주황색 선이 그 출발 높이입니다. 초록 진자는 semi-implicit Euler로 계산해서 선 위로 올라가지 않습니다. 파란 진자는 explicit Euler로 계산해서 한 번 흔들릴 때마다 더 높이 올라갑니다. 둘 다 이 레슨의 `simulate()`에서 `dt` = 0.04초(이 레슨의 스텝 크기 비교에서 가장 큰 값)로 구했고 거의 실제 속도로 재생합니다."
   },
   "toy": null,
- "motion": "euler-energy",
   "three": "pendulum-timestep-3d"
 }

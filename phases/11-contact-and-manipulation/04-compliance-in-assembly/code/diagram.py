@@ -1,4 +1,4 @@
-# 레슨 11/04 도해: 딱딱한 손목이 jam 을 만드는 연쇄와 부드러운 손목이 비켜 주는 연쇄를 Excalidraw 로 그린다
+# 레슨 11/04 도해: 딱딱한 손목이 1 mm 어긋남을 큰 옆힘으로 바꿔 peg 를 jam 시키는 연쇄와, 부드러운 손목이 비켜 주는 연쇄를 Excalidraw 로 그린다
 import pathlib
 import sys
 
@@ -9,29 +9,29 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def jam():
-    d = Diagram()
+    d = Diagram(numbered=True)
     d.title("How a stiff wrist jams the peg")
-    a = d.box("Lateral offset e\nbetween tool and hole", 0, 0, "yellow")
-    b = d.box("Stiff wrist turns it\ninto a big side force", 1, 0, "purple")
-    c = d.box("Tip pressed on wall\nfriction grows", 2, 0, "red")
-    e = d.box("Two-point wedge\ncones hold the peg", 3, 0, "red")
-    f = d.box("Push cannot move it:\nJAM", 3, 1, "red")
+    a = d.box("Peg is 1 mm off\nthe hole centre", 0, 0, "yellow", step=1)
+    b = d.box("Stiff wrist: about\n112 N sideways", 1, 0, "purple", step=2)
+    c = d.box("Tip pressed on wall\nfriction grows", 2, 0, "red", step=3)
+    e = d.box("Two-point wedge\nholds the peg", 2, 1, "red", step=4)
+    f = d.box("JAM at 34.6 mm\npush is still 5 N", 1, 1, "red", step=5)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
     d.arrow(e, f)
-    d.note("The side force is what feeds the friction.", d.margin, d.margin + 60 + 2 * d.ch - 10, size=22)
+    d.note("The side force is what feeds the friction.", near=f, side="b")
     d.save(OUT / "diagram-jam-chain.excalidraw")
 
 
 def comply():
-    d = Diagram(cell=(330, 170))
-    d.title("A compliant wrist gives way")
-    a = d.box("Same offset e", 0, 0.5, "yellow", w=200)
-    b = d.box("Stiff wrist\nkx large", 1, 0, "red", w=230)
-    c = d.box("Soft wrist\nkx small", 1, 1, "green", w=230)
-    r = d.box("Big side force\nwedge holds: jam", 2, 0, "red", w=250)
-    s = d.box("Tiny side force\npeg slides, tilt shrinks", 2, 1, "green", w=250)
+    d = Diagram()
+    d.title("Same 1 mm offset, same 5 N push")
+    a = d.box("Wrist holds\nthe peg", 1, 0, "yellow")   # a tree: one branch per wrist, so each arrow meets the middle of a side
+    b = d.box("Stiff wrist\n1e5 N/m", 0, 1, "red")
+    c = d.box("Soft wrist\n1e3 N/m", 2, 1, "green")
+    r = d.box("112 N sideways\nJAM", 0, 2, "red")
+    s = d.box("1.1 N sideways\npeg goes in", 2, 2, "green")
     for u, v in ((a, b), (a, c), (b, r), (c, s)):
         d.arrow(u, v)
     d.save(OUT / "diagram-comply.excalidraw")

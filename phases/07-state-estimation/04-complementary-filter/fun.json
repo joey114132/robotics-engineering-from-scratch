@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "The gyro is a smooth talker who drifts, and the accelerometer is honest but twitchy. One time constant decides who speaks when.",
-    "mission": "In `code/main.py` swap the `best_tau(dt, b, sa)` argument of `complementary(...)` for `0.05` and run `python3 code/main.py`. Predict whether fused rmse beats the best tau's 0.0068."
+    "mission": "In `code/main.py` swap the `best_tau(dt, b, sa)` argument of `complementary(...)` for `0.05` and run `python3 code/main.py`. Predict whether fused rmse beats the best tau's 0.0068.",
+    "clip": "Each solid board shows one method's estimate of a rocking board's tilt, and the grey ghost behind it is the true tilt. Blue integrates only the gyro, so its bias of 0.01 rad/s becomes a growing offset, and amber uses only the accelerometer, so it is right on average but shakes with noise. Green is `complementary()` with the time constant from `best_tau()`, and it follows the true tilt. The data are seconds 12 to 17.5 of the lesson's 20 s run, in real time."
   },
   "ko": {
-    "hook": "gyro는 말이 매끄럽지만 슬금슬금 밀리고 가속도계는 정직하지만 떨립니다. 누가 언제 말할지는 시간상수 하나가 정합니다.",
-    "mission": "`code/main.py`의 `complementary(...)`에서 `best_tau(dt, b, sa)`를 `0.05`로 바꾸고 `python3 code/main.py`를 실행하세요. fused rmse가 최적 tau의 약 0.0068보다 나을지 예측하세요."
+    "hook": "gyro는 말이 매끄럽지만 슬금슬금 밀리고 가속도계는 정직하지만 떨립니다. 누가 언제 말할지는 time constant 하나가 정합니다.",
+    "mission": "`code/main.py`의 `complementary(...)`에서 `best_tau(dt, b, sa)`를 `0.05`로 바꾸고 `python3 code/main.py`를 실행하세요. fused rmse가 최적 tau의 약 0.0068보다 나을지 예측하세요.",
+    "clip": "채워진 판은 흔들리는 판의 기울기를 각 방법이 추정한 값이고 뒤의 회색 유령이 실제 기울기입니다. 파란 판은 gyro만 적분해서 bias 0.01 rad/s가 점점 커지는 오프셋이 되고 호박색 판은 가속도계만 써서 평균은 맞지만 노이즈로 떨립니다. 초록 판은 `best_tau()`의 time constant를 쓴 `complementary()`이고 실제 기울기를 잘 따라갑니다. 20초 실험 중 12초에서 17.5초 구간을 실제 속도로 보여 줍니다."
   },
   "toy": null,
-  "motion": "tau-lanes",
   "three": "tilt-planks-3d"
 }

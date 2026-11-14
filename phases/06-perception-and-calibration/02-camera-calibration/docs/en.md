@@ -6,34 +6,37 @@
 
 ## In Plain Words
 
-Photograph squared paper straight on, then tilt it. The squares look narrower in one direction, but their
-real sides and right angles stay fixed. Those known relationships let you separate the camera's geometry
-from the paper's pose.
+A camera on a stand looks at a checkerboard on a paddle. Every square is the same size with square corners, so squashed squares in the photo come from the board's tilt and the camera's lens. A new tilt squashes them in a new pattern, a fresh clue.
 
-Camera calibration uses tilted views to estimate focal lengths and the principal point, where the optical
-axis meets the image plane. Sliding the paper without changing its orientation repeats the same
-constraints, leaving some unknowns unresolved. Varied tilts provide new constraints; more useful views
-can also reduce the effect of noisy pixel measurements.
+Sliding the board without tilting keeps the pattern, so it adds no clue. Several tilts let you solve for the focal length, how strongly the lens zooms, and the principal point, the pixel where the camera's centre line lands.
 
 ## The Problem
 
-You trust the focal length printed in a datasheet, unproject a pixel at the image edge, and the point is a few centimetres off. The real `fx` and `cx` differ from the nominal values, and nothing in the image tells you so. You need to measure them from a target whose geometry you know.
+You trust the datasheet's focal length, unproject an edge pixel, and the point is a few centimetres off. The real `fx` and `cx` differ and nothing in the image says so. Measure them from a target you know.
 
 ## The Concept
 
-![Four linear steps from grid to intrinsics](../assets/diagram-calib-steps.png)
+![Four linear steps from grid to camera numbers](../assets/diagram-calib-steps.png)
 
-*Each view of a flat grid gives a homography. Its columns constrain `B = K^-T K^-1`, and `K` falls out of `B`.*
+*Left to right: each view gives a matrix `H`, the `H`s give a matrix `B`, and `B` gives `fx, fy, cx, cy`.*
 
-For a plane at `Z = 0` the pixel is `K [r1 r2 t]` applied to `(X, Y, 1)`, so each view gives a 3x3 homography `H = K [r1 r2 t]`. Because `r1` and `r2` are orthonormal, `h1' B h2 = 0` and `h1' B h1 = h2' B h2`. Two linear equations per view, and `B` has five unknowns when skew is zero.
+The board is flat, so each corner has board coordinates `(X, Y)` with `Z = 0`. The matrix `K` holds `fx, fy, cx, cy`. Each view gives a 3x3 matrix `H = K [r1 r2 t]` (a homography) that maps `(X, Y, 1)` to pixels. `r1, r2` are the board's edge directions and `t` is where it sits, so the first columns of `H` are `h1 = K r1` and `h2 = K r2`.
+
+The edges are perpendicular and equally long. Writing `r = K^-1 h` (`'` and `T` mean transpose) turns that into `h1' B h2 = 0` and `h1' B h1 = h2' B h2`, where `B = K^-T K^-1` collects the unknowns: two linear equations per view. `B` is symmetric (six numbers), zero skew (the slant of the pixel grid) removes one, and it is known only up to scale, so four equations suffice: two tilted views.
+
+Example: for the `K` with `fx = 620`, `fy = 580`, `cx = 330`, `cy = 235`, `make_views(K, 4, 0.0, 3)` makes 4 views, no pixel noise, seed 3. Tilted 28 to 42 degrees, they return exactly that `K`. Slid the same way but never tilted, every view adds the same clue, so `calibrate()` raises `degenerate views`.
+
+![A slid board and a tilted board](../assets/clip-example.mp4)
+
+*Blue board only slides: red cross (rejected). Green board tilts a new way each time: green ball (solved).*
 
 ![Which views work](../assets/diagram-calib-views.png)
 
-*Views that only slide the target sideways repeat the same constraints, so the solver rejects them.*
+*Sliding repeats the same clue and is rejected; different tilts add new ones.*
 
 ![Error against pixel noise](../assets/fig-calib-noise.png)
 
-*Median over 100 seeded runs. The linear answer is several times the pixel noise with 3 views, and more views cut it by about half.*
+*Median of 100 runs: 3 views give several times the pixel noise, and more views halve it.*
 
 ## Build It
 
@@ -44,7 +47,7 @@ cx, cy = -B13 / B11, -B23 / B22
 fx, fy = np.sqrt(lam / B11), np.sqrt(lam / B22)   # lam = B33 - B13^2/B11 - B23^2/B22
 ```
 
-`homography_dlt()` normalises both point sets, stacks two rows per point and takes the smallest singular vector. `calibrate()` raises for degenerate or unphysical results.
+`homography_dlt()` normalises the points, stacks two rows per point and takes the smallest singular vector. `calibrate()` raises for degenerate or unphysical results.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -53,9 +56,9 @@ python3 -m pytest phases/06-perception-and-calibration/02-camera-calibration -q
 
 ## Use It
 
-Run `cv2.calibrateCamera` on the same synthetic views with distortion terms fixed, and compare `fx` and `cy`. Production tools then refine the linear answer by minimising reprojection error with nonlinear least squares.
+Run `cv2.calibrateCamera` on the same views with distortion terms fixed and compare `fx` and `cy`. Production tools refine it by minimising reprojection error.
 
-Sources: the [OpenCV calibration tutorial](https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html) (an older version) describes `cv2.calibrateCamera` returning the camera matrix, distortion coefficients and poses, and uses reprojection error to check them.
+Sources: the [OpenCV calibration tutorial](https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html) (an older version) describes `cv2.calibrateCamera` and uses reprojection error to check it.
 
 ## Ship It
 
@@ -63,6 +66,6 @@ Sources: the [OpenCV calibration tutorial](https://opencv24-python-tutorials.rea
 
 ## Exercises
 
-1. Remove the zero-skew assumption by adding `B12` and see how the error changes.
+1. Drop the zero-skew assumption by adding `B12` and compare the error.
 2. Find the smallest number of views that never fails at 1 px noise.
-3. Add a nonlinear refinement step with `scipy.optimize.least_squares` and compare the error.
+3. Add a refinement step with `scipy.optimize.least_squares` and compare the error.

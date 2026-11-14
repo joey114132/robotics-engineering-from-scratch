@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Reaching the target on time is easy. Arriving without a knock takes six promises, and a cubic keeps only four.",
-  "mission": "In `code/main.py` change `T, dt = 2.0, 0.002` to `T, dt = 1.0, 0.002` and run `python3 code/main.py`. Predict how many times bigger the quintic peak jerk (7.5 now) gets when the move takes half the time."
- },
- "ko": {
-  "hook": "제시간에 목표에 닿는 건 쉽습니다. 덜컥거림 없이 닿으려면 약속이 여섯 개 필요한데 cubic은 네 개만 지킵니다.",
-  "mission": "`code/main.py`에서 `T, dt = 2.0, 0.002`를 `T, dt = 1.0, 0.002`로 바꾸고 `python3 code/main.py`를 실행하세요. 움직임이 절반 시간이면 quintic peak jerk(현재 7.5)가 몇 배가 될지 예측하세요."
- },
- "toy": null,
- "motion": "trapezoid-profile",
- "three": "trajectory-lanes-3d"
+  "en": {
+    "hook": "Reaching the target on time is easy. Arriving without a knock takes six promises, and a cubic keeps only four.",
+    "mission": "In `code/main.py` change `T, dt = 2.0, 0.002` to `T, dt = 1.0, 0.002` and run `python3 code/main.py`. Predict how many times bigger the quintic peak jerk (7.5 now) gets when the move takes half the time.",
+    "clip": "Two bench arms make the same 1 rad move in 2 s, the blue one with a cubic profile and the green one with a quintic. The red arrow is the joint acceleration, drawn 0.3 m per rad/s². The cubic's arrow jumps to full length when the move starts and vanishes at the end, which is the knock a motor feels, while the quintic's grows and fades smoothly. The curves come from `cubic()`, `quintic()` and `poly()`, played 1.5 times slower."
+  },
+  "ko": {
+    "hook": "제시간에 목표에 닿는 건 쉽습니다. 덜컥거림 없이 닿으려면 약속이 여섯 개 필요한데 cubic은 네 개만 지킵니다.",
+    "mission": "`code/main.py`에서 `T, dt = 2.0, 0.002`를 `T, dt = 1.0, 0.002`로 바꾸고 `python3 code/main.py`를 실행하세요. 움직임이 절반 시간이면 quintic peak jerk(현재 7.5)가 몇 배가 될지 예측하세요.",
+    "clip": "파란 팔(cubic)과 초록 팔(quintic)이 같은 1 rad 이동을 2 s 동안 합니다. 빨간 화살표는 관절 가속도이고 1 rad/s²당 0.3 m로 그렸습니다. cubic의 화살표는 움직임이 시작되는 순간 한 번에 길어지고 끝나는 순간 한 번에 사라집니다. 이것이 모터가 느끼는 덜컥임입니다. quintic의 화살표는 서서히 자라고 서서히 줄어듭니다. 값은 `cubic()`, `quintic()`, `poly()`에서 나왔고 1.5배 느리게 재생합니다."
+  },
+  "toy": null,
+  "three": "trajectory-lanes-3d"
 }

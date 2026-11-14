@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Change the time step and my bouncing ball grows taller. Physics didn't do that. My integrator got greedy with energy.",
-    "mission": "In `code/main.py` replace `1.9e-2` with `5e-3`. Predict the semi-implicit rebound height at that step, then run `python3 code/main.py` and compare it with the euler column."
+    "mission": "In `code/main.py` replace `1.9e-2` with `5e-3`. Predict the semi-implicit rebound height at that step, then run `python3 code/main.py` and compare it with the euler column.",
+    "clip": "Two crates drop 0.1 m onto a stiff pad and bounce, both with a 3 ms time step. The blue crate uses explicit Euler and rebounds to 0.27 m, far above the shelf it fell from. The green crate uses semi-implicit Euler and comes back to about 0.1 m. Heights come from this lesson's `step()`, drawn 2.2 times larger and slowed 10 times."
   },
   "ko": {
     "hook": "time step을 바꿨더니 공이 더 높이 튑니다. 물리가 한 일이 아닙니다. integrator가 에너지를 욕심낸 것입니다.",
-    "mission": "`code/main.py`에서 `1.9e-2`를 `5e-3`으로 바꾸세요. 그 dt에서 semi-implicit의 rebound 높이를 예측한 뒤 `python3 code/main.py`를 실행해 euler 열과 비교하세요."
+    "mission": "`code/main.py`에서 `1.9e-2`를 `5e-3`으로 바꾸세요. 그 dt에서 semi-implicit의 rebound 높이를 예측한 뒤 `python3 code/main.py`를 실행해 euler 열과 비교하세요.",
+    "clip": "상자 두 개를 0.1 m 높이에서 단단한 패드에 떨어뜨립니다. time step은 둘 다 3 ms입니다. 파란 상자는 explicit Euler라서 0.27 m까지 튀어 올라 처음 놓인 선반보다 훨씬 높이 갑니다. 초록 상자는 semi-implicit Euler라서 약 0.1 m로 돌아옵니다. 높이는 이 레슨의 `step()`으로 계산했고 2.2배 크게 그렸으며 10배 느리게 재생했습니다."
   },
   "toy": "dt-blowup",
-  "motion": "dt-bounce",
   "three": "timestep-pendulums-3d"
 }

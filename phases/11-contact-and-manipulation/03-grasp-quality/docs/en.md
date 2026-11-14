@@ -14,15 +14,21 @@ disturbance direction, the grasp lacks force closure. A grasp with little margin
 
 ## The Problem
 
-Two fingers pinch a box. Slide one finger up a little and the box twists out, even though the squeeze force is the same. A grasp can fail without any contact losing grip, because the contacts together cannot resist some direction of load.
+Two fingers pinch a box. Slide one finger up and the box twists out, even though the squeeze force is the same. A grasp can fail without any contact losing grip, because the contacts together cannot resist some direction of load.
 
 ## The Concept
 
+A wrench packs a push and a twist into three numbers `(fx, fy, torque)`. A fingertip can push with any force inside its friction cone, so the two edge wrenches are its extremes. The grasp holds when some mix of such pushes (never pulls) cancels any load, that is, when the origin (no net push or twist) lies inside the hull, the tight wrapping of all edge wrenches in 3-D.
+
 ![From contacts to a closure test](../assets/diagram-closure-pipeline.png)
 
-*Each contact contributes the two edges of its friction cone as wrenches (force plus torque). The grasp closes when their convex hull contains the origin in its interior.*
+*Each contact contributes the two edges of its friction cone as wrenches. The grasp closes when their convex hull contains the origin in its interior.*
 
-A planar wrench has three parts, `(fx, fy, torque)`, so the hull lives in 3-D. With friction, one contact gives two edge wrenches and two contacts already give four, enough to enclose the origin.
+Take a box of width 2 and `mu = 0.3`, with the right jaw `offset` above the left. The contacts balance only while the line joining them stays inside both cones, which needs `offset / 2 <= mu`, so `offset <= 0.6`. Offset 0.4 closes with margin epsilon 0.07 (from `epsilon()`), and 0.8 gives 0.
+
+![A gripper with a rising jaw](../assets/clip-example.mp4)
+
+*Watch the right jaw rise: the box holds until offset 0.6, then turns.*
 
 ![Why friction decides closure](../assets/diagram-friction-needed.png)
 
@@ -30,11 +36,11 @@ A planar wrench has three parts, `(fx, fy, torque)`, so the hull lives in 3-D. W
 
 ![Grasps that close and grasps that do not](../assets/fig-grasp-gallery.png)
 
-*Blue closes, orange does not. Moving the right jaw from 0.4 to 0.8 pushes the line between the contacts outside the cones.*
+*Blue closes, orange does not.*
 
 ![Quality against jaw offset](../assets/fig-epsilon-vs-offset.png)
 
-*The quality epsilon falls linearly and reaches zero at offset = 2 mu, the box width times mu.*
+*Epsilon falls linearly and reaches zero at offset = 2 mu.*
 
 ## Build It
 
@@ -56,7 +62,7 @@ python3 phases/11-contact-and-manipulation/03-grasp-quality/code/main.py
 
 ## Use It
 
-With SciPy, solve the closure linear program for the same wrenches and compare. The test suite does this on random three-finger grasps and the two answers agree.
+With SciPy, solve the closure linear program for the same wrenches. The test suite compares both on random three-finger grasps and they agree.
 
 Sources: Lynch and Park, *Modern Robotics*, May 2017 preprint, Sec. 12.2.3 (opened 2026-11-09): force closure means the composite wrench cone contains the whole wrench space, and a planar grasp can close with two frictional contacts.
 

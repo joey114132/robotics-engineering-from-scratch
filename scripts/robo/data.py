@@ -8,8 +8,8 @@ from pathlib import Path
 DEFAULT_ROOT = Path(__file__).resolve().parents[2]
 PHASE_KO = {"setup-and-tooling": "설치와 도구", "math-foundations": "수학 기초", "manipulator-kinematics": "매니퓰레이터 기구학",
             "dynamics-and-control": "동역학과 제어", "actuators-and-sensors": "액추에이터와 센서", "robot-software": "로봇 소프트웨어",
-            "perception-and-calibration": "인식과 캘리브레이션", "state-estimation": "상태 추정", "mobile-robots": "이동로봇",
-            "motion-planning": "모션 플래닝", "legged-and-aerial": "다리와 비행", "contact-and-manipulation": "접촉과 조작",
+            "perception-and-calibration": "인식과 캘리브레이션", "state-estimation": "상태 추정", "mobile-robots": "이동 로봇",
+            "motion-planning": "모션 플래닝", "legged-and-aerial": "보행 로봇과 비행 로봇", "contact-and-manipulation": "접촉과 조작",
             "simulation-and-sim-to-real": "시뮬레이션과 sim-to-real", "learning-for-robots": "로봇 학습",
             "multi-robot-and-swarms": "다중 로봇과 swarm", "safety-and-deployment": "안전과 배포", "capstones": "캡스톤"}
 ACRONYMS = {"se3": "SE(3)", "pid": "PID", "ik": "IK", "fk": "FK", "slam": "SLAM", "urdf": "URDF", "ros2": "ROS 2", "rrt": "RRT",

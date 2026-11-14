@@ -1,8 +1,8 @@
 [
   {"id": 1, "stage": "pre", "question": "두 바퀴가 같은 속도로 돕니다. 로봇은 어떻게 움직입니까?", "options": ["직선으로 간다", "원을 그린다", "제자리에서 돈다"], "answer": 0, "explanation": "바퀴 가장자리 속도가 같으면 회전율이 0입니다."},
-  {"id": 2, "stage": "check", "question": "차동 구동의 회전율은 어떤 식입니까?", "options": ["r (wr - wl) / b", "r (wr + wl) / 2", "r (wr - wl) * b"], "answer": 0, "explanation": "두 바퀴 속도 차를 윤거로 나눈 값이 회전율입니다."},
-  {"id": 3, "stage": "check", "question": "odometry는 사각형이 닫혔다고 하는데 실제 로봇은 출발점에서 18 cm 떨어져 끝났습니다. 가장 가능성 높은 원인은 무엇입니까?", "options": ["모델의 바퀴 반지름이나 윤거가 틀렸다", "encoder가 카운트를 놓쳤다", "사각형이 너무 작았다"], "answer": 0, "explanation": "추정값은 계획과 같은 틀린 값을 쓰므로 그래도 닫힙니다."},
-  {"id": 4, "stage": "check", "question": "주행 거리는 바꾸지 않고 회전각만 바꾸는 오차는 무엇입니까?", "options": ["윤거", "바퀴 반지름", "시간 간격"], "answer": 0, "explanation": "윤거는 w에만 들어가고 v에는 없습니다."},
+  {"id": 2, "stage": "check", "question": "차동 구동의 회전율은 어떤 식입니까?", "options": ["r (wr - wl) / b", "r (wr + wl) / 2", "r (wr - wl) * b"], "answer": 0, "explanation": "두 바퀴 속도 차를 track width로 나눈 값이 회전율입니다."},
+  {"id": 3, "stage": "check", "question": "odometry는 사각형이 닫혔다고 하는데 실제 로봇은 출발점에서 18 cm 떨어져 끝났습니다. 가장 가능성 높은 원인은 무엇입니까?", "options": ["모델의 wheel radius나 track width가 틀렸다", "encoder가 카운트를 놓쳤다", "사각형이 너무 작았다"], "answer": 0, "explanation": "추정값은 계획과 같은 틀린 값을 쓰므로 그래도 닫힙니다."},
+  {"id": 4, "stage": "check", "question": "주행 거리는 바꾸지 않고 회전각만 바꾸는 오차는 무엇입니까?", "options": ["track width", "wheel radius", "시간 간격"], "answer": 0, "explanation": "track width는 w에만 들어가고 v에는 없습니다."},
   {"id": 5, "stage": "post", "question": "작은 파라미터 오차에서 사각형 끝의 간격이 선형으로 커지는 이유는 무엇입니까?", "options": ["모서리마다 각도 오차가 그에 비례해 커지고 네 변이 더는 상쇄되지 않는다", "모터가 약해진다", "시간 간격이 줄어든다"], "answer": 0, "explanation": "작은 회전 오차는 각 변을 조금씩 돌려 놓으므로 벡터 합이 오차에 비례해 커집니다."},
-  {"id": 6, "stage": "post", "question": "실제 로봇의 윤거는 어떻게 보정합니까?", "options": ["길이를 잰 루프를 달리고 실제 간격이 닫힐 때까지 조정한다", "제어 주기를 올린다", "바퀴를 바꾼다"], "answer": 0, "explanation": "추정값이 스스로 줄 수 없는 측정이 루프의 실제 간격입니다."}
+  {"id": 6, "stage": "post", "question": "실제 로봇의 track width는 어떻게 보정합니까?", "options": ["길이를 잰 루프를 달리고 실제 간격이 닫힐 때까지 조정한다", "제어 주기를 올린다", "바퀴를 바꾼다"], "answer": 0, "explanation": "추정값이 스스로 줄 수 없는 측정이 루프의 실제 간격입니다."}
 ]

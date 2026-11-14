@@ -14,7 +14,7 @@
 {
 "id": 2,
 "stage": "check",
-"question": "일정한 외부 토크 F와 강성 K에서 정상 처짐은 얼마입니까?",
+"question": "일정한 외부 토크 F와 stiffness K에서 정상 처짐은 얼마입니까?",
 "options": [
 "F*K",
 "F/K",
@@ -26,7 +26,7 @@
 {
 "id": 3,
 "stage": "check",
-"question": "K, J, D에서 감쇠비는 무엇입니까?",
+"question": "K, J, D에서 damping ratio는 무엇입니까?",
 "options": [
 "D / (2 sqrt(K J))",
 "D / K",

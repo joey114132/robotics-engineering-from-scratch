@@ -6,15 +6,13 @@
 
 ## In Plain Words
 
-Lay a dotted outline on tracing paper over another copy. Pair each dot with the nearest dot underneath, then slide and turn the whole
-sheet to bring those pairs closer. Repeat the pairing after each move.
+A rover scans an L-shaped room and gets dots along the walls. After moving a little it scans again, and the new dots miss the old ones. Pair each new dot with the nearest old dot, slide and turn the whole new set to bring the pairs closer, and repeat. This is ICP, iterative closest point.
 
-ICP aligns scans this way without knowing which points match. A small starting offset helps it find the right pairs. Starting far away
-can pair the wrong features, so the dots get closer while the estimated movement is still wrong.
+A small starting offset helps: nearest dots are then true partners. From far away they pair the wrong walls, so the dots get closer while the estimated move is wrong.
 
 ## The Problem
 
-Wheel odometry (08/01) drifts, and a laser scanner sees the same room twice from two slightly different poses. You want the move between the two scans so you can correct the pose. A program needs a rule that works on raw points with no labels.
+Wheel odometry (08/01) drifts, and a scanner sees the same room from two slightly different poses. You want the move between the scans, using a rule that works on raw unlabelled points.
 
 ## The Concept
 
@@ -22,19 +20,25 @@ Wheel odometry (08/01) drifts, and a laser scanner sees the same room twice from
 
 *Each pass pairs points, fits one rigid move to those pairs, and applies it.*
 
-If the pairs were right, the best rotation `R` and shift `t` would come in one step. For paired points the SVD of the cross-covariance of the centred clouds gives `R`, and a sign fix on the last singular direction forbids a mirror image. The shift is then `t = q_mean - R p_mean`. ICP does not know the pairs, so it uses the nearest point as a guess.
+If the pairs were right, one step would give the best turn `R` and shift `t`. Centre both dot sets on their averages. The SVD (a standard matrix tool) of how the paired dots line up gives `R`, and a sign fix on its last direction forbids a mirror image. Then `t = q_mean - R p_mean`. ICP does not know the pairs, so it guesses nearest dots.
+
+The dots sit 0.05 m apart along the walls. The lesson's demo starts the second scan 0.2 rad off, where the average distance from a new dot to its nearest old dot is 0.39 m; 12 iterations bring it to 0.016 m. Started 2.6 rad off, that distance is 4.07 m, most pairs are wrong, and 25 iterations stop at 0.54 m, still 2.5 rad off.
+
+![ICP: a near start settles, a far start gets stuck](../assets/clip-example.mp4)
+
+*Grey dots are the room; thin lines join dots to nearest partners. Green (0.2 rad) settles on it. Blue (2.6 rad) pairs with wrong walls and gets stuck.*
 
 ![Why a big start offset ends in a wrong answer](../assets/diagram-icp-failure.png)
 
-*If the scans start further apart than the point spacing, nearest points are wrong partners and the fit locks in the wrong answer.*
+*A small start offset keeps nearest dots as true partners. A large one puts the nearest dot on the wrong wall, and the fit locks in a wrong answer.*
 
 The error never rises, because each fit is optimal for its pairs and re-pairing only shortens distances.
 
 ![ICP in four views](../assets/fig-icp-basin.png)
 
-*Three panels show one run converging. The last shows final pose error against starting rotation: good up to about 65 to 70 degrees for this room, then a local minimum. The dashed line is the 0.05 m point spacing.*
+*Three panels show one run converging. The fourth shows final pose error against starting rotation: good up to about 65 to 70 degrees for this room, then a local minimum (a dead end where small moves no longer help).*
 
-On this demo, the residual floor is about the point spacing. This is not universal: different samples can align exactly, and tiny residuals can hide a wrong pose. A single straight wall poorly constrains sliding along it.
+A tiny leftover error can still hide a wrong pose, and one straight wall poorly constrains sliding along it.
 
 ## Build It
 
@@ -61,7 +65,7 @@ python3 phases/08-mobile-robots/05-icp-scan-matching/code/main.py
 
 ## Use It
 
-Open3D's ICP registration takes an initial transformation that roughly aligns the clouds, and iterates between finding correspondences and updating the transformation. Compare it with `icp()` and feed it your odometry as the initial guess.
+Open3D's ICP registration takes a rough initial transformation and alternates finding correspondences with updating it. Compare it with `icp()`, starting from your odometry.
 
 Sources: Open3D ICP registration tutorial, https://www.open3d.org/docs/latest/tutorial/pipelines/icp_registration.html (opened 2026-11-10).
 
@@ -71,6 +75,6 @@ Sources: Open3D ICP registration tutorial, https://www.open3d.org/docs/latest/tu
 
 ## Exercises
 
-1. Add 2 cm of noise to both scans and measure the pose error against the spacing.
-2. Start ICP from the odometry guess and find the largest rotation drift it still repairs.
-3. Add a trimmed fit that ignores the worst 20% of pairs and test it with a missing corner.
+1. Add 2 cm of noise to both scans and compare the pose error with the spacing.
+2. Start ICP from an odometry guess and find the largest rotation drift it repairs.
+3. Ignore the worst 20% of pairs (a trimmed fit) and test with a missing corner.

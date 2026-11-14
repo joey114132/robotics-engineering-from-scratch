@@ -6,34 +6,45 @@
 
 ## 쉽게 말하면
 
-컵이 놓인 탁자에서 고정한 핀 사이로 고무줄을 걸어 보세요. 고무줄은 팽팽해지며 곧아지려 하고 컵은 그 길을 막아요.
+탐사 로봇의 경로는 출발점과 깃발에 고정된 waypoint 사슬이에요. 핀 두 개 사이에 팽팽하게 당겨 둔 고무줄 앞을 컵이 막고 있는 것과 같아요.
 
-trajectory optimisation도 경로의 waypoint에 비슷한 작용을 줘요. smoothness는 각 점을 이웃 점 쪽으로 당기고 obstacle penalty는 가까운 점을 장애물 바깥으로 밀어요. 조금씩 고치면 합친
-cost가 줄지만 너무 크게 옮기면 오히려 늘 수 있어요. waypoint만 확인하면 점 사이 선분은 여전히 검사하지 않은 상태예요.
+고무줄의 장력은 각 waypoint를 양옆 이웃을 잇는 직선 쪽으로 당겨서 경로를 부드럽게 해요. 컵은 가까이 온 waypoint를 바깥으로 밀어내요.
+
+경로는 당기는 힘과 미는 힘이 균형을 이루는 곳에 멈춰요. waypoint를 조금씩 옮기면 경로가 얼마나 나쁜지 나타내는 cost가 줄어들어요. 너무 크게 옮기면 균형점을 지나쳐서 오히려 늘어요.
 
 ## 문제
 
-sampling planner가 모든 장애물을 피하면서 지그재그로 걷는 경로를 줍니다. 그대로 따라가면 시간이 낭비되고 팔이 흔들립니다. 지그재그를 손으로 펴면 경로가 다시 장애물 안으로 들어가서, 두 목표가 서로 부딪칩니다.
+sampling planner가 모든 장애물을 피하면서 지그재그로 걷는 경로를 줍니다. 그대로 따라가면 시간이 낭비되고 팔이 흔들립니다. 지그재그를 손으로 펴면 경로가 다시 장애물 안으로 들어가서 두 목표가 서로 부딪칩니다.
 
 ## 개념
 
 ![부드러움과 장애물 penalty](../assets/diagram-cost-loop.png)
 
-*경로는 양 끝이 고정된 waypoint 목록입니다. 비용 항 두 개, 곧 부드러움과 장애물 penalty가 gradient 하나를 만들어 waypoint를 움직입니다.*
+*번호를 따라가 보세요. waypoint는 양 끝이 고정되고 비용 항 두 개(부드러움과 장애물 penalty)가 gradient 하나를 만들어 waypoint를 움직입니다.*
 
-부드러움은 이웃 점 사이 걸음의 제곱합의 절반입니다. waypoint에서의 gradient는 `2 x_i - x_{i-1} - x_{i+1}`이고 점을 이웃을 잇는 직선 쪽으로 끌어당깁니다.
+부드러움은 이웃 점 사이 걸음의 제곱합의 절반입니다. gradient(비용이 가장 빨리 커지는 방향)는 waypoint에서 `2 x_i - x_{i-1} - x_{i+1}`이고 그 반대 방향으로 가면 점이 이웃을 잇는 직선 쪽으로 당겨집니다.
 
-장애물 penalty는 waypoint가 중심에서 `r + margin`보다 가까우면 `w (r + margin - d)^2`이고 그렇지 않으면 0입니다. 이 gradient는 점을 바깥쪽으로 밀어냅니다.
+장애물 penalty는 waypoint가 중심에서 `r + margin`보다 가까우면 `w (r + margin - d)^2`이고 그렇지 않으면 0입니다(`w` = 8은 penalty의 가중치이고 `margin`은 여유로 남겨 두는 간격입니다). 이 gradient의 반대 방향으로 가면 점이 바깥쪽으로 밀려납니다.
+
+이런 걸음(크기 `lr` = 0.04)을 되풀이하는 것이 gradient descent입니다.
 
 ![waypoint마다 걸리는 두 힘](../assets/diagram-two-forces.png)
 
-*경로는 당기는 힘과 미는 힘이 균형을 이루는 곳에서 멈춥니다. 걸음이 너무 크면 비용이 오릅니다.*
+*경로는 당기는 힘과 미는 힘이 균형을 이루는 곳에서 멈춥니다. 걸음이 너무 크면 균형점을 지나쳐서 비용이 오릅니다.*
+
+예시로 (0, 0)과 (10, 0)에 핀이 있고 그 사이에 waypoint 하나가 있으며 컵은 (5, 0)에 반지름 1이고 `margin = 0.4`입니다. waypoint는 컵 안인 (5, 0.2)에서 시작합니다. 부드러움은 0.4로 아래로 당기고 컵은 19.2로 위로 밉니다.
+
+8걸음 뒤에는 (5, 1.24)에 멈추고 이때 두 힘은 모두 2.49이며 컵에서 0.24 떨어져 있습니다.
+
+![waypoint 하나에 걸리는 당김과 밀침](../assets/clip-example.mp4)
+
+*경로 가운데를 확대한 장면이고 1 단위가 0.8 m입니다. 빨간 화살표 둘을 보세요. 아래로 당기는 힘과 위로 미는 힘이고 길이는 힘의 제곱근에 따라 늘어납니다. 미는 힘은 아주 크게 시작해서 줄어들어 두 화살표가 같아집니다. 그다음 탐사 로봇이 갑니다.*
 
 ![최적화 전후 경로와 반복마다의 비용](../assets/fig-before-after.png)
 
-*왼쪽은 들쭉날쭉한 시작 경로가 두 장애물을 지나가고 결과 경로가 그것을 돌아가는 모습입니다. 오른쪽은 전체 비용이 매 반복 줄어드는 모습입니다.*
+*왼쪽은 들쭉날쭉한 시작 경로가 두 장애물을 지나가고 결과 경로가 그것을 돌아가는 모습입니다. 오른쪽은 비용이 매 반복 줄어드는 모습입니다.*
 
-이것은 CHOMP의 작은 친척입니다. CHOMP는 covariant gradient를 쓰는 데 비해 여기서는 일반 gradient를 쓰고 waypoint에만 penalty를 주며 waypoint 사이의 선분은 검사하지 않습니다.
+이것은 CHOMP planner의 작은 버전입니다. waypoint에만 penalty를 주고 waypoint 사이의 선분은 검사하지 않습니다.
 
 ## 만들기
 
@@ -55,9 +66,7 @@ python3 phases/09-motion-planning/04-trajectory-optimisation/code/main.py
 
 SciPy의 `minimize`에 `method="L-BFGS-B"`를 주면 같은 비용과 gradient를 받습니다. 마지막 테스트가 일반 descent 4000걸음보다 나쁘지 않은 비용에 도달하는지 확인합니다.
 
-출처는 [CHOMP, Ratliff 외 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf)입니다.
-
-2026년 11월 9일에 열람했습니다. elastic band 방식은 경로에 길이나 부드러움에 대한 내부 에너지와 장애물에서 오는 외부 에너지를 주고 CHOMP는 covariant gradient 기법을 쓴다는 것을 확인했습니다.
+출처는 [CHOMP, Ratliff 외 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf)이고 2026년 11월 9일에 열람했습니다.
 
 ## 결과물
 

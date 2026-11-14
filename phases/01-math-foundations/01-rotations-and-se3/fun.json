@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Matrix order is socks and shoes. Swap them and everything still looks valid, just wrong.",
-  "mission": "In `code/main.py` change `np.pi / 2` to `np.pi`. Predict where the point (1,0,0) lands, then run `python3 code/main.py`."
- },
- "ko": {
-  "hook": "행렬 순서는 양말과 신발과 같습니다. 바꿔도 멀쩡해 보이지만 결과는 틀립니다.",
-  "mission": "`code/main.py`에서 `np.pi / 2`를 `np.pi`로 바꾸세요. 점 (1,0,0)이 어디에 놓일지 예측한 다음 `python3 code/main.py`를 실행하세요."
- },
- "toy": "rotation-order",
- "motion": "rotation-frames",
- "three": "rotation-order-3d"
+  "en": {
+    "hook": "Matrix order is socks and shoes. Swap them and everything still looks valid, just wrong.",
+    "mission": "In `code/main.py` change `np.pi / 2` to `np.pi`. Predict where the point (1,0,0) lands, then run `python3 code/main.py`.",
+    "clip": "Two drones make the same two 90 degree turns in opposite orders. The green drone turns about x first and ends with its nose pointing along y, and the blue drone turns about z first and ends with its nose pointing up. The poses are built with `make_T`, `rot_x` and `rot_z`, and the amber ball is the point (1, 0, 0) riding on each pose."
+  },
+  "ko": {
+    "hook": "행렬 순서는 양말과 신발과 같습니다. 바꿔도 멀쩡해 보이지만 결과는 틀립니다.",
+    "mission": "`code/main.py`에서 `np.pi / 2`를 `np.pi`로 바꾸세요. 점 (1,0,0)이 어디에 놓일지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "드론 두 대가 같은 90도 회전 두 번을 서로 반대 순서로 합니다. 초록 드론은 x축을 먼저 돌려서 앞쪽이 y 방향을 향하고 파란 드론은 z축을 먼저 돌려서 앞쪽이 위를 향합니다. 자세는 `make_T`, `rot_x`, `rot_z`로 만들었고 주황 공은 각 자세에 실려 가는 점 (1, 0, 0)입니다."
+  },
+  "toy": "rotation-order",
+  "three": "rotation-order-3d"
 }

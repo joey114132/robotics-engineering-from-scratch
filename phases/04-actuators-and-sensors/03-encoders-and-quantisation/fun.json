@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "My encoder counts in whole ticks, so slow motion looks jumpy, and smoothing calms it only by making me late. Nothing is free.",
-    "mission": "In `code/main.py` change `(1, 5, 20)` to `(100,)`. Predict whether std and lag go up or down, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `(1, 5, 20)` to `(100,)`. Predict whether std and lag go up or down, then run `python3 code/main.py`.",
+    "clip": "A slowly turning encoder disc and two dials that show the velocity estimated from its counts. The blue dial differences one count at 1 kHz, so the needle slams up each time a slit edge passes and never rests at the true speed (amber mark). The green dial uses a 20 sample window and stays near the true speed, at the price of a delay that this steady turn does not show. Rendered from `diff_velocity()` and `window_velocity()`: 80 ms at 60 times slower, with the disc drawn turning so that one count is one 10 degree slit edge."
   },
   "ko": {
     "hook": "제 encoder는 정수 count로만 셉니다. 그래서 느리게 움직이면 속도가 들쭉날쭉하고 필터로 달래면 대신 늦어집니다. 공짜는 없습니다.",
-    "mission": "`code/main.py`에서 `(1, 5, 20)`을 `(100,)`으로 바꾸세요. std와 lag가 오를지 내릴지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `(1, 5, 20)`을 `(100,)`으로 바꾸세요. std와 lag가 오를지 내릴지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "천천히 도는 encoder 원판과 그 count에서 추정한 속도를 보여 주는 속도계 두 개입니다. 파란 속도계는 1 kHz에서 count 한 칸을 차분하므로 slit 모서리가 지날 때마다 바늘이 튀어 오르고 참 속도(주황 표시)에 머물지 못합니다. 초록 속도계는 20 sample 창을 쓰기 때문에 참 속도 근처에 있습니다. 대신 지연이 생기지만 이 일정한 회전에서는 보이지 않습니다. `diff_velocity()`와 `window_velocity()` 결과에서 80 ms를 60배 느리게 렌더했고, 원판은 count 한 칸이 slit 모서리 한 번(10도)이 되도록 그렸습니다."
   },
   "toy": "encoder-window",
-  "motion": "encoder-window",
   "three": "encoder-disc-3d"
 }

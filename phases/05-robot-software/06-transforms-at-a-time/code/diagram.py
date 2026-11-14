@@ -9,34 +9,30 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def lookup():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("One lookup, three possible answers")
-    q = d.box("Pose at time t?", 0, 1, "gray", w=220)
-    a = d.box("Between two samples", 1, 0, "green", w=250)
-    b = d.box("Just past the newest", 1, 1, "yellow", w=250)
-    c = d.box("Too old or too new", 1, 2, "red", w=250)
-    ra = d.box("lerp + slerp", 2, 0, "green", w=210)
-    rb = d.box("Extrapolate if\nunder the limit", 2, 1, "yellow", w=230)
-    rc = d.box("Raise an error", 2, 2, "red", w=210)
-    for t in (a, b, c):
-        d.arrow(q, t)
+    a = d.box("Between two\nsamples", col=0, row=0, color="green")
+    b = d.box("Just past\nthe newest", col=0, row=1, color="yellow")
+    c = d.box("Too old or\ntoo new", col=0, row=2, color="red")
+    ra = d.box("lerp + slerp", col=1, row=0, color="green")
+    rb = d.box("Extrapolate if\nunder the limit", col=1, row=1, color="yellow")
+    rc = d.box("Raise an\nerror", col=1, row=2, color="red")
     for x, y in ((a, ra), (b, rb), (c, rc)):
         d.arrow(x, y)
+    d.note("Each row answers the question: pose at time t?", near=rb, side="b")
     d.save(OUT / "diagram-lookup-rules.excalidraw")
 
 
 def scan():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("Which pose places a scan point?")
-    s = d.box("Scan point\nwith a stamp", 0, 0.5, "blue", w=220)
-    n = d.box("Newest pose", 1, 0, "red", w=220)
-    t = d.box("Pose at the\nstamp", 1, 1, "green", w=220)
-    sm = d.box("Wall looks bent\nwhen robot turns", 2, 0, "red", w=240)
-    ok = d.box("Wall stays\nstraight", 2, 1, "green", w=240)
-    d.arrow(s, n)
-    d.arrow(s, t)
+    n = d.box("Place with the\nnewest pose", col=0, row=0, color="red")
+    sm = d.box("Wall looks bent\nwhen rover turns", col=1, row=0, color="red")
+    t = d.box("Place with the\npose at its stamp", col=0, row=1, color="green")
+    ok = d.box("Wall stays\nstraight", col=1, row=1, color="green")
     d.arrow(n, sm)
     d.arrow(t, ok)
+    d.note("Every scan point carries a stamp.", near=n, side="t")
     d.save(OUT / "diagram-scan-stamps.excalidraw")
 
 

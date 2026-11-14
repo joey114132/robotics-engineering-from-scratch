@@ -9,28 +9,28 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def two_roads():
-    d = Diagram(cell=(310, 170))
+    d = Diagram()
     d.title("Two roads to the same torque")
-    a = d.box("Energy road\nwrite T(q, qd)", 0, 0, "blue")
-    b = d.box("Differentiate\nd/dt(dT/dqd) - dT/dq", 1, 0, "purple", w=250)
-    c = d.box("Force road\nlink accelerations", 0, 2, "blue")
-    e = d.box("Walk the chain\nforces, then moments", 1, 2, "purple", w=250)
-    t = d.box("Same tau?\nIf not, a bug", 2, 1, "green")
+    a = d.box("Energy road:\nwrite T(q, qd)", 0, 0, "blue")
+    b = d.box("Differentiate:\nd/dt(dT/dqd) - dT/dq", 0, 1, "purple")
+    c = d.box("Force road:\nlink accelerations", 1, 0, "blue")
+    e = d.box("Walk the chain:\nforces, then moments", 1, 1, "purple")
+    t = d.box("Same tau?\nIf not, a bug", 0.5, 2, "green")
     for s, u in ((a, b), (c, e), (b, t), (e, t)):
         d.arrow(s, u)
     d.save(OUT / "diagram-two-roads.excalidraw")
 
 
 def parts():
-    d = Diagram(cell=(310, 170))
+    d = Diagram()
     d.title("Which piece of the energy makes which term")
-    t = d.box("T = 1/2 qd' M(q) qd", 0, 1, "blue", w=250)
-    m = d.box("M(q): read it off\nwith unit velocities", 1, 0, "green", w=250)
-    h = d.box("M changes with q:\nCoriolis, centripetal", 1, 2, "yellow", w=250)
-    r = d.box("tau = M qdd + h", 2, 1, "purple", w=230)
+    t = d.box("T = 1/2 qd' M(q) qd", 0.5, 0, "blue")
+    m = d.box("M(q): read it off\nwith unit velocities", 0, 1, "green")
+    h = d.box("M changes with q:\nCoriolis terms", 1, 1, "yellow")
+    r = d.box("tau = M qdd + h", 0.5, 2, "purple")
     for s, u in ((t, m), (t, h), (m, r), (h, r)):
         d.arrow(s, u)
-    d.note("The Coriolis term exists only because M depends on the elbow angle.", d.margin, d.margin + 60 + 2.6 * d.ch, size=20)
+    d.note("No elbow angle in M, no Coriolis term.", near=r, side="b")
     d.save(OUT / "diagram-energy-parts.excalidraw")
 
 

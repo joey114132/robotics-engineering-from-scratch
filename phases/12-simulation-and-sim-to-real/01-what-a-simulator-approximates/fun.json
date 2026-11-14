@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A simulator is the real joint with some chores deleted. One deleted chore sends the biggest bill, and you can measure which.",
-    "mission": "In `REAL` in `code/main.py` change `c=0.05` to `c=0.025`. Predict whether friction is still the costliest effect, then run `python3 code/main.py` and compare the costs."
+    "mission": "In `REAL` in `code/main.py` change `c=0.05` to `c=0.025`. Predict whether friction is still the costliest effect, then run `python3 code/main.py` and compare the costs.",
+    "clip": "One wall-mounted joint gets the same torque command for 5.5 s, twice. The solid blue arm is the real joint, with friction and motor lag. The ghost arm is a simulation that leaves both out, so it swings farther. The sensor delay only shifts the reported angle, so it is not drawn. Both angles come from this lesson's `simulate()`, played at real speed."
   },
   "ko": {
     "hook": "시뮬레이터는 집안일 몇 개를 지워 버린 진짜 관절입니다. 지운 일 가운데 청구서가 제일 큰 것이 무엇인지 직접 잴 수 있습니다.",
-    "mission": "`code/main.py`의 `REAL`에서 `c=0.05`를 `c=0.025`로 바꾸세요. friction이 여전히 가장 큰 비용일지 예측한 뒤 `python3 code/main.py`로 비용을 비교하세요."
+    "mission": "`code/main.py`의 `REAL`에서 `c=0.05`를 `c=0.025`로 바꾸세요. friction이 여전히 가장 큰 비용일지 예측한 뒤 `python3 code/main.py`로 비용을 비교하세요.",
+    "clip": "벽에 붙은 관절 하나가 같은 토크 명령을 5.5초 동안 두 번 받습니다. 단색 파란 팔은 마찰과 motor lag가 있는 실제 관절입니다. 유령 팔은 둘 다 뺀 시뮬레이션이라서 더 멀리 흔들립니다. sensor delay는 보고되는 각도만 늦추므로 그리지 않았습니다. 두 각도는 이 레슨의 `simulate()`로 계산했고 실제 속도로 재생했습니다."
   },
   "toy": null,
-  "motion": "sim-missing-effects",
   "three": "joint-sim-gap-3d"
 }

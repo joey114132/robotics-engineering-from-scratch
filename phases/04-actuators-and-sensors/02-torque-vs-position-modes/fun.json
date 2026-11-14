@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Position mode is torque mode wearing someone else's PD gains. I wrote a soft spring and the drive politely overruled me.",
-    "mission": "Run `cd code && python3 -c \"from main import *; print(felt_stiffness('position', 20.0, kp_in=100.0))\"`. Before you look, guess whether the joint feels like 20, 100 or 400, and whose gain wins."
+    "mission": "Run `cd code && python3 -c \"from main import *; print(felt_stiffness('position', 20.0, kp_in=100.0))\"`. Before you look, guess whether the joint feels like 20, 100 or 400, and whose gain wins.",
+    "clip": "Two bench arms receive the same 2 Nm push upward at 0.5 s (red arrow). The blue arm is in position mode, so the drive's inner PD holds it almost still. The green arm is in torque mode with K = 20 and gives way like a soft spring. Rendered from this lesson's `run()` at half speed, with the deflection drawn 5 times larger."
   },
   "ko": {
-    "hook": "position mode는 남의 PD gain을 입은 torque mode입니다. 제가 부드러운 스프링을 짰는데 drive가 예의 바르게 무시했습니다.",
-    "mission": "다음 명령을 실행하세요. `cd code && python3 -c \"from main import *; print(felt_stiffness('position', 20.0, kp_in=100.0))\"` 결과를 보기 전에 관절이 20으로 느껴질지 100일지 400일지 짐작하고 누구의 gain이 이기는지도 생각해 보세요."
+    "hook": "position mode는 남의 PD gain을 입은 torque mode입니다. 제가 부드러운 스프링을 짰는데 drive가 예의 바르게 제 뜻을 뒤집었습니다.",
+    "mission": "다음 명령을 실행하세요. `cd code && python3 -c \"from main import *; print(felt_stiffness('position', 20.0, kp_in=100.0))\"` 결과를 보기 전에 관절이 20으로 느껴질지 100일지 400일지 짐작하고 누구의 gain이 이기는지도 생각해 보세요.",
+    "clip": "같은 2 Nm 힘이 0.5초에 위로 밀리는 bench 팔 두 대입니다(빨간 화살표). 파란 팔은 position 모드라서 drive 안쪽 PD가 거의 제자리에 붙잡습니다. 초록 팔은 K = 20인 torque 모드라서 부드러운 스프링처럼 밀려납니다. 이 레슨의 `run()` 결과를 절반 속도로 렌더했고, 처짐은 5배 크게 그렸습니다."
   },
   "toy": null,
-  "motion": "push-modes",
   "three": "torque-position-push-3d"
 }

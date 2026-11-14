@@ -9,33 +9,31 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def exchange():
-    d = Diagram(cell=(300, 170))
+    d = Diagram(numbered=True)
     d.title("Offset from four timestamps")
-    a = d.box("Client sends\nt0 (client clock)", 0, 0, "blue", w=220)
-    b = d.box("Server gets\nt1 (server clock)", 1, 0, "yellow", w=220)
-    c = d.box("Server replies\nt2 (server clock)", 2, 0, "yellow", w=220)
-    e = d.box("Client gets\nt3 (client clock)", 3, 0, "blue", w=220)
-    o = d.box("offset = ((t1-t0) + (t2-t3)) / 2", 1, 1.3, "purple", w=480)
+    a = d.box("Client sends\nt0, client clock", col=0, row=0, color="blue", step=1)
+    b = d.box("Server gets\nt1, server clock", col=1, row=0, color="yellow", step=2)
+    c = d.box("Server replies\nt2, server clock", col=2, row=0, color="yellow", step=3)
+    e = d.box("Client gets\nt3, client clock", col=2, row=1, color="blue", step=4)
+    o = d.box("offset =\n((t1-t0)+(t2-t3))/2", col=1, row=1, color="purple", step=5)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.arrow(e, o, route="below")
+    d.arrow(e, o)
     d.save(OUT / "diagram-offset-exchange.excalidraw")
 
 
 def trace():
-    d = Diagram(cell=(300, 170))
+    d = Diagram(numbered=True)
     d.title("Find the first record that disagrees")
-    i = d.box("Intent\nstep, target", 0, 0.5, "blue", w=200)
-    t = d.box("Trace line\npre and post", 1, 0.5, "yellow", w=210)
-    r = d.box("Reader walks\nsteps in order", 2, 0.5, "purple", w=220)
-    n = d.box("not executed", 3, 0, "red", w=210)
-    m = d.box("no motion", 3, 1, "red", w=210)
-    w = d.box("wrong motion", 3, 2, "red", w=210)
+    i = d.box("Intent:\nstep and target", col=0, row=0, color="blue", step=1)
+    t = d.box("Trace line:\npre and post", col=1, row=0, color="yellow", step=2)
+    r = d.box("Reader checks\nsteps in order", col=2, row=0, color="purple", step=3)
+    n = d.box("First mismatch:\nstop here", col=2, row=1, color="red", step=4)
     d.arrow(i, t)
     d.arrow(t, r)
-    for x in (n, m, w):
-        d.arrow(r, x)
+    d.arrow(r, n)
+    d.note("not executed, no motion or wrong motion", near=n, side="l")
     d.save(OUT / "diagram-trace-reader.excalidraw")
 
 

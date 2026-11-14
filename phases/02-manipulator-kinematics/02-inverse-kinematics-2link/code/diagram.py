@@ -9,28 +9,29 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def triangle():
-    d = Diagram(cell=(310, 150))
+    d = Diagram(numbered=True)
     d.title("IK is one triangle")
-    a = d.box("Target (x, y)", 0, 0.5, "blue", w=200)
-    b = d.box("Distance r\nfrom the base", 1, 0.5, "gray", w=200)
-    c = d.box("Law of cosines\ngives cos q2", 2, 0.5, "purple", w=210)
-    e = d.box("q2 = +acos or -acos\n(two elbows)", 3, 0, "yellow", w=230)
-    f = d.box("q1 from the angle\nto the target", 3, 1, "purple", w=230)
-    for s, t in ((a, b), (b, c), (c, e), (c, f)):
+    a = d.box("Ball at (x, y),\nr from the base", col=0, row=0, color="blue")
+    b = d.box("Law of cosines\ngives cos q2", col=0, row=1, color="purple")
+    c = d.box("q2 is +acos or -acos:\ntwo elbows", col=0, row=2, color="yellow")
+    e = d.box("Then q1 from the\nangle to the ball", col=0, row=3, color="purple")
+    for s, t in ((a, b), (b, c), (c, e)):
         d.arrow(s, t)
     d.save(OUT / "diagram-triangle.excalidraw")
 
 
 def decision():
-    d = Diagram(cell=(310, 150))
+    d = Diagram()
     d.title("Check reach first, then check the answer")
-    a = d.box("Target\nat distance r", 0, 0.5, "blue", w=190)
-    b = d.box("|L1 - L2| <= r\n<= L1 + L2 ?", 1, 0.5, "yellow", w=270, shape="diamond", h=140)
-    no = d.box("No: refuse\n(raise an error)", 2, 1.2, "red", w=220)
-    yes = d.box("Yes: two answers\nelbow-up, elbow-down", 2, 0, "purple", w=240)
-    fk = d.box("Run FK on the answer\nmust land on the target", 3, 0, "green", w=250)
-    for s, t, lab in ((a, b, None), (b, no, "no"), (b, yes, "yes"), (yes, fk, None)):
-        d.arrow(s, t, label=lab)
+    a = d.box("Ball at\ndistance r", col=0, row=0.5, color="blue")
+    b = d.box("r inside\nthe band?", col=1, row=0.5, color="yellow", shape="diamond")
+    yes = d.box("Two answers:\nelbow up, down", col=2, row=0, color="purple")
+    no = d.box("Refuse:\nraise an error", col=2, row=1, color="red")
+    fk = d.box("FK of the answer\nlands on the ball", col=3, row=0, color="green")
+    d.arrow(a, b)
+    d.arrow(b, yes, label="yes")
+    d.arrow(b, no, label="no")
+    d.arrow(yes, fk)
     d.save(OUT / "diagram-decision.excalidraw")
 
 

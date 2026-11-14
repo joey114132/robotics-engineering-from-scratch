@@ -1,4 +1,4 @@
-# 레슨 09/03 도해: 얇은 장애물을 샘플이 건너뛰는 과정과 half-step 패딩 규칙을 Excalidraw 로 그린다
+# 레슨 09/03 도해: 얇은 기둥을 말뚝이 건너뛰는 과정과 half-step 패딩 규칙을 Excalidraw 로 그린다
 import pathlib
 import sys
 
@@ -10,30 +10,30 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 def tunnel():
     d = Diagram()
-    d.title("How a path tunnels through an obstacle")
-    a = d.box("Thin obstacle\nwidth 2r", 0, 0, "red")
-    b = d.box("Step larger\nthan 2r", 1, 0, "yellow")
-    c = d.box("Samples land on\nboth sides", 2, 0, "purple")
-    e = d.box("Check says free,\npath is not", 3, 0, "red")
+    d.title("How the car drives through a post")
+    a = d.box("Post is 0.5 wide\n(2r)", 0, 0, "red")
+    b = d.box("Pegs 1.0 apart,\nwider than the post", 0, 1, "yellow")
+    c = d.box("Pegs land before\nand after the post", 0, 2, "purple")
+    e = d.box("All pegs say free,\ncar hits the post", 0, 3, "red")
     f = d.box("Exact test:\nclosest point", 1, 1, "green")
-    g = d.box("Sees the hit", 2, 1, "green")
+    g = d.box("Sees the hit", 1, 2, "green")
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
     d.arrow(f, g)
-    d.note("Both tests start from the same segment and circle.", d.margin, d.margin + 60 + 2 * d.ch - 10, size=22)
+    d.note("both tests use the same segment and post", near=f, side="t")
     d.save(OUT / "diagram-tunnel.excalidraw")
 
 
 def rule():
-    d = Diagram(cell=(330, 170))
-    d.title("Choosing the step size")
-    s = d.box("Sampled check\nwith spacing s", 0, 0.5, "blue", w=240)
-    a = d.box("s at most 2r:\ncatches dead-centre", 1, 0, "green", w=270)
-    b = d.box("Grazing hits\nstill slip through", 2, 0, "red", w=240)
-    p = d.box("Pad circle\nby s / 2", 1, 1, "purple", w=270)
-    r = d.box("Never misses,\nmay over-warn", 2, 1, "green", w=240)
-    for x, y in ((s, a), (a, b), (s, p), (p, r)):
+    d = Diagram()
+    d.title("Choosing the peg spacing s")
+    s = d.box("Pegs every s", 0, 0, "blue")
+    a = d.box("s at most 2r:\ncentre hits seen", 0, 1, "green")
+    b = d.box("A graze can\nslip through", 0, 2, "red")
+    p = d.box("Pad the post\nby s / 2", 1, 1, "purple")
+    r = d.box("Never misses,\nmay over-warn", 1, 2, "green")
+    for x, y in ((s, a), (s, p), (a, b), (p, r)):
         d.arrow(x, y)
     d.save(OUT / "diagram-step-rule.excalidraw")
 

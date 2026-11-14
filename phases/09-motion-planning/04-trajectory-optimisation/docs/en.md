@@ -6,12 +6,9 @@
 
 ## In Plain Words
 
-Stretch a rubber band between fixed pins on a table with cups in the way. Tension pulls the band straighter, while the cups keep it
-from taking the direct route.
+A rover's route is a chain of waypoints pinned at the start and the flag, like a rubber band with cups in the way. The band's tension pulls each waypoint toward the straight line between its two neighbours, which smooths the route. A cup pushes any waypoint near it outward.
 
-Trajectory optimisation balances similar effects on path waypoints. Smoothness pulls each point toward its neighbours; an obstacle
-penalty pushes nearby points away from cup-shaped obstacles. Small adjustments can reduce the combined cost. Large adjustments may
-raise it, and checking waypoints alone still leaves the segments between them unchecked.
+The route settles where pull and push balance. Moving the waypoints a little at a time lowers the total cost, a score of how bad the route is. Moving them too far overshoots the balance and raises it.
 
 ## The Problem
 
@@ -21,19 +18,25 @@ A sampling planner hands you a path that avoids every obstacle but zigzags. Foll
 
 ![Smoothness plus obstacle penalty](../assets/diagram-cost-loop.png)
 
-*The path is a list of waypoints with fixed ends. Two cost terms, smoothness and obstacle penalty, give one gradient that moves the waypoints.*
+*Follow the numbers. Waypoints have fixed ends; two cost terms, smoothness and obstacle penalty, give one gradient that moves them.*
 
-Smoothness is half the sum of squared steps between neighbours. Its gradient at a waypoint is `2 x_i - x_{i-1} - x_{i+1}`, which pulls the point toward the line through its neighbours. The obstacle penalty is `w (r + margin - d)^2` when a waypoint is closer than `r + margin` to a centre, and zero otherwise. Its gradient pushes the point straight out.
+Smoothness is half the sum of squared steps between neighbours. Its gradient, the direction in which cost rises fastest, is `2 x_i - x_{i-1} - x_{i+1}` at a waypoint, so stepping against it pulls the point toward the line through its neighbours. The obstacle penalty is `w (r + margin - d)^2` when a waypoint is closer than `r + margin` to a centre (`w` = 8 is the penalty weight and `margin` is spare clearance), and zero otherwise. Stepping against its gradient pushes the point out. Repeating such steps (size `lr` = 0.04) is gradient descent.
 
 ![Two forces on every waypoint](../assets/diagram-two-forces.png)
 
-*The path settles where the pull and the push balance. A step that is too large makes the cost go up.*
+*The path settles where the pull and the push balance. A step that is too large overshoots it and the cost goes up.*
+
+Worked example: one waypoint between pins at (0, 0) and (10, 0), a cup of radius 1 at (5, 0), `margin = 0.4`. It starts at (5, 0.2), inside the cup. Smoothness pulls it down with 0.4 and the cup pushes it up with 19.2. After 8 steps it rests at (5, 1.24), where both forces are 2.49, 0.24 outside the cup.
+
+![Pull and push on one waypoint](../assets/clip-example.mp4)
+
+*Close-up of the route's middle, 0.8 m per unit. Watch the red arrows, pull down and push up (length grows with the square root of the force). The push starts huge and shrinks until they match. Then the rover drives.*
 
 ![Path before and after, and cost per iteration](../assets/fig-before-after.png)
 
-*Left: the jagged start runs through both obstacles and the result bends around them. Right: the total cost falls every iteration.*
+*Left: the jagged start runs through both obstacles, the result bends around them. Right: cost falls every iteration.*
 
-This is a small cousin of CHOMP. It uses a plain gradient, where CHOMP uses a covariant one, and it penalises waypoints only, not the segments between them.
+This is a small version of the CHOMP planner. It penalises waypoints only, not the segments between them.
 
 ## Build It
 
@@ -55,7 +58,7 @@ python3 phases/09-motion-planning/04-trajectory-optimisation/code/main.py
 
 SciPy's `minimize` with `method="L-BFGS-B"` takes the same cost and gradient. The last test checks that it reaches a cost no worse than 4000 plain steps.
 
-Sources: [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf) (opened 2026-11-09: elastic-band planning gives a path an internal energy for length or smoothness and an external energy from obstacles, and CHOMP uses covariant gradient techniques).
+Sources: [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf) (opened 2026-11-09).
 
 ## Ship It
 

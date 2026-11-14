@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Smoothness pulls my path straight and obstacles push it away. I'm a rubber band in a tug of war, and balancing is all I can do.",
-    "mission": "In `code/main.py` add `wo=0.0` to the `optimise(X0, obs, iters=4000)` call and run `python3 code/main.py`. Predict what the closest approach becomes once the obstacle push is switched off."
+    "mission": "In `code/main.py` add `wo=0.0` to the `optimise(X0, obs, iters=4000)` call and run `python3 code/main.py`. Predict what the closest approach becomes once the obstacle push is switched off.",
+    "clip": "A rover waits at the start of a 4 m path through two cups. The blue waypoints begin jagged and run into the cups, then each frame shows more steps of `optimise()` (up to 4000, on a log time axis) until the path bends smoothly around them. The grey ring is the obstacle margin, and 1 lesson unit is drawn as 0.4 m. The rover then drives the finished green path."
   },
   "ko": {
     "hook": "부드러움은 제 경로를 곧게 당기고 장애물은 밀어냅니다. 저는 줄다리기에 끼인 고무줄이라 이길 수는 없고 균형만 맞춥니다.",
-    "mission": "`code/main.py`의 `optimise(X0, obs, iters=4000)` 호출에 `wo=0.0`을 더하고 `python3 code/main.py`를 실행하세요. 장애물이 밀어내지 않으면 closest approach가 어떻게 될지 예측하세요."
+    "mission": "`code/main.py`의 `optimise(X0, obs, iters=4000)` 호출에 `wo=0.0`을 더하고 `python3 code/main.py`를 실행하세요. 장애물이 밀어내지 않으면 closest approach가 어떻게 될지 예측하세요.",
+    "clip": "탐사 로봇이 컵 두 개를 지나는 4 m 경로의 출발점에서 기다립니다. 파란 waypoint는 들쭉날쭉하게 시작해서 컵 안으로 들어갑니다. 화면마다 `optimise()`의 단계가 늘어나서(최대 4000단계, 로그 시간축) 경로가 컵을 부드럽게 돌아갑니다. 회색 고리는 장애물 margin이고 레슨의 1 단위를 0.4 m로 그렸습니다. 마지막에 로봇이 완성된 초록 경로를 따라 갑니다."
   },
   "toy": null,
-  "motion": "path-relax",
   "three": "path-rubber-band-3d"
 }

@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "따로 둔 시연에서 오차가 작은데도 복제 정책이 실패할 수 있는 이유는 무엇입니까?", "options": ["따로 둔 데이터가 너무 작습니다", "자기 실수가 만든, 시연이 덮지 못한 상태를 만나기 때문입니다", "전문가가 결정론적이기 때문입니다"], "answer": 1, "explanation": "학습은 전문가의 상태 분포를 재고 배포는 학습자의 분포를 씁니다."},
-  {"id": 2, "stage": "check", "question": "DAgger에서 학습자가 지나간 상태의 행동 라벨은 누가 줍니까?", "options": ["학습자 자신", "전문가", "무작위 추측"], "answer": 1, "explanation": "학습자가 준 라벨은 자기 실수를 그대로 확인할 뿐입니다."},
-  {"id": 3, "stage": "check", "question": "이 레슨에서 단순 복제의 오차 곡선은 호라이즌에 따라 어떻게 됩니까?", "options": ["평평합니다", "오른 뒤 높게 유지됩니다", "0으로 떨어집니다"], "answer": 1, "explanation": "학습자가 시연 상태를 벗어난 뒤에는 오차가 계속 큽니다."},
-  {"id": 4, "stage": "check", "question": "dagger()에서 rounds=0이면 무엇이 됩니까?", "options": ["단순 행동 복제", "전문가", "학습되지 않은 정책"], "answer": 0, "explanation": "롤아웃이 추가되지 않으므로 깨끗한 시연만 씁니다."},
-  {"id": 5, "stage": "post", "question": "누적되는 오차를 드러내는 측정은 무엇입니까?", "options": ["따로 둔 시연의 loss", "학습자 롤아웃을 따라 잰 오차", "학습 loss"], "answer": 1, "explanation": "롤아웃만이 학습자가 만드는 상태를 지나갑니다."},
+  {"id": 1, "stage": "pre", "question": "따로 둔 시연에서 오차가 작은데도 복제한 policy가 실패할 수 있는 이유는 무엇입니까?", "options": ["따로 둔 데이터가 너무 작습니다", "자기 실수가 만든, 시연이 덮지 못한 상태를 만나기 때문입니다", "전문가가 결정론적이기 때문입니다"], "answer": 1, "explanation": "학습은 전문가의 상태 분포를 재고 배포는 learner의 분포를 씁니다."},
+  {"id": 2, "stage": "check", "question": "DAgger에서 learner가 지나간 상태의 행동 라벨은 누가 줍니까?", "options": ["learner 자신", "전문가", "무작위 추측"], "answer": 1, "explanation": "learner가 준 라벨은 자기 실수를 그대로 확인할 뿐입니다."},
+  {"id": 3, "stage": "check", "question": "이 레슨에서 단순 복제의 오차 곡선은 step에 따라 어떻게 됩니까?", "options": ["평평합니다", "오른 뒤 높게 유지됩니다", "0으로 떨어집니다"], "answer": 1, "explanation": "learner가 시연 상태를 벗어난 뒤에는 오차가 계속 큽니다."},
+  {"id": 4, "stage": "check", "question": "dagger()에서 rounds=0이면 무엇이 됩니까?", "options": ["단순 행동 복제", "전문가", "학습되지 않은 policy"], "answer": 0, "explanation": "rollout이 추가되지 않으므로 깨끗한 시연만 씁니다."},
+  {"id": 5, "stage": "post", "question": "누적되는 오차를 드러내는 측정은 무엇입니까?", "options": ["따로 둔 시연의 loss", "learner rollout을 따라 잰 오차", "학습 loss"], "answer": 1, "explanation": "rollout만이 learner가 만드는 상태를 지나갑니다."},
   {"id": 6, "stage": "post", "question": "배포 뒤에 전문가가 없을 때 더 싼 대안은 무엇입니까?", "options": ["복구 동작을 일부러 녹화합니다", "시뮬레이션의 noise만 낮춥니다", "시연을 줄입니다"], "answer": 0, "explanation": "경로 밖에서 시작하는 시연이 돌아오는 법을 가르칩니다."}
 ]

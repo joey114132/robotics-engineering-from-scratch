@@ -1,4 +1,4 @@
-# 레슨 16/02 도해: 내비게이션 시스템 구성도와 오도메트리 오차가 landmark 보정으로 복구되는 흐름을 Excalidraw 로 그린다
+# 레슨 16/02 도해: 내비게이션 시스템 구성도와 같은 바퀴 오차에서 보정이 없을 때와 있을 때가 갈리는 흐름을 Excalidraw 로 그린다
 import pathlib
 import sys
 
@@ -9,37 +9,38 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def system():
-    d = Diagram()
-    d.title("Navigation: which lesson each part comes from")
-    g = d.box("Occupancy grid\nlesson 08/03", 0, 0, "blue")
-    a = d.box("A* search\nnew here", 1, 0, "purple")
-    s = d.box("Shortcut smoothing\nlesson 09/03", 2, 0, "purple")
-    p = d.box("Pure pursuit\nlesson 08/04", 2, 1, "purple")
-    r = d.box("Differential drive\nlesson 08/01", 1, 1, "yellow")
-    o = d.box("Odometry estimate\n+ landmark fix", 0, 1, "gray")
-    for x, y in ((g, a), (a, s), (s, p), (p, r), (r, o)):
-        d.arrow(x, y)
-    d.note("The pose estimate goes back into pure pursuit. The grid is inflated by the robot radius first.", d.margin, d.margin + 60 + 2 * d.ch - 10, size=18)
+    d = Diagram(numbered=True, columns=2)
+    d.title("Plan with a map, steer by a guess")
+    grid = d.box("Room grid,\nwalls inflated", 0, 0, "blue", step=1)
+    astar = d.box("A* route,\n77 waypoints", 1, 0, "purple", step=2)
+    short = d.box("Shortcuts,\n6 waypoints", 2, 0, "purple", step=3)
+    pursuit = d.box("Pure pursuit\nsteers", 2, 1, "purple", step=4)
+    rover = d.box("Rover drives,\nwheels read off", 1, 1, "yellow", step=5)
+    guess = d.box("Guess of where\nthe rover is", 0, 1, "gray", step=6)
+    for a, b in ((grid, astar), (astar, short), (short, pursuit), (pursuit, rover), (rover, guess)):
+        d.arrow(a, b)
+    d.arrow(guess, pursuit, label="steer by it", dashed=True)
+    d.note("posts reset it", near=guess, side="b")
     d.save(OUT / "diagram-nav-system.excalidraw")
+    return d.warnings
 
 
 def broken():
-    d = Diagram()
-    d.title("Break test: raise the odometry error")
-    a = d.box("Odometry error\nraised", 0, 0, "gray")
-    b = d.box("Estimate drifts\naway from truth", 1, 0, "red")
-    c = d.box("Robot follows\nthe wrong path", 2, 0, "red")
-    e = d.box("Wall hit,\ngoal missed", 2, 1, "red")
-    f = d.box("Landmark fix\nresets the pose", 1, 1, "green")
-    h = d.box("Back on the path,\ngoal reached", 0, 1, "green")
-    for x, y in ((a, b), (b, c), (c, e)):
+    d = Diagram(columns=2)
+    d.title("Same wheel error, with and without a fix")
+    a = d.box("Guess drifts\n4.7 m off", 0, 0, "red")
+    b = d.box("Rover steers\nby the guess", 1, 0, "red")
+    c = d.box("Rover hits\nthe wall", 2, 0, "red")
+    e = d.box("Two posts seen\neach second", 0, 1, "green")
+    f = d.box("Guess stays\nwithin 0.11 m", 1, 1, "green")
+    g = d.box("Rover reaches\nthe goal", 2, 1, "green")
+    for x, y in ((a, b), (b, c), (e, f), (f, g)):
         d.arrow(x, y)
-    d.arrow(f, h)
-    d.arrow(b, f, dashed=True, label="fix", label_dx=26)
-    d.note("Red path: no fix. Green path: the fix keeps the error small.", d.margin, d.margin + 60 + 2 * d.ch - 10, size=18)
+    d.note("no fix", near=a, side="t")
+    d.note("fix every second", near=e, side="t")
     d.save(OUT / "diagram-nav-broken.excalidraw")
+    return d.warnings
 
 
 if __name__ == "__main__":
-    system()
-    broken()
+    print(system(), broken())

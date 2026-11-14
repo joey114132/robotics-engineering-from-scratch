@@ -2,7 +2,7 @@
   {"id": 1, "stage": "pre", "question": "평면 쿼드로터의 입력은 T와 tau 둘입니다. 어떻게 옆으로 움직입니까?", "options": ["기울여서 추력에 옆 성분이 생기게 합니다", "옆으로 미는 전용 모터로 합니다", "움직일 수 없습니다"], "answer": 0, "explanation": "추력은 몸체 축을 따르므로 기울여야만 옆 방향 힘이 생깁니다."},
   {"id": 2, "stage": "check", "question": "수평으로 정지한 기체를 유지하는 추력은 무엇입니까?", "options": ["T = m g", "T = m g / 2", "T = 0"], "answer": 0, "explanation": "theta = 0이면 수직 가속도는 T/m - g입니다."},
   {"id": 3, "stage": "check", "question": "기체가 theta만큼 기울고 T가 m g로 유지되면 높이는 어떻게 됩니까?", "options": ["내려갑니다", "올라갑니다", "유지됩니다"], "answer": 0, "explanation": "수직 성분이 m g cos(theta)로 무게보다 작습니다."},
-  {"id": 4, "stage": "check", "question": "정지 상태에서 일정한 토크 tau를 작은 각도와 T = m g로 가하면 x는 어떻게 자랍니까?", "options": ["t에 비례합니다", "t^2에 비례합니다", "t^4에 비례합니다"], "answer": 2, "explanation": "토크와 위치 사이에 적분이 네 번 있습니다."},
+  {"id": 4, "stage": "check", "question": "작은 각도에서 T = m g로 정지 상태의 기체에 일정한 토크 tau를 가하면 x는 어떻게 자랍니까?", "options": ["t에 비례합니다", "t^2에 비례합니다", "t^4에 비례합니다"], "answer": 2, "explanation": "토크와 위치 사이에 적분이 네 번 있습니다."},
   {"id": 5, "stage": "post", "question": "theta만큼 기울어 있을 때 높이를 유지하는 T는 무엇입니까?", "options": ["m g cos(theta)", "m g / cos(theta)", "m g sin(theta)"], "answer": 1, "explanation": "수직 성분 T cos(theta)가 m g와 같아야 합니다."},
   {"id": 6, "stage": "post", "question": "위치 명령을 주면 처음에 반응이 늦은 것처럼 보이는 이유는 무엇입니까?", "options": ["옆 방향 힘이 생기기 전에 pitch가 먼저 커져야 해서입니다", "모터가 늦게 출발해서입니다", "중력이 추력을 상쇄해서입니다"], "answer": 0, "explanation": "옆 방향 힘 T sin(theta)는 theta가 커지기 전에는 거의 0입니다."}
 ]

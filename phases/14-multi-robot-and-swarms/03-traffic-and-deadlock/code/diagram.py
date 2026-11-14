@@ -9,29 +9,34 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def cycle():
-    d = Diagram(cell=(330, 190))
-    d.title("Wait-for graph: a loop means nobody can move")
-    a = d.box("Robot A\nholds (0,0)", 0, 0, "red", w=230)
-    b = d.box("Robot B\nholds (1,0)", 1, 0, "red", w=230)
-    c = d.box("Robot C\nholds (1,1)", 1, 1, "red", w=230)
-    e = d.box("Robot D\nholds (0,1)", 0, 1, "red", w=230)
-    d.arrow(a, b, label="wants (1,0)")
-    d.arrow(b, c, label="wants (1,1)", label_dx=60)
-    d.arrow(c, e, label="wants (0,1)")
-    d.arrow(e, a, label="wants (0,0)", label_dx=-60)
+    d = Diagram()
+    d.title("Four toy cars wait in a loop")
+    a = d.box("Car 0\nholds (0,0)", 0, 0, "red")
+    b = d.box("Car 1\nholds (1,0)", 1, 0, "red")
+    c = d.box("Car 2\nholds (1,1)", 1, 1, "red")
+    e = d.box("Car 3\nholds (0,1)", 0, 1, "red")
+    d.arrow(a, b, label="waits for car 1")
+    d.arrow(b, c, label="waits for car 2")
+    d.arrow(c, e, label="waits for car 3")
+    d.arrow(e, a, label="waits for car 0")
+    d.note("find_cycle() returns [0, 1, 2, 3]", d.margin, 0)
     d.save(OUT / "diagram-wait-cycle.excalidraw")
 
 
 def fix():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("Reservation: take the whole route or wait outside")
-    q = d.box("Robot wants\nto enter", 0, 0.5, "blue", w=230)
-    r = d.box("Is every node\non its route free?", 1, 0.5, "purple", w=250, shape="diamond", h=120)
-    y = d.box("Reserve all,\ndrive, release\nas it leaves", 2, 0, "green", w=240, h=100)
-    n = d.box("Wait outside,\nholding nothing", 2, 1, "yellow", w=240)
-    g = d.box("No hold-and-wait\nso no loop", 3, 0.5, "green", w=220)
-    for s, t in ((q, r), (r, y), (r, n), (y, g), (n, g)):
-        d.arrow(s, t)
+    q = d.box("Car wants to\nenter the crossing", 0, 0.5, "blue")
+    r = d.box("Is every cell on\nits route free?", 1, 0.5, "purple", shape="diamond")
+    y = d.box("Reserve all cells,\ndrive, release\nas it leaves", 2, 0, "green")
+    n = d.box("Wait outside,\nholding nothing", 2, 1, "yellow")
+    g = d.box("No hold-and-wait,\nso no loop", 3, 0.5, "green")
+    d.arrow(q, r)
+    d.arrow(r, y, label="yes")
+    d.arrow(r, n, label="no")
+    d.arrow(y, g)
+    d.arrow(n, g)
+    d.note("In the clip all four cars finish by tick 7", d.margin, 0)
     d.save(OUT / "diagram-reservation.excalidraw")
 
 

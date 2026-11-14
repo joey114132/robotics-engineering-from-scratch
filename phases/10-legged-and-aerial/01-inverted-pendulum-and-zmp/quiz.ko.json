@@ -1,6 +1,6 @@
 [
-  {"id": 1, "stage": "pre", "question": "서 있는 몸이 밀렸고 발목 토크가 한계입니다. 넘어지는지는 무엇이 정합니까?", "options": ["capture point가 발 안에 있는지", "발바닥의 색", "제어 루프의 언어"], "answer": 0, "explanation": "발목은 ZMP를 발 안에서만 옮길 수 있으므로 xi가 발 밖이면 걸음이 필요합니다."},
-  {"id": 2, "stage": "check", "question": "x'' = (g/h)(x - p)의 시상수는 무엇입니까?", "options": ["sqrt(g/h)", "sqrt(h/g)", "h/g"], "answer": 1, "explanation": "exp(t/Tc)를 대입하면 1/Tc^2 = g/h입니다."},
+  {"id": 1, "stage": "pre", "question": "서 있는 몸이 밀렸고 발목 토크가 한계입니다. 넘어질지는 무엇이 결정합니까?", "options": ["capture point가 발 안에 있는지", "발바닥의 색", "제어 루프의 언어"], "answer": 0, "explanation": "발목은 ZMP를 발 안에서만 옮길 수 있으므로 xi가 발 밖이면 걸음이 필요합니다."},
+  {"id": 2, "stage": "check", "question": "x'' = (g/h)(x - p)의 time constant는 무엇입니까?", "options": ["sqrt(g/h)", "sqrt(h/g)", "h/g"], "answer": 1, "explanation": "exp(t/Tc)를 대입하면 1/Tc^2 = g/h입니다."},
   {"id": 3, "stage": "check", "question": "몸의 높이가 4배가 되면 Tc는 어떻게 됩니까?", "options": ["2배", "4배", "절반"], "answer": 0, "explanation": "Tc는 sqrt(h)에 비례합니다."},
   {"id": 4, "stage": "check", "question": "발을 capture point 위에 정확히 놓으면 몸은 어떻게 됩니까?", "options": ["계속 가속합니다", "그 점 위에서 정지합니다", "영원히 진동합니다"], "answer": 1, "explanation": "xi' = (xi - p)/Tc가 0이 되고 속도는 0으로 줄어듭니다."},
   {"id": 5, "stage": "post", "question": "ZMP에 대해 맞는 설명은 무엇입니까?", "options": ["바닥 어디든 있을 수 있다", "지지 영역 안에 있어야 한다", "capture point와 같다"], "answer": 1, "explanation": "지면은 밀기만 하므로 힘의 작용점은 접촉 영역 안에 있어야 합니다."},

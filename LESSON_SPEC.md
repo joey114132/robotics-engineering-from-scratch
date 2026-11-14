@@ -10,14 +10,16 @@ phases/NN-slug/NN-lesson-slug/
   code/main.py                  from-scratch implementation, at most 80 lines, one-line header comment
   code/diagram.py               builds assets/diagram-*.excalidraw with scripts/excal.py (2 or more diagrams)
   code/figure.py                builds assets/fig-*.png data plots with matplotlib (1 or more where there is data)
+  code/clip.py                  builds assets/clip.mp4 and clip.jpg in Blender: the lesson's real object, moved by code/main.py
+  code/clip-example.py          optional second clip for the worked example, linked from both docs
   code/tests/test_<slug>.py     pytest, 5+ tests, written first (red), unique file name
   assets/                       generated .excalidraw, .svg, .png. Commit them.
   quiz.json  quiz.ko.json       6 questions: 1 pre, 3 check, 2 post; same ids, same answer index
   outputs/skill-<slug>.md       English harness file, front matter name and description (when to call it)
-  fun.json                      website extras: en and ko text, plus the names of the lesson's toy, motion and three (3D scene)
+  fun.json                      extras: en and ko text (hook, mission, clip caption), plus the names of the lesson's toy and three (3D scene); the separate website repo reads the last two
 ```
 
-## Doc shape: at most 540 English words outside code blocks, at least 3 images
+## Doc shape: at most 600 English words outside code blocks, at least 3 images
 
 ```text
 # Title
@@ -55,15 +57,14 @@ Apply these five rules in both languages.
 | "A notebook records every corner as a right angle, so the drawn square closes even though your smaller turns leave you away from the start." | "A wrong stride length distorts distances." (This does not explain why the notebook can hide the error.) |
 | "The showerhead pushes water away, so your hand feels a push in the opposite direction." | "A propeller's thrust points in the direction it blows air." |
 
-The total English budget is 450 + 90 = 540 words outside fenced code, including headings and metadata.
+The total English budget is 450 + 90 + 60 = 600 words outside fenced code, including headings and metadata. The last 60 are for one worked example with the lesson's own numbers, which may carry a clip (see Visuals).
 The opening cap counts visible prose, including link labels. Korean has a mechanical ceiling of 90 whitespace-separated words and 600 characters, including spaces and paragraph breaks; match the English meaning rather than filling the ceiling.
 Prefer words to equations in the opening. If a familiar number is needed for the causal scene, link it to a source or a lesson test. The 08-01 example keeps 90° / 90도 and links those labels to a verified definition of a right angle. Put detailed numeric examples and equations in the later sections.
 Korean opening paragraphs may exceed the general 160-character paragraph guideline when needed to preserve a connected explanation; the block still has the 600-character ceiling. Source lines must stay within the checker's 160-character limit. A soft line break does not create a new paragraph.
 Mechanical checks cannot establish that an analogy is physically correct, so reviewers must trace its causal chain.
 
-The site renders the block as a callout before the playground and includes its heading in the section rail and progress chip.
-The terminal reader also shows it before the lesson hook. Single-file builds keep it in the immediate article, not the deferred body.
-Glossary terms follow the existing first-mention-per-section rule; the term taught by the lesson itself still has no redundant tooltip.
+The terminal reader shows it before the lesson hook.
+Glossary terms (`scripts/glossary.json`) follow the first-mention-per-section rule; the term taught by the lesson itself still has no redundant tooltip.
 
 ### Corrected worked examples
 
@@ -184,26 +185,32 @@ Run the guard afterward. Heading checks share `scripts/lesson_sections.py` with 
 
 ## Visuals
 
-Build everything with `python3 scripts/build_figures.py <lesson-name-fragment>`. It runs `diagram*.py` and `figure*.py`, then renders every `.excalidraw` to `.svg` and `.png` with the real Excalidraw renderer. Docs link the `.png`.
+Build everything with `python3 scripts/build_figures.py <lesson-name-fragment>`. It runs `diagram*.py` and `figure*.py`, then renders every `.excalidraw` to `.svg` and `.png` with the real Excalidraw renderer. Docs link the `.png`. Next to each `diagram-<name>.png` the build also writes `diagram-<name>.anim.webp`: the same picture with short dashes flowing along every arrow from start to end (12 frames, about 14 a second, endless loop, usually under 110 KB). Boxes, text and labels do not move. A web page can show it unless the visitor asked for less motion; docs keep linking the `.png`.
 
-Diagrams use `scripts/excal.py`:
+Diagrams use `scripts/excal.py`. You say what connects to what; `save()` lays it out for a phone (a lesson column is about 350 px wide):
 
 ```python
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts"))
 from excal import Diagram
-d = Diagram()                                  # grid cells 300 x 170 px
+d = Diagram()                                  # Diagram(numbered=True) adds step badges
 d.title("Why a soft arm sags")
-a = d.box("Model says\ngravity = ff", col=0, row=0, color="blue")   # colors: blue green yellow red purple gray
-b = d.box("Residual", col=1, row=0.5, color="red", shape="rectangle")  # shapes: rectangle ellipse diamond
-d.arrow(a, b, label="minus")                   # route="below" draws a feedback loop under the boxes
-d.note("one-line takeaway", x, y)
+a = d.box("Model says\ngravity = ff", col=0, row=0, color="blue")   # colors: blue green yellow red purple gray; shapes: rectangle ellipse diamond
+b = d.box("Residual", col=1, row=0.5, color="red")
+d.arrow(a, b, label="minus")                   # feedback arrows (route="below" in old files) are routed around the boxes by the engine
+d.note("check units first", near=a, side="b")  # a note hung on a box; d.note(text, x, y) is a takeaway line under the picture
 d.save(OUT / "diagram-name.excalidraw")
 ```
 
-- At most 8 boxes per diagram, 2 lines per box, short words. Colour carries meaning: blue input, yellow real world, red problem, purple transform, green result, gray neutral.
+- `col` and `row` say what sits left of or above what, and which boxes share a lane. They are not pixels: the engine picks left to right, top to bottom, or a snake that wraps at 3 columns, whichever reads best, sizes the boxes to the text, and keeps the smallest text at about 12 px when the PNG is shown 350 px wide (the test requires 11). Do not set `w`, `h`, `size`, `dx` or `dy`; they are ignored.
+- Arrows are straight orthogonal segments in a clear lane. They never cross a box or text. Both ends touch the shape's outline: a lone arrow meets the middle of a side, several arrows on one side are spread evenly and symmetrically about the middle, and two boxes level with each other (same row or column) are joined by one straight arrow through both middles. Bends leave and enter at right angles. A label sits in the middle of a straight stretch of its own arrow with a white background, so keep labels to a few words.
+- `Diagram(numbered=True)` puts a number badge on each box in reading order (left to right by `col`, then by `row`). Use `box(..., step=n)` to set a number by hand. Use it when order matters, such as a procedure.
+- `note(text, near=box, side="r"|"b"|"l"|"t")` puts a short note beside a box with a thin leader. The engine moves it to another side if that side is crowded or would widen the picture.
+- At most 3 columns across and 8 boxes. Fonts are Nunito, 26 px in boxes and 24 px in labels and notes. Check the report in `d.warnings` after `save()`: it lists a label or note that found no clear spot.
+- At most 2 lines per box and short words; the engine wraps longer text, but a word wider than about 200 px (for example `Counterexample`) forces wide boxes. Colour carries meaning: blue input, yellow real world, red problem, purple transform, green result, gray neutral.
 - Data figures (matplotlib, Agg backend): 1200x675 px or smaller, English labels only, axis names with units, a title that states the takeaway, colour-blind-safe colours (`#0072B2` blue, `#D55E00` orange, `#555555` gray), seeded, no external data.
 - Captions live in each language's doc, so one image serves every language.
-- Every lesson has one 3D scene. `fun.json` names it (`"three": "<name>-3d"`), and `scripts/motion3d/pNN.js` for the lesson's phase registers it with `window.MOTION.three(name, spec, frame)`. The spec needs `en`, `ko` and a two-line `cap`. The scene computes the lesson's own formula, draws only with the engine in `scripts/motion3d/00-engine.js` (Canvas 2D, no library, no network), and each phase file stays under 45 KB. `scripts/tests_robo/test_motion3d_wave2.py` checks that the registered scenes and the `three` names match.
+- Every lesson has one 3D scene, which lives in the separate website repo. `fun.json` names it (`"three": "<name>-3d"`); this repo does not check the name.
+- Every lesson has a lead clip. `code/clip.py` builds a small Blender scene from `scripts/blender/kit.py` (a toy car, a bench arm, a rover, a drone) and keys it with arrays from `kit.lesson_main(__file__)`, so what moves is what `code/main.py` computes. No text in the picture, 4 to 6 seconds, blue for the plain or failing case and green for the fixed one. Its caption is `clip` under `en` and `ko` in `fun.json`. A worked example may have its own clip, `code/clip-example.py`, linked in both docs as `![alt](../assets/clip-example.mp4)` with the usual italic caption line; the terminal reader shows its poster. Render with `python3 scripts/build_clips.py <lesson fragment>` (Blender 5 and ffmpeg on PATH; `CLIP_LOOK=real` for the ray-traced look; `--still N` for one frame). Commit the `.mp4` and `.jpg`.
 - Look at every PNG with the Read tool before reporting. Check clipped or overlapping text, crossing arrows, and whether the picture shows what the caption claims. Fix and rebuild.
 
 ## Content rules

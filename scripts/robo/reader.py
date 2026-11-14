@@ -156,6 +156,8 @@ def print_lesson(u, lesson, state, mode, root=None):
         else:
             _, alt, src, cap = part
             path = (doc.parent / src).resolve() if not src.startswith("http") else Path(src)
+            if path.suffix == ".mp4":   # the terminal shows a clip as its poster frame
+                path = path.with_suffix(".jpg")
             u.print()
             full = mode == "full"
             lines = figures.render_figure(path, cap if u.plain else cap.replace("`", ""), min(w - 4, 96 if full else figures.MAX_COLS),

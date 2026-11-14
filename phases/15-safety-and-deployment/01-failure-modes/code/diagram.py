@@ -9,44 +9,45 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def loop():
-    d = Diagram(cell=(280, 170))
+    d = Diagram()
     d.title("Where each fault enters the loop")
-    r = d.box("Reference", 0, 1, "blue", w=190)
-    c = d.box("Controller\nPD", 1, 1, "purple", w=190)
-    a = d.box("Actuator", 2, 1, "gray", w=190)
-    j = d.box("Joint", 3, 1, "yellow", w=190)
-    s = d.box("Sensor", 3, 2, "gray", w=190)
-    ws = d.box("Wrong sign", 1, 0, "red", w=190)
-    sa = d.box("Saturation", 2, 0, "red", w=190)
-    sf = d.box("Stuck\nDropout\nDelay", 4, 2, "red", w=190, h=110)
-    d.arrow(r, c)
-    d.arrow(c, a)
-    d.arrow(a, j)
+    t = d.box("Target\n1 rad", col=0, row=0, color="blue")
+    c = d.box("Controller\npushes like a spring", col=1, row=0, color="purple")
+    m = d.box("Motor\nturns the joint", col=2, row=0, color="gray")
+    j = d.box("Joint\nthe arm itself", col=2, row=1, color="yellow")
+    s = d.box("Sensor\nreports the angle", col=1, row=1, color="gray")
+    ws = d.box("Wrong sign\npush is flipped", col=1, row=-1, color="red")
+    sa = d.box("Saturation\npush is capped low", col=2, row=-1, color="red")
+    sf = d.box("Bad reading\nstuck, dropout, delay", col=0, row=1, color="red")
+    d.arrow(t, c)
+    d.arrow(c, m)
+    d.arrow(m, j)
     d.arrow(j, s)
-    d.arrow(s, c, route="below")
+    d.arrow(s, c)
     d.arrow(ws, c, dashed=True)
-    d.arrow(sa, a, dashed=True)
+    d.arrow(sa, m, dashed=True)
     d.arrow(sf, s, dashed=True)
     d.save(OUT / "diagram-fault-points.excalidraw")
+    return d
 
 
 def checks():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("Which cheap check sees which fault")
-    f = d.box("Reading flat\nwhile torque on", 0, 0, "purple", w=250)
-    j = d.box("Reading jumps\nin one tick", 0, 1, "purple", w=250)
-    g = d.box("Error grows\nin 100 ms", 0, 2, "purple", w=250)
-    l = d.box("Not at target\nafter 2 s", 0, 3, "purple", w=250)
-    st = d.box("Stuck sensor", 1, 0, "red", w=210)
-    dr = d.box("Dropout", 1, 1, "red", w=210)
-    ws = d.box("Wrong sign\nDelay", 1, 2, "red", w=210)
-    sa = d.box("Saturation", 1, 3, "red", w=210)
-    for a, b in ((f, st), (j, dr), (g, ws), (l, sa)):
-        d.arrow(a, b)
-    d.note("Saturation is the quiet one: nothing trips until the clock does.", d.margin, d.margin + 60 + 4 * d.ch - 40, size=20)
+    rows = (("Reading flat\nwhile torque is on", "Stuck sensor"),
+            ("Reading jumps\nin one tick", "Dropout"),
+            ("Error grows\nin 100 ms", "Wrong sign, delay"),
+            ("Not at target\nafter 2 s", "Saturation"))
+    for i, (check, fault) in enumerate(rows):
+        a = d.box(check, col=0, row=i, color="purple")
+        b = d.box(fault, col=1, row=i, color="red")
+        d.arrow(a, b, label="catches")
+        if fault == "Saturation":
+            d.note("The quiet one: only the clock catches it", near=b, side="b")
     d.save(OUT / "diagram-fault-checks.excalidraw")
+    return d
 
 
 if __name__ == "__main__":
-    loop()
-    checks()
+    for dd in (loop(), checks()):
+        print(dd.warnings)

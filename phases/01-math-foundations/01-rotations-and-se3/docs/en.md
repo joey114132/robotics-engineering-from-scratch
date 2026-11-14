@@ -6,35 +6,37 @@
 
 ## In Plain Words
 
-Hold a book flat, tilt it around a fixed table edge, then turn it around the room's vertical axis. Reverse
-those actions and the cover can face a different way, because the first turn changes how the book faces before
-the second.
+Hold a drone, nose to the door. Roll it a quarter turn about its nose, then spin it a quarter turn about the vertical line: the nose points left. Spin first, then roll about the door line: the nose swings up to the ceiling.
 
-A pose combines orientation and position. Transform multiplication keeps track of both, in order. Swapping
-transforms can therefore give a different location even though every individual rotation and distance is
-valid.
+The first turn moved the drone, so the second acts on a drone that faces differently. Position works the same way: shift before turning and the turn carries the drone around the origin. A pose is orientation plus position, and multiplying poses in order tracks both.
 
 ## The Problem
 
-A camera sees a cup at (0.2, 0, 0.5) in its own frame, and the arm needs the cup in the base frame. If you multiply two transforms in the wrong order, the result is still a valid-looking pose, just a wrong one. The arm reaches for a point that does not exist and nothing in the code complains.
+A camera sees a cup at (0.2, 0, 0.5) in its own frame (x, y, z measured from the camera), and the arm needs it in the base frame, measured from its base. Multiply the camera's and the cup's transforms in the wrong order and the result is still a valid-looking pose, just a wrong one, so the arm reaches for a point that does not exist and nothing complains.
 
 ## The Concept
 
-![One matrix goes one way, its inverse goes back](../assets/diagram-transform-chain.png)
+A rotation matrix `R` turns without stretching or mirroring: its columns are perpendicular and one unit long (orthonormal) and its determinant, a mirror check, is +1 (a mirror gives -1). A rigid transform `T` stacks `R` and a position `p` into one 4x4 matrix, a pose in SE(3). Applying `T` to a point turns it by `R`, then shifts it by `p`. In a product `A @ B` the right matrix acts first, so order matters.
 
-*A rigid transform `T_base_cam` carries a point from camera coordinates into base coordinates.*
+![A transform and its inverse](../assets/diagram-transform-chain.png)
 
-A rotation matrix has orthonormal columns and determinant +1. A rigid transform stacks `R` and a position `p` into a 4x4 matrix. Chaining frames is matrix multiplication, which is not commutative.
+*Follow the numbers: `T_base_cam` maps camera coordinates to base coordinates, and its inverse maps back.*
 
-![Two orders of the same turns end in different places](../assets/diagram-rotation-order.png)
+A drone's pose is a quarter turn about z plus a shift `p = (1, 2, 0)`. Turn then shift: its centre ends at `p` and a mark on its nose, (1, 0, 0), at (1, 3, 0). Shift then turn: the turn swings the centre around the origin to (-2, 1, 0) and the nose mark to (-2, 2, 0).
 
-*Rotating about x then z sends (1, 0, 0) to (0, 1, 0). The opposite order sends it to (0, 0, 1).*
+![Two drones, opposite orders](../assets/clip-example.mp4)
 
-The inverse has a closed form, `[R^T, -R^T p]`. A general matrix inverse also works, but it hides drift: if `R` stops being orthonormal, it quietly returns a non-rigid result.
+*Green turns, then moves onto the grey target. Blue moves first, so the turn swings it around the origin.*
+
+![Two turn orders](../assets/diagram-rotation-order.png)
+
+*Compare the rows: roll about x then spin about z, or the reverse, sends the nose (1, 0, 0) to (0, 1, 0) or (0, 0, 1).*
+
+The inverse has a closed form, `[R^T, -R^T p]`: `R^T` (rows and columns of `R` swapped) undoes the turn, so `T^-1` shifts back, then turns back. A general inverse hides drift, the slow error from many rounded multiplications, by silently inverting a slightly wrong `R`. The closed form trusts `R^T` to undo `R`, so drift makes `T^-1 T` miss the identity.
 
 ![Float32 drift with and without repair](../assets/fig-rotation-drift.png)
 
-*Composing 20,000 small rotations in float32 lets drift grow. Re-orthonormalising every 100 steps keeps it at rounding level.*
+*Compare the curves. Composing 20,000 small rotations in float32 (rounded numbers) lets drift grow. Snapping `R` back (`reorthonormalize`) every 100 steps keeps it at rounding level.*
 
 ## Build It
 
@@ -51,7 +53,7 @@ def reorthonormalize(R):
     return U @ np.diag([1, 1, np.linalg.det(U @ Vt)]) @ Vt
 ```
 
-`rot_x`, `rot_y`, `rot_z` and `make_T` are in `code/main.py`.
+Helpers `rot_x`, `rot_y`, `rot_z`, `make_T`: see `code/main.py`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -60,13 +62,13 @@ python3 -m pytest phases/01-math-foundations/01-rotations-and-se3 -q
 
 ## Use It
 
-`scipy.spatial.transform.Rotation` does all of this. The last test compares `rot_z(0.8)` with `Rotation.from_euler("z", 0.8).as_matrix()`. Use the library in production, and use your version to know what its output means when a pose looks wrong.
+`scipy.spatial.transform.Rotation` does all of this; the last test compares it with `rot_z(0.8)`.
 
 Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2 (descriptions and transformations).
 
 ## Ship It
 
-`outputs/skill-transform-sanity.md` is a checklist that catches these pose bugs before they reach hardware.
+`outputs/skill-transform-sanity.md` is a checklist that catches these pose bugs before hardware.
 
 ## Exercises
 

@@ -1,39 +1,42 @@
 # The Sampling Limit
 
-> A damper that is correct in continuous time can still be unstable once the controller holds its command for one tick.
+> A damper (a brake on speed) that is correct in continuous time can still be unstable once the controller holds its command for one tick.
 
 **Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A friend tries to stop a sliding puck by checking its motion, then pushing against it until the next check. If
-the push lasts past the moment the puck stops, it sends the puck back the other way.
+Picture a bench arm swinging at the elbow, with a motor that brakes the swing. The controller looks at the swing speed once, then pushes against that speed with a steady force until its next look.
 
-A sampled damper can do the same to a joint. It holds torque based on an earlier velocity. Stronger damping, a
-longer hold, or smaller inertia makes reversal more likely. Push too hard for too long and the speed grows
-with each reversal instead of fading.
+A gentle push slows the arm. If the push is strong, the arm is light or the wait is long, the push lasts past the moment the arm stops and shoves it back the other way. A strong enough shove sends it back faster than before, so each swing grows.
 
 ## The Problem
 
-You raise a damping gain `kd` so a joint stops oscillating, and the joint starts buzzing instead. The gain looked mild. The host computes a torque once per control period and holds it, so the damper pushes against a velocity that is already one tick old.
+You raise a damping gain `kd` (braking strength) so a joint stops oscillating, and it starts buzzing instead. The gain looked mild. The host (the controller's computer) computes a torque once per tick, one control step, and holds it, so the damper pushes against a speed that is already one tick old.
 
 ## The Concept
 
-![A held command acts on stale velocity](../assets/diagram-stale-command.png)
+![Stale velocity](../assets/diagram-stale-command.png)
 
-*The torque is computed from the velocity at the start of the tick, but it acts for the whole tick.*
+*The torque comes from the speed at tick start but acts all tick, so by the red box it is out of date.*
 
-For a pure inertia `J` with torque `-kd * v` held for `dt`, one tick gives `v+ = v * (1 - r)` with `r = dt * kd / J`. The factor `1 - r` decides everything.
+Take a pure inertia `J` (how hard the joint is to speed up or slow down). Hold the torque `-kd * v` for the tick length `dt`. Torque is inertia times acceleration, so the speed changes by `-dt * kd * v / J`. One tick later it is `v+ = v * (1 - r)`, where `r = dt * kd / J`.
 
-![Four zones of r](../assets/diagram-r-zones.png)
+![Three zones of r](../assets/diagram-r-zones.png)
 
-*Below 1 the velocity shrinks smoothly. At exactly 1 it reaches zero in one tick. Between 1 and 2 it flips sign but still shrinks. From 2 up it never decays.*
+*Up to 1 the speed shrinks smoothly (at exactly 1, to zero in one tick). Between 1 and 2 it flips sign but still shrinks. At exactly 2 it keeps its size, and above 2 it grows.*
 
-![Velocity per tick and the factor 1 - r](../assets/fig-r-response.png)
+![Speed per tick](../assets/fig-r-response.png)
 
-*Left: velocity for four values of `r`. Right: the factor `1 - r` crosses 0 at `r = 1` and -1 at `r = 2`.*
+*Watch `r = 1.5` on the left: the sign flips, the swings shrink. Right: `1 - r` crosses 0 at `r = 1` and -1 at `r = 2`.*
 
-`J` is in the ratio, so the joint with the smallest effective inertia, often a wrist, crosses the line first at a gain that feels mild on the shoulder.
+`J` is in the ratio, so the lightest joint crosses the `r = 1` line first at a gain that feels mild on the shoulder.
+
+Example: `J = 0.02`, `dt = 0.001`, `kd = 30` gives `r = 1.5`, so each tick multiplies the speed by `-0.5` (1, -0.5, 0.25). A weight that triples `J` gives `r = 0.5` (1, 0.5, 0.25).
+
+![Two arms](../assets/clip-example.mp4)
+
+*Same `kd = 30`. Watch the blue arm: light (`r = 1.5`), it jerks back and forth in shrinking steps. The green arm carries a weight (`r = 0.5`) and glides to a stop. One tick is drawn a third of a second.*
 
 ## Build It
 
@@ -46,7 +49,7 @@ def classify(J, kd, dt):
     return "smooth" if r <= 1 else "chatter" if r < 2 else "divergent"
 ```
 
-Tests cover both sides of each boundary with `J = 0.02` and `dt = 0.001`, where the limits are `kd = 20` and `kd = 40`. One test checks `r = 1` exactly: velocity is zero after one tick with no sign flip.
+Tests cover both sides of each boundary at `J = 0.02`, `dt = 0.001` (limits `kd = 20` and `40`) and check that `r = 1` gives zero speed with no sign flip.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -56,7 +59,7 @@ python3 phases/03-dynamics-and-control/01-the-sampling-limit/code/figure.py
 
 ## Use It
 
-Many drives run an inner loop at a much higher rate, which removes the limit from the host loop. When damping must stay on the host, lower `kd`, raise the loop rate, or gate gains with the inertia of the lowest-inertia pose.
+Many drives run an inner loop (inside the motor drive) at a much higher rate, which removes the limit from the host loop. When damping must stay on the host, lower `kd`, raise the loop rate, or gate gains with the inertia of the lowest-inertia pose.
 
 ## Ship It
 

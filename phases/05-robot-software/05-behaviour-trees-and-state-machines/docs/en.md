@@ -6,34 +6,35 @@
 
 ## In Plain Words
 
-You put on a shoe, then tie its laces. If a knot slips, you retry the knot without taking the shoe off and
-starting again. Remembering the unfinished step keeps a small failure from restarting the whole job.
-
-A behaviour tree does that with success, failure and running answers. This lesson's Sequence remembers a
-running child. Retry gives a failed action another attempt, while Fallback tries an alternative. A state
-machine records the same decisions as explicit transitions between named states.
+An arm fetches a crate: reach it, grasp it, carry it to the bin, let go. If the grasp misses, the arm should try again where it is, not drive back to the start. A behaviour tree gives it that memory. Every step answers success, failure or running. A Sequence remembers which step is still running, and a Retry gives a failed step another attempt. A state machine writes the same decisions as named states with arrows between them.
 
 ## The Problem
 
-You write a fetch task as nested ifs inside one callback. The grasp fails, the callback runs again next cycle, and it no longer knows whether the robot already reached the object. So it drives there again, or it skips the retry. Task logic needs a place to keep "where was I" that is not a pile of flags.
+You write a fetch task as nested ifs inside one callback. The grasp fails, the callback runs again next cycle, and it no longer knows whether the arm already reached the crate. So the arm drives there again, or the retry is skipped. Task logic needs a place to keep "where was I" that is not a pile of flags.
 
 ## The Concept
 
 ![A fetch task as a tree](../assets/diagram-fetch-tree.png)
 
-*The task is a Sequence of steps. The grasp sits under a Retry, so a failed grasp does not end the whole task.*
+*The task is a Sequence of steps. The grasp sits under a Retry, so a failed grasp does not end the task.*
 
-Every cycle the root is ticked, and the tick walks down. A leaf does a little work and returns `success`, `failure` or `running`. A parent reads those answers and decides what to do next.
+Every cycle the root is ticked, which means the tree is asked to take one small step, and the tick walks down. A leaf does a little work and returns `success`, `failure` or `running`. A parent reads those answers and decides what to do next.
 
 ![What a parent does with each answer](../assets/diagram-status-rules.png)
 
 *Sequence stops at the first failure and Fallback stops at the first success. Both remember the child that said running and resume there.*
 
+Example: the arm holds a crate and a Fallback tries bin A, then bin B. Bin A is full, so tick 1 fails the check `A has room` and moves on to `go B`, which answers running. Tick 2 resumes at `go B` without asking about A again, and tick 3 succeeds. The check ran once and `go A` never ran.
+
+![An arm skips a full bin and carries its crate to the second bin](../assets/clip-example.mp4)
+
+*A red frame flashes on the full bin at tick 1. The arm then swings toward bin B over three ticks and drops the crate, never asking about bin A again.*
+
 ![Which nodes tick on which cycle](../assets/fig-fetch-ticks.png)
 
-*The grasp fails twice and the Retry reports running. Once go object succeeds, it is never ticked again.*
+*The grasp fails twice and the Retry reports running. Once the reach step succeeds, it is never ticked again.*
 
-A state machine is the other common tool. It is a table of `state -> event -> next state`. Every state lists its own exits, so adding a retry means editing every state that can fail. In a tree the retry is one node around one child.
+A state machine is another common tool. It is a table of `state -> event -> next state`. Every state lists its own exits, so adding a retry means editing every state that can fail. In a tree the retry is one node around one child.
 
 ## Build It
 
@@ -66,4 +67,4 @@ BehaviorTree.CPP and `py_trees` use the same core answers and add parallel nodes
 
 1. Add a Fallback that sends the robot to a safe pose when the Retry gives up.
 2. Make a Sequence without memory that rechecks a condition leaf every tick.
-3. Write the fetch task as a state machine table and count the transitions.
+3. Write the fetch task as a state machine table and count transitions.

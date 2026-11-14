@@ -6,37 +6,41 @@
 
 ## In Plain Words
 
-Walk along a school corridor with your eyes closed, counting steps. Uneven steps leave several possible
-locations. Opening your eyes and seeing a doorway favours places with doors, but cannot identify which door by
-itself.
+A small robot rolls around a ring corridor, counting wheel turns. The wheels slip, so after every move it is less sure which spot it is on. Picture a bar over each spot, taller where the robot is more likely to be. As it rolls, the bars spread out and shrink.
 
-A Bayes filter keeps probabilities over those possibilities. Prediction shifts and spreads them according to
-uncertain movement. Update gives more weight to places that fit the new observation, then normalises the
-probabilities. These steps change the belief about your location, not the corridor or your actual position.
+When the door sensor says "door", the robot raises the bars over spots with doors and lowers the rest. Only the bars, the robot's belief, change; the robot and corridor stay put.
 
 ## The Problem
 
-A robot rolls down a corridor and counts its wheel turns to know where it is. Wheels slip a little, so after a hundred steps the count is a guess, and the robot walks into the wrong door. Throwing the count away is no better: one reading of "door" fits several places.
+A robot rolls down a corridor, counting wheel turns to know where it is. Wheels slip, so after a hundred steps the count is a guess and it walks into the wrong door. Discarding the count is no better: one "door" reading fits several places.
 
 ## The Concept
 
-![One step of the Bayes filter](../assets/diagram-bayes-cycle.png)
+![Bayes filter step](../assets/diagram-bayes-cycle.png)
 
-*Predict shifts the belief by the move and blurs it. Update multiplies by how well each cell explains the reading.*
+*Predict shifts and blurs the belief. Update multiplies it by how well each cell explains the reading.*
 
-The belief is a histogram: one probability per corridor cell. Predict convolves it with a motion kernel, here 5% short, 90% exact, 5% long. Update uses Bayes' rule, `posterior = prior * likelihood / sum`, where a cell that agrees with the reading is weighted by `p_hit = 0.9` and a cell that disagrees by `0.1`.
+The belief is a histogram: one bar of probability per corridor cell. Predict slides the bars by the move and blurs them, because wheels slip: 5% short, 90% exact, 5% long. Update applies Bayes' rule, `posterior = prior * likelihood / sum`. The prior is the belief before the reading, the likelihood is how well a cell explains it, and the posterior is the new belief.
 
-![Dead reckoning against the filter](../assets/diagram-bayes-split.png)
+A cell that agrees with the reading is weighted by `p_hit = 0.9`, one that disagrees by `0.1`. Dividing by the sum makes the probabilities add to 1.
 
-*Without the sensor step the belief keeps spreading. With it the belief stays near the truth.*
+A robot that knows nothing gives all 20 cells 0.05, and 8 have doors. It reads "door". A door cell becomes `0.05 * 0.9 = 0.045` and a wall cell `0.05 * 0.1 = 0.005`. The sum is `8 * 0.045 + 12 * 0.005 = 0.42`, so a door cell ends at 0.107 and a wall cell at 0.012.
 
-![Belief locks on as readings arrive](../assets/fig-belief-sharpening.png)
+![Rover finds its cell](../assets/clip-example.mp4)
 
-*Left: starting from a flat belief, the mass collects on the true cell after a few doors. Right: entropy falls from ln 20 toward 1 nat.*
+*Watch the green bars. Each move slides and blurs them, each reading (door: amber lamp, wall: grey) makes them jump. After five moves the rover's cell holds 0.86.*
 
-![Doubt grows without the sensor](../assets/fig-dead-reckoning.png)
+![Filter against dead reckoning](../assets/diagram-bayes-split.png)
 
-*Left: entropy of motion-only belief keeps rising, the filter's stays flat. Right: each predict adds `0.05 + 0.05 = 0.1` cell^2 of variance, matched by simulation.*
+*Without the sensor step (dead reckoning: wheel counting only) the belief keeps spreading. With it the belief stays near the truth.*
+
+![Belief locks on](../assets/fig-belief-sharpening.png)
+
+*Left: from a flat belief, probability gathers on the true cell after a few doors. Right: entropy, a score of doubt, falls from ln 20 (about 3, all cells equal) toward 1.*
+
+![Doubt without the sensor](../assets/fig-dead-reckoning.png)
+
+*Left: motion-only doubt keeps rising, the filter's stays flat. Right: a one-cell slip happens 10% of the time, so each predict adds `0.05 + 0.05 = 0.1` cell^2 of variance (spread), matched by simulation.*
 
 ## Build It
 
@@ -49,7 +53,7 @@ def update(bel, z, doors=DOORS, p_hit=P_HIT):
     return post / post.sum()
 ```
 
-The corridor is a ring of 20 cells so `np.roll` handles the ends. The full file adds `entropy`, `simulate` and `run`.
+The corridor is a ring of 20 cells, so `np.roll` handles the ends.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -58,7 +62,7 @@ python3 -m pytest phases/07-state-estimation/01-bayes-filter -q
 
 ## Use It
 
-A particle filter stores the same belief as samples instead of a histogram, which scales to a 2-D map. Nav2's AMCL (Adaptive Monte Carlo Localization) estimates a robot's pose in a known map using a 2D laser scanner. Compare its pose spread with this lesson's entropy as the robot moves.
+A particle filter stores the same belief as samples. Nav2's AMCL (Adaptive Monte Carlo Localization) uses one to find a robot's pose in a known map with a 2D laser scanner.
 
 Sources: Nav2 AMCL README, https://github.com/ros-navigation/navigation2/blob/main/nav2_amcl/README.md (opened 2026-11-09).
 
@@ -68,6 +72,6 @@ Sources: Nav2 AMCL README, https://github.com/ros-navigation/navigation2/blob/ma
 
 ## Exercises
 
-1. Change `KERNEL` to `(0.2, 0.6, 0.2)` and predict the variance after 10 steps before running it.
-2. Feed the filter a wrong `p_hit` of 0.99 and watch what a single bad reading does.
-3. Replace the ring with a corridor that has two walls and decide where the lost mass goes.
+1. Set `KERNEL` to `(0.2, 0.6, 0.2)` and predict the variance after 10 steps.
+2. Use a wrong `p_hit` of 0.99 and watch what one bad reading does.
+3. Replace the ring with a walled corridor and decide where the lost mass goes.

@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Give me a target and ten random starts. I'll show you ten different elbows that all poke the same spot.",
-    "mission": "In `code/main.py` change the target from `[0.5, 0.3]` to `[0.85, 0.0]` and print how many seeds converge. Predict whether the count goes up or down first."
+    "mission": "In `code/main.py` change the target from `[0.5, 0.3]` to `[0.85, 0.0]` and print how many seeds converge. Predict whether the count goes up or down first.",
+    "clip": "Two three-link arms run this lesson's `solve_ik()` one damped Newton step at a time, and each step is spread over 10 frames. The green arm's target is reachable, and the error falls below 1 mm in about seven steps. The blue arm's red target is beyond its 0.9 m reach, so the arm stretches out and the error stops shrinking at about 0.27 m. It stays at its best effort."
   },
   "ko": {
-    "hook": "표적 하나와 무작위 시작 열 개를 주세요. 같은 자리를 찌르는 서로 다른 팔꿈치 열 개를 보여 드립니다.",
-    "mission": "`code/main.py`에서 표적을 `[0.5, 0.3]`에서 `[0.85, 0.0]`으로 바꾸고 수렴하는 seed 수를 출력하세요. 수가 늘지 줄지 먼저 예측하세요."
+    "hook": "목표 하나와 무작위 시작 열 개를 주세요. 같은 자리를 찌르는 서로 다른 팔꿈치 열 개를 보여 드립니다.",
+    "mission": "`code/main.py`에서 목표를 `[0.5, 0.3]`에서 `[0.85, 0.0]`으로 바꾸고 수렴하는 seed 수를 출력하세요. 수가 늘지 줄지 먼저 예측하세요.",
+    "clip": "3링크 팔 두 대가 이 레슨의 `solve_ik()`를 damped Newton 걸음 하나씩 실행하고 걸음마다 10프레임에 걸쳐 보여 줍니다. 초록 팔의 목표는 닿는 곳이라 약 아홉 걸음 만에 수렴합니다. 파란 팔의 빨간 목표는 0.9 m 도달 거리 밖이라서 네 걸음 뒤에는 팔이 쭉 펴지고 더 나아지지 않습니다. 팔은 최선의 자세에 머뭅니다."
   },
   "toy": "ik-seeds",
- "motion": "ik-iterate",
   "three": "numeric-ik-steps-3d"
 }

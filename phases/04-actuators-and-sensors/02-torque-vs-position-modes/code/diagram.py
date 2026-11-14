@@ -1,4 +1,4 @@
-# 레슨 04/02 도해: 토크 모드와 position 모드의 루프 구조, 그리고 어느 모드에서 무엇이 가능한지를 Excalidraw 로 그린다
+# 레슨 04/02 도해: 토크 모드와 position 모드에서 누가 토크를 쓰는지, 부드러운 관절을 원할 때 고를 수 있는 길을 Excalidraw 로 그린다
 import pathlib
 import sys
 
@@ -9,28 +9,27 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def loops():
-    d = Diagram(cell=(300, 170))
-    d.title("Who closes the loop?")
-    a = d.box("Outer controller\nimpedance K, D", 0, 0, "blue", w=240)
-    b = d.box("Torque command", 1, 0, "purple", w=210)
-    j1 = d.box("Joint", 2, 0, "yellow", w=170)
-    c = d.box("Outer controller\nsends q_des only", 0, 1, "blue", w=240)
-    e = d.box("Drive inner PD\nfixed kp, kd", 1, 1, "red", w=210)
-    j2 = d.box("Joint", 2, 1, "yellow", w=170)
+    d = Diagram()
+    d.title("Who writes the torque?")
+    a = d.box("Your code\nsets K, D", col=0, row=0, color="blue")
+    b = d.box("Torque command", col=1, row=0, color="purple")
+    j1 = d.box("Arm joint\npushed up", col=2, row=0, color="yellow")
+    c = d.box("Your code\nsends a target", col=0, row=1, color="blue")
+    e = d.box("Drive's PD\nfixed kp_in", col=1, row=1, color="red")
+    j2 = d.box("Arm joint\npushed up", col=2, row=1, color="yellow")
     for s, t in ((a, b), (b, j1), (c, e), (e, j2)):
         d.arrow(s, t)
-    d.note("Top row: torque mode. Bottom row: position mode, the stiffness is not yours.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=20)
     d.save(OUT / "diagram-mode-loops.excalidraw")
 
 
 def options():
-    d = Diagram(cell=(320, 170))
-    d.title("What the outer controller can ask for")
-    q = d.box("Want a soft,\nyielding joint?", 0, 0.5, "gray", w=230)
-    t = d.box("Drive offers torque mode", 1, 0, "green", w=260)
-    p = d.box("Position-only drive", 1, 1, "yellow", w=260)
-    ti = d.box("Impedance: any K, D", 2, 0, "green", w=250)
-    ad = d.box("Add admittance layer\nneeds a torque sensor", 2, 1, "red", w=250)
+    d = Diagram()
+    d.title("How to get a soft joint")
+    q = d.box("You want a joint\nthat gives way", col=0, row=0.5, color="gray")
+    t = d.box("Drive takes\ntorque commands", col=1, row=0, color="green")
+    p = d.box("Drive takes only\nposition commands", col=1, row=1, color="yellow")
+    ti = d.box("Impedance with\nany K, D", col=2, row=0, color="green")
+    ad = d.box("Admittance layer\nneeds a torque sensor", col=2, row=1, color="red")
     for s, tt in ((q, t), (q, p), (t, ti), (p, ad)):
         d.arrow(s, tt)
     d.save(OUT / "diagram-mode-options.excalidraw")

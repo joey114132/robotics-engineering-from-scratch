@@ -6,31 +6,42 @@
 
 ## 쉽게 말하면
 
-학생들이 서로 다른 시계로 공을 넘긴 시각을 적어요. 앞선 시계 때문에 먼저 넘긴 일이 나중 일처럼 보일 수 있어요. offset을 빼서 순서를 바로잡아요. offset은 양쪽에서 요청과 응답
-시각을 재서 추정해요. 다만 오가는 시간이 다르면 오차가 남아요.
-
-로봇도 컴퓨터마다 시계가 다르면 같은 문제가 생겨요. trace에는 동작 전후 상태도 담아야 해요. 의도한 전달 순서와 비교하면 실행 기록이 없거나 상태가 그대로이거나 결과가 틀린 첫 단계를 찾을
-수 있어요.
+자동차에는 컴퓨터가 서로 다른 센서 두 개가 달려 있어요. 움직임을 느끼는 IMU와 길을 보는 카메라예요. 두 센서의 값을 합치는 프로그램인 filter는 각 값에 찍힌 시각을 믿어요.
+카메라 시계가 앞서 가면 카메라 값에 미래의 시각이 찍혀서 filter는 사건을 잘못된 순서로 보고 차의 위치가 앞으로 튀었다가 되돌아와요.
+시계의 offset을 빼 주면 순서가 바로잡혀요. offset은 요청과 응답에 시각을 적어 재요.
 
 ## 문제
 
-융합 필터가 컴퓨터 두 대에서 오는 카메라와 IMU 샘플을 받는데 로봇이 뒤로 튀는 것처럼 움직입니다. 샘플은 모두 맞지만 카메라 시계가 30 ms 앞서 있어서 필터가 사건을 잘못된 순서로 봅니다. 나중에 실행이 실패해도 어느 step이 처음 틀어졌는지 아무도 모릅니다.
+fusion filter는 컴퓨터 두 대에서 오는 카메라와 IMU 샘플을 합치는데 추적하는 자동차가 앞으로 튀었다가 되돌아옵니다.
+샘플은 모두 맞지만 카메라 시계가 30 ms 앞서 있어서 먼저 찍은 카메라 샘플이 나중에 찍은 IMU 샘플보다 늦은 stamp를 받을 수 있습니다.
+나중에 실행이 실패해도 각 step이 상태를 기록해 두지 않았다면 어느 step이 처음 틀어졌는지 아무도 모릅니다.
 
 ## 개념
 
 ![네 개의 타임스탬프](../assets/diagram-offset-exchange.png)
 
-*요청과 응답 한 쌍에서 타임스탬프 네 개가 나옵니다. 두 편도 차이의 합을 절반으로 나눈 것이 offset입니다.*
+*번호 1부터 5까지 따라가 보세요. offset은 `t1 - t0`와 `t2 - t3`의 합을 절반으로 나눈 값입니다.*
 
-가는 길과 오는 길이 같은 시간이 걸리면 이 식은 정확합니다. 지연이 다르면 오차는 그 차이의 절반이고 왕복 시간의 절반을 넘지 않습니다. 그래서 왕복이 가장 짧은 교환을 믿습니다.
+client는 요청을 t0에 보내고 응답을 t3에 받으며 둘 다 자기 시계로 적습니다. server는 요청을 t1에 받고 t2에 응답하며 둘 다 server 시계로 적습니다.
+예를 들어 server 시계가 50 ms 앞서 있고 한 번 가는 데 20 ms가 걸리면 `t1 - t0`는 70 ms이고 `t2 - t3`는 30 ms입니다. 둘의 평균은 50 ms이고 이동 시간이 한쪽에서는 더해지고 다른 쪽에서는 빠지기 때문입니다.
+가는 데 30 ms 오는 데 10 ms가 걸리면 60 ms가 나와서 두 지연 차이의 절반만큼 틀립니다. 오차는 왕복 시간의 절반을 넘지 않으므로 왕복이 가장 짧은 교환을 믿습니다.
 
 ![offset 추정과 순서 오류](../assets/fig-time-sync.png)
 
-*왼쪽은 8번 중 지연이 가장 낮은 교환이 한 번 잰 값보다 오차가 훨씬 좁은 모습입니다. 오른쪽은 센서 간격이 10 ms일 때 offset이 10 ms를 넘으면 순서가 뒤집히고 1 ms 오차의 추정값을 빼면 순서가 복구되는 모습입니다.*
+*왼쪽은 8번 중 가장 좋은 교환이 한 번 잰 값보다 오차가 좁은 모습입니다. 오른쪽은 센서 간격이 10 ms일 때 offset이 10 ms를 넘으면 순서가 뒤집히고 1 ms 오차의 추정값은 순서를 복구하는 모습입니다.*
+
+trace는 step마다 JSON 한 줄(글자로 쓴 기록)을 남긴 로그이고 각 줄에 전 상태(`pre`)와 후 상태(`post`)가 들어 있습니다. intent는 그 step이 이루어야 할 일입니다.
+reader는 처음 실패한 것을 `not_executed`, `no_motion`(상태가 그대로), `wrong_motion`(엉뚱한 곳에 도착) 중 하나로 부릅니다.
 
 ![trace reader](../assets/diagram-trace-reader.png)
 
-*trace 한 줄에는 한 step의 전 상태와 후 상태가 들어 있습니다. reader는 intent를 순서대로 확인하고 맞지 않는 첫 기록에서 멈춥니다.*
+*reader는 intent를 순서대로 확인하고 처음 어긋난 곳에서 멈춥니다.*
+
+예를 들어 목표가 세 곳인데 step 2에서 `pre`와 `post`가 같다고 해 보겠습니다. `first_mismatch()`는 step 2와 `no_motion`을 돌려주고 step 3은 보지 않습니다.
+
+![목표 두 번째를 건너뛴 팔, 멈추는 reader](../assets/clip-example.mp4)
+
+*팔이 가운데 목표를 놓칩니다. reader가 첫 번째를 초록, 두 번째를 빨강으로 바꾸고 멈춥니다.*
 
 ## 만들기
 
@@ -39,9 +50,9 @@ def estimate(t0, t1, t2, t3):
     return ((t1 - t0) + (t2 - t3)) / 2, (t3 - t0) - (t2 - t1)
 ```
 
-`order_errors()`는 두 센서 스트림을 스탬프로 정렬하고 실제 순서와 다른 칸을 셉니다. `trace_line()`은 step마다 `pre`와 `post`가 든 JSON 객체 한 줄을 씁니다.
+`order_errors()`는 stamp로 정렬한 순서가 실제 순서와 다른 칸을 셉니다. `trace_line()`은 step마다 JSON 객체 한 줄을 씁니다.
 
-`first_mismatch()`는 처음 실패한 intent에 대해 `not_executed`, `no_motion`, `wrong_motion` 중 하나를 돌려줍니다.
+`first_mismatch()`는 처음 실패한 intent를 돌려줍니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -50,7 +61,7 @@ python3 -m pytest phases/05-robot-software/04-time-sync-and-traces -q
 
 ## 실제 도구로 보기
 
-실제로는 NTP 같은 서비스가 시스템 시계를 맞추고 ROS 2도 네트워크 전체에서 시스템 시계가 동기화되어 있기를 요구합니다. `estimate()`를 NTP 규격의 offset과 delay 정의와 비교해 보세요.
+`estimate()`를 NTP 규격의 offset과 delay 정의와 비교해 보세요.
 
 출처: RFC 5905와 ROS 2 설계 문서 "Clock and Time".
 https://datatracker.ietf.org/doc/html/rfc5905
@@ -60,7 +71,7 @@ https://design.ros2.org/articles/clock_and_time.html
 
 ## 결과물
 
-`outputs/skill-trace-first-mismatch.md`는 trace를 읽고 의도대로 동작하지 않은 첫 step을 알려 줍니다.
+`outputs/skill-trace-first-mismatch.md`는 trace를 읽고 처음 실패한 step을 알려 줍니다.
 
 ## 연습 문제
 

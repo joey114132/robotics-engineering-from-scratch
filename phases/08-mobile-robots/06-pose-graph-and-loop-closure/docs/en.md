@@ -6,36 +6,38 @@
 
 ## In Plain Words
 
-Your sketch of a walk around school ends away from the entrance, although you recognise the entrance again. Moving only the final mark
-leaves the earlier turns misplaced.
+A rover drives a square, but its wheels err a little each step, so its path ends away from the start. Moving only the last pose leaves every earlier turn misplaced.
 
-A pose graph links each recorded stop to its neighbours with measured movements. Recognising the entrance adds a loop closure linking
-the end to the start. Hold the starting mark fixed and adjust the other poses together, giving more weight to reliable measurements. A
-mistaken recognition can pull the whole map the wrong way.
+A pose graph links each stop to the next with a measured move, like a spring. Recognising the start adds a spring from the end to the start. With the first pose fixed, all poses shift together to stretch every spring as little as possible. Reliable springs pull harder. A false match pulls the map out of shape.
 
 ## The Problem
 
-You drive a 5 m square and odometry says the robot ended 1.4 m from where it started. A scan match (08/05) then reports that the last scan looks exactly like the first. Overwriting the last pose fixes one point and leaves every earlier pose and the map built from them still bent.
+You drive a 5 m square and odometry says the robot ended 1.4 m from the start. A scan match (08/05) says the last scan looks exactly like the first. Overwriting the last pose fixes one point; every earlier pose and the map stay bent.
 
 ## The Concept
 
-![Poses are unknowns, edges are springs](../assets/diagram-posegraph-springs.png)
+![Poses and springs](../assets/diagram-posegraph-springs.png)
 
-*Each odometry step is a spring between neighbouring poses. The loop closure is one more spring from the last pose to the first.*
+*Each odometry step is a spring between neighbouring poses. The loop closure is one more spring, last pose to first.*
 
-A pose is `(x, y, heading)`. An edge from pose `i` to `j` carries a measurement `z`, the pose of `j` as seen from `i`. Its residual is `between(x_i, x_j) - z`, with the heading difference wrapped. Each residual is divided by its noise, so trusted springs are stiffer. The cost is the sum of squared residuals.
+A pose is `(x, y, heading)`. An edge from pose `i` to `j` carries a measurement `z`, the pose of `j` as seen from `i`. Its residual, how far the spring is stretched, is `between(x_i, x_j) - z`: the current guess of that view minus the measured one, with the heading difference wrapped into one turn. Each residual is divided by its noise, so trusted springs are stiffer. The cost is the sum of squared residuals.
 
-![How a late correction repairs old poses](../assets/diagram-posegraph-pipeline.png)
+The square's poses 0 to 20 sit one per metre, so 5, 10, 15 and 20 are corners (20 = start). Odometry ends 1.42 m away, with rms error 0.70 m (typical pose distance from the truth). A true closure spreads that gap along the loop: poses 5, 10, 15 and 20 move 0.20, 0.59, 1.03 and 1.41 m, and the rms error falls to 0.09 m. A false closure (the end matched to a place 3 m and 2 m off) raises it to 1.88 m.
 
-*One closure edge enters the graph and the solver re-solves every pose at once.*
+![False and true loop closure](../assets/clip-example.mp4)
 
-Gauss-Newton linearises the residuals, solves a least-squares step and repeats. With every pose free, shifting or rotating the whole map changes no residual, so three directions are undetermined. Holding pose 0 fixed removes them.
+*Watch the amber spring. Blue (false closure) ends 3.6 m from the start, green (true closure) closes the square.*
 
-![The loop before and after closure](../assets/fig-posegraph-loop.png)
+![Repair pipeline](../assets/diagram-posegraph-pipeline.png)
 
-*Left: odometry drifts open, and the solved trajectory lands on the square. Right: the error shrinks along the whole loop, not only at the end.*
+*One closure edge enters, then every pose is re-solved.*
 
-A closure edge is a claim. A wrong one bends the map worse than none, which a test checks.
+Gauss-Newton treats residuals as straight lines and repeats the step that most reduces the cost. Sliding the whole map in x or y, or turning it, changes no residual, so those three directions are undetermined until pose 0 is held fixed.
+
+![Loop before and after closure](../assets/fig-posegraph-loop.png)
+
+*Left: odometry drifts open, and the solved path lands on the square. Right: the error shrinks along the whole loop.*
+
 
 ## Build It
 
@@ -52,7 +54,7 @@ J = jacobian(X, edges, free=range(1, len(X)))   # numeric, pose 0 held fixed
 dx = np.linalg.lstsq(J, -residuals(X, edges), rcond=None)[0]
 ```
 
-Tests check that cost never rises, pose 0 does not move, the unanchored Jacobian has rank `3n - 3`, and a wrong closure gives a worse map.
+Tests check that cost never rises, pose 0 stays put, and a wrong closure worsens the map.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -62,7 +64,7 @@ python3 phases/08-mobile-robots/06-pose-graph-and-loop-closure/code/main.py
 
 ## Use It
 
-g2o frames SLAM as a graph of poses and constraints solved by nonlinear least squares, with Gauss-Newton or Levenberg-Marquardt. Build the same graph there and compare the poses with `solve()`.
+g2o solves SLAM as a graph of poses and constraints by nonlinear least squares (Gauss-Newton or Levenberg-Marquardt). Build this graph there and compare poses with `solve()`.
 
 Sources: Kümmerle et al., g2o: A General Framework for Graph Optimization (ICRA 2011),
 http://ais.informatik.uni-freiburg.de/publications/papers/kuemmerle11icra.pdf
@@ -74,6 +76,6 @@ http://ais.informatik.uni-freiburg.de/publications/papers/kuemmerle11icra.pdf
 
 ## Exercises
 
-1. Remove the heading bias and see how far the closure still moves the map.
-2. Make the loop closure 10 times less certain and watch the error spread.
-3. Add a second closure between poses 5 and 15 and compare the error.
+1. Remove the heading bias; does the closure still help?
+2. Make the closure 10 times less certain; watch the error.
+3. Add a second closure between poses 5 and 15 and compare.

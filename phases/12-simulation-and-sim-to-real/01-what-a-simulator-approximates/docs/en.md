@@ -6,32 +6,35 @@
 
 ## In Plain Words
 
-A playground swing on a screen may keep moving longer than the real swing after the same timed pushes. Leaving out hinge friction
-removes a force that opposes motion. A delayed angle display causes a different mismatch: it shows an earlier position, even though the
-swing itself has already moved.
+Picture a metal arm hanging from a motor on a wall. You send the same pushes to the real arm and to a simulator that leaves out some real effects. The real hinge rubs, so every swing loses energy and shrinks. Without friction, the simulated arm swings farther.
 
-This lesson replays identical commands while removing effects from a simulated joint. Comparing each result with the reference
-separates missing physics from delayed measurements and shows which omission matters most.
+Two quieter effects matter. The motor needs a moment to build its push, and the angle sensor reports where the arm just was. This lesson removes one effect at a time and measures which omission matters most.
 
 ## The Problem
 
-A trajectory looks perfect in simulation and the real joint undershoots it, lags behind it and stops short. Nobody changed the command. The simulator quietly left out things the hardware does, and you do not know which of them matters most.
+A trajectory looks perfect in simulation, yet the real joint undershoots it, lags behind and stops short. Nobody changed the command. The simulator quietly left out things the hardware does, and you do not know which matters most.
 
 ## The Concept
 
-![The real signal path and the shorter sim path](../assets/diagram-real-vs-sim.png)
+![Real path and sim path](../assets/diagram-real-vs-sim.png)
 
-*The real command passes through motor lag, a joint with friction and a delayed sensor. The simple sim skips three of those steps.*
+*The real command (a torque, the motor's twisting push) passes through motor lag, a joint with friction and a delayed sensor. The simple sim skips three of those steps.*
 
-We use one small plant for the whole phase: a pendulum joint with inertia `J`, viscous damping `b`, Coulomb friction `c`, gravity `k = m*g*l`, a first-order motor lag `Tm` and a sensor delay.
+One small plant (the thing controlled) serves the phase: a pendulum joint. Its parts are inertia `J` (hard to speed up), viscous damping `b` (drag that grows with speed), Coulomb friction `c` (a constant rub), gravity `k = m*g*l` (mass, g, arm length), a first-order motor lag `Tm` (torque follows the command slowly) and a sensor delay.
 
-![Replay the same commands on both plants](../assets/diagram-replay-rank.png)
+![Replay the same commands](../assets/diagram-replay-rank.png)
 
-*Open-loop commands cannot correct themselves, so every difference between the plants shows up as divergence.*
+*Open-loop commands (no feedback) cannot correct themselves, so every difference between the plants shows up as divergence.*
 
-![Trajectories, error over time and cost per missing effect](../assets/fig-divergence.png)
+![Trajectories, error, cost](../assets/fig-divergence.png)
 
-*Top: the two trajectories separate. Bottom left: the error without friction swings up to 1 rad while lag and delay stay under 0.1 rad. Bottom right: RMS error is 0.545 rad without friction, 0.042 rad without lag and 0.029 rad without delay.*
+*Top: the two trajectories separate. Bottom left: the error without friction swings up to 1 rad while lag and delay stay under 0.1 rad. Bottom right: RMS error (a typical gap, in radians) is 0.545 rad without friction, 0.042 rad without lag and 0.029 rad without delay.*
+
+On the clip's 0.4 m arm, 0.545 rad (1 rad is about 57 degrees) is 31 degrees, a fingertip 22 cm off. Lag's 0.042 rad and delay's 0.029 rad are 2.4 and 1.7 degrees, 1 to 2 cm. Friction costs 13 times more than lag, so model it first.
+
+![Three arms, one effect each](../assets/clip-example.mp4)
+
+*Watch the ghosts. Blue is the real arm; each ghost misses one effect: friction, motor lag, sensor delay, left to right. Only the left ghost visibly separates.*
 
 ## Build It
 
@@ -53,7 +56,7 @@ python3 phases/12-simulation-and-sim-to-real/01-what-a-simulator-approximates/co
 
 ## Use It
 
-MuJoCo can switch these effects on one at a time: joint `frictionloss` for dry friction, actuator `dyntype="filter"` for first-order dynamics on the actuator activation (`act_dot = (ctrl - act) / dynprm[0]`), and actuator `delay` with `nsample` for a delayed control input. Add them to a model and rerun the ranking.
+MuJoCo can switch these effects on one at a time: joint `frictionloss` for dry friction, actuator `dyntype="filter"` for first-order dynamics on the actuator activation (`act_dot = (ctrl - act) / dynprm[0]`), and actuator `delay` with `nsample` for a delayed control input. Add them and rerun the ranking.
 
 Sources: MuJoCo XML reference, `joint/frictionloss`, `actuator/dyntype`, `actuator/delay` (https://mujoco.readthedocs.io/en/stable/XMLreference.html, opened 2026-11-09).
 

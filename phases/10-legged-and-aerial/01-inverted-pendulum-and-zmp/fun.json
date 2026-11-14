@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "I'm a pencil standing on its tip, and my ankles are the only help I have. When they run out of room, my feet decide.",
-    "mission": "In `code/main.py` change the push `0.4` in `fall_or_recover(0.4, ...)` to `0.1` and run `python3 code/main.py`. Predict first: can the ankle alone hold this smaller push without a step?"
+    "mission": "In `code/main.py` change the push `0.4` in `fall_or_recover(0.4, ...)` to `0.1` and run `python3 code/main.py`. Predict first: can the ankle alone hold this smaller push without a step?",
+    "clip": "The same push (red arrow) hits two walkers. The blue one can only shift its ZMP (amber dot) inside a 10 cm foot, so it keeps leaning over. The green one steps onto the capture point, about 15 cm ahead, and stops. Rendered from this lesson's `fall_or_recover()` and `zmp()` at one third speed; the legs stretch because the model keeps the body height fixed."
   },
   "ko": {
     "hook": "저는 끝으로 선 연필 같아서 믿을 곳은 발목뿐입니다. 발목 여유가 다하면 발이 나서야 해요.",
-    "mission": "`code/main.py`에서 `fall_or_recover(0.4, ...)`의 `0.4`를 `0.1`로 바꾸고 `python3 code/main.py`를 실행하세요. 더 작은 밀침은 발목만으로 버틸지 먼저 예측하세요."
+    "mission": "`code/main.py`에서 `fall_or_recover(0.4, ...)`의 `0.4`를 `0.1`로 바꾸고 `python3 code/main.py`를 실행하세요. 더 작은 밀침은 발목만으로 버틸지 먼저 예측하세요.",
+    "clip": "같은 밀침(빨간 화살표)이 보행자 두 명에게 닿습니다. 파란 쪽은 ZMP(주황 점)를 10 cm 발바닥 안에서만 옮길 수 있어서 계속 앞으로 기웁니다. 초록 쪽은 약 15 cm 앞의 capture point 에 발을 내디뎌 멈춥니다. 이 레슨의 `fall_or_recover()`와 `zmp()` 결과를 3분의 1 속도로 렌더했습니다. 모델이 몸 높이를 고정하기 때문에 다리가 늘어납니다."
   },
   "toy": "pendulum-balance",
-  "motion": "capture-step",
   "three": "lipm-support-3d"
 }

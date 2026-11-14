@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Odometry says I walked a spiral. One 'hey, I've been here' edge and I snap back into a square. Springs are magic.",
-  "mission": "In `code/main.py` change `bias=0.02` to `0.04` and run it. Predict whether the closure still gets the rms error under 0.2 m, then check."
- },
- "ko": {
-  "hook": "오도메트리는 제가 나선을 그렸다고 합니다. '여기 와 본 적 있어' edge 하나면 저는 정사각형으로 돌아옵니다. 스프링은 마법입니다.",
-  "mission": "`code/main.py`에서 `bias=0.02`를 `0.04`로 바꿔 실행하세요. 폐쇄 뒤 rms 오차가 0.2 m 아래인지 예측한 다음 확인하세요."
- },
- "toy": "pose-graph-closure",
- "motion": "loop-bend",
- "three": "pose-graph-loop-3d"
+  "en": {
+    "hook": "Odometry says I walked a spiral. One 'hey, I've been here' edge and I snap back into a square. Springs are magic.",
+    "mission": "In `code/main.py` change `bias=0.02` to `0.04` and run it. Predict whether the closure still gets the rms error under 0.2 m, then check.",
+    "clip": "A rover drives a 5 m square with odometry whose heading drifts a little every step, so its blue nodes do not close the loop. When it recognises the start, a loop-closure edge (amber bar) joins the end to the start. The lesson's `solve()` (Gauss-Newton) then moves every node at once to the green positions, and the loop closes. The white line is the true square. Driving is sped up, and the relaxation is shown as a slide because the solver has no time axis."
+  },
+  "ko": {
+    "hook": "odometry는 제가 나선을 그렸다고 합니다. '여기 와 본 적 있어' edge 하나면 저는 정사각형으로 돌아옵니다. 스프링은 마법입니다.",
+    "mission": "`code/main.py`에서 `bias=0.02`를 `0.04`로 바꿔 실행하세요. 폐쇄 뒤 rms 오차가 0.2 m 아래인지 예측한 다음 확인하세요.",
+    "clip": "로버가 heading이 step마다 조금씩 어긋나는 odometry로 5 m 정사각형을 돕니다. 그래서 파란 node는 루프를 닫지 못합니다. 출발점을 알아보면 루프 폐쇄 edge(주황 막대)이 끝과 출발점을 잇습니다. 레슨의 `solve()`(Gauss-Newton)가 모든 node를 한꺼번에 초록 위치로 옮기고 루프가 닫힙니다. 흰 선은 실제 정사각형입니다. 주행은 빠르게 재생했고 solver에는 시간축이 없어서 이동 과정은 미끄러지는 애니메이션으로 보여 줍니다."
+  },
+  "toy": "pose-graph-closure",
+  "three": "pose-graph-loop-3d"
 }

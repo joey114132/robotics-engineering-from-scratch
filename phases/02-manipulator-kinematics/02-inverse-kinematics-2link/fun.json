@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A target is a triangle with two answers, elbow up or down. Past full stretch I should say no, not nan.",
-    "mission": "In `code/main.py` change `(0.6, 0.3)` to `(0.9, 0.0)`, which is full stretch. Predict how the two elbow answers compare, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `(0.6, 0.3)` to `(0.9, 0.0)`, which is full stretch. Predict how the two elbow answers compare, then run `python3 code/main.py`.",
+    "clip": "Two arms touch the same target with this lesson's `ik()`. The blue arm uses the elbow-down answer and the green arm uses the elbow-up answer. Then the target slides outward along y = 0.3 m. Both arms stretch straight, and when `ik()` refuses at about x = 0.85 m they keep their last pose and the ball turns red. The link lengths are 0.5 m and 0.4 m."
   },
   "ko": {
     "hook": "목표점은 답이 둘인 삼각형입니다. 팔꿈치는 위일 수도 아래일 수도 있습니다. 닿지 않는 점에는 nan이 아니라 못 한다고 말해야 합니다.",
-    "mission": "`code/main.py`에서 `(0.6, 0.3)`을 완전히 편 상태인 `(0.9, 0.0)`으로 바꾸세요. 두 elbow 답이 어떻게 비교될지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `(0.6, 0.3)`을 완전히 편 상태인 `(0.9, 0.0)`으로 바꾸세요. 두 elbow 답이 어떻게 비교될지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "팔 두 대가 이 레슨의 `ik()`로 같은 목표를 찍습니다. 파란 팔은 elbow-down 답을 쓰고 초록 팔은 elbow-up 답을 씁니다. 그다음 목표가 y = 0.3 m 선을 따라 바깥으로 미끄러집니다. 두 팔은 쭉 펴지고 x = 0.85 m 근처에서 `ik()`가 거절하면 마지막 자세를 유지하며 공이 빨간색으로 바뀝니다. link 길이는 0.5 m와 0.4 m입니다."
   },
   "toy": "ik-2link",
- "motion": "ik-reach-limit",
   "three": "ik-two-elbows-3d"
 }

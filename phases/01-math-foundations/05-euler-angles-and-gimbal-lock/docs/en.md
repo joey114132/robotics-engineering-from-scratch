@@ -6,33 +6,39 @@
 
 ## In Plain Words
 
-Point a phone camera straight upward. Turning around the room's vertical axis and twisting about the camera's
-forward axis now turn about the same line. Those controls can no longer describe independent changes of
-direction.
+A camera sits in three nested rings: the outer turns about the vertical line, the middle tilts it, the inner rolls it about its viewing line. Tilt it straight down and the outer and inner rings line up, so both twist the view about one line and none can swing it sideways.
 
-Euler angles meet this problem when pitch reaches vertical: roll and yaw become coupled. Nearby, a modest
-physical turn can require very large changes in the reported angles. Crossing that pose can also make the
-angle readings jump while the phone moves smoothly.
+Near that pose the same view has two ring settings. The code that reads the ring angles reports only one, so it switches as the camera crosses, and yaw and roll jump while the camera moves smoothly.
 
 ## The Problem
 
-A wrist or camera reports roll, pitch and yaw. As the tool tilts up through vertical, roll and yaw suddenly jump by 180 degrees, or the controller asks for huge joint speeds. The sensor is fine. The angle format is the problem.
+A wrist or camera reports roll, pitch and yaw. As the tool tilts through vertical, roll and yaw suddenly jump by 180 degrees, or the controller asks for huge joint speeds. The angle format is the problem, not the sensor.
 
 ## The Concept
 
-![Three nested rings lose one degree of freedom](../assets/diagram-gimbal-rings.png)
+Euler angles describe a pose with three ring turns: yaw about the vertical z axis, pitch about the side y axis, roll about the camera's forward x axis. In `R = Rz(yaw) Ry(pitch) Rx(roll)` the rightmost matrix, roll, acts first.
 
-*Yaw, pitch and roll are three rings. At pitch 90 degrees the roll ring lines up with the yaw ring and the pair turns the same way.*
+![Rings lose a direction](../assets/diagram-gimbal-rings.png)
 
-![A smooth turn reads as a jump](../assets/diagram-angle-jump.png)
+*Follow the numbers. At pitch 90 degrees (gimbal lock) the roll ring lines up with the yaw ring.*
 
-*Every orientation has two spellings. Across 90 degrees the reader switches spelling, so roll and yaw flip by 180 degrees while the tool moves smoothly.*
+Then the camera looks straight down: the roll axis points down and the yaw axis up, so both rings turn about one vertical line, and roll `+a` equals yaw `-a`. So only `yaw - roll` matters: one direction is lost.
 
-We use ZYX order, `R = Rz(yaw) Ry(pitch) Rx(roll)`. The map from Euler rates to world angular velocity is a 3x3 matrix `E` with `det E = cos(pitch)`. At 90 degrees it has rank 2, so some spins have no Euler rates at all.
+![Two rigs, one pose](../assets/clip-example.mp4)
+
+*Each rig is a camera in three rings. The left turns its roll ring +1.2 rad, the right its yaw ring -1.2 rad, and the amber fins end up pointing the same way.*
+
+The code that reads angles back from `R` reports pitch between -90 and 90 degrees. Every orientation also has a second spelling (`other_spelling()`) with pitch past 90 and roll and yaw 180 degrees away, so past 90 the reader switches spellings.
+
+![Smooth turn, jump](../assets/diagram-angle-jump.png)
+
+*Follow the arrows: roll and yaw flip by 180 degrees while the tool moves smoothly.*
+
+Euler rates (how fast each ring turns) become the camera's world angular velocity through a 3x3 matrix `E` with `det E = cos(pitch)`. At 90 degrees the determinant is 0, so `E` flattens to a plane (rank 2) and spins out of it have no Euler rates.
 
 ![Jump and rate blow-up](../assets/fig-gimbal-lock.png)
 
-*Left: a pure pitch sweep from 60 to 120 degrees. Roll and yaw jump by 180 degrees at 90. Right: for a 1 rad/s world-x spin at yaw 0, the Euler rate norm grows like 1 / cos(pitch).*
+*Left: a pitch sweep from 60 to 120 degrees. Right: for a 1 rad/s world-x spin at yaw 0, Euler rates grow like 1 / cos(pitch).*
 
 ## Build It
 
@@ -41,7 +47,7 @@ def euler_to_R(roll, pitch, yaw):
     return _rot(2, yaw) @ _rot(1, pitch) @ _rot(0, roll)
 ```
 
-`R_to_euler()` reads pitch from `-R[2, 0]`, then roll and yaw from the other entries. When `|R[2, 0]|` is within 1e-9 of 1 it returns `locked=True` and sets roll to 0, because only `yaw - roll` at pitch +90 degrees or `yaw + roll` at -90 degrees is defined. `other_spelling()` returns the second triple for the same rotation. `euler_rates()` solves with `E` and raises at gimbal lock.
+`R_to_euler()` reads pitch from `-R[2, 0]`, then roll and yaw from the other entries. When `|R[2, 0]|` is within 1e-9 of 1 it returns `locked=True` with roll 0 (only `yaw - roll` at +90 degrees, `yaw + roll` at -90, is defined). `euler_rates()` solves with `E` and raises at gimbal lock.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -51,7 +57,7 @@ python3 phases/01-math-foundations/05-euler-angles-and-gimbal-lock/code/main.py
 
 ## Use It
 
-Compare `R_to_euler()` with `scipy.spatial.transform.Rotation.as_euler("ZYX")`. SciPy reports gimbal lock with a warning, so check that both give the same rotation, not the same angles.
+Compare `R_to_euler()` with `scipy.spatial.transform.Rotation.as_euler("ZYX")`. SciPy warns at gimbal lock, so compare rotations, not angles.
 
 ## Ship It
 

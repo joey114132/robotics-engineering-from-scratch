@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Perfect square, flawless wheels, and I still came home 18 cm off. Two numbers I typed in a hurry did it.",
-    "mission": "In `code/main.py` change `B * 1.01` to `B * 1.02` and run `python3 code/main.py`. Predict the closure error of that row (0.089 m now) before looking, then check your guess."
+    "mission": "In `code/main.py` change `B * 1.01` to `B * 1.02` and run `python3 code/main.py`. Predict the closure error of that row (0.089 m now) before looking, then check your guess.",
+    "clip": "A rover drives the lesson's 2 m square with the wheel commands from `square_wheels()`. The green disc is where odometry believes the rover is, and it closes the loop exactly. The blue rover's real track width is 5% larger than the config, so every turn falls short and it stops about 0.44 m from the start (amber bar). Poses come from `dead_reckon()`; time is sped up about 5x, and the error is 5% instead of the lesson's 2% so the gap is easy to see."
   },
   "ko": {
     "hook": "완벽한 사각형에 멀쩡한 바퀴였는데 18 cm 어긋나서 돌아왔습니다. 급히 적은 숫자 두 개 때문입니다.",
-    "mission": "`code/main.py`에서 `B * 1.01`을 `B * 1.02`로 바꾸고 `python3 code/main.py`를 실행하세요. 그 줄의 closure error(지금 0.089 m)가 얼마가 될지 보기 전에 예측하세요."
+    "mission": "`code/main.py`에서 `B * 1.01`을 `B * 1.02`로 바꾸고 `python3 code/main.py`를 실행하세요. 그 줄의 closure error(지금 0.089 m)가 얼마가 될지 보기 전에 예측하세요.",
+    "clip": "로버가 `square_wheels()`가 만든 바퀴 명령으로 한 변이 2 m인 정사각형을 돕니다. 초록 반투명 원판은 odometry가 믿는 위치이고 사각형을 정확히 닫습니다. 파란 로버는 실제 track width가 설정보다 5% 커서 매번 덜 돌고 출발점에서 약 0.44 m 떨어져 멈춥니다(주황 막대). 자세는 `dead_reckon()`으로 계산했고 약 5배 빠르게 재생합니다. 간격이 잘 보이도록 레슨의 2% 대신 5% 오차를 썼습니다."
   },
   "toy": "diff-drive",
-  "motion": "odometry-gap",
   "three": "odometry-drift-3d"
 }

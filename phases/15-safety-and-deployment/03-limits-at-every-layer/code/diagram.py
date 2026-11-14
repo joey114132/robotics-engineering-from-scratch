@@ -9,34 +9,33 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def nested():
-    d = Diagram(cell=(300, 170))
+    d = Diagram(numbered=True)
     d.title("Healthy: each layer is looser than the one before")
-    p = d.box("Planner\nvel 1.0", 0, 0, "blue", w=210)
-    c = d.box("Controller\nvel 1.5", 1, 0, "purple", w=210)
-    r = d.box("Drive\nvel 2.0", 2, 0, "gray", w=210)
-    j = d.box("Joint", 3, 0, "yellow", w=160)
+    p = d.box("Planner\nspeed limit 1.0", col=0, row=0, color="blue")
+    c = d.box("Controller\nspeed limit 1.5", col=1, row=0, color="purple")
+    r = d.box("Drive\nspeed limit 2.0", col=2, row=0, color="gray")
+    j = d.box("Joint\nmoves at most 1.0", col=3, row=0, color="yellow")
     for s, t in ((p, c), (c, r), (r, j)):
         d.arrow(s, t)
-    d.note("The planner clamps first and the later layers are safety nets that never fire in normal use.", d.margin, d.margin + 60 + d.ch - 10, size=20)
     d.save(OUT / "diagram-limits-nested.excalidraw")
+    return d
 
 
 def silent():
-    d = Diagram(cell=(300, 170))
+    d = Diagram(numbered=True)
     d.title("Mismatch: the tightest layer wins and nobody says so")
-    p = d.box("Planner asks\nvel 3.0", 0, 0, "blue", w=210)
-    c = d.box("Controller allows\nvel 3.0", 1, 0, "purple", w=230)
-    r = d.box("Drive allows\nvel 1.5", 2, 0, "red", w=210)
-    j = d.box("Joint moves\nat 1.5", 3, 0, "yellow", w=190)
+    p = d.box("Planner asks\nspeed 3.0", col=0, row=0, color="blue")
+    c = d.box("Controller allows\nspeed 3.0", col=0, row=1, color="purple")
+    r = d.box("Drive allows\nonly 1.5", col=0, row=2, color="red")
+    j = d.box("Joint moves\nat 1.5", col=0, row=3, color="yellow")
+    chk = d.box("Startup check\nsees 3.0 > 1.5", col=1, row=2, color="green")
     for s, t in ((p, c), (c, r), (r, j)):
         d.arrow(s, t)
-    chk = d.box("Startup check\ncompares every pair", 1, 1.4, "green", w=260)
-    msg = d.box("Report each mismatch\nbefore the first move", 2, 1.4, "green", w=260)
-    d.arrow(chk, msg)
-    d.arrow(c, chk, dashed=True)
+    d.arrow(chk, r, dashed=True, label="reports")
     d.save(OUT / "diagram-limits-silent.excalidraw")
+    return d
 
 
 if __name__ == "__main__":
-    nested()
-    silent()
+    for dd in (nested(), silent()):
+        print(dd.warnings)

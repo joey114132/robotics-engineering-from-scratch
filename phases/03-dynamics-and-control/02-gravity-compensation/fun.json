@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A soft joint is polite until the gravity model is wrong, then I droop like a tired plant. Halve kp, double the droop.",
-    "mission": "In `code/main.py` change `(200.0, 100.0, 50.0)` to `(50.0, 25.0)`. Predict the second sag against the first, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `(200.0, 100.0, 50.0)` to `(50.0, 25.0)`. Predict the second sag against the first, then run `python3 code/main.py`.",
+    "clip": "Both arms are told to hold the same horizontal pose while the position gain `kp` is lowered from 400 to 30 Nm/rad. The blue arm's gravity model is 20% too light, so it sags more as `kp` falls, while the green arm's model is right and it stays level. The amber ball marks the commanded fingertip. Rendered from `sag()`; the sag is drawn 4 times larger."
   },
   "ko": {
     "hook": "관절이 부드러우면 정중하지만 중력 모델이 틀리면 저는 지친 화분처럼 처집니다. kp를 반으로 줄이면 처짐은 두 배입니다.",
-    "mission": "`code/main.py`에서 `(200.0, 100.0, 50.0)`을 `(50.0, 25.0)`으로 바꾸세요. 둘째 sag가 첫째의 몇 배일지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `(200.0, 100.0, 50.0)`을 `(50.0, 25.0)`으로 바꾸세요. 둘째 sag가 첫째의 몇 배일지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 팔에 같은 수평 자세를 지령하고 위치 gain `kp`를 400에서 30 Nm/rad까지 낮춥니다. 파란 팔은 중력 모델이 20% 가벼워서 `kp`가 내려갈수록 더 처지고 초록 팔은 모델이 맞아서 수평을 지킵니다. 호박색 공은 지령한 손끝 위치입니다. `sag()` 결과를 렌더했고 처짐은 4배로 크게 그렸습니다."
   },
   "toy": "grav-sag",
-  "motion": "sag-halves",
   "three": "gravity-torque-3d"
 }

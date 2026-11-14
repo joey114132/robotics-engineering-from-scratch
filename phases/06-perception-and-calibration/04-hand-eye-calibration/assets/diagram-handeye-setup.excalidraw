@@ -4,48 +4,12 @@
  "source": "robotics-engineering-from-scratch",
  "elements": [
   {
-   "type": "text",
-   "id": "e1",
-   "x": 40,
-   "y": 30,
-   "width": 578,
-   "height": 38,
-   "angle": 0,
-   "strokeColor": "#1e1e1e",
-   "backgroundColor": "transparent",
-   "fillStyle": "solid",
-   "strokeWidth": 1,
-   "strokeStyle": "solid",
-   "roughness": 1,
-   "opacity": 100,
-   "groupIds": [],
-   "frameId": null,
-   "roundness": null,
-   "seed": 1007,
-   "version": 1,
-   "versionNonce": 1,
-   "isDeleted": false,
-   "boundElements": null,
-   "updated": 1,
-   "link": null,
-   "locked": false,
-   "text": "Why hand-eye calibration is AX = XB",
-   "originalText": "Why hand-eye calibration is AX = XB",
-   "fontSize": 30,
-   "fontFamily": 1,
-   "textAlign": "left",
-   "verticalAlign": "top",
-   "containerId": null,
-   "lineHeight": 1.25,
-   "autoResize": true
-  },
-  {
    "type": "rectangle",
-   "id": "e2",
-   "x": 40,
-   "y": 100,
-   "width": 250,
-   "height": 88,
+   "id": "box1",
+   "x": 8.0,
+   "y": 67.5,
+   "width": 162.0,
+   "height": 158.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "#a5d8ff",
@@ -59,17 +23,17 @@
    "roundness": {
     "type": 3
    },
-   "seed": 1014,
+   "seed": 1007,
    "version": 1,
-   "versionNonce": 2,
+   "versionNonce": 1,
    "isDeleted": false,
    "boundElements": [
     {
-     "id": "e3",
+     "id": "e2",
      "type": "text"
     },
     {
-     "id": "e10",
+     "id": "arrow5",
      "type": "arrow"
     }
    ],
@@ -79,47 +43,47 @@
   },
   {
    "type": "text",
-   "id": "e3",
-   "x": 50,
-   "y": 119.0,
-   "width": 230,
-   "height": 50,
+   "id": "e2",
+   "x": 20.0,
+   "y": 81.5,
+   "width": 138.0,
+   "height": 130,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
    "roundness": null,
-   "seed": 1021,
+   "seed": 1014,
    "version": 1,
-   "versionNonce": 3,
+   "versionNonce": 2,
    "isDeleted": false,
    "boundElements": null,
    "updated": 1,
    "link": null,
    "locked": false,
-   "text": "Gripper moves\nmotion A (from joints)",
-   "originalText": "Gripper moves\nmotion A (from joints)",
-   "fontSize": 20,
-   "fontFamily": 1,
+   "text": "Hand\nmoves:\nmotion A\n(joints)",
+   "originalText": "Hand\nmoves:\nmotion A\n(joints)",
+   "fontSize": 26,
+   "fontFamily": 6,
    "textAlign": "center",
    "verticalAlign": "middle",
-   "containerId": "e2",
+   "containerId": "box1",
    "lineHeight": 1.25,
    "autoResize": false
   },
   {
    "type": "rectangle",
-   "id": "e4",
-   "x": 40,
-   "y": 270,
-   "width": 250,
-   "height": 88,
+   "id": "box2",
+   "x": 8.0,
+   "y": 283.5,
+   "width": 162.0,
+   "height": 158.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "#ffec99",
@@ -133,17 +97,17 @@
    "roundness": {
     "type": 3
    },
-   "seed": 1028,
+   "seed": 1021,
    "version": 1,
-   "versionNonce": 4,
+   "versionNonce": 3,
    "isDeleted": false,
    "boundElements": [
     {
-     "id": "e5",
+     "id": "e4",
      "type": "text"
     },
     {
-     "id": "e11",
+     "id": "arrow6",
      "type": "arrow"
     }
    ],
@@ -153,47 +117,47 @@
   },
   {
    "type": "text",
-   "id": "e5",
-   "x": 50,
-   "y": 289.0,
-   "width": 230,
-   "height": 50,
+   "id": "e4",
+   "x": 20.0,
+   "y": 297.5,
+   "width": 138.0,
+   "height": 130,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
    "roundness": null,
-   "seed": 1035,
+   "seed": 1028,
    "version": 1,
-   "versionNonce": 5,
+   "versionNonce": 4,
    "isDeleted": false,
    "boundElements": null,
    "updated": 1,
    "link": null,
    "locked": false,
-   "text": "Camera sees the\nsame move as B",
-   "originalText": "Camera sees the\nsame move as B",
-   "fontSize": 20,
-   "fontFamily": 1,
+   "text": "Camera\nsees the\nsame move\nas B",
+   "originalText": "Camera\nsees the\nsame move\nas B",
+   "fontSize": 26,
+   "fontFamily": 6,
    "textAlign": "center",
    "verticalAlign": "middle",
-   "containerId": "e4",
+   "containerId": "box2",
    "lineHeight": 1.25,
    "autoResize": false
   },
   {
    "type": "rectangle",
-   "id": "e6",
-   "x": 430.0,
-   "y": 185.0,
-   "width": 270,
-   "height": 88,
+   "id": "box3",
+   "x": 222.0,
+   "y": 175.5,
+   "width": 162.0,
+   "height": 158.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "#ffc9c9",
@@ -207,25 +171,25 @@
    "roundness": {
     "type": 3
    },
-   "seed": 1042,
+   "seed": 1035,
    "version": 1,
-   "versionNonce": 6,
+   "versionNonce": 5,
    "isDeleted": false,
    "boundElements": [
     {
-     "id": "e7",
+     "id": "e6",
      "type": "text"
     },
     {
-     "id": "e10",
+     "id": "arrow5",
      "type": "arrow"
     },
     {
-     "id": "e11",
+     "id": "arrow6",
      "type": "arrow"
     },
     {
-     "id": "e12",
+     "id": "arrow7",
      "type": "arrow"
     }
    ],
@@ -235,47 +199,47 @@
   },
   {
    "type": "text",
-   "id": "e7",
-   "x": 440.0,
-   "y": 204.0,
-   "width": 250,
-   "height": 50,
+   "id": "e6",
+   "x": 234.0,
+   "y": 189.5,
+   "width": 138.0,
+   "height": 130,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
    "roundness": null,
-   "seed": 1049,
+   "seed": 1042,
    "version": 1,
-   "versionNonce": 7,
+   "versionNonce": 6,
    "isDeleted": false,
    "boundElements": null,
    "updated": 1,
    "link": null,
    "locked": false,
-   "text": "Fixed unknown X\ncamera in gripper frame",
-   "originalText": "Fixed unknown X\ncamera in gripper frame",
-   "fontSize": 20,
-   "fontFamily": 1,
+   "text": "X: where\nthe camera\nsits on the\nhand",
+   "originalText": "X: where\nthe camera\nsits on the\nhand",
+   "fontSize": 26,
+   "fontFamily": 6,
    "textAlign": "center",
    "verticalAlign": "middle",
-   "containerId": "e6",
+   "containerId": "box3",
    "lineHeight": 1.25,
    "autoResize": false
   },
   {
    "type": "rectangle",
-   "id": "e8",
-   "x": 820.0,
-   "y": 185.0,
-   "width": 240,
-   "height": 88,
+   "id": "box4",
+   "x": 436.0,
+   "y": 191.5,
+   "width": 162.0,
+   "height": 126.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "#d0bfff",
@@ -289,17 +253,17 @@
    "roundness": {
     "type": 3
    },
-   "seed": 1056,
+   "seed": 1049,
    "version": 1,
-   "versionNonce": 8,
+   "versionNonce": 7,
    "isDeleted": false,
    "boundElements": [
     {
-     "id": "e9",
+     "id": "e8",
      "type": "text"
     },
     {
-     "id": "e12",
+     "id": "arrow7",
      "type": "arrow"
     }
    ],
@@ -309,18 +273,54 @@
   },
   {
    "type": "text",
-   "id": "e9",
-   "x": 830.0,
-   "y": 204.0,
-   "width": 220,
-   "height": 50,
+   "id": "e8",
+   "x": 448.0,
+   "y": 205.5,
+   "width": 138.0,
+   "height": 98,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
+   "opacity": 100,
+   "groupIds": [],
+   "frameId": null,
+   "roundness": null,
+   "seed": 1056,
+   "version": 1,
+   "versionNonce": 8,
+   "isDeleted": false,
+   "boundElements": null,
+   "updated": 1,
+   "link": null,
+   "locked": false,
+   "text": "A X = X B\nfor every\nmotion",
+   "originalText": "A X = X B\nfor every\nmotion",
+   "fontSize": 26,
+   "fontFamily": 6,
+   "textAlign": "center",
+   "verticalAlign": "middle",
+   "containerId": "box4",
+   "lineHeight": 1.25,
+   "autoResize": false
+  },
+  {
+   "type": "arrow",
+   "id": "arrow5",
+   "x": 170.0,
+   "y": 146.5,
+   "width": 133.0,
+   "height": 29.0,
+   "angle": 0,
+   "strokeColor": "#1e1e1e",
+   "backgroundColor": "transparent",
+   "fillStyle": "solid",
+   "strokeWidth": 2,
+   "strokeStyle": "solid",
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
@@ -333,36 +333,53 @@
    "updated": 1,
    "link": null,
    "locked": false,
-   "text": "A X = X B\nfor every motion",
-   "originalText": "A X = X B\nfor every motion",
-   "fontSize": 20,
-   "fontFamily": 1,
-   "textAlign": "center",
-   "verticalAlign": "middle",
-   "containerId": "e8",
-   "lineHeight": 1.25,
-   "autoResize": false
+   "points": [
+    [
+     0.0,
+     0.0
+    ],
+    [
+     133.0,
+     0.0
+    ],
+    [
+     133.0,
+     29.0
+    ]
+   ],
+   "startArrowhead": null,
+   "endArrowhead": "triangle",
+   "lastCommittedPoint": null,
+   "elbowed": false,
+   "startBinding": {
+    "elementId": "box1",
+    "focus": 0,
+    "gap": 1
+   },
+   "endBinding": {
+    "elementId": "box3",
+    "focus": 0,
+    "gap": 1
+   }
   },
   {
    "type": "arrow",
-   "id": "e10",
-   "x": 296,
-   "y": 144.0,
-   "width": 128,
-   "height": 85,
+   "id": "arrow6",
+   "x": 170.0,
+   "y": 362.5,
+   "width": 133.0,
+   "height": 29.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 2,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
-   "roundness": {
-    "type": 2
-   },
+   "roundness": null,
    "seed": 1070,
    "version": 1,
    "versionNonce": 10,
@@ -373,49 +390,51 @@
    "locked": false,
    "points": [
     [
-     0,
-     0
+     0.0,
+     0.0
     ],
     [
-     128,
-     85
+     133.0,
+     0.0
+    ],
+    [
+     133.0,
+     -29.0
     ]
    ],
    "startArrowhead": null,
-   "endArrowhead": "arrow",
+   "endArrowhead": "triangle",
+   "lastCommittedPoint": null,
+   "elbowed": false,
    "startBinding": {
-    "elementId": "e2",
+    "elementId": "box2",
     "focus": 0,
-    "gap": 6
+    "gap": 1
    },
    "endBinding": {
-    "elementId": "e6",
+    "elementId": "box3",
     "focus": 0,
-    "gap": 6
-   },
-   "lastCommittedPoint": null,
-   "elbowed": false
+    "gap": 1
+   }
   },
   {
    "type": "arrow",
-   "id": "e11",
-   "x": 296,
-   "y": 314.0,
-   "width": 128,
-   "height": 85,
+   "id": "arrow7",
+   "x": 384.0,
+   "y": 254.5,
+   "width": 52.0,
+   "height": 0.0,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
    "strokeWidth": 2,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
-   "roundness": {
-    "type": 2
-   },
+   "roundness": null,
    "seed": 1077,
    "version": 1,
    "versionNonce": 11,
@@ -426,49 +445,47 @@
    "locked": false,
    "points": [
     [
-     0,
-     0
+     0.0,
+     0.0
     ],
     [
-     128,
-     -85
+     52.0,
+     0.0
     ]
    ],
    "startArrowhead": null,
-   "endArrowhead": "arrow",
+   "endArrowhead": "triangle",
+   "lastCommittedPoint": null,
+   "elbowed": false,
    "startBinding": {
-    "elementId": "e4",
+    "elementId": "box3",
     "focus": 0,
-    "gap": 6
+    "gap": 1
    },
    "endBinding": {
-    "elementId": "e6",
+    "elementId": "box4",
     "focus": 0,
-    "gap": 6
-   },
-   "lastCommittedPoint": null,
-   "elbowed": false
+    "gap": 1
+   }
   },
   {
-   "type": "arrow",
+   "type": "text",
    "id": "e12",
-   "x": 706.0,
-   "y": 229.0,
-   "width": 108,
-   "height": 0,
+   "x": 8.0,
+   "y": 8.0,
+   "width": 508.8,
+   "height": 38,
    "angle": 0,
    "strokeColor": "#1e1e1e",
    "backgroundColor": "transparent",
    "fillStyle": "solid",
-   "strokeWidth": 2,
+   "strokeWidth": 1,
    "strokeStyle": "solid",
-   "roughness": 1,
+   "roughness": 0,
    "opacity": 100,
    "groupIds": [],
    "frameId": null,
-   "roundness": {
-    "type": 2
-   },
+   "roundness": null,
    "seed": 1084,
    "version": 1,
    "versionNonce": 12,
@@ -477,66 +494,18 @@
    "updated": 1,
    "link": null,
    "locked": false,
-   "points": [
-    [
-     0,
-     0
-    ],
-    [
-     108,
-     0
-    ]
-   ],
-   "startArrowhead": null,
-   "endArrowhead": "arrow",
-   "startBinding": {
-    "elementId": "e6",
-    "focus": 0,
-    "gap": 6
-   },
-   "endBinding": {
-    "elementId": "e8",
-    "focus": 0,
-    "gap": 6
-   },
-   "lastCommittedPoint": null,
-   "elbowed": false
-  },
-  {
-   "type": "text",
-   "id": "e13",
-   "x": 40,
-   "y": 420,
-   "width": 792,
-   "height": 25,
-   "angle": 0,
-   "strokeColor": "#495057",
-   "backgroundColor": "transparent",
-   "fillStyle": "solid",
-   "strokeWidth": 1,
-   "strokeStyle": "solid",
-   "roughness": 1,
-   "opacity": 100,
-   "groupIds": [],
-   "frameId": null,
-   "roundness": null,
-   "seed": 1091,
-   "version": 1,
-   "versionNonce": 13,
-   "isDeleted": false,
-   "boundElements": null,
-   "updated": 1,
-   "link": null,
-   "locked": false,
-   "text": "The camera is bolted to the gripper, so X never changes between motions.",
-   "originalText": "The camera is bolted to the gripper, so X never changes between motions.",
-   "fontSize": 20,
-   "fontFamily": 1,
+   "text": "Why hand-eye calibration is AX = XB",
+   "originalText": "Why hand-eye calibration is AX = XB",
+   "fontSize": 30,
+   "fontFamily": 6,
    "textAlign": "left",
    "verticalAlign": "top",
    "containerId": null,
    "lineHeight": 1.25,
-   "autoResize": true
+   "autoResize": true,
+   "customData": {
+    "role": "title"
+   }
   }
  ],
  "appState": {

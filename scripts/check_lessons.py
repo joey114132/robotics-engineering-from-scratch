@@ -1,4 +1,4 @@
-# 레슨 구조 검사: 필수 파일, en/ko 구조 일치, 이미지 3장 이상, quiz 6문항, 테스트 5개 이상, 분량 상한
+# 레슨 구조 검사: 필수 파일, en/ko 구조 일치, 이미지 3장 이상, quiz 6문항, 테스트 5개 이상, 분량 상한, 클립 스크립트와 캡션
 import argparse
 import json
 import re
@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = ["docs/en.md", "docs/ko.md", "code/main.py", "quiz.json", "quiz.ko.json"]
 EN_SECTIONS = SECTIONS["en"]
 KO_SECTIONS = SECTIONS["ko"]
-MAX_WORDS = 540
+MAX_WORDS = 600
 PLAIN_WORDS = 90
 PLAIN_KO_CHARS = 600
 MIN_IMAGES = 3
@@ -105,7 +105,11 @@ def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[st
     if len(imgs) < MIN_IMAGES:
         errs.append(f"{lang}: {len(imgs)} images, need {MIN_IMAGES}+")
     for p in imgs:
-        if not (f.parent / p).resolve().exists():
+        target = (f.parent / p).resolve()
+        if p.endswith(".mp4"):   # a clip: its script must exist; scripts/build_clips.py renders the file
+            if not (d / "code" / (target.stem + ".py")).exists():
+                errs.append(f"{lang}: clip script not found: code/{target.stem}.py")
+        elif not target.exists():
             errs.append(f"{lang}: image not found: {p}")
     if lang == "en":
         w = prose_words(t)
@@ -137,8 +141,23 @@ def check_quiz(d: Path, name: str) -> list[str]:
     return errs
 
 
+def check_motion(d: Path) -> list[str]:
+    """the lesson's moving pictures: the clip script (scripts/build_clips.py renders it), a caption per language"""
+    errs = [] if (d / "code" / "clip.py").exists() else ["missing code/clip.py"]
+    f = d / "fun.json"
+    if not f.exists():
+        return errs + ["missing fun.json"]
+    try:
+        fun = json.loads(f.read_text())
+    except json.JSONDecodeError as e:
+        return errs + [f"fun.json invalid: {e}"]
+    errs += [f"fun.json {lang}.clip caption is empty" for lang in ("en", "ko") if not str((fun.get(lang) or {}).get("clip", "")).strip()]
+    return errs
+
+
 def check_lesson(d: Path, *, allow_missing_plain_words=False) -> list[str]:
     errs = [f"missing {f}" for f in REQUIRED if not (d / f).exists()]
+    errs += check_motion(d)
     if not list((d / "outputs").glob("skill-*.md")):
         errs.append("missing outputs/skill-*.md")
     tests = list((d / "code" / "tests").glob("test_*.py"))

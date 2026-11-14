@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "My sensor says one thing, my model says another, and I trust neither. The Kalman gain is how I pick a side without a fight.",
-    "mission": "In `code/main.py` change `kalman(zs)` to `kalman(zs, r=6.0)` and run `python3 code/main.py`. The sensor is still 2.0 m noisy. Predict whether the filter rmse gets worse and whether `sqrt(P00)` stays honest."
+    "mission": "In `code/main.py` change `kalman(zs)` to `kalman(zs, r=6.0)` and run `python3 code/main.py`. The sensor is still 2.0 m noisy. Predict whether the filter rmse gets worse and whether `sqrt(P00)` stays honest.",
+    "clip": "A toy car drives at about 1 m/s while a position sensor reports where it is with about 2 m of noise (amber pin). The green pin is the Kalman filter's estimate and the green strip on the road is the filter's own plus or minus 2 sigma. The amber pin jumps around, but the green pin stays close to the car and the strip keeps about the same width. Values come from this lesson's `simulate()` and `kalman()` (steps 20 to 40, 4 steps a second, 1 m drawn as 0.17 m)."
   },
   "ko": {
     "hook": "센서는 이렇게 말하고 모델은 저렇게 말하는데 저는 둘 다 못 믿습니다. Kalman gain은 싸우지 않고 편을 고르는 방법입니다.",
-    "mission": "`code/main.py`에서 `kalman(zs)`를 `kalman(zs, r=6.0)`으로 바꾸고 `python3 code/main.py`를 실행하세요. 센서 잡음은 그대로 2.0 m입니다. filter rmse가 나빠질지와 `sqrt(P00)`이 정직할지 예측하세요."
+    "mission": "`code/main.py`에서 `kalman(zs)`를 `kalman(zs, r=6.0)`으로 바꾸고 `python3 code/main.py`를 실행하세요. 센서 잡음은 그대로 2.0 m입니다. filter rmse가 나빠질지와 `sqrt(P00)`이 정직할지 예측하세요.",
+    "clip": "장난감 자동차가 약 1 m/s로 달리고 위치 센서는 2 m 정도 흔들리는 값을 줍니다(호박색 핀). 초록 핀은 Kalman filter의 추정이고 도로 위 초록 띠는 필터가 스스로 계산한 ±2 sigma 범위입니다. 호박색 핀은 크게 흔들리지만 초록 핀은 자동차 가까이에 머물고 띠의 폭은 거의 그대로입니다. 값은 이 레슨의 `simulate()`와 `kalman()`에서 가져왔고 20번째에서 40번째 step을 초당 4 step으로 재생했으며 1 m를 0.17 m로 그렸습니다."
   },
   "toy": "kalman",
-  "motion": "kalman-gain",
   "three": "kalman-lane-3d"
 }

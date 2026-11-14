@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A stiff position loop fights every touch. Make me a spring and a damper instead and my handshake turns polite.",
-    "mission": "In `code/main.py` change the `0.2` in `damping_for_zeta(100.0, 1.0, 0.2)` to `1.0`. Predict how `peak` compares with `steady`, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change the `0.2` in `damping_for_zeta(100.0, 1.0, 0.2)` to `1.0`. Predict how `peak` compares with `steady`, then run `python3 code/main.py`.",
+    "clip": "Two arms have the same stiffness `K = 100` Nm/rad and get the same push (the red arrow, 2 Nm). The amber ball marks the resting deflection `F / K`. The blue arm (damping ratio 0.2) overshoots it by more than half and rings, while the green arm (`zeta = 1`) glides to it without overshoot. Rendered from `simulate()` at 0.4 speed; the deflection is drawn 12 times larger."
   },
   "ko": {
     "hook": "뻣뻣한 position loop는 건드릴 때마다 싸웁니다. 저를 스프링과 댐퍼로 만들어 주면 악수가 훨씬 예의 바릅니다.",
-    "mission": "`code/main.py`에서 `damping_for_zeta(100.0, 1.0, 0.2)`의 `0.2`를 `1.0`으로 바꾸세요. `peak`가 `steady`와 어떻게 다를지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `damping_for_zeta(100.0, 1.0, 0.2)`의 `0.2`를 `1.0`으로 바꾸세요. `peak`가 `steady`와 어떻게 다를지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 팔은 stiffness `K = 100` Nm/rad로 같고 같은 힘(빨간 화살표, 2 Nm)으로 눌립니다. 호박색 공은 정지 처짐 `F / K`의 위치입니다. 파란 팔(damping ratio 0.2)은 공을 절반 넘게 지나쳤다가 출렁이고 초록 팔(`zeta = 1`)은 overshoot 없이 공에 닿습니다. `simulate()` 결과를 0.4배 속도로 렌더했고 처짐은 12배로 크게 그렸습니다."
   },
   "toy": null,
-  "motion": "push-and-settle",
   "three": "impedance-spring-joint-3d"
 }

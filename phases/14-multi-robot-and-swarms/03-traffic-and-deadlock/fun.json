@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Four robots, four cells, everyone waiting politely for everyone else. Nobody is broken and nobody moves.",
-    "mission": "In the `Sim(...)` line of `code/main.py` change `\"naive\"` to `\"reserve\"`. Predict what `find_cycle` prints now, then run `python3 code/main.py`."
+    "mission": "In the `Sim(...)` line of `code/main.py` change `\"naive\"` to `\"reserve\"`. Predict what `find_cycle` prints now, then run `python3 code/main.py`.",
+    "clip": "Four robots meet at a crossing, and each needs the cell the next one stands on. The blue robots use the `naive` rule (move if the next cell is free), so `find_cycle()` finds the loop (red arrows) and nobody moves again. The green robots use `reserve`: a robot enters only when its whole route is free, and all four finish within 7 ticks of `Sim.step()`. One tick is 0.65 s, one grid step is drawn as 1 m, and the amber pads are reserved cells."
   },
   "ko": {
     "hook": "로봇 넷에 칸 넷이고 모두가 서로를 예의 바르게 기다립니다. 고장 난 로봇은 없는데 움직이는 로봇도 없습니다.",
-    "mission": "`code/main.py`의 `Sim(...)` 줄에서 `\"naive\"`를 `\"reserve\"`로 바꾸세요. `find_cycle`이 무엇을 출력할지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`의 `Sim(...)` 줄에서 `\"naive\"`를 `\"reserve\"`로 바꾸세요. `find_cycle`이 무엇을 출력할지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "로봇 네 대가 교차로에서 만나고 각자 다음 로봇이 서 있는 칸이 필요합니다. 파란 로봇은 `naive` 규칙(다음 칸이 비면 이동)을 써서 `find_cycle()`이 찾은 고리(빨간 화살표)에 갇히고 아무도 다시 움직이지 못합니다. 초록 로봇은 `reserve`를 써서 경로 전체가 비었을 때만 들어가고 `Sim.step()` 7틱 안에 네 대가 모두 끝냅니다. 1틱은 0.65초이고 격자 한 칸은 1 m로 그렸으며 주황색 패드는 예약된 칸입니다."
   },
   "toy": null,
- "motion": "deadlock-ring",
  "three": "deadlock-grid-3d"
 }

@@ -14,7 +14,7 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "스프링 표면에서 적분 힘 제어 v = ki (fd - f)의 정착 시정수는 무엇입니까?",
+  "question": "spring 표면에서 적분 힘 제어 v = ki (fd - f)의 정착 시정수는 무엇입니까?",
   "options": [
    "1 / (ke ki)",
    "ke ki",

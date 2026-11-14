@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Spin about one axis forever and call it calibration? The math keeps asking for a second axis.",
-    "mission": "In `code/main.py` change the spreads `(0.0, 15.0, 60.0)` to `(0.0, 2.0, 5.0)` and run `python3 code/main.py`. Predict the rotation error at 5 deg first, then see how few degrees start to help."
+    "mission": "In `code/main.py` change the spreads `(0.0, 15.0, 60.0)` to `(0.0, 2.0, 5.0)` and run `python3 code/main.py`. Predict the rotation error at 5 deg first, then see how few degrees start to help.",
+    "clip": "A camera is bolted to the gripper at an unknown offset `X`, and the arm must reach a cup that the camera sees. `solve_hand_eye()` estimates `X` from 12 calibration motions made by `make_motions()`. The blue arm used motions that all rotate about one axis (spread 0 degrees), so its `X` is wrong and the gripper ends about 0.22 m from the cup. The green arm used a 60 degree spread and ends within 2 mm, all at true scale."
   },
   "ko": {
     "hook": "한 축으로만 돌려 놓고 보정이라고 부를 수 있을까요? 수학은 계속 두 번째 축을 요구합니다.",
-    "mission": "`code/main.py`에서 `(0.0, 15.0, 60.0)`을 `(0.0, 2.0, 5.0)`으로 바꾸고 `python3 code/main.py`를 실행하세요. 5도일 때 회전 오차를 먼저 예측하고 몇 도부터 도움이 되는지 확인하세요."
+    "mission": "`code/main.py`에서 `(0.0, 15.0, 60.0)`을 `(0.0, 2.0, 5.0)`으로 바꾸고 `python3 code/main.py`를 실행하세요. 5도일 때 회전 오차를 먼저 예측하고 몇 도부터 도움이 되는지 확인하세요.",
+    "clip": "카메라가 알 수 없는 offset `X`로 gripper에 붙어 있습니다. 팔은 카메라에 보이는 컵으로 가야 합니다. `solve_hand_eye()`가 `make_motions()`로 만든 보정 동작 12개로 `X`를 추정합니다. 파란 팔은 회전축이 하나뿐인 동작(축이 퍼진 정도인 spread가 0도)을 써서 `X`가 틀렸고 gripper가 컵에서 약 0.22 m 떨어진 곳에 닿습니다. 초록 팔은 spread 60도 동작을 써서 2 mm 안으로 도착합니다. 크기는 모두 실제 그대로입니다."
   },
   "toy": null,
-  "motion": "handeye-spread",
  "three": "handeye-twist-3d"
 }

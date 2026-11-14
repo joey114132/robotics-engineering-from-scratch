@@ -1,4 +1,4 @@
-# 레슨 09/01 도해: 프로파일 세 가지의 경계 조건과 결과, 가속도 계단이 관절에 닿는 경로를 Excalidraw 로 그린다
+# 레슨 09/01 도해: 프로파일 세 가지가 가속도에 미치는 영향, 가속도 계단이 관절에 닿는 경로를 Excalidraw 로 그린다
 import pathlib
 import sys
 
@@ -9,34 +9,32 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def choice():
-    d = Diagram(cell=(330, 170))
-    d.title("Three ways to move from q0 to qf in time T")
-    s = d.box("Same move\nq0 to qf in T", 0, 1, "gray", w=240)
-    c = d.box("Cubic\n4 conditions", 1, 0, "blue", w=240)
-    q = d.box("Quintic\n6 conditions", 1, 1, "blue", w=240)
-    t = d.box("Trapezoid\nflat cruise", 1, 2, "blue", w=240)
-    rc = d.box("Acceleration\njumps at ends", 2, 0, "red", w=240)
-    rq = d.box("Acceleration\nstarts at zero", 2, 1, "green", w=240)
-    rt = d.box("Acceleration\nsteps 4 times", 2, 2, "red", w=240)
-    for a, b in ((s, c), (s, q), (s, t), (c, rc), (q, rq), (t, rt)):
+    d = Diagram()
+    d.title("One arm move, three profiles")
+    c = d.box("Cubic:\n4 conditions", 0, 0, "blue")
+    q = d.box("Quintic:\n6 conditions", 0, 1, "blue")
+    t = d.box("Trapezoid:\nflat cruise", 0, 2, "blue")
+    rc = d.box("Acceleration\njumps at the ends", 1, 0, "red")
+    rq = d.box("Acceleration\nstarts and ends at 0", 1, 1, "green")
+    rt = d.box("Acceleration\nsteps four times", 1, 2, "red")
+    for a, b in ((c, rc), (q, rq), (t, rt)):
         d.arrow(a, b)
     d.save(OUT / "diagram-profile-choice.excalidraw")
 
 
 def jerk_chain():
     d = Diagram()
-    d.title("How an acceleration step reaches the joint")
-    a = d.box("Acceleration\nsteps 0 to a", 0, 0, "red")
-    b = d.box("Jerk spike\n= step / dt", 1, 0, "red")
-    c = d.box("Motor torque\nsteps at once", 2, 0, "yellow")
-    e = d.box("Joint jerks,\ngearbox rattles", 3, 0, "red")
-    f = d.box("Quintic: start\nat acceleration 0", 1, 1, "green")
-    g = d.box("Jerk stays\nfinite", 2, 1, "green")
+    d.title("From a step in acceleration to a rattle")
+    a = d.box("Cubic acceleration\nsteps 0 to 1.5 rad/s²", 0, 0, "red")
+    b = d.box("Jerk spike:\n1.5 / 0.002 = 750", 0, 1, "red")
+    c = d.box("Motor torque\nsteps at once", 0, 2, "yellow")
+    e = d.box("Arm knocks,\ngearbox rattles", 0, 3, "red")
+    f = d.box("Quintic starts\nat acceleration 0", 1, 0, "green")
+    g = d.box("Peak jerk\nonly 7.5", 1, 1, "green")
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
     d.arrow(f, g)
-    d.note("Finer sampling makes the spike taller, not shorter.", d.margin, d.margin + 60 + 2 * d.ch - 10, size=22)
     d.save(OUT / "diagram-jerk-chain.excalidraw")
 
 

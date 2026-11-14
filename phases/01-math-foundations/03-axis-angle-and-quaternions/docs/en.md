@@ -6,32 +6,37 @@
 
 ## In Plain Words
 
-A clock hand sits just past the top. You can reach it with a short clockwise turn or an almost complete
-counterclockwise turn. The destination alone does not choose the route.
+A robot wrist is told to turn a tiny bit left. The same direction is also reachable by turning almost a full circle right, so the destination alone does not choose the route.
 
-With quaternions, q and -q describe the same orientation. Interpolating toward the opposite sign can send a
-wrist the long way around. Slerp checks the dot product and flips the target sign when needed, keeping the
-orientation while choosing the shorter rotation.
+A quaternion names an orientation, but q and its opposite, -q, name the same one. They sit on opposite sides of a sphere of orientations, so the short way to one is the long way to the other. Slerp, a smooth turn between two orientations, flips the sign when needed to keep the turn short.
 
 ## The Problem
 
-A wrist was told to correct a 0.1 rad error and instead spun almost a full turn the long way round. The target quaternion had arrived with the opposite sign, which names the same orientation. The interpolator trusted the sign and took the far side.
+A wrist was told to correct a 0.1 rad error and instead spun almost a full turn the long way round. The target quaternion had arrived with the opposite sign, which names the same orientation. The interpolator, the code that moves smoothly between two orientations, trusted the sign and took the far side.
 
 ## The Concept
 
-![q and minus q are one rotation](../assets/diagram-double-cover.png)
+A unit axis `k` (the line to turn about) and an angle `t` give a rotation matrix by Rodrigues' formula, `R = I + sin(t) K + (1 - cos(t)) K^2`, where `I` is the do-nothing matrix and `K` turns a vector `v` into `k x v`. A unit quaternion packs the same turn into four numbers, `(cos(t/2), sin(t/2) k)`.
 
-*Two opposite points on the 4D unit sphere map to one 3x3 rotation matrix.*
+A turn of 0.1 about z gives `q = (0.9988, 0, 0, 0.0500)`. Add one full turn, `t = 0.1 + 2pi`, and the wrist ends where it was. The half angle `t/2` grows by `pi`, which flips the sign of both `cos` and `sin`, so the quaternion is `-q = (-0.9988, 0, 0, -0.0500)`. So every rotation has two quaternions (it is covered twice).
 
-Rodrigues' formula turns an axis `k` and an angle into a matrix: `R = I + sin(t) K + (1 - cos(t)) K^2`, where `K` is the cross-product matrix of `k`. A unit quaternion is `(cos(t/2), sin(t/2) k)`. Because `t` and `t + 2pi` give `q` and `-q`, each rotation has two quaternions (a double cover).
+![Two wrists, one pose](../assets/clip-example.mp4)
 
-![Slerp checks the sign of the dot product](../assets/diagram-slerp-sign-fix.png)
+*Watch the dials. Blue turns 0.1, green turns 0.1 + 2pi, and both grippers end in the same pose. A needle shows the quaternion's half angle: 0.05 for blue, pi + 0.05 for green, the opposite side.*
 
-*If `dot(q0, q1)` is negative, negate `q1` before interpolating. The rotation is unchanged and the short arc is taken.*
+![q and -q](../assets/diagram-double-cover.png)
 
-![Swept angle with and without the fix](../assets/fig-slerp-long-way.png)
+*A unit quaternion is a point on a sphere in four dimensions. Two opposite points map to one 3x3 rotation matrix.*
 
-*Same start, same target. Without the fix the wrist sweeps 354.3 degrees, with it 5.7 degrees.*
+The dot product (multiply matching entries and add up) scores how alike two quaternions are. From `q0 = (1, 0, 0, 0)` to `-q` it is -0.9988: negative, so the target is on the far side and slerp must flip it.
+
+![Slerp sign check](../assets/diagram-slerp-sign-fix.png)
+
+*Follow the numbers. If `dot(q0, q1)` is negative, negate `q1` before interpolating. The rotation is unchanged and the short arc is taken.*
+
+![Swept angle](../assets/fig-slerp-long-way.png)
+
+*Compare the lines. Same start, same target. Without the fix the wrist sweeps 354.3 degrees (360 minus 5.7), with it 5.7 (0.1 rad).*
 
 ## Build It
 
@@ -58,7 +63,7 @@ python3 -m pytest phases/01-math-foundations/03-axis-angle-and-quaternions -q
 
 ## Use It
 
-SciPy's `Rotation.from_quat` and `Slerp` do this. SciPy stores quaternions scalar-last, `(x, y, z, w)`, and the last test checks that against this lesson's scalar-first `(w, x, y, z)`. Always confirm the order when you cross a library boundary.
+SciPy's `Rotation.from_quat` and `Slerp` do this. SciPy stores quaternions scalar-last, `(x, y, z, w)` with the plain number `w` at the end, and the last test checks that against this lesson's scalar-first `(w, x, y, z)`. Always confirm the order when you cross a library boundary.
 
 Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2 (Euler parameters; section number not verified).
 

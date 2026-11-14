@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A gust leans on me and my PD loop lets it win. Give the inner loop a memory and it pushes back, quietly, until the lean is gone.",
-    "mission": "In the `I, kp, kd, ki = ...` line of `code/main.py` change the last value `0.5` to `0.0` and run `python3 code/main.py`. Predict how the cascade compares with PD, then explain why."
+    "mission": "In the `I, kp, kd, ki = ...` line of `code/main.py` change the last value `0.5` to `0.0` and run `python3 code/main.py`. Predict how the cascade compares with PD, then explain why.",
+    "clip": "Two drones on test stands feel the same 0.1 Nm gust for 1 s (red arrow). The blue one uses a single PD loop and stays tilted for as long as the gust lasts. The green one adds an inner rate loop with integral action (a cascade) and returns to level even during the gust. Rendered from this lesson's `simulate()`, `pd()` and `cascade()`, slowed by 1.2, with the tilt drawn 3 times larger."
   },
   "ko": {
     "hook": "돌풍이 기대면 PD 루프는 그냥 져 줍니다. 안쪽 루프에 기억을 주면 기울기가 사라질 때까지 조용히 되밀어 냅니다.",
-    "mission": "`code/main.py`의 `I, kp, kd, ki = ...` 줄에서 마지막 값 `0.5`를 `0.0`으로 바꾸고 `python3 code/main.py`를 실행하세요. cascade가 PD와 어떻게 비교될지 예측하고 이유를 설명해 보세요."
+    "mission": "`code/main.py`의 `I, kp, kd, ki = ...` 줄에서 마지막 값 `0.5`를 `0.0`으로 바꾸고 `python3 code/main.py`를 실행하세요. cascade가 PD와 어떻게 비교될지 예측하고 이유를 설명해 보세요.",
+    "clip": "시험대에 얹은 드론 두 대가 같은 0.1 Nm 돌풍을 1초 동안 맞습니다(빨간 화살표). 파란 쪽은 단일 PD 루프라서 돌풍이 부는 동안 기운 채 버팁니다. 초록 쪽은 적분이 있는 안쪽 rate 루프를 더한 캐스케이드라서 돌풍 중에도 수평으로 돌아옵니다. 이 레슨의 `simulate()`, `pd()`, `cascade()` 결과를 1.2배 느리게 렌더했고 기울기는 3배 크게 그렸습니다."
   },
   "toy": null,
-  "motion": "gust-integral",
   "three": "attitude-gust-stand-3d"
 }

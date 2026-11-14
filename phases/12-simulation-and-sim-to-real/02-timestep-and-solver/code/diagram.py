@@ -9,29 +9,27 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def order():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("Two ways to take one step")
-    a = d.box("Explicit Euler\nx uses the OLD v", 0, 0, "red", w=270)
-    a2 = d.box("v uses the old force", 1, 0, "gray", w=250)
-    a3 = d.box("Energy grows\nevery step", 2, 0, "red", w=230)
-    b = d.box("Semi-implicit Euler\nx uses the NEW v", 0, 1.3, "green", w=270)
-    b2 = d.box("v first, then x", 1, 1.3, "gray", w=250)
-    b3 = d.box("Energy wobbles\nbut stays bounded", 2, 1.3, "green", w=230)
-    for s, t in ((a, a2), (a2, a3), (b, b2), (b2, b3)):
-        d.arrow(s, t)
+    a = d.box("Explicit Euler:\nmove x with the OLD speed", 0, 0, "red")
+    a2 = d.box("Crate gains energy\nevery step", 1, 0, "red")
+    b = d.box("Semi-implicit Euler:\nspeed first, then move x", 0, 1, "green")
+    b2 = d.box("Crate energy wobbles\nbut stays bounded", 1, 1, "green")
+    d.arrow(a, a2)
+    d.arrow(b, b2)
     d.save(OUT / "diagram-update-order.excalidraw")
 
 
 def sweep():
-    d = Diagram(cell=(300, 170))
+    d = Diagram(numbered=True)
     d.title("Never trust one step size")
-    run = d.box("Run at\ndt = 1e-5", 0, 0.5, "blue", w=200)
-    ref = d.box("Reference\nanswer", 1, 0.5, "green", w=200)
-    swp = d.box("Sweep dt up,\ncompare each run", 2, 0.5, "yellow", w=230)
-    mat = d.box("Result moves?\nStop and shrink dt", 3, 0.5, "red", w=240)
-    for s, t in ((run, ref), (ref, swp), (swp, mat)):
+    run = d.box("Drop the crate\nat a tiny dt", 0, 0, "blue")
+    ref = d.box("Keep that bounce\nas the reference", 1, 0, "green")
+    swp = d.box("Raise dt, rerun,\ncompare to the reference", 2, 0, "yellow")
+    bad = d.box("Answer moves?\nShrink dt again", 2, 1, "red")
+    for s, t in ((run, ref), (ref, swp), (swp, bad)):
         d.arrow(s, t)
-    d.note("The step you ship must sit on the flat part of the sweep.", d.margin, d.margin + 60 + 1.5 * d.ch + 40, size=22)
+    d.note("Ship a dt from the flat part of the sweep.", near=bad, side="l")
     d.save(OUT / "diagram-dt-sweep.excalidraw")
 
 

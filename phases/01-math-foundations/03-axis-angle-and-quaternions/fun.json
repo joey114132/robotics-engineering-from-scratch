@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Every rotation has two names, plus and minus. Pick the wrong one and my wrist takes the scenic route.",
-    "mission": "In `code/main.py` delete the minus in front of `quat_from_axis_angle([0, 0, 1], 0.1)`. Predict both swept angles, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` delete the minus in front of `quat_from_axis_angle([0, 0, 1], 0.1)`. Predict both swept angles, then run `python3 code/main.py`.",
+    "clip": "The same 0.1 rad correction is sent to two wrists, but the target quaternion arrives with the opposite sign. The blue wrist uses `slerp` without the sign fix and sweeps 354.3 degrees, while the green wrist uses `slerp(fix=True)` and turns only 5.7 degrees. The amber dots are the fingertip path from `quat_to_R`, and the see-through gripper is the target. The wrist is drawn 1.8 times larger than the model."
   },
   "ko": {
     "hook": "회전에는 이름이 둘 있습니다. 플러스와 마이너스입니다. 잘못 고르면 제 손목은 한 바퀴를 돌아서 갑니다.",
-    "mission": "`code/main.py`에서 `quat_from_axis_angle([0, 0, 1], 0.1)` 앞의 마이너스를 지우세요. 두 swept 각도를 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `quat_from_axis_angle([0, 0, 1], 0.1)` 앞의 마이너스를 지우세요. 두 swept 각도를 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "같은 0.1 rad 보정 명령이 손목 두 개에 가지만 목표 quaternion은 부호가 반대로 도착합니다. 파란 손목은 부호 보정이 없는 `slerp`라서 354.3도를 돌고 초록 손목은 `slerp(fix=True)`라서 5.7도만 돕니다. 주황 점은 `quat_to_R`로 구한 손가락 끝 경로이고 투명한 gripper는 목표 자세입니다. 손목은 모델보다 1.8배 크게 그렸습니다."
   },
   "toy": null,
- "motion": "slerp-sign",
- "three": "slerp-long-way-3d"
+  "three": "slerp-long-way-3d"
 }

@@ -18,7 +18,7 @@ STAGES = {"pre": ("Warm-up", "워밍업"), "check": ("Checks", "체크"), "post"
 CHEER = [("Nice one.", "좋아요."), ("Clean.", "깔끔합니다."), ("That is it.", "맞습니다."), ("Gears turning.", "톱니가 잘 맞물립니다.")]
 OOPS = [("Close. Read why and it sticks.", "아깝습니다. 이유를 읽으면 기억에 남습니다."),
         ("Not yet. The right answer is shown above.", "아직입니다. 정답은 위에 나와 있습니다."),
-        ("Good miss. Now you know why.", "좋은 오답입니다. 이제 이유를 압니다.")]
+        ("Good miss. Now you know why.", "좋은 오답입니다. 이제 이유를 알았습니다.")]
 COMBO_LINES = {3: ("Three in a row.", "3연속입니다."), 5: ("Five straight. On a roll.", "5연속입니다. 기세가 좋습니다.")}
 
 
@@ -72,7 +72,7 @@ def read_key():
 
 
 def ask_line(u, n):
-    hint = u.t(f"Type 1-{n} (or a-{chr(96 + n)}), q to stop.", f"1-{n} (또는 a-{chr(96 + n)})을 입력하세요. q 는 중단입니다.")
+    hint = u.t(f"Type 1-{n} (or a-{chr(96 + n)}), q to stop.", f"1-{n} (또는 a-{chr(96 + n)}) 중에서 고르세요. 중단하려면 q를 입력하세요.")
     while True:
         try:
             raw = input(u.t("answer> ", "답> ")).strip().lower()
@@ -133,7 +133,7 @@ def question_block(u, q, idx, total, outcomes, combo, label):
         u.print()
         u.rule(label, w)
     head = Text()
-    head.append(u.t(f"Question {idx + 1} of {total}", f"{idx + 1} / {total} 번째 문제"), style="muted")
+    head.append(u.t(f"Question {idx + 1} of {total}", f"문제 {idx + 1} / {total}"), style="muted")
     u.print()
     u.print(progress_row(u, outcomes, idx, total))
     u.print(Text("  ") + head)
@@ -183,7 +183,7 @@ def celebration_frames(u, n=10, rng=None):
     cols = [u.pal[k] for k in ("accent", "ok", "warn", "teal")]
     sparks = "✦✧▪◦"
     w = 44
-    word = u.t("PERFECT", "완벽합니다")
+    word = u.t("PERFECT", "만점입니다")
     frames = []
     for f in range(n):
         lines = []
@@ -224,7 +224,7 @@ def celebrate(u, sleep=time.sleep):
 def results_panel(u, score, total, gained, state, title, extra_lines=(), shown=3):
     """결과 카드 한 장. shown 개의 별만 켜서 그린다(별 애니메이션의 프레임)."""
     stars = stars_for(score, total)
-    verdict = {3: u.t("Perfect round.", "완벽한 한 판입니다."), 2: u.t("Good round.", "좋은 한 판입니다."), 1: u.t("Round done. The misses are worth a re-read.", "한 판 끝났습니다. 틀린 문제는 한 번 더 읽어 보세요.")}[stars]
+    verdict = {3: u.t("Perfect round.", "만점 라운드입니다."), 2: u.t("Good round.", "좋은 라운드입니다."), 1: u.t("Round done. The misses are worth a re-read.", "라운드가 끝났습니다. 틀린 문제는 한 번 더 읽어 보세요.")}[stars]
     st = Text()
     for i in range(3):
         lit = i < stars and i < shown
@@ -305,7 +305,7 @@ class Session:
                 u.print()
             pick = self.choose(q)
             if pick is None:
-                u.print(Text("  " + u.t("Stopped. Progress so far is saved.", "중단했습니다. 지금까지의 진행은 저장되었습니다."), style="muted"))
+                u.print(Text("  " + u.t("Stopped. Progress so far is saved.", "중단했습니다. 지금까지의 진행 상황은 저장했습니다."), style="muted"))
                 return score, gained, False
             correct = pick == q.answer
             got = self.award(q, correct)

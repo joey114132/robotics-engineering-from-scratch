@@ -1,6 +1,6 @@
 [
   {"id": 1, "stage": "pre", "question": "두 회전 행렬을 반대 순서로 곱하면 같은 회전이 나옵니까?", "options": ["예, 항상", "아니오, 일반적으로는", "z축 회전일 때만"], "answer": 1, "explanation": "행렬 곱은 교환법칙이 성립하지 않습니다. 같은 축 회전만 예외입니다."},
-  {"id": 2, "stage": "check", "question": "3x3 행렬이 회전이 되는 두 조건은 무엇입니까?", "options": ["대칭이고 trace가 3", "열이 orthonormal이고 determinant가 +1", "determinant가 1이기만 하면 된다"], "answer": 1, "explanation": "반사 행렬도 orthonormal이지만 determinant가 -1이라서 determinant 검사가 필요합니다."},
+  {"id": 2, "stage": "check", "question": "3x3 행렬이 회전이 되는 두 조건은 무엇입니까?", "options": ["대칭이고 trace가 3", "열이 orthonormal이고 determinant가 +1", "determinant가 1이기만 하면 된다"], "answer": 1, "explanation": "거울상으로 뒤집는 반사 행렬도 orthonormal이지만 determinant가 -1이라서 determinant 검사가 필요합니다."},
   {"id": 3, "stage": "check", "question": "회전 R과 위치 p를 가진 rigid transform의 inverse는 무엇입니까?", "options": ["[R^T, -R^T p]", "[R^T, -p]", "[-R, -p]"], "answer": 0, "explanation": "위치는 부호를 바꾸기 전에 다른 frame으로 되돌려 회전시켜야 합니다."},
   {"id": 4, "stage": "check", "question": "일반 행렬 inverse 대신 closed-form inverse를 쓰는 이유는 무엇입니까?", "options": ["항상 10배 빠르다", "drift가 생긴 R을 조용히 rigid로 받아들이지 않는다", "np.linalg.inv가 4x4에서 틀린다"], "answer": 1, "explanation": "closed form은 rigid임을 전제하므로 is_rotation과 함께 쓰면 drift를 잡을 수 있습니다."},
   {"id": 5, "stage": "post", "question": "점을 T로 변환할 때 회전과 이동은 어떤 순서로 적용됩니까?", "options": ["이동한 뒤 회전", "회전한 뒤 이동", "교환되므로 상관없다"], "answer": 1, "explanation": "R x + p입니다. 회전을 먼저 하고 오프셋을 더합니다."},

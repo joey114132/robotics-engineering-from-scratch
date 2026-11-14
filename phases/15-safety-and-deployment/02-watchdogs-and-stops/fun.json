@@ -1,13 +1,14 @@
 {
  "en": {
   "hook": "A watchdog that barks late is just a loud witness. Do the stopping math before you pick the timeout.",
-  "mission": "Predict whether 0.5 rad of room allows any watchdog timeout at 4 rad/s with a=8, then run `cd code && python3 -c 'from main import max_timeout; print(max_timeout(0.5, 4.0, 8.0))'` (an error is a valid answer)."
+  "mission": "Predict whether 0.5 rad of room allows any watchdog timeout at 4 rad/s with a=8, then run `cd code && python3 -c 'from main import max_timeout; print(max_timeout(0.5, 4.0, 8.0))'` (an error is a valid answer).",
+  "clip": "Two bench joints swing at 2 rad/s toward a hard stop when the command source dies at 0.5 s. When the watchdog trips, the lamp lights. The blue joint only loses torque, so it coasts into the stop. The green joint brakes at 8 rad/s^2 and halts short of it. Rendered from this lesson's `simulate('cut')` and `simulate('ramp')`, at quarter speed."
  },
  "ko": {
   "hook": "늦게 짖는 watchdog은 시끄러운 목격자일 뿐입니다. timeout을 정하기 전에 멈추는 거리부터 계산하세요.",
-  "mission": "0.5 rad 여유로 4 rad/s에서 a=8일 때 timeout이 가능한지 예측한 뒤 `cd code && python3 -c 'from main import max_timeout; print(max_timeout(0.5, 4.0, 8.0))'`를 실행하세요. 에러도 정답입니다."
+  "mission": "0.5 rad 여유로 4 rad/s에서 a=8일 때 timeout이 가능한지 예측한 뒤 `cd code && python3 -c 'from main import max_timeout; print(max_timeout(0.5, 4.0, 8.0))'`를 실행하세요. 에러도 정답입니다.",
+  "clip": "작업대 위 관절 두 개가 2 rad/s로 hard stop을 향해 돌다가 0.5초에 명령이 끊깁니다. watchdog이 작동하면 램프가 켜집니다. 파란 관절은 토크만 잃어서 그대로 stop에 부딪힙니다. 초록 관절은 8 rad/s^2로 브레이크를 걸어 stop 앞에서 멈춥니다. 이 레슨의 `simulate('cut')`와 `simulate('ramp')` 결과를 4분의 1 속도로 렌더했습니다."
  },
  "toy": "watchdog-budget",
- "motion": "watchdog-stop",
  "three": "watchdog-stop-3d"
 }

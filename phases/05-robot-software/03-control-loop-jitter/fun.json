@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "My average heartbeat is perfect, and once in a while I still stumble. The average hides the stumble.",
-    "mission": "In `code/main.py` change `spike_p=0.003` to `spike_p=0.0`. Predict which of `mean_period`, `worst` and `misses` change, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `spike_p=0.003` to `spike_p=0.0`. Predict which of `mean_period`, `worst` and `misses` change, then run `python3 code/main.py`.",
+    "clip": "Two arms replay the same 1000-step motion, one step per cycle of a 1 kHz loop from the lesson's `simulate()`. The green loop sleeps until `i * T`, so it finishes after 1.0 s. The blue loop sleeps `T` after its work, so each cycle takes 1.22 ms and the arm falls further behind and finishes 0.22 s late. The rare late wake-ups of the lesson are too small to see at this scale. Played 4.2 times slower."
   },
   "ko": {
     "hook": "제 평균 박동은 완벽한데 가끔 한 번씩 비틀거립니다. 평균은 그 비틀거림을 숨깁니다.",
-    "mission": "`code/main.py`에서 `spike_p=0.003`을 `spike_p=0.0`으로 바꾸세요. `mean_period`와 `worst`와 `misses` 중 무엇이 바뀔지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `spike_p=0.003`을 `spike_p=0.0`으로 바꾸세요. `mean_period`와 `worst`와 `misses` 중 무엇이 바뀔지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 팔이 같은 1000 step 동작을 1 kHz loop의 한 주기에 한 step씩 따라갑니다. loop 주기는 이 레슨의 `simulate()`로 만들었습니다. 초록 loop는 `i * T` 시각까지 자므로 1.0초에 끝납니다. 파란 loop는 일을 끝낸 뒤 `T`를 쉬어서 한 주기가 1.22 ms가 되고 팔이 점점 뒤처져 0.22초 늦게 끝납니다. 이 레슨의 드문 late wake-up은 이 크기에서는 보이지 않습니다. 4.2배 느리게 재생했습니다."
   },
   "toy": null,
-  "motion": "jitter-bars",
   "three": "loop-jitter-belt-3d"
 }

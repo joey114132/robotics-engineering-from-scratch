@@ -6,23 +6,27 @@
 
 ## In Plain Words
 
-Place an eraser on a textbook and slowly tilt the book. Gravity pulls the eraser downhill, while friction from the book acts uphill.
-Tilting more increases the downhill pull and reduces the force pressing the eraser into the book.
+Place an eraser on a textbook and slowly tilt the book. Gravity pulls the eraser downhill, and friction from the book pulls it back uphill. Tilting more raises the downhill pull and lowers the force pressing the eraser into the book.
 
-A contact model limits friction according to that pressing force. Once the uphill friction needed to hold the eraser exceeds the limit,
-it slides. The model's small spring-like contact deformation supplies the supporting force; friction cannot grow without bound.
+Friction has a cap: at most `mu` times the pressing force, where `mu` says how grippy the surfaces are. All the friction forces up to that cap form the friction cone. Once the friction needed to hold the eraser passes the cap, the eraser slides.
 
 ## The Problem
 
-Your gripper holds a part, you tilt the wrist a few degrees, and the part slides out. The same part held a little flatter would have stayed. Contact decides this. A rigid-body simulator gets it right only if its contact model has the same switch between sticking and sliding.
+Your gripper holds a part, you tilt the wrist a few degrees, and the part slides out. Held a little flatter, it would have stayed. A rigid-body simulator gets it right only if its contact model has the same switch between sticking and sliding.
 
 ## The Concept
 
-![Two layers of a penalty contact](../assets/diagram-penalty-layers.png)
+Call the tilt `theta`, the mass `m` and gravity `g`. Gravity splits into `fn = m g cos(theta)`, which presses the block into the plane (the normal force), and `m g sin(theta)`, which pulls it down the slope. To stay put the block needs friction `ft = m g sin(theta)` along the slope, so `ft / fn = tan(theta)`. The friction cone allows `ft / fn` up to `mu`.
 
-*Penetration gives the normal force. That force sets the cap on friction, and a tangential spring tries to hold the contact still until it hits the cap.*
+![Two layers of a simulated contact](../assets/diagram-penalty-layers.png)
 
-On a plane tilted by `theta`, gravity splits into `m g cos(theta)` pressing in and `m g sin(theta)` pulling along. Sticking needs friction `ft = m g sin(theta)` against `fn = m g cos(theta)`, so `ft / fn = tan(theta)`. The Coulomb cone allows `ft / fn` up to `mu`.
+*In a simulator the block sinks a hair into the plane. That penetration gives the normal force, which sets the cap on friction. A sideways spring holds the contact still until it hits the cap.*
+
+Take `mu = 0.5`. A 25 degree ramp needs 0.47 and holds. A 35 degree ramp needs 0.70, so the block slides: friction stays at its cap `mu * fn`, leaving a net pull of `m g (sin(theta) - mu cos(theta))`, about 1.6 m/s² here.
+
+![A tilting plank](../assets/clip-example.mp4)
+
+*Watch the orange block as the plank tilts. It holds until the plank passes the see-through marker at 26.6 degrees, then slides.*
 
 ![Stick or slip decision on a tilted plane](../assets/diagram-stick-slip.png)
 
@@ -30,7 +34,7 @@ On a plane tilted by `theta`, gravity splits into `m g cos(theta)` pressing in a
 
 ![Force trajectories in the friction cone and slip acceleration against tan(theta)](../assets/fig-stick-slip.png)
 
-*Left: the sticking blocks end inside the cone, the sliding block rides its edge. Right: simulated acceleration is zero until tan(theta) passes mu, then follows g (sin t - mu cos t).*
+*Left: the sticking blocks end inside the cone, the sliding block rides its edge. Right: simulated acceleration is zero until tan(theta) passes mu, then rises as derived above.*
 
 ## Build It
 
@@ -54,9 +58,9 @@ python3 phases/11-contact-and-manipulation/01-contact-models/code/main.py
 
 ## Use It
 
-Simulators such as MuJoCo use the same two ideas: a soft normal force and a friction cone, which the MuJoCo docs say can be elliptic or pyramidal. Build the same tilted block there and compare the angle where it starts to slide with `arctan(mu)`.
+MuJoCo uses the same two ideas: a soft normal force and a friction cone that its docs say can be elliptic or pyramidal. Build the same tilted block there and compare its sliding angle with `arctan(mu)`.
 
-Sources: MuJoCo documentation, Computation chapter (opened 2026-11-09), for the cone shapes and spring-damper contact.
+Sources: MuJoCo documentation, Computation chapter (opened 2026-11-09).
 
 ## Ship It
 

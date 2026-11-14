@@ -1,39 +1,42 @@
 # Inverted Pendulum and ZMP
 
-> A standing body falls like a pendulum balanced on its tip, and the capture point tells you where the next foot must land.
+> A standing body falls like a balanced pencil, and the capture point tells you where the next foot must land.
 
 **Type:** Build   **Prerequisites:** 03/04 PID and Tuning   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A bus brakes and your body keeps moving forward. Shifting pressure toward your toes can help with a small disturbance, but your feet
-have only so much room. A bigger disturbance makes you step.
+Someone shoves you from behind. Your body starts moving forward, and you can lean on your toes to hold yourself up. That works only for a small shove, because the spot where the floor pushes up (ZMP) can move only as far as your foot is long.
 
-The inverted pendulum model captures this by keeping the body's height fixed. Its capture point lies farther ahead when forward speed
-increases. If that point is outside the foot, shifting the ground force within the foot cannot stop the fall; moving the foot there
-can.
+A bigger shove carries your body farther before it would stop. That stopping spot, the capture point, lies beyond your toes. Leaning cannot reach it, but a foot placed there stops you.
 
 ## The Problem
 
-A biped is nudged from behind and its ankles push back as hard as they can, yet it keeps tipping forward. The ankles can only move the force point inside the foot, so a big enough push is beyond them. A model small enough to tell you, before the fall, whether a step is required and where is what you need.
+A walking robot is shoved from behind and its ankles push back hard, yet it keeps tipping forward. They only shift where the ground pushes inside the foot, so a big shove beats them. You need a model that says early whether a step is needed, and where.
 
 ## The Concept
 
 ![From a leg to one time constant](../assets/diagram-lipm-flow.png)
 
-*Treat the body as one mass at height `h` and the leg as massless. The tipping speed then collapses into one number, `Tc`.*
+*Treat the body as one mass at height `h` on a massless leg, like a pencil on its tip. Its tipping speed becomes one number, `Tc`.*
 
-With the foot at `p`, the mass obeys `x'' = (g/h)(x - p)`. Trying `exp(t/Tc)` gives `1/Tc^2 = g/h`, so `Tc = sqrt(h/g)`. The general solution is `x = p + (x0-p) cosh(t/Tc) + Tc v0 sinh(t/Tc)`. For `h = 0.9 m`, `Tc` is about 0.30 s.
+`x` is the body's distance ahead of the ankle and `g` gravity. With the foot at `p`, the mass obeys `x'' = (g/h)(x - p)`: the farther the body is ahead of the foot, the harder gravity pulls it on (`x''` is its acceleration). Try `exp(t/Tc)`: its second derivative is `exp(t/Tc)/Tc^2`, so `1/Tc^2 = g/h`. For `h = 0.9 m`, `Tc = sqrt(h/g)` is about 0.30 s, and the tipping grows 2.7 times (e) every `Tc`.
 
-The zero-moment point (ZMP) is where the ground force acts: `p = x - (h/g) x''`. It cannot leave the foot. The capture point `xi = x + v Tc` obeys `xi' = (xi - p)/Tc`, so a foot placed on `xi` freezes it and the body stops over that foot.
+Solved for `p`, it gives the zero-moment point (ZMP), where the ground's push acts under the foot: `p = x - (h/g) x''`. It cannot leave the foot, because the ground can only push. The capture point is the body's position plus its speed times `Tc`: `xi = x + v Tc`. It moves at `xi' = (xi - p)/Tc` (`xi'` is its speed), so a foot placed on `xi` freezes it and the body stops over that foot.
+
+Example: a 10 cm foot lets the ground's push sit at most 0.05 m from the ankle. A shove gives the body `v = 0.4 m/s`, so `xi = 0.4 * 0.30 = 0.12 m`, beyond 0.05 m: the ankle alone fails. A shove of 0.1 m/s gives `xi = 0.03 m`, inside the foot, so the ankle holds.
+
+![Two shoves, ankle only](../assets/clip-example.mp4)
+
+*Purple post: the capture point. Grey posts: the ends of the foot (both drawn 3 times farther from the ankle). Green, 0.1 m/s: the purple post stays between them. Blue, 0.4 m/s: it leaves and the body topples.*
 
 ![Ankle torque or a step](../assets/diagram-capture-decision.png)
 
-*If `xi` is inside the foot the ankle can hold. If not, only a step helps.*
+*Inside the foot the ankle can hold; outside, only a step helps.*
 
 ![A fall and a recovery from the same push](../assets/fig-fall-and-recovery.png)
 
-*Same 0.4 m/s push, capture point 0.12 m, foot half-length 0.05 m. Ankle only: the body diverges. A step onto `xi` at 0.1 s: it stops at 0.15 m.*
+*Ankle only: the body diverges. Waiting 0.1 s moves `xi` on to 0.15 m, so a step there stops the body at 0.15 m.*
 
 ## Build It
 
@@ -47,7 +50,7 @@ def capture_point(x, v, h, g=G):
     return x + v * time_constant(h, g)
 ```
 
-`simulate()` integrates the same equation with RK4 and the tests check it against the closed form. `fall_or_recover()` clamps the ZMP to the foot and optionally steps.
+`simulate()` steps the equation forward in time (RK4). `fall_or_recover()` clamps the ZMP to the foot and optionally steps.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -57,14 +60,14 @@ python3 phases/10-legged-and-aerial/01-inverted-pendulum-and-zmp/code/main.py
 
 ## Use It
 
-SciPy's `solve_ivp` integrates the same ODE, and the last test compares it with the closed form. A full-body controller replaces the single mass with the whole-body centre of mass, but the capture-point test is the same.
+The last test checks `lipm_state` against SciPy's `solve_ivp`.
 
 ## Ship It
 
-`outputs/skill-capture-point-check.md` reviews balance code for ZMP limits, the capture-point test and the step trigger.
+`outputs/skill-capture-point-check.md` reviews balance code for the ZMP, capture-point and step logic.
 
 ## Exercises
 
-1. Raise `h` to 1.8 m and find the largest push the ankle alone can absorb.
-2. Delay the step by 0.3 s and find where the foot must now land.
-3. Add a foot width of 0.1 m and show the step target moves.
+1. Raise `h` to 1.8 m; find the largest push the ankle alone absorbs.
+2. Delay the step by 0.3 s; where must the foot land?
+3. Add a foot width of 0.1 m; show the step target moves.

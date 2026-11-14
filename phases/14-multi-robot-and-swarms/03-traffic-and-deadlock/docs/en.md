@@ -6,31 +6,35 @@
 
 ## In Plain Words
 
-Pupils squeeze through narrow classroom aisles. Each stands in a space the next pupil needs and waits for a space occupied by someone
-else. If those waits form a loop, being polite and waiting leaves everyone stuck.
+Four toy cars meet at a crossing. Each stops on a square the next car needs and waits for the square ahead. The waits form a loop, so politely waiting leaves every car stuck forever.
 
-The traffic model calls this deadlock. Reserving a whole clear route before entering breaks the loop: pupils waiting outside hold no
-aisle space that another needs. It prevents this kind of blockage, but keeping routes reserved also limits how many can pass together.
+The traffic model calls this deadlock. If a car enters only when its whole route is clear and then reserves it, a car waiting outside holds no square another car needs. The loop cannot form, but reserved routes keep other cars from passing.
 
 ## The Problem
 
-Four robots enter a small junction, each stopping on one intersection because the next one is taken. Each holds what the next robot needs, so none can move and the fleet's output drops to zero. Nothing is broken. Every robot did the polite thing and waited for a free cell.
+Four robots enter a small junction, each stopping on one intersection because the next is taken. Each holds what the next needs, so none can move and throughput, the jobs finished per tick, drops to zero. Nothing is broken: every robot politely waited for a free cell.
 
 ## The Concept
 
-![A wait-for loop](../assets/diagram-wait-cycle.png)
+![Wait-for loop](../assets/diagram-wait-cycle.png)
 
-*An arrow means "waits for the robot standing there". A loop in this graph is a deadlock, and no robot in it can ever move.*
+*An arrow means "waits for the car standing there". A loop is a deadlock: no car in it can ever move.*
 
-![Reservation breaks the loop](../assets/diagram-reservation.png)
+![Reservation](../assets/diagram-reservation.png)
 
 *A robot enters only if its whole route is free, then holds it. A robot that waits outside holds nothing, so no one waits on it.*
 
-![Throughput before and after](../assets/fig-throughput.png)
+![Throughput](../assets/fig-throughput.png)
 
-*Left: with 8 robots and 40 jobs, "move if free" freezes at about 3.5 finished while reservation reaches 40. Right: the more robots share the grid, the more the naive rule deadlocks. Reservation levels off near 31 by tick 30 because whole routes block each other, which is its price.*
+*Left: 8 robots, 40 jobs, mean of 30 layouts: "move if free" freezes near 3.5 jobs finished while reservation finishes all 40. Right: jobs finished by tick 30 against robots on the grid. The naive rule deadlocks more as robots are added, and reservation levels off near 31 because whole routes block each other, its price.*
 
-The deadlock needs four conditions at once: one robot per cell, robots hold a cell while waiting for the next, nobody can be pushed out, and the waits form a loop. Reservation removes hold-and-wait.
+The deadlock needs four conditions at once: one robot per cell, hold-and-wait (a robot holds a cell while waiting for the next), no pushing (nobody is forced out) and circular wait (the waits form a loop). Reservation removes hold-and-wait.
+
+In the clip, four cars start on a 2 x 2 grid of cells, each needing the next car's cell: car 0 drives (0,0), (1,0), (1,1), car 1 (1,0), (1,1), car 2 (1,1), (0,1), car 3 (0,1), (0,0). With `naive` all four enter at tick 1 and `find_cycle()` returns the cars on the loop, `[0, 1, 2, 3]`. With `reserve` car 0 takes its three cells first, the others wait outside, and all four finish by tick 7.
+
+![Reserved cells and stop bars](../assets/clip-example.mp4)
+
+*`reserve` at 0.7 s per tick. A red bar stops a waiting car even when the cell ahead looks free, because its whole route is not free. Amber marks reserved cells.*
 
 ## Build It
 
@@ -41,7 +45,7 @@ need = p if self.policy == "reserve" else p[:1]
 if len(self.at) < self.K and all(n not in self.occ and n not in self.res for n in need):
 ```
 
-Tests build the four-robot loop, check it is found, and check that under reservation the wait-for graph is empty at every tick on 40 random jobs.
+Tests check the four-robot loop is found and that under reservation the wait-for graph is empty at every tick on 40 random jobs.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -51,7 +55,7 @@ python3 phases/14-multi-robot-and-swarms/03-traffic-and-deadlock/code/figure.py
 
 ## Use It
 
-No external source was consulted for this lesson. Cross-check `find_cycle` against a graph library's cycle finder on random wait-for graphs, and try time-window reservations to recover the throughput lost to whole-route holding.
+No external source was used. Cross-check `find_cycle` against a graph library's cycle finder, and try time-window reservations to win back the throughput lost to whole-route holding.
 
 ## Ship It
 

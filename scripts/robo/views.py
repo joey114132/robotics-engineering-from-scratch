@@ -43,7 +43,7 @@ def hud(u, state, today):
     t.append(" "), t.append_text(U.bar_text(into / span, 10, u.plain)), t.append(f" {into}/{span}" if i < len(P.LEVELS) - 1 else " max", style="muted")
     t.append_text(sep)
     st = P.streak(state, today)
-    t.append(u.t("streak ", "연속 ") + (f"{st} " + u.t("day" if st == 1 else "days", "일")), style="muted" if st == 0 else "warn")
+    t.append(u.t("streak ", "연속 ") + (f"{st}" + u.t(" day" if st == 1 else " days", "일")), style="muted" if st == 0 else "warn")
     t.append_text(sep)
     t.append(u.t("badges ", "배지 ") + str(len(state["badges"])), style="muted")
     return t
@@ -52,7 +52,7 @@ def hud(u, state, today):
 def next_hint(u, course, state):
     nxt = course.next_lesson(state, P.lesson_done)
     if not nxt:
-        return Text(u.t("Every lesson is done. Run robo daily to review.", "모든 레슨을 마쳤습니다. robo daily 로 복습을 이어 가세요."), style="ok")
+        return Text(u.t("Every lesson is done. Run robo daily to review.", "모든 레슨을 마쳤습니다. robo daily로 복습을 이어 가세요."), style="ok")
     t = Text()
     t.append(u.t("Next  ", "다음  "), style="muted"), t.append(u.g["arrow"] + " ", style="accent")
     t.append(f"{nxt.short}  ", style="bold accent"), t.append(nxt.title(u.lang), style="bold")
@@ -66,7 +66,7 @@ def phase_progress(course, state, phase):
 
 
 def home_tagline(u, course):
-    return u.t(f"{len(course.lessons)} lessons in {len(course.phases)} phases", f"{len(course.phases)}개 단계 · 레슨 {len(course.lessons)}개")
+    return u.t(f"{len(course.lessons)} lessons in {len(course.phases)} phases", f"phase {len(course.phases)}개 · 레슨 {len(course.lessons)}개")
 
 
 def phase_lines(u, course, state, scale=1.0):
@@ -92,7 +92,7 @@ def home(u, course, state, today, head=True):
         U.print_banner(u, tagline=home_tagline(u, course))
         u.para(Text("  ") + hud(u, state, today))
     u.print()
-    u.rule(u.t("Phases", "단계"), u.read_width)
+    u.rule(u.t("Phases", "Phase"), u.read_width)
 
     def build(scale):
         t = Text("\n").join(phase_lines(u, course, state, scale))
@@ -107,7 +107,7 @@ def home(u, course, state, today, head=True):
         u.para(Text(f"        robo read {n}   robo quiz {n}   robo mission {n}", style="muted"), indent=8)
     else:
         u.print(Text("  ") + hint)
-    u.print(Text("  " + u.t("robo --help lists every command", "robo --help 로 모든 명령을 봅니다"), style="muted"))
+    u.print(Text("  " + u.t("robo --help lists every command", "robo --help로 모든 명령을 볼 수 있습니다"), style="muted"))
 
 
 def lesson_map(u, course, state):
@@ -154,7 +154,7 @@ def mission_card(u, lesson, state):
         inner.append(u.g["good"] + " " + u.t("Mission done.", "미션 완료."), style="ok")
     else:
         inner.append(u.t(f"When you have run it: robo mission {lesson.short} --done   (+{P.XP_PER_MISSION} XP once)",
-                         f"해 봤다면 robo mission {lesson.short} --done   (한 번만 +{P.XP_PER_MISSION} XP)"), style="muted")
+                         f"실행해 봤다면 robo mission {lesson.short} --done   (한 번만 +{P.XP_PER_MISSION} XP)"), style="muted")
     title = Text(u.t(" Mission ", " 미션 ") + lesson.short + " ", style="bold accent")
     u.print(Panel(inner, title=title, title_align="left", box=box.ASCII if u.plain else box.ROUNDED, width=u.read_width,
                   padding=(1, 2), border_style="accent"))
@@ -187,11 +187,11 @@ def stats(u, course, state, today, weeks=12):
     ans = [v for q in state["q"].values() for v in q.values()]
     got = state["rv"].get(today.isoformat(), 0)
     rows = [("XP", lambda s: xp), (u.t("Level", "레벨"), level_row),
-            (u.t("Streak", "연속"), lambda s: Text(f"{st} " + u.t("day" if st == 1 else "days", "일"), style="warn" if st else "muted")),
+            (u.t("Streak", "연속"), lambda s: Text(f"{st}" + u.t(" day" if st == 1 else " days", "일"), style="warn" if st else "muted")),
             (u.t("Badges", "배지"), lambda s: Text(badges, style="" if state["badges"] else "muted")),
             (u.t("Lessons", "레슨"), lessons_row),
-            (u.t("Answers", "답"), lambda s: Text(u.t(f"{sum(ans)} right of {len(ans)}", f"{len(ans)}개 중 {sum(ans)}개 정답"))),
-            ("Daily 5", lambda s: Text(f"{got}/{P.DAILY_CAP} XP " + u.t("today", "오늘"), style="ok" if got >= P.DAILY_CAP else ""))]
+            (u.t("Answers", "푼 문제"), lambda s: Text(u.t(f"{sum(ans)} right of {len(ans)}", f"{len(ans)}개 중 {sum(ans)}개 정답"))),
+            (u.t("Daily 5", "오늘"), lambda s: Text(u.t(f"{got}/{P.DAILY_CAP} XP today", f"5문제 {got}/{P.DAILY_CAP} XP"), style="ok" if got >= P.DAILY_CAP else ""))]
 
     def build(scale):
         lines = [Text("  " + U.pad(label, 9), style="muted") + fn(scale) for label, fn in rows]
@@ -220,6 +220,6 @@ def heat_strip(u, state, today, weeks=12):
         u.print(t, no_wrap=True, overflow="crop")
     leg = Text("  " + " " * 4)
     leg.append(cell[0][0], style=cell[0][1]), leg.append(u.t(" none   ", " 없음   "), style="muted")
-    leg.append(cell[1][0], style=cell[1][1]), leg.append(u.t(" studied   ", " 공부   "), style="muted")
-    leg.append(cell[2][0], style=cell[2][1]), leg.append(u.t(" Daily 5 cleared", " Daily 5 완료"), style="muted")
+    leg.append(cell[1][0], style=cell[1][1]), leg.append(u.t(" studied   ", " 학습   "), style="muted")
+    leg.append(cell[2][0], style=cell[2][1]), leg.append(u.t(" Daily 5 cleared", " 오늘의 5문제 완료"), style="muted")
     u.print(leg)

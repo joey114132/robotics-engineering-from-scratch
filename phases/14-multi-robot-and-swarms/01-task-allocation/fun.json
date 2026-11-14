@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Everyone grabbed the closest task and one poor robot got the far corner. Greedy is polite. Optimal looks at every pair.",
-    "mission": "In `code/main.py` change both `(8, 2)` to `(30, 2)`. Predict whether the gap between greedy and `hungarian` grows or shrinks, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change both `(8, 2)` to `(30, 2)`. Predict whether the gap between greedy and `hungarian` grows or shrinks, then run `python3 code/main.py`.",
+    "clip": "Five robots each take one of five task pads (amber). Both floors have the same layout and every robot drives at the same speed. The blue robots follow `greedy()`, so one of them is left with a trip across the whole floor. The green robots follow `hungarian()` and every trip is short, so the blue robots drive about 1.6 times as far in total. The layout is five random points through `cost_matrix()`, drawn at 2.7 m per unit."
   },
   "ko": {
-    "hook": "모두 가장 가까운 일을 집었더니 한 로봇이 먼 구석을 떠안았습니다. greedy는 예의 바르고 최적 배정은 모든 쌍을 봅니다.",
-    "mission": "`code/main.py`에서 `(8, 2)` 두 곳을 `(30, 2)`로 바꾸세요. greedy와 `hungarian`의 격차가 커질지 작아질지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+    "hook": "모두 가장 가까운 작업을 골랐더니 한 로봇이 먼 구석을 떠안았습니다. greedy 배정은 예의 바르고 최적 배정은 모든 쌍을 봅니다.",
+    "mission": "`code/main.py`에서 `(8, 2)` 두 곳을 `(30, 2)`로 바꾸세요. greedy와 `hungarian`의 격차가 커질지 작아질지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "로봇 다섯 대가 task 패드(주황색) 다섯 곳을 하나씩 맡습니다. 두 바닥은 배치가 같고 로봇은 모두 같은 속도로 달립니다. 파란 로봇은 `greedy()`를 따라서 한 대가 바닥을 가로지르는 먼 길을 맡습니다. 초록 로봇은 `hungarian()`을 따라서 모두 짧게 가므로 파란 쪽은 합계로 약 1.6배를 더 달립니다. 배치는 `cost_matrix()`에 넣은 임의의 점 5개이고 1 단위를 2.7 m로 그렸습니다."
   },
   "toy": null,
- "motion": "greedy-trap",
  "three": "allocation-lines-3d"
 }

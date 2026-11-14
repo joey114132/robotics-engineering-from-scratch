@@ -1,4 +1,4 @@
-# 순수 파이썬 점자 plot 과 toy 시뮬레이션 (상수는 scripts/toys/*.js 와 같아야 하며 테스트가 대조한다)
+# 순수 파이썬 점자 plot 과 toy 시뮬레이션 (상수는 웹사이트 저장소의 scripts/toys/*.js 와 같아야 하며 그 저장소의 테스트가 대조한다)
 import math
 import random
 from dataclasses import dataclass, field
@@ -6,11 +6,11 @@ from dataclasses import dataclass, field
 from rich.cells import cell_len
 from rich.text import Text
 
-# scripts/toys/10-control-arm.js: pd-step 은 단위 관성 J=1, 마찰 B, dt 0.002 s, 3 s
+# 웹 toy 10-control-arm.js: pd-step 은 단위 관성 J=1, 마찰 B, dt 0.002 s, 3 s
 PD_DT, PD_T, PD_B = 0.002, 3, 0.2
 # sampling-limit: 40 스텝, r 슬라이더 최대 2.5, y 축 ±1.5
 SL_N, SL_RMAX, SL_YM = 40, 2.5, 1.5
-# scripts/toys/20-estimation-mobile-planning.js: kalman (레슨 07/02 와 같은 숫자)
+# 웹 toy 20-estimation-mobile-planning.js: kalman (레슨 07/02 와 같은 숫자)
 K_DT, K_N, K_SA, K_R = 1.0, 60, 0.1, 2.0
 
 

@@ -9,28 +9,28 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def starve():
-    d = Diagram(cell=(310, 170))
+    d = Diagram()
     d.title("One thread, one slow callback")
-    r = d.box("Timer ready\nevery 10 ms", 0, 0, "blue", w=230)
-    s = d.box("Slow callback\nstarts, 60 ms", 0, 1, "yellow", w=230)
-    e = d.box("Executor thread\nruns one at a time", 1, 0.5, "purple", w=240)
-    w = d.box("Timer waits\nup to 59 ms", 2, 0.5, "red", w=230)
+    r = d.box("Heartbeat timer\nready every 10 ms", col=0, row=0, color="blue")
+    e = d.box("One thread\none job at a time", col=1, row=0, color="purple")
+    w = d.box("Heartbeat waits\nup to 59 ms", col=2, row=0, color="red")
+    s = d.box("Slow callback\nruns 60 ms", col=1, row=1, color="yellow")
     d.arrow(r, e)
-    d.arrow(s, e)
     d.arrow(e, w)
+    d.arrow(s, e)
     d.save(OUT / "diagram-executor-starve.excalidraw")
 
 
 def groups():
-    d = Diagram(cell=(320, 170))
+    d = Diagram()
     d.title("Two threads help only with two groups")
-    a = d.box("Timer and slow\nsame group", 0, 0, "red", w=240)
-    b = d.box("Timer and slow\nown groups", 0, 1, "green", w=240)
-    c = d.box("2 threads\nstill one at a time", 1, 0, "red", w=240)
-    e = d.box("2 threads\nrun in parallel", 1, 1, "green", w=240)
-    f = d.box("Timer still waits", 2, 0, "red", w=220)
-    g = d.box("Timer on time", 2, 1, "green", w=220)
-    for s, t in ((a, c), (b, e), (c, f), (e, g)):
+    a = d.box("Timer and slow\nsame group", col=0, row=0, color="red")
+    c = d.box("2 threads, but\none at a time", col=1, row=0, color="red")
+    f = d.box("Timer still\nwaits", col=2, row=0, color="red")
+    b = d.box("Timer and slow\nown groups", col=0, row=1, color="green")
+    e = d.box("2 threads run\nin parallel", col=1, row=1, color="green")
+    g = d.box("Timer on\ntime", col=2, row=1, color="green")
+    for s, t in ((a, c), (c, f), (b, e), (e, g)):
         d.arrow(s, t)
     d.save(OUT / "diagram-callback-groups.excalidraw")
 

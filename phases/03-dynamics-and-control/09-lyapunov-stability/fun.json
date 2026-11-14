@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "I used to say it looked stable. Now I check every arrow in the phase plane. One pointing outward and I am out of excuses.",
-  "mission": "In `code/main.py` call `check` with `kd` of -0.2, -0.1 and 0.0 (c is 0.1). Predict the sign of the worst slope for each, then run and find the exact `kd` where it flips."
- },
- "ko": {
-  "hook": "예전엔 안정해 보인다고 말했습니다. 이제는 위상 평면의 화살표를 전부 확인합니다. 바깥을 향한 화살표가 하나만 있어도 변명할 수 없습니다.",
-  "mission": "`code/main.py`에서 `kd`를 -0.2, -0.1, 0.0으로 바꿔 `check`를 부르세요(c는 0.1입니다). 최악 기울기의 부호를 각각 예측하고 실행해서 부호가 바뀌는 정확한 `kd`를 찾으세요."
- },
- "toy": "lyapunov-arrows",
- "motion": "energy-falls",
+  "en": {
+    "hook": "I used to say it looked stable. Now I check every arrow in the phase plane. One pointing outward and I am out of excuses.",
+    "mission": "In `code/main.py` call `check` with `kd` of -0.2, -0.1 and 0.0 (c is 0.1). Predict the sign of the worst slope for each, then run and find the exact `kd` where it flips.",
+    "clip": "Two pendulum arms start 1 rad off, with the same PD gains. The green arm sees its rate right away: the lesson's V keeps falling and the arm settles. The blue arm sees the rate 0.5 s late: V grows, and the swing builds until the arm goes over the top. Rendered from `f()` and `V()`, checked against `simulate()`, over the first 3 s at 0.6 speed."
+  },
+  "ko": {
+    "hook": "예전엔 안정해 보인다고 말했습니다. 이제는 위상 평면의 화살표를 전부 확인합니다. 바깥을 향한 화살표가 하나만 있어도 변명할 수 없습니다.",
+    "mission": "`code/main.py`에서 `kd`를 -0.2, -0.1, 0.0으로 바꿔 `check`를 부르세요(c는 0.1입니다). 최악 기울기의 부호를 각각 예측하고 실행해서 부호가 바뀌는 정확한 `kd`를 찾으세요.",
+    "clip": "두 진자 팔이 1 rad 벗어난 자세에서 같은 PD gain으로 시작합니다. 초록 팔은 속도를 바로 봐서 레슨의 V가 계속 줄고 팔이 멈춥니다. 파란 팔은 속도를 0.5초 늦게 봐서 V가 늘고 흔들림이 쌓여 팔이 위로 넘어갑니다. `f()`와 `V()`로 계산하고 `simulate()`와 맞춰 본 앞 3초를 0.6배 속도로 렌더했습니다."
+  },
+  "toy": "lyapunov-arrows",
   "three": "lyapunov-bowl-3d"
 }

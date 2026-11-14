@@ -9,7 +9,7 @@
    "cos(theta)와 mu의 비교"
   ],
   "answer": 0,
-  "explanation": "필요한 마찰력을 수직항력으로 나누면 m g sin / m g cos = tan(theta)입니다."
+  "explanation": "필요한 마찰력을 법선력으로 나누면 m g sin / m g cos = tan(theta)입니다."
  },
  {
   "id": 2,

@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Forward kinematics is me walking my own arm: turn, step, turn, step. Lose count once and the gripper is somewhere else.",
-  "mission": "Run `python3 code/main.py`. Before you read line 2, guess the closest and farthest tip distance for links `[3.0, 1.0]`, then check it against `reach_bounds`."
- },
- "ko": {
-  "hook": "forward kinematics는 제 팔을 따라 걷는 일입니다. 돌고 걷고 돌고 걷다가 한 번 길을 잃으면 gripper는 딴 곳에 있습니다.",
-  "mission": "`python3 code/main.py`를 실행하세요. 두 번째 줄을 읽기 전에 link `[3.0, 1.0]`의 손끝이 가장 가까울 때와 가장 멀 때의 거리를 짐작하고 `reach_bounds`와 비교하세요."
- },
- "toy": null,
- "motion": "fk-chain",
+  "en": {
+    "hook": "Forward kinematics is me walking my own arm: turn, step, turn, step. Lose count once and the gripper is somewhere else.",
+    "mission": "Run `python3 code/main.py`. Before you read line 2, guess the closest and farthest tip distance for links `[3.0, 1.0]`, then check it against `reach_bounds`.",
+    "clip": "Two arms get exactly the same joint angles, and each leaves an amber dot where `fk_planar` puts its tip. The arm with links [1, 1] fills a disc, but the arm with links [3, 1] never gets closer than the inner grey ring. The grey rings are the `reach_bounds` limits, and 1 lesson unit is drawn as 0.22 m."
+  },
+  "ko": {
+    "hook": "forward kinematics는 제 팔을 따라 걷는 일입니다. 돌고 걷고 돌고 걷다가 한 번 길을 잃으면 gripper는 딴 곳에 있습니다.",
+    "mission": "`python3 code/main.py`를 실행하세요. 두 번째 줄을 읽기 전에 link `[3.0, 1.0]`의 손끝이 가장 가까울 때와 가장 멀 때의 거리를 짐작하고 `reach_bounds`와 비교하세요.",
+    "clip": "두 팔이 정확히 같은 관절각을 받고 `fk_planar`가 계산한 손끝 위치마다 주황 점이 남습니다. link [1, 1] 팔은 원판을 채우지만 link [3, 1] 팔은 안쪽 회색 고리보다 가까이 오지 못합니다. 회색 고리는 `reach_bounds`의 한계이고 레슨 단위 1을 0.22 m로 그렸습니다."
+  },
+  "toy": null,
   "three": "planar-fk-reach-3d"
 }

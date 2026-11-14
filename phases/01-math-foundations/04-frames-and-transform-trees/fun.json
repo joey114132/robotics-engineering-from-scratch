@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Name transforms like postal addresses and the tree finds the route. Call one T1 and I mail the cup to the wrong frame.",
-    "mission": "In `code/main.py` change `lookup(\"tool\", \"cam\")` to `lookup(\"cam\", \"tool\")`. Guess whether the position is just the old one with flipped signs, then run it."
+    "mission": "In `code/main.py` change `lookup(\"tool\", \"cam\")` to `lookup(\"cam\", \"tool\")`. Guess whether the position is just the old one with flipped signs, then run it.",
+    "clip": "The camera sees the cup at (0.2, 0, 0.5) in its own frame, and the arm needs it in the base frame. The arm first reaches for the red ball, where the swapped product `T_cam_cup @ T_base_cam` sends it, and finds nothing. Then it reaches the cup, where `TFTree.lookup` puts it. With the camera yawed 180 degrees the two answers are 0.4 apart, drawn at 0.6 m per lesson unit."
   },
   "ko": {
     "hook": "transform에 우편 주소처럼 이름을 붙이면 tree가 길을 찾아 줍니다. T1이라고 부르면 저는 컵을 엉뚱한 frame으로 보냅니다.",
-    "mission": "`code/main.py`에서 `lookup(\"tool\", \"cam\")`을 `lookup(\"cam\", \"tool\")`로 바꾸세요. 위치가 이전 값의 부호만 뒤집은 것인지 짐작한 다음 실행해 보세요."
+    "mission": "`code/main.py`에서 `lookup(\"tool\", \"cam\")`을 `lookup(\"cam\", \"tool\")`로 바꾸세요. 위치가 이전 값의 부호만 뒤집은 것인지 짐작한 다음 실행해 보세요.",
+    "clip": "카메라는 컵이 자기 frame의 (0.2, 0, 0.5)에 있다고 보고 팔에는 base frame 좌표가 필요합니다. 팔은 먼저 순서를 바꾼 곱 `T_cam_cup @ T_base_cam`이 가리키는 빨간 공으로 손을 뻗지만 아무것도 없습니다. 그다음 `TFTree.lookup`이 구한 컵 위치에 닿습니다. 카메라를 180도 돌려 놓으면 두 답은 0.4만큼 벌어집니다. 그림은 레슨 단위 1을 0.6 m로 그렸습니다."
   },
   "toy": null,
- "motion": "tf-compose",
- "three": "tf-wrong-product-3d"
+  "three": "tf-wrong-product-3d"
 }

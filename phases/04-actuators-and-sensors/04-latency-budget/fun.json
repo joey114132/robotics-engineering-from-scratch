@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Every millisecond between my sensor and my motor comes out of one wallet called phase margin. The wallet is tiny.",
-    "mission": "In `code/main.py` double `KD` from `2.0` to `4.0`. Will the delay margin in ms double, stay put or shrink? Predict, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` double `KD` from `2.0` to `4.0`. Will the delay margin in ms double, stay put or shrink? Predict, then run `python3 code/main.py`.",
+    "clip": "Two arms run the same PD loop (kp = 100, kd = 2) and start 0.1 rad off target; only the delay differs. At 0.6 times the delay margin the green arm settles. At 1.5 times the margin the blue arm swings wider each time, because the simulated angle keeps growing. Rendered from this lesson's `simulate()` and `delay_margin()` at 1/17 speed, with the angle drawn 1.6 times larger and softly capped at 0.9 rad so the arm stays above the table."
   },
   "ko": {
-    "hook": "센서에서 motor까지 걸리는 1 ms는 전부 phase margin이라는 한 지갑에서 나갑니다. 그 지갑이 이렇게 작은 줄 몰랐습니다.",
-    "mission": "`code/main.py`에서 `KD`를 `2.0`에서 `4.0`으로 두 배로 올리세요. delay margin(ms)이 두 배가 될지 그대로일지 줄어들지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "hook": "센서와 motor 사이에서 쓰는 ms는 전부 phase margin이라는 한 지갑에서 나갑니다. 그 지갑은 아주 작습니다.",
+    "mission": "`code/main.py`에서 `KD`를 `2.0`에서 `4.0`으로 두 배로 올리세요. delay margin(ms)이 두 배가 될지 그대로일지 줄어들지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 팔이 같은 PD 루프(kp = 100, kd = 2)로 목표에서 0.1 rad 벗어난 채 출발하고, 지연만 다릅니다. delay margin의 0.6배에서는 초록 팔이 가라앉습니다. 1.5배에서는 시뮬레이션 각도가 계속 커지므로 파란 팔이 갈 때마다 더 크게 흔들립니다. 이 레슨의 `simulate()`와 `delay_margin()` 결과를 17분의 1 속도로 렌더했고, 각도는 1.6배 크게 그리되 팔이 테이블 위에 머물도록 0.9 rad에서 부드럽게 한계를 두었습니다."
   },
   "toy": "latency-ring",
-  "motion": "delay-budget",
   "three": "latency-budget-bars-3d"
 }

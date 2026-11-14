@@ -11,31 +11,33 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 def structure():
     d = Diagram()
     d.title("Impedance: the joint as a spring and a damper")
-    s = d.box("Spring\nK*(q_des - q)", 0, 0, "blue")
-    m = d.box("Damper\n-D * qd", 0, 1, "blue")
+    s = d.box("Spring:\nK * error", 0, 0, "blue")
+    m = d.box("Damper:\n-D * speed", 0, 1, "blue")
     g = d.box("Gravity\nfeedforward", 0, 2, "blue")
-    j = d.box("Joint\ninertia J", 1.5, 1, "purple")
-    f = d.box("Push from\nthe world, F", 1.5, 2, "yellow")
-    q = d.box("Deflection\nF / K at rest", 3, 1, "green")
+    t = d.box("Motor torque:\nthe three added", 1, 1, "gray")   # one sum box, so every arrow can meet the middle of a side
+    f = d.box("Finger pushes\nthe hand: F", 2, 0, "yellow")
+    j = d.box("Joint\ninertia J", 2, 1, "purple")
+    q = d.box("At rest: it\nsags F / K", 2, 2, "green")
     for a in (s, m, g):
-        d.arrow(a, j)
+        d.arrow(a, t)
+    d.arrow(t, j)
     d.arrow(f, j)
     d.arrow(j, q)
     d.save(OUT / "diagram-impedance-structure.excalidraw")
 
 
 def recipe():
-    d = Diagram()
+    d = Diagram(numbered=True)
     d.title("Choosing K and D in four steps")
-    a = d.box("Largest push F\nBudget x_max", 0, 0, "yellow")
-    b = d.box("K = F / x_max", 1, 0, "purple")
-    c = d.box("D = 2*zeta*\nsqrt(K*J)", 2, 0, "purple")
-    e = d.box("Check\ndt*D/J < 1", 3, 0, "green")
+    a = d.box("Largest push F,\nbudget x_max", 0, 0, "yellow", step=1)
+    b = d.box("K = F / x_max", 1, 0, "purple", step=2)
+    c = d.box("D = 2*zeta*\nsqrt(K*J)", 1, 1, "purple", step=3)
+    e = d.box("Check\ndt*D/J < 1", 0, 1, "green", step=4)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.arrow(e, c, label="too big? lower D or speed up the loop", route="below")
-    d.note("zeta 0.7 to 1 for contact tasks.", d.margin, d.margin + 60 + 1.6 * d.ch, size=22)
+    d.note("Too big? Lower D or speed up the loop.", near=e, side="b")
+    d.note("zeta 0.7 to 1 for contact tasks.", near=c, side="r")
     d.save(OUT / "diagram-impedance-recipe.excalidraw")
 
 

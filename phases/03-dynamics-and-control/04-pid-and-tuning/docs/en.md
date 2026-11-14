@@ -6,40 +6,41 @@
 
 ## In Plain Words
 
-Push a trolley toward a floor mark. P increases your forward push with the remaining distance; D brakes
-according to speed. I builds extra push while an error persists, overcoming a steady opposing load.
+Imagine steering a toy car to a stop line with a throttle. P presses harder the farther the car is from the line. D brakes harder the faster it moves. I adds push the longer the car stays short, which beats a steady headwind.
 
-If you are already pushing as hard as possible, accumulating more I cannot add any more force. It can keep the
-push excessive near the mark and cause overshoot. Anti-windup stops that accumulation while the limit prevents
-the requested extra push.
+With the throttle pressed all the way down, I cannot add real push but keeps counting. That stored push shoves the car on past the line. Anti-windup stops the counting while the throttle is at its limit.
 
 ## The Problem
 
-A joint oscillated, so someone raised `kp` and `kd` to stiffen it. Now it buzzes and the motor runs hot. PID gains look like three independent knobs, but each one has a limit set by the plant, the actuator and the control period.
+A joint oscillated, so someone raised `kp` (push per unit of error) and `kd` (brake per unit of speed) to stiffen it. Now it buzzes and the motor runs hot. Each PID gain looks like an independent knob, but the joint, the motor's torque limit and the control period each cap it.
 
 ## The Concept
 
-![Three terms add up, then the actuator clips them](../assets/diagram-pid-structure.png)
+![Three terms, one limit](../assets/diagram-pid-structure.png)
 
-*The joint has inertia `J`, friction `b` and a load. The controller sees only the measured angle and velocity.*
+*Three terms add up and the motor clips the sum at `umax`. The joint has inertia `J`, friction `b` and a load; the controller sees only angle and velocity.*
 
-![P alone rings, P+D settles with an offset, P+I+D removes it](../assets/fig-pid-terms.png)
+![P, P+D and P+I+D](../assets/fig-pid-terms.png)
 
-*A load steps in at 5 s. With P+D the joint settles `load / kp` below the target. Only the integral term brings it back.*
+*Watch each curve after 5 s, when a steady load steps in. With P+D the joint settles `load / kp` below the target. Only the integral term brings it back.*
 
-The integral term adds up error, so it keeps adding while the actuator is at its limit. That is windup.
+![Two toy cars hold a line while a steady push arrives](../assets/clip-example.mp4)
 
-![Windup piles up the integral term while the actuator is saturated](../assets/diagram-windup.png)
+*Same case, toy cars. A steady push of 20 arrives (red arrows). With `kp = 100`, the blue car (P+D) stays `20 / 100 = 0.2` short of the line. The green car (P+I+D) is pushed back, then returns.*
 
-*The fix used here is conditional integration: freeze the integral while saturated and the error pushes deeper.*
+The integral term (I) adds up error and keeps adding even when the motor is at its limit (saturated). It shrinks only after the error changes sign, so the car must overshoot to pay it back. That is windup.
 
-![Windup overshoot against a clamped integrator](../assets/fig-windup.png)
+![Windup](../assets/diagram-windup.png)
 
-*Same gains and same torque limit. Without the clamp the joint overshoots the target by about 1.5 rad.*
+*Follow the red boxes. The fix used here, conditional integration (the clamp), stops adding while the motor is saturated and the error would push it deeper.*
 
-Raising gains has a second limit. With one command held per tick, the loop is stable only while the eigenvalues of its 2x2 update matrix stay inside the unit circle. That is lesson 03/01 again: `kd` above about `2J/dt` makes the command flip every tick.
+![Clamped windup](../assets/fig-windup.png)
 
-![Raised gains buzz the command, and the eigenvalue shows why](../assets/fig-raised-gains.png)
+*The orange curve is the joint without the clamp: same gains and limit, and it overshoots the target by about 1.5 rad.*
+
+Raising gains has a second limit, lesson 03/01 again. The loop is stable only while the eigenvalues of its 2x2 update matrix (how much each motion pattern is multiplied per tick) stay below 1 in size. `kd` above about `2J/dt` breaks that and flips the command every tick.
+
+![Raised gains](../assets/fig-raised-gains.png)
 
 *Left: the torque command after the gain change. Right: the largest eigenvalue magnitude leaves 1 near `kd = 2J/dt`.*
 
@@ -53,7 +54,7 @@ if u == raw or e * raw < 0:      # conditional integration
 v += dt / J * (u - b * v - load)
 ```
 
-`simulate()` runs this loop. `closed_loop_matrix()` and `spectral_radius()` give the stability test. Tests check the offset `load / kp`, the effect of I and D, windup against the clamp, and that the eigenvalue predicts growth for both gain sets.
+`simulate()` runs this loop. `closed_loop_matrix()` and `spectral_radius()` (largest eigenvalue size) give the stability test. Tests check the offset `load / kp`, the effect of I and D, and windup against the clamp.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -63,7 +64,7 @@ python3 phases/03-dynamics-and-control/04-pid-and-tuning/code/figure.py
 
 ## Use It
 
-ROS 2 `control_toolbox` offers `none`, `back_calculation` and `conditional_integration` anti-windup strategies; `pid_controller` picks one per joint via `gains.<dof_names>.antiwindup_strategy`. Compare its conditional integration on your plant with this lesson's clamp. Craig, Ch. 9 (section 9.7, disturbance rejection) covers the offset argument.
+ROS 2 `control_toolbox` offers `none`, `back_calculation` and `conditional_integration` anti-windup strategies; `pid_controller` picks one per joint via `gains.<dof_names>.antiwindup_strategy`. Compare its conditional integration on your plant with this lesson's clamp. Craig 9.7 covers the offset argument.
 
 Sources: [control_toolbox docs](https://control.ros.org/master/doc/control_toolbox/doc/index.html) (the three strategies), [PID controller user doc](https://control.ros.org/rolling/doc/ros2_controllers/pid_controller/doc/userdoc.html) (the per-joint setting), checked 2026-11-09.
 

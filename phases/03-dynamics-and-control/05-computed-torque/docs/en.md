@@ -6,37 +6,39 @@
 
 ## In Plain Words
 
-Swing a schoolbag horizontally with your elbow bent, then with your arm extended. The same angular
-acceleration needs different shoulder torque because the load sits at a different distance. Moving the elbow
-also changes what the shoulder must do.
+Picture a two-link arm sweeping across a table. With the elbow straight, the hand is far from the shoulder, so the same swing takes more shoulder torque than with the elbow bent. A fast swing also makes each link tug on the other.
 
-Computed torque predicts these inertia and coupling effects from the arm's model before adding corrections for
-tracking error. With an exact model, the corrections act on a simpler system. Wrong masses leave some of those
-torques uncancelled.
+Computed torque works out from the arm's equations the torque these effects demand and supplies it in advance. A small correction handles the leftover error. If the model's masses are wrong, part of that torque is missing.
 
 ## The Problem
 
-A joint-by-joint PD controller tracks a slow motion well. Make the same motion four times faster and the arm lags and wobbles, because the inertia and coupling torques that were small at low speed now dominate. Raising the gains runs into the limit of lesson 03/04.
+A joint-by-joint PD controller (push by error, brake by speed) tracks a slow motion well. Make the same motion four times faster and the arm lags and wobbles, because inertia and coupling torques, small at low speed, now dominate.
 
 ## The Concept
 
-![Why a joint-by-joint PD fails at speed](../assets/diagram-pd-blind-spot.png)
+![PD fails at speed](../assets/diagram-pd-blind-spot.png)
 
-*The elbow angle changes the inertia, and fast swinging adds Coriolis torque. PD sees both as surprise pushes.*
+*The elbow angle changes the inertia, and fast swinging adds Coriolis torque (the links' spin tugging on each other). PD sees both as surprise pushes.*
 
-For a horizontal 2-link arm the dynamics are `tau = M(q) qdd + h(q, qd)`. `M` is the inertia matrix and `h` holds the Coriolis and centripetal torques. Gravity is lesson 03/02's job and is left out here. Computed torque picks `tau = M(q) a + h(q, qd)` with `a = qdd_d + kd ed + kp e`. The model cancels the arm, so the error obeys `e'' + kd e' + kp e = 0`.
+For a horizontal 2-link arm the dynamics are `tau = M(q) qdd + h(q, qd)` (`q`: joint angles, `qd` and `qdd`: their speed and acceleration). `M` is the inertia matrix (how heavy the arm feels to each joint) and `h` holds the Coriolis and centripetal torques. Gravity (lesson 03/02) is left out. Computed torque picks `tau = M(q) a + h(q, qd)` with `a = qdd_d + kd ed + kp e`, where `qdd_d` is the planned acceleration and `e`, `ed` are the position and velocity errors. Since `tau = M qdd + h` too, the model cancels the arm: `qdd = a`, so the error obeys `e'' + kd e' + kp e = 0`, a spring and damper settling to zero.
 
 ![Computed torque in two layers](../assets/diagram-computed-torque.png)
 
 *The inner layer is the model. The outer layer is a plain PD on the error.*
 
-![Inertia against elbow angle, and the torques PD ignores](../assets/fig-model-terms.png)
+![Inertia and torques](../assets/fig-model-terms.png)
 
 *Left: joint-1 inertia changes by a factor of about four with the elbow. Right: along the reference, the inertial and Coriolis torques are large.*
 
-![Tracking error of PD and computed torque](../assets/fig-tracking-error.png)
+![Tracking error](../assets/fig-tracking-error.png)
 
-*A 1 s swing with `omega = 20`. Computed torque with the exact model has about 300 times less error than PD, and with masses off by 20% it still has about 5 times less.*
+*A 1 s swing, both controllers tuned to `omega = 20`. With the exact model computed torque has about 300 times less error than PD.*
+
+Example: the real `m1` is 20% larger and `m2` 20% smaller than the model says. PD peaks at 0.19 rad of error. Computed torque with the wrong model peaks at 0.038 rad, about five times less.
+
+![Wrong masses](../assets/clip-example.mp4)
+
+*Watch the tips against the translucent reference arms (the planned path): blue (PD) lags by up to 0.19 rad, green (computed torque) stays close despite the wrong masses. One-third speed.*
 
 ## Build It
 
@@ -46,7 +48,7 @@ a = qdd_d + 2*w*(qd_d - qd) + w*w*(q_d - q)
 tau = M @ a + coriolis(q, qd, model)    # Coriolis and centripetal terms
 ```
 
-`main.py` holds the full `M` and `h` terms. Tests check `M` against the kinetic energy computed from Cartesian velocities, `M qdd + h` against a numeric Lagrangian, and that free motion conserves kinetic energy, which tests the Coriolis sign. Then PD and computed torque run on the same trajectory.
+Tests check `M` against the kinetic energy computed from Cartesian velocities, `M qdd + h` against a numeric Lagrangian, and that free motion conserves kinetic energy, which tests the Coriolis sign.
 
 ```bash
 cd robotics-engineering-from-scratch

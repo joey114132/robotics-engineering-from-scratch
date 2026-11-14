@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "numpy will happily rotate me 90 radians and never say a word. Let's put a bouncer at the door.",
-    "mission": "Run `cd code && python3 -c \"from main import joint_angles; print(joint_angles([90, 45]))\"` and guess the result first. Then swap in `[1.5, 0.8]` and see why the guard stays quiet."
+    "mission": "Run `cd code && python3 -c \"from main import joint_angles; print(joint_angles([90, 45]))\"` and guess the result first. Then swap in `[1.5, 0.8]` and see why the guard stays quiet.",
+    "clip": "Two bench arms get the same encoder readings, 0 to 90 in steps of 15. The green arm converts them with `deg2rad` and lifts in steps to vertical. The blue arm reads the same numbers as radians, as `np.cos` would, so it jumps between poses and ends about 27 degrees past vertical. Angles come from the lesson's `joint_angles()` and `deg2rad()`, and each drawn angle has all of its full turns subtracted, since a full turn looks the same."
   },
   "ko": {
-    "hook": "numpy는 제가 90 radian을 돌아도 아무 말이 없습니다. 입구에 경비원을 하나 세워 봅시다.",
-    "mission": "`cd code && python3 -c \"from main import joint_angles; print(joint_angles([90, 45]))\"`를 실행하되 결과를 먼저 예측해 보세요. 이어서 `[1.5, 0.8]`을 넣고 guard가 왜 가만히 있는지 확인하세요."
+    "hook": "numpy는 제가 90 radians를 돌아도 아무 말이 없습니다. 입구에 경비원을 하나 세워 봅시다.",
+    "mission": "`cd code && python3 -c \"from main import joint_angles; print(joint_angles([90, 45]))\"`를 실행하되 결과를 먼저 예측해 보세요. 이어서 `[1.5, 0.8]`을 넣고 guard가 왜 가만히 있는지 확인하세요.",
+    "clip": "bench arm 두 대가 같은 encoder 값 0에서 90까지(15 간격)를 받습니다. 초록 팔은 `deg2rad`로 변환해서 한 단계씩 수직까지 올라갑니다. 파란 팔은 `np.cos`처럼 같은 숫자를 radian으로 읽어서 자세를 이리저리 바꾸다가 수직보다 약 27도 넘어간 채 끝납니다. 각도는 이 레슨의 `joint_angles()`와 `deg2rad()`로 구했고 그릴 때는 값에서 온전한 바퀴 수를 모두 뺀 각도를 썼습니다."
   },
   "toy": null,
- "motion": "degrees-guard",
   "three": "degrees-guard-arm-3d"
 }

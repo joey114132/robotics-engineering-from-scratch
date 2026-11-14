@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Two fingers can squeeze hard and still lose the box, because grip depends on the directions you can resist.",
-    "mission": "Change the `mu` tuple in `code/main.py` to `(0.0, 0.3, 0.6)`. Predict the epsilon for `0.6` from the other two rows, then run `python3 code/main.py`."
+    "mission": "Change the `mu` tuple in `code/main.py` to `(0.0, 0.3, 0.6)`. Predict the epsilon for `0.6` from the other two rows, then run `python3 code/main.py`.",
+    "clip": "Two grippers pinch a box and the same twisting load (the red arc) acts on both. With friction 0.3 the green jaws, 0.4 apart in height (lesson units, 8 cm drawn), give a positive `epsilon()`, so the contacts cancel the load and the box stays. The blue jaws, 0.8 apart (16 cm drawn), give zero, so the box turns. The load is the direction the blue grasp resists worst, and the turn is what the `contact_wrenches()` cones cannot cancel. Load size and time are drawn, not measured."
   },
   "ko": {
     "hook": "손가락 두 개가 세게 쥐어도 상자를 놓칠 수 있습니다. 파지는 힘의 세기보다 버틸 수 있는 방향에 달려 있습니다.",
-    "mission": "`code/main.py`의 `mu` 튜플을 `(0.0, 0.3, 0.6)`으로 바꾸세요. 앞의 두 줄로 `0.6`의 epsilon을 예측한 뒤 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`의 `mu` 튜플을 `(0.0, 0.3, 0.6)`으로 바꾸세요. 앞의 두 줄로 `0.6`의 epsilon을 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 gripper가 상자를 집고 같은 비틀림 하중(빨간 호)이 두 상자에 걸립니다. 마찰계수가 0.3일 때 초록 jaw는 높이 차이가 0.4(레슨 단위, 그림에서는 8 cm)이고 `epsilon()`이 양수라서 접촉이 하중을 상쇄하고 상자가 가만히 있습니다. 파란 jaw는 높이 차이가 0.8(그림에서는 16 cm)이고 `epsilon()`이 0이라서 상자가 돌아갑니다. 하중은 파란 파지가 가장 약한 방향으로 골랐고 도는 양은 `contact_wrenches()`의 원뿔이 상쇄하지 못하고 남은 힘입니다. 하중의 크기와 시간은 그린 값이지 잰 값이 아닙니다."
   },
   "toy": null,
-  "motion": "grasp-slide-jaw",
- "three": "grasp-hull-3d"
+  "three": "grasp-hull-3d"
 }

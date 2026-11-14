@@ -1,4 +1,14 @@
-{"en": {"hook": "Left or right around the box? Ask two friends and average them, and you walk into the box. I just pick one and stay picked.", "mission": "In `code/main.py` change the pair `(8, 4)` in the last loop to `(16, 8)`. Guess whether the jitter rises or falls, then run `python3 code/main.py`."}, "ko": {"hook": "상자의 왼쪽일까요 오른쪽일까요? 친구 둘에게 묻고 평균을 내면 상자에 부딪힙니다. 저는 하나를 골라 끝까지 갑니다.", "mission": "`code/main.py` 마지막 반복문에서 `(8, 4)`를 `(16, 8)`로 바꾸세요. jitter가 오를지 내릴지 예측한 뒤 `python3 code/main.py`를 실행하세요."}, "toy": "chunk-vs-mean",
-  "motion": "average-or-commit",
+{
+  "en": {
+    "hook": "Left or right around the box? Ask two friends and average them, and you walk into the box. I just pick one and stay picked.",
+    "mission": "In `code/main.py` change the pair `(8, 4)` in the last loop to `(16, 8)`. Guess whether the jitter rises or falls, then run `python3 code/main.py`.",
+    "clip": "Twelve demonstrations, the grey lines, pass the pillar on one side or the other: half go above it in the picture and half go below. The blue rover steers by the average of the demonstrations' actions, which at the start is straight ahead, so it drives into the pillar. Two green rovers copy chunks of 8 steps from one demonstration and start a new chunk every 4 steps; one goes above, one below, and both reach the goal. Paths come from this lesson's `mean_policy()` and `rollout_chunks()`, and every rover plays one step per 0.075 s."
+  },
+  "ko": {
+    "hook": "상자의 왼쪽일까요 오른쪽일까요? 친구 둘에게 묻고 평균을 내면 상자에 부딪힙니다. 저는 하나를 골라 끝까지 갑니다.",
+    "mission": "`code/main.py` 마지막 반복문에서 `(8, 4)`를 `(16, 8)`로 바꾸세요. jitter가 오를지 내릴지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "시연 12개(회색 선)는 그림에서 기둥의 위쪽 또는 아래쪽을 지나갑니다. 파랑 로버는 시연 행동의 평균으로 움직이는데 처음에는 그 평균이 직진이라서 기둥에 부딪힙니다. 초록 로버 두 대는 chunk(한 시연에서 베낀 연속 행동 묶음)를 8걸음씩 쓰고 4걸음마다 새 chunk를 시작해서 한 대는 위로 한 대는 아래로 돌아 둘 다 목표에 닿습니다. 경로는 이 레슨의 `mean_policy()`와 `rollout_chunks()`로 계산했고 로버마다 한 걸음을 0.075초에 재생합니다."
+  },
+  "toy": "chunk-vs-mean",
   "three": "action-chunk-fork-3d"
 }

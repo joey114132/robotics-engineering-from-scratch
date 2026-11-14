@@ -9,31 +9,31 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def anatomy():
-    d = Diagram(cell=(300, 170))
+    d = Diagram(numbered=True)
     d.title("One turn of a fixed-rate loop")
-    a = d.box("Sleep until\ni x period", 0, 0, "gray", w=210)
-    b = d.box("Wake late\nby a random delay", 1, 0, "yellow", w=220)
-    c = d.box("Do the work\n0.2 ms", 2, 0, "blue", w=200)
-    e = d.box("Done before the\nnext deadline?", 3, 0, "purple", shape="diamond", w=230, h=120)
-    m = d.box("No: deadline\nmissed", 3, 1.3, "red", w=210)
+    a = d.box("Sleep until\ni x T", col=0, row=0, color="gray", step=1)
+    b = d.box("Wake a\nlittle late", col=1, row=0, color="yellow", step=2)
+    c = d.box("Work\n0.2 ms", col=2, row=0, color="blue", step=3)
+    e = d.box("Done before\nnext deadline?", col=2, row=1, color="purple", shape="diamond", step=4)
+    m = d.box("Deadline\nmissed", col=1, row=1, color="red", step=5)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.arrow(e, m, label="late")
+    d.arrow(e, m, label="no")
+    d.note("If yes, sleep until the next i x T.", near=a, side="b")
     d.save(OUT / "diagram-loop-anatomy.excalidraw")
 
 
 def hide():
-    d = Diagram(cell=(320, 170))
+    d = Diagram()
     d.title("Why the average hides the problem")
-    s = d.box("5000 loop periods", 0, 0.5, "gray", w=230)
-    m = d.box("Mean jitter\n0 us: looks fine", 1, 0, "green", w=240)
-    w = d.box("Worst jitter\n1.5 ms: one spike", 1, 1, "red", w=240)
-    r = d.box("The motor feels\nthe worst one", 2, 0.5, "yellow", w=230)
-    d.arrow(s, m)
-    d.arrow(s, w)
-    d.arrow(m, r, dashed=True)
+    m = d.box("Mean jitter\n0 us", col=0, row=0, color="green")
+    ok = d.box("Looks\nhealthy", col=1, row=0, color="green")
+    w = d.box("Worst cycle\n1.5 ms late", col=0, row=1, color="red")
+    r = d.box("Motor\ntwitches", col=1, row=1, color="red")
+    d.arrow(m, ok)
     d.arrow(w, r)
+    d.note("Same 5000 cycles, two very different answers.", near=r, side="r")
     d.save(OUT / "diagram-average-hides.excalidraw")
 
 

@@ -33,7 +33,7 @@
    "토크 x N, 속도 / N"
   ],
   "answer": 2,
-  "explanation": "손실을 빼면 출력(파워)이 보존됩니다."
+  "explanation": "손실을 빼면 일률(power)이 보존됩니다."
  },
  {
   "id": 4,

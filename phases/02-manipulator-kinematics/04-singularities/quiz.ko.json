@@ -54,7 +54,7 @@
   "options": [
    "singularity 근처에서 tip이 명령을 따르지 못한다",
    "팔이 불안정해진다",
-   "순기구학이 바뀐다"
+   "forward kinematics가 바뀐다"
   ],
   "answer": 0,
   "explanation": "Jacobian이 rank를 잃는 곳에서는 속도 제한과 정확한 추종이 동시에 성립할 수 없습니다."

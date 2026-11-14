@@ -6,40 +6,43 @@
 
 ## In Plain Words
 
-Your room thermostat freezes below the target temperature. Following its display keeps the heater running
-even as the room gets hotter. A steady reading can hide a worsening situation.
+A bench arm is moving toward its target angle when its sensor freezes. The frozen reading still says the arm is fast, so the controller keeps braking against a speed that is gone. That steady brake drives the arm back past its start and into the hard stop, the block that ends its travel.
 
-A robot controller can likewise keep driving when its sensor is stuck. This lesson injects faults and
-separately measures the true joint motion and what a monitor could detect from available signals. That
-separates how much damage a fault causes from how early it gives warning.
+The controller never broke. It obeyed a bad reading. This lesson injects five faults and measures two things: the damage the real arm takes, and how early a cheap check could warn.
 
 ## The Problem
 
-A joint that tracked well all week suddenly slams into its stop, and the log shows no error. The controller did exactly what its inputs told it to. This lesson injects five faults into a small PD loop, then measures how much damage each does and how soon a cheap check could have noticed.
+A joint that tracked well all week suddenly slams into its stop, and the log shows no error. We break a small PD loop five ways. A PD controller pulls the joint toward its target like a spring and brakes it by its speed.
 
 ## The Concept
 
 ![Where each fault enters the loop](../assets/diagram-fault-points.png)
 
-*Wrong sign and saturation live in the command path. Stuck, dropout and delay corrupt what the controller believes about the joint.*
+*Follow the loop from target to controller, motor, joint and sensor. Going out, wrong sign flips the push and saturation caps it small. Coming back, stuck freezes the reading, dropout zeroes it briefly and delay makes it arrive old.*
 
-A fault is only dangerous through the loop it sits in. A stuck sensor makes the controller push on a joint it thinks is still. A wrong sign turns the spring into a repeller.
+A stuck sensor makes the controller act on one frozen picture of the joint, so its push never changes. A wrong sign turns the spring into a repeller.
+
+Example, wrong sign. The torque, the motor's twisting push, is flipped, so the joint runs away from the target and hits the stop at 0.460 s. A check on the controller's own signals, "error grew in the last 100 ms", trips at 0.205 s: 0.255 s of warning.
+
+![A bench arm runs away from its target when the torque sign is wrong](../assets/clip-example.mp4)
+
+*Amber ghost: the target. Green settles on it. Blue runs the other way, and the lamp lights at 0.205 s, before the stop.*
 
 ![Joint response under each fault](../assets/fig-fault-responses.png)
 
-*Dashed gray is the healthy run. The blue vertical line is the first alarm. Wrong sign and stuck end pinned at the limit, dropout slams into it and recovers, delay rings, saturation crawls.*
+*Watch where each curve ends. Dashed gray is the healthy run, the blue line the first alarm. Wrong sign and stuck end at the stop, dropout hits it and recovers, delay wobbles, saturation crawls.*
 
 ![Damage and warning time](../assets/fig-fault-ranking.png)
 
-*Left: error left at the end. Right: the alarm comes before the limit for every fault that reaches it, but saturation is only caught by a clock.*
+*Left: error left at the end. Right: the alarm beats the limit for every fault that reaches it, but saturation trips only the 2 s deadline check.*
 
 ![Which cheap check sees which fault](../assets/diagram-fault-checks.png)
 
-*Four checks on the controller's own signals are enough to flag all five faults in this model.*
+*Four checks flag all five faults: reading flat while the motor pushes, reading jumps, error grows in 100 ms, not at target after 2 s. Saturation trips only the last, a clock check.*
 
 ## Build It
 
-`simulate(fault)` runs a 1-DOF joint (`J qdd = tau - b qd`) with a hard stop at 2 rad. Each fault is a few lines inside the loop, for example:
+`simulate(fault)` runs a 1-DOF joint (`J qdd = tau - b qd`) with a hard stop at 2 rad (about 115 degrees). Each fault is a few lines inside the loop, for example:
 
 ```python
 if fault == "stuck" and on:
@@ -70,7 +73,7 @@ rank fault        peak|q| final err limit at alarm at  warned first
 
 ## Use It
 
-The same injection works in a MuJoCo joint or a ROS 2 node. Wrap the sensor topic and the command topic, then compare your own monitors against this table. These thresholds belong to this plant, so re-measure them on yours.
+The same injection works in a MuJoCo joint or a ROS 2 node. Wrap the sensor and command topics and compare your monitors with this table. Re-measure the thresholds on your own plant.
 
 ## Ship It
 
@@ -79,5 +82,5 @@ The same injection works in a MuJoCo joint or a ROS 2 node. Wrap the sensor topi
 ## Exercises
 
 1. Inject the stuck sensor after the joint has settled and explain why nothing bad happens.
-2. Find the delay in milliseconds at which this loop first rings.
+2. Find the delay in milliseconds at which this loop first oscillates.
 3. Add a sixth fault, an encoder that reads twice the true angle, and rank it.

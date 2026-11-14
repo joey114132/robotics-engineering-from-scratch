@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "pick-and-place가 place 지점에서 2 cm 빗나갔는데 부품마다 자기 테스트는 통과했습니다. 어디부터 봐야 할까요?", "options": ["부품끼리 상호작용하는 곳, 예를 들어 정상상태 처짐", "계획서의 글꼴", "볼 곳이 없습니다. 오차는 무작위입니다"], "answer": 0, "explanation": "각자 통과한 부품도 함께 쓰면 실패할 수 있고, 정상상태 처짐이 그런 상호작용의 하나입니다."},
-  {"id": 2, "stage": "check", "question": "파이프라인에서 pick과 place의 직교 좌표를 관절 목표로 바꾸는 것은 무엇일까요?", "options": ["역기구학", "PD 게인", "질량 행렬"], "answer": 0, "explanation": "IK가 관절 waypoint를 주고, quintic 경로가 그 사이를 잇습니다."},
+  {"id": 1, "stage": "pre", "question": "pick-and-place가 place 지점에서 2 cm 빗나갔는데 부품마다 자기 테스트는 통과했습니다. 어디부터 봐야 할까요?", "options": ["부품끼리 상호작용하는 곳, 예를 들어 정상상태 처짐", "계획서의 글꼴", "볼 곳이 없습니다. 오차는 무작위입니다"], "answer": 0, "explanation": "각자 통과한 부품도 함께 쓰면 실패할 수 있습니다. 정상상태 처짐이 그런 상호작용의 하나입니다."},
+  {"id": 2, "stage": "check", "question": "파이프라인에서 pick과 place의 직교 좌표를 관절 목표로 바꾸는 것은 무엇일까요?", "options": ["역기구학", "PD 게인", "질량 행렬"], "answer": 0, "explanation": "IK가 관절 waypoint를 주고 quintic 경로가 그 사이를 잇습니다."},
   {"id": 3, "stage": "check", "question": "waypoint 사이에 quintic 구간을 쓰는 이유는 무엇일까요?", "options": ["모든 waypoint에서 속도와 가속도가 0이라 튀지 않습니다", "팔이 가벼워집니다", "PD 루프가 필요 없어집니다"], "answer": 0, "explanation": "구간마다 조건 여섯 개가 양 끝의 속도와 가속도를 0으로 고정합니다."},
-  {"id": 4, "stage": "check", "question": "중력 feedforward를 빼고 kp는 그대로입니다. 1차 근사 정상상태 오차는 얼마일까요?", "options": ["tau_g / kp", "tau_g * kp", "0입니다. PD 루프가 보정합니다"], "answer": 0, "explanation": "중력 토크 전체가 잔차가 되고, position 스프링이 그것을 나눕니다."},
-  {"id": 5, "stage": "post", "question": "pass 검사를 움직이는 중이 아니라 안정 시간 뒤 place 지점에서 하는 이유는 무엇일까요?", "options": ["움직이는 중의 추종 지연은 당연하고, 작업이 요구하는 것은 최종 위치입니다", "움직이는 팔은 잴 수 없습니다", "움직이는 중의 오차는 중요하지 않습니다"], "answer": 0, "explanation": "팁은 움직이는 동안 계획보다 최대 9 mm 뒤처지지만, 작업은 끝점만 요구합니다."},
-  {"id": 6, "stage": "post", "question": "토크 0, 감쇠 없는 자유 스윙 에너지 테스트는 무엇을 보여야 할까요?", "options": ["에너지가 거의 일정합니다", "에너지가 계속 늘어납니다", "에너지가 0이 됩니다"], "answer": 0, "explanation": "토크와 마찰이 없으면 모델은 에너지를 보존해야 하고, 틀린 Coriolis 항은 여기서 드러납니다."}
+  {"id": 4, "stage": "check", "question": "중력 feedforward를 빼고 kp는 그대로입니다. 1차 근사 정상상태 오차는 얼마일까요?", "options": ["tau_g / kp", "tau_g * kp", "0입니다. PD 루프가 보정합니다"], "answer": 0, "explanation": "중력 토크 전체가 잔차가 되고 처짐은 그 잔차를 position 스프링 상수 kp로 나눈 값입니다."},
+  {"id": 5, "stage": "post", "question": "pass 검사를 움직이는 중이 아니라 안정 시간 뒤 place 지점에서 하는 이유는 무엇일까요?", "options": ["움직이는 중의 추종 지연은 당연하고 작업이 요구하는 것은 최종 위치입니다", "움직이는 팔은 잴 수 없습니다", "움직이는 중의 오차는 중요하지 않습니다"], "answer": 0, "explanation": "팁은 움직이는 동안 계획보다 최대 9 mm 뒤처집니다. 작업은 끝점만 요구합니다."},
+  {"id": 6, "stage": "post", "question": "토크 0, 감쇠 없는 자유 스윙 에너지 테스트는 무엇을 보여야 할까요?", "options": ["에너지가 거의 일정합니다", "에너지가 계속 늘어납니다", "에너지가 0이 됩니다"], "answer": 0, "explanation": "토크와 마찰이 없으면 모델은 에너지를 보존해야 합니다. 틀린 Coriolis 항은 여기서 드러납니다."}
 ]

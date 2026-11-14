@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "I copied the expert perfectly until one tiny slip put me somewhere nobody ever showed me. Awkward.",
-  "mission": "Change `(0, 2, 4)` to `(0, 1, 6)` in `code/main.py`. Guess how much a single DAgger round adds over plain cloning, then run `python3 code/main.py`."
- },
- "ko": {
-  "hook": "전문가를 완벽히 따라 했는데 작은 실수 하나로 아무도 보여 준 적 없는 곳에 서 있습니다. 난감합니다.",
-  "mission": "`code/main.py`의 `(0, 2, 4)`를 `(0, 1, 6)`으로 바꾸세요. DAgger 한 라운드가 plain cloning보다 얼마나 올려 줄지 짐작한 뒤 `python3 code/main.py`를 실행하세요."
- },
- "toy": null,
- "motion": "bc-drift",
- "three": "bc-drift-3d"
+  "en": {
+    "hook": "I copied the expert perfectly until one tiny slip put me somewhere nobody ever showed me. Awkward.",
+    "mission": "Change `(0, 2, 4)` to `(0, 1, 6)` in `code/main.py`. Guess how much a single DAgger round adds over plain cloning, then run `python3 code/main.py`.",
+    "clip": "Both rovers learned from the same four expert demonstrations, and each gets the same size of random push on its wheels (one random draw per rover). The blue rover was trained by plain cloning: its push moves it to a spot the demonstrations never visited, where it steers badly, and it hits the pillar. The green rover also went through four DAgger rounds, in which the expert relabels the spots the rover itself reached, and it gets to the goal. Paths come from this lesson's `dagger()` and `rollout()`, played 1.6 times slower."
+  },
+  "ko": {
+    "hook": "전문가를 완벽히 따라 했는데 작은 실수 하나로 아무도 보여 준 적 없는 곳에 서 있습니다. 난감합니다.",
+    "mission": "`code/main.py`의 `(0, 2, 4)`를 `(0, 1, 6)`으로 바꾸세요. DAgger 한 라운드가 plain cloning보다 얼마나 올려 줄지 짐작한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 로버는 같은 전문가 시연 4개로 배웠고 바퀴에는 같은 크기의 무작위 힘(바퀴 미끄러짐)이 가해지며 무작위 값은 로버마다 따로 뽑습니다. 파랑 로버는 단순 복제(plain cloning)라서 이 힘에 시연이 가지 않은 상태로 밀려나 서툴게 조향하다가 기둥에 부딪힙니다. 초록 로버는 DAgger 4라운드(로버가 실제로 간 상태마다 전문가가 정답 행동을 다시 붙여 주는 것)를 거쳐 목표에 닿습니다. 경로는 이 레슨의 `dagger()`와 `rollout()`으로 계산했고 1.6배 느리게 재생합니다."
+  },
+  "toy": null,
+  "three": "bc-drift-3d"
 }

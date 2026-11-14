@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "로봇이 차례로 가장 가까운 빈 작업을 고르면 총 이동 거리는 항상 최소입니까?", "options": ["그렇다", "아니다, 앞의 싼 선택이 뒤의 비싼 선택을 강요할 수 있다", "N이 짝수일 때만 그렇다"], "answer": 1, "explanation": "탐욕 배정은 로봇을 하나씩 결정하고 이미 한 선택을 다시 보지 않습니다."},
-  {"id": 2, "stage": "check", "question": "배정 문제는 무엇을 최소화합니까?", "options": ["가장 긴 거리 하나", "순열에 대한 C[i, perm[i]]의 합", "쓰는 로봇 수"], "answer": 1, "explanation": "로봇마다 작업 하나, 작업마다 로봇 하나를 주고 총비용을 더합니다."},
-  {"id": 3, "stage": "check", "question": "레슨 테스트는 Hungarian 결과를 어떻게 검증합니까?", "options": ["지도를 눈으로 본다", "작은 N은 brute force, 큰 N은 SciPy와 비교한다", "탐욕 배정을 두 번 돌린다"], "answer": 1, "explanation": "N이 6 이하일 때는 brute force가 정확하고, N = 30은 SciPy로 확인합니다."},
-  {"id": 4, "stage": "check", "question": "임의 배치를 많이 만들면 탐욕 비용은 최적과 비교해 어떻습니까?", "options": ["가끔 더 낮다", "더 낮은 적은 없고 N이 클수록 비율이 커진다", "항상 같다"], "answer": 1, "explanation": "최적은 모든 순열 중 최솟값이고, 잰 평균 비율은 약 1.12에서 1.28로 오릅니다."},
-  {"id": 5, "stage": "post", "question": "로봇 6대와 작업 4개입니다. 정사각 풀이기를 어떻게 재사용합니까?", "options": ["로봇 두 대를 임의로 뺀다", "비용 0인 가짜 작업으로 행렬을 채운다", "탐욕 배정을 쓴다"], "answer": 1, "explanation": "가짜 열은 행렬을 정사각으로 만들 뿐 실제 짝의 우열을 바꾸지 않습니다."},
+  {"id": 1, "stage": "pre", "question": "로봇이 차례로 가장 가까운 빈 작업을 고르면 총 이동 거리는 항상 최소입니까?", "options": ["그렇다", "아니다, 앞의 싼 선택이 뒤의 비싼 선택을 강요할 수 있다", "N이 짝수일 때만 그렇다"], "answer": 1, "explanation": "greedy 배정은 로봇을 하나씩 결정하고 이미 한 선택을 다시 보지 않습니다."},
+  {"id": 2, "stage": "check", "question": "배정 문제는 무엇을 최소화합니까?", "options": ["가장 긴 거리 하나", "순열에 대한 C[i, perm[i]]의 합", "사용하는 로봇 수"], "answer": 1, "explanation": "로봇마다 작업 하나, 작업마다 로봇 하나를 주고 총비용을 더합니다."},
+  {"id": 3, "stage": "check", "question": "레슨 테스트는 Hungarian 결과를 어떻게 검증합니까?", "options": ["지도를 눈으로 본다", "작은 N은 brute force, 큰 N은 SciPy와 비교한다", "greedy 배정을 두 번 돌린다"], "answer": 1, "explanation": "N이 6 이하일 때는 brute force가 정확하고, N = 30은 SciPy로 확인합니다."},
+  {"id": 4, "stage": "check", "question": "임의 배치를 많이 만들면 greedy 비용은 최적과 비교해 어떻습니까?", "options": ["가끔 더 낮다", "더 낮은 적은 없고 N이 클수록 비율이 커진다", "항상 같다"], "answer": 1, "explanation": "최적은 모든 순열 중 최솟값이고, 측정한 평균 비율은 약 1.12에서 1.28로 오릅니다."},
+  {"id": 5, "stage": "post", "question": "로봇 6대와 작업 4개입니다. 정사각 행렬만 받는 solver를 어떻게 재사용합니까?", "options": ["로봇 두 대를 임의로 뺀다", "비용 0인 가짜 작업으로 행렬을 채운다", "greedy 배정을 쓴다"], "answer": 1, "explanation": "가짜 열은 행렬을 정사각으로 만들 뿐 실제 짝의 우열을 바꾸지 않습니다."},
   {"id": 6, "stage": "post", "question": "로봇 30대에 brute force를 쓰지 않는 이유는 무엇입니까?", "options": ["GPU가 필요하다", "순열이 30!개다", "답이 틀린다"], "answer": 1, "explanation": "순열 수는 팩토리얼로 늘고 Hungarian 방법은 O(n^3)입니다."}
 ]

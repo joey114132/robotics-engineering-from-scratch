@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Two textbooks, two DH conventions, one arm, and nobody complains when I mix them up. I find that rude.",
-    "mission": "In `code/main.py` change `q = [0.5, 0.8]` to `q = [0.0, 0.0]`. Do `craig` and `wrong` still disagree? Predict, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `q = [0.5, 0.8]` to `q = [0.0, 0.0]`. Do `craig` and `wrong` still disagree? Predict, then run `python3 code/main.py`.",
+    "clip": "Two bench arms get the same DH table and the same joint angles. The green arm runs it through Craig's routine and the blue arm through the other one. Both start identical at zero pose, then bend to q = (0.5, 0.8) rad, and the blue hand ends about 31 cm from the amber ball that the right routine reaches. The poses come from `fk_dh()` in this lesson."
   },
   "ko": {
-    "hook": "교과서 둘에 DH 규약이 둘이고 팔은 하나입니다. 섞어 써도 아무도 불평하지 않아서 저는 좀 얄밉습니다.",
-    "mission": "`code/main.py`에서 `q = [0.5, 0.8]`을 `q = [0.0, 0.0]`으로 바꾸세요. `craig`와 `wrong`이 여전히 다를지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "hook": "교과서 둘에 DH convention도 둘인데 팔은 하나입니다. 제가 둘을 섞어 써도 아무도 뭐라 하지 않는 게 저는 좀 괘씸합니다.",
+    "mission": "`code/main.py`에서 `q = [0.5, 0.8]`을 `q = [0.0, 0.0]`으로 바꾸세요. `craig`와 `wrong`이 여전히 다를지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "작업대 위의 로봇 팔 두 대가 같은 DH 표와 같은 joint 각도를 받습니다. 초록 팔은 Craig의 routine으로 계산하고 파란 팔은 다른 routine으로 계산합니다. 둘은 zero pose에서 똑같이 시작해 q = (0.5, 0.8) rad까지 굽혀집니다. 파란 손은 맞는 routine이 닿는 주황색 공에서 약 31 cm 벗어납니다. 자세는 이 레슨의 `fk_dh()`로 계산했습니다."
   },
   "toy": null,
- "motion": "dh-wrong-convention",
   "three": "dh-origins-3d"
 }

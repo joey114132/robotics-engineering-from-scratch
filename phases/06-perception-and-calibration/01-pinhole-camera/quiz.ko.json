@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "pixel과 depth로 만든 목표가 옆으로 몇 cm 어긋납니다. 가장 의심스러운 입력은 무엇입니까?", "options": ["그 픽셀에서 읽은 depth", "영상 너비", "frame rate"], "answer": 0, "explanation": "틀린 depth는 점을 시선 광선을 따라 밀어냅니다."},
-  {"id": 2, "stage": "check", "question": "점이 광선을 따라 카메라에서 두 배 멀어지면 principal point에서 본 픽셀 거리는 어떻게 됩니까?", "options": ["두 배가 된다", "절반이 된다", "그대로다"], "answer": 1, "explanation": "u - cx = fx*x/z 이므로 z가 두 배가 되면 절반이 됩니다."},
-  {"id": 3, "stage": "check", "question": "depth z에서 픽셀 오차 1 px가 만드는 옆 오차는 대략 얼마입니까?", "options": ["fx / z", "z * fx", "z / fx"], "answer": 2, "explanation": "x = (u - cx)*z/fx 이므로 1 px는 z/fx m입니다."},
-  {"id": 4, "stage": "check", "question": "principal point 바로 위의 픽셀에서 depth가 0.1 m 크게 읽혔습니다. 3D 오차는 무엇입니까?", "options": ["옆으로 0.1 m", "광축 방향으로 0.1 m", "없다"], "answer": 1, "explanation": "그 자리의 광선이 광축이라 옆 성분이 없습니다."},
-  {"id": 5, "stage": "post", "question": "같은 depth 오차에 가장 크게 다치는 픽셀은 무엇입니까?", "options": ["principal point에서 먼 픽셀", "principal point 위의 픽셀", "모두 같다"], "answer": 0, "explanation": "옆 이동량은 dz*(u-cx)/fx 입니다."},
-  {"id": 6, "stage": "post", "question": "물체 가장자리에서 배경 depth를 읽는 문제의 가장 좋은 해결책은 무엇입니까?", "options": ["해상도를 높인다", "fx를 키운다", "안쪽 픽셀을 쓰거나 창 안에서 더 가까운 depth를 쓴다"], "answer": 2, "explanation": "픽셀과 depth는 같은 표면을 가리켜야 합니다."}
+  {"id": 1, "stage": "pre", "question": "pixel과 depth로 만든 목표가 옆으로 몇 cm 어긋납니다. 가장 의심스러운 입력은 무엇입니까?", "options": ["그 pixel에서 읽은 depth", "영상 너비", "frame rate"], "answer": 0, "explanation": "틀린 depth는 점을 ray를 따라 밀어냅니다."},
+  {"id": 2, "stage": "check", "question": "점이 ray를 따라 카메라에서 두 배 멀어지면 principal point에서 본 pixel 거리는 어떻게 됩니까?", "options": ["두 배가 된다", "절반이 된다", "그대로다"], "answer": 1, "explanation": "u - cx = fx*x/z 이므로 z가 두 배가 되면 절반이 됩니다."},
+  {"id": 3, "stage": "check", "question": "depth z에서 pixel 오차 1 px가 만드는 옆 오차는 대략 얼마입니까?", "options": ["fx / z", "z * fx", "z / fx"], "answer": 2, "explanation": "x = (u - cx)*z/fx 이므로 1 px는 z/fx m입니다."},
+  {"id": 4, "stage": "check", "question": "principal point 바로 위의 pixel에서 depth가 0.1 m 크게 읽혔습니다. 3D 오차는 무엇입니까?", "options": ["옆으로 0.1 m", "광축 방향으로 0.1 m", "없다"], "answer": 1, "explanation": "그 pixel의 ray가 광축(optical axis)이라 옆 성분이 없습니다."},
+  {"id": 5, "stage": "post", "question": "같은 depth 오차의 영향을 가장 크게 받는 pixel은 무엇입니까?", "options": ["principal point에서 먼 pixel", "principal point 위의 pixel", "모두 같다"], "answer": 0, "explanation": "옆 이동량은 dz*(u-cx)/fx 입니다."},
+  {"id": 6, "stage": "post", "question": "물체 가장자리에서 배경 depth를 읽는 문제의 가장 좋은 해결책은 무엇입니까?", "options": ["해상도를 높인다", "fx를 키운다", "안쪽 pixel을 쓰거나 창 안에서 더 가까운 depth를 쓴다"], "answer": 2, "explanation": "pixel과 depth는 같은 표면을 가리켜야 합니다."}
 ]

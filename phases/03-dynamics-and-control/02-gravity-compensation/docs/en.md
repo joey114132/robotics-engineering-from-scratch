@@ -6,29 +6,35 @@
 
 ## In Plain Words
 
-Gravity compensation lets a motor carry an arm's weight, much as a friend helps you carry a tray. At the cafeteria serving counter, you lift a heavy tray while your friend supports most of its weight.
+A bench arm holding its hand out needs motor torque to carry its own weight. Gravity compensation is the motor's guess of that weight, added in advance, like a friend lifting a tray by guessing how heavy it is.
 
-Your friend's support is like gravity compensation. The position controller carries the remaining load. Its gain kp sets how strongly it pushes back for a given amount of sag. With a lower kp, the arm must sag farther to produce the same support.
+If the guess is too low, the leftover weight pulls the hand down. If too high, the hand rises. The position controller pushes back on that error, and its gain kp is the push per unit of sag, so a lower kp lets the same mistake move the hand farther.
 
 ## The Problem
 
-You lower the position gain `kp` to soften an arm so a person can push it. The arm now sags below its commanded pose, or floats above it, and the softer you go the worse it gets. Gravity compensation, a feedforward torque that cancels gravity, was supposed to prevent exactly this.
+You lower the position gain `kp` (how hard the motor pushes the arm back per radian of error) to soften an arm so a person can push it. The arm now sags below its commanded pose, or floats above it, and the softer you go the worse it gets. Gravity compensation was supposed to prevent exactly this.
 
 ## The Concept
 
-![Residual divided by kp is the sag](../assets/diagram-sag-flow.png)
+![Residual over kp](../assets/diagram-sag-flow.png)
 
-*The model's feedforward and the real gravity torque disagree by a residual. The position spring turns that residual into a visible error.*
+*Follow the red box: `ff` is the torque the model feeds forward in advance and `tau_g` is what gravity really needs. Their gap, the residual (the model's error), is left to the position spring.*
 
-At rest the torques balance: `kp * (q_des - q) + ff = tau_g(q)`. To first order the error is `(ff - tau_g) / kp`. The sign of the model error decides the direction.
+At rest the torques balance: `kp * (q_des - q) + ff = tau_g(q)`, where `q_des - q` is the commanded angle minus the real one, so `kp` times it acts like a spring. Rearranged, the sag `q - q_des` is `(ff - tau_g) / kp`, to first order (small errors). Angles are measured upward, so negative sag is droop.
 
-![Three cases of model error](../assets/diagram-sag-cases.png)
+![Three cases](../assets/diagram-sag-cases.png)
 
-*A light model droops, an exact model holds, a heavy model floats up.*
+*Pick your case: a light model droops, an exact model holds, a heavy model floats up.*
 
-![Sag against kp and the arm it produces](../assets/fig-gravity-sag.png)
+Example: the lesson's two-link arm (masses 2 and 1 kg, links 0.4 m) held straight out, `kp = 30`. Gravity needs 9.81 Nm at the shoulder (`gravity_torque`). A model 20% too light misses `0.2 * 9.81 = 1.96` Nm, which the spring turns into `1.96 / 30 = 0.065` rad, about 3.7 degrees of droop. A model 20% too heavy misses 1.96 Nm the other way, so the arm floats up about 3.7 degrees (the exact solve gives 3.70 and 3.79).
 
-*Left: halving kp doubles the error, in both directions. Right: the same command at a soft kp leaves the arm below the commanded line.*
+![Two models](../assets/clip-example.mp4)
+
+*Same `kp = 30`. Each amber ball is where an exact model holds the fingertip: the left arm droops below it, the right floats above. Sag drawn 6 times larger.*
+
+![Sag against kp](../assets/fig-gravity-sag.png)
+
+*Left: halving kp doubles the error either way. Right: a soft kp leaves the arm below the commanded line.*
 
 ## Build It
 
@@ -39,7 +45,7 @@ t2 = m2*lc2*g*np.cos(q1+q2)
 t1 = (m1*lc1 + m2*l1)*g*np.cos(q1) + t2
 ```
 
-`steady_state()` solves the balance equation and raises if no equilibrium exists, which happens when `kp` is below the gravity gradient. `sag()` returns `q - q_des`.
+`steady_state()` solves the balance equation and raises if no equilibrium exists, which happens when `kp` is below the gravity gradient (how fast gravity torque grows with angle). `sag()` returns `q - q_des`.
 
 ```bash
 cd robotics-engineering-from-scratch

@@ -1,4 +1,4 @@
-# 레슨 01/01 도해: 카메라에서 베이스로 가는 transform 흐름과 회전 순서에 따른 결과 차이를 Excalidraw 로 그린다
+# 레슨 01/01 도해: 카메라에서 베이스로 가는 transform 흐름과 드론 코가 회전 순서에 따라 다른 곳을 향하는 두 길을 Excalidraw 로 그린다
 import pathlib
 import sys
 
@@ -9,29 +9,27 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def chain():
-    d = Diagram()
-    d.title("Cup in camera frame to cup in base frame")
-    a = d.box("Cup in camera\np_cam", 0, 0, "blue")
-    t = d.box("T_base_cam\nR and p", 1, 0, "purple")
-    b = d.box("Cup in base\np_base = R p_cam + p", 2, 0, "green", w=260)
-    inv = d.box("Inverse\nR^T and -R^T p", 2, 1, "gray", w=260)
+    d = Diagram(numbered=True)
+    d.title("Camera numbers to base numbers")
+    a = d.box("Cup seen by camera\np_cam", 0, 0, "blue")
+    t = d.box("T_base_cam\nturn, then shift", 1, 0, "purple")
+    b = d.box("Cup seen by base\nR p_cam + p", 2, 0, "green")
     d.arrow(a, t)
     d.arrow(t, b)
-    d.arrow(b, inv, label="invert", label_dx=45)
-    d.note("One matrix goes one way. Its inverse goes the other.", d.margin, d.margin + 60 + 2 * d.ch - 30, size=20)
+    d.arrow(b, a, label="inverse goes back", route="below")
     d.save(OUT / "diagram-transform-chain.excalidraw")
 
 
 def order():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("Same two turns, two orders, two answers")
-    p = d.box("Point (1, 0, 0)", 0, 0.5, "blue", w=220)
-    a = d.box("Turn 90 deg about x,\nthen 90 deg about z", 1, 0, "purple", w=260)
-    b = d.box("Turn 90 deg about z,\nthen 90 deg about x", 1, 1, "purple", w=260)
-    ra = d.box("(0, 1, 0)", 2, 0, "green", w=200)
-    rb = d.box("(0, 0, 1)", 2, 1, "red", w=200)
-    for s, t in ((p, a), (p, b), (a, ra), (b, rb)):
+    for row, (turns, nose, color) in enumerate((("Roll x,\nthen spin z", "Nose left\n(0, 1, 0)", "green"),
+                                                ("Spin z,\nthen roll x", "Nose up\n(0, 0, 1)", "red"))):
+        s = d.box("Nose at door\n(1, 0, 0)", 0, row, "blue")
+        t = d.box(turns, 1, row, "purple")
+        r = d.box(nose, 2, row, color)
         d.arrow(s, t)
+        d.arrow(t, r)
     d.save(OUT / "diagram-rotation-order.excalidraw")
 
 

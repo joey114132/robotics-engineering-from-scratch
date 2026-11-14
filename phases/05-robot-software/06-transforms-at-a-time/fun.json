@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Ask me where I am right now and I will tell you. Ask where I was a moment ago and I will interpolate. Ask about tomorrow and I refuse.",
-    "mission": "In `code/main.py` call `buf.lookup(0.25)` and `buf.lookup(1.2)` after the two samples are added. Predict which one raises and what the message says."
+    "mission": "In `code/main.py` call `buf.lookup(0.25)` and `buf.lookup(1.2)` after the two samples are added. Predict which one raises and what the message says.",
+    "clip": "A robot turns at 1 rad/s and drives at 0.5 m/s while its laser scans a straight wall for 0.5 s, and `to_world()` places every point. Green points use the pose at each point's own stamp, so they land on the wall. Blue points use the newest pose for every point, so the line bends away from the wall by about 0.5 m, and some points land 1.18 m from where they should be. Played seven times slower."
   },
   "ko": {
     "hook": "지금 어디냐고 물으면 답합니다. 방금 어디였냐고 물으면 보간합니다. 내일 어디냐고 물으면 거부합니다.",
-    "mission": "`code/main.py`에서 두 sample을 넣은 뒤 `buf.lookup(0.25)`와 `buf.lookup(1.2)`를 호출하세요. 어느 쪽이 오류를 내고 메시지가 무엇일지 예측하세요."
+    "mission": "`code/main.py`에서 두 sample을 넣은 뒤 `buf.lookup(0.25)`와 `buf.lookup(1.2)`를 호출하세요. 어느 쪽이 오류를 내고 메시지가 무엇일지 예측하세요.",
+    "clip": "로봇이 1 rad/s로 회전하고 0.5 m/s로 달리는 동안 laser가 곧은 벽을 0.5초 동안 스캔하고 `to_world()`가 모든 점을 놓습니다. 초록 점은 점마다 찍힌 시각의 pose를 쓰므로 벽 위에 놓입니다. 파란 점은 모든 점에 최신 pose를 쓰므로 선이 벽에서 약 0.5 m 휘어지고 일부 점은 제자리에서 1.18 m 벗어납니다. 7배 느리게 재생했습니다."
   },
   "toy": "tf-at-a-time",
-  "motion": "tf-lookup",
   "three": "timestamp-frames-3d"
 }

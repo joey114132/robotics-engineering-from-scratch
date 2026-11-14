@@ -6,44 +6,47 @@
 
 ## In Plain Words
 
-Moving a cup from a table to a shelf combines several jobs: choose your arm angles, move without a sudden start, and keep supporting
-your arm's weight.
+A bench arm lifts a ball off a post (A) and sets it on a marker (B). Gravity pulls the whole arm down, so the arm needs a steady upward push just to hold still.
 
-This simulated arm joins IK, a quintic trajectory and a PD controller with gravity feedforward. Feedforward supplies the holding torque
-before a position error is needed. Remove it and the controller must let the arm sag to create enough corrective torque. The planned
-destination stays the same, but the actual tip can miss the placing point.
+Gravity feedforward adds that push in advance. Without it, the controller pushes back only after the arm has sagged, and the push grows with the sag. The arm therefore settles lower than planned, and the ball lands beside the marker.
 
 ## The Problem
 
-Every earlier lesson passes its own test, yet the parts have never had to work together. A pick-and-place run needs all of them at once. A fault in one shows up as a miss at the end. Here you build the whole chain on a simulated planar arm and learn to read where a miss comes from.
+Every earlier lesson passes its own test, yet in this run the ball lands 2 cm from the marker. Here you build the whole chain in simulation and learn where a miss comes from.
 
 ## The Concept
 
 ![Parts of the pick-and-place system](../assets/diagram-pick-place-system.png)
 
-*Targets become joint waypoints, waypoints become a smooth path, and a PD loop with gravity feedforward drives a simulated arm. The tip error at B decides pass or fail.*
+*Follow the numbers. IK (inverse kinematics) finds the joint angles that put the hand on each stop, a quintic (a curve that starts and ends at rest) joins them, and a PD loop (push for error, brake for speed) drives the arm along it with gravity feedforward added.*
 
 ![Break test diagram](../assets/diagram-pick-place-broken.png)
 
-*Without feedforward the full gravity torque becomes a residual, and the position spring turns it into sag.*
+*Read the chain from the left: without feedforward all of gravity's torque becomes error, which the position spring turns into sag.*
+
+Hold the arm at B. The shoulder must carry 6.11 Nm (`gravity()`). With `kp = 150` (Nm of push per radian of error) and no feedforward the spring must supply all of it, so the shoulder sinks about `6.11 / 150 = 0.04` rad. The tip is about 0.5 m from the shoulder, so it moves about `0.04 × 0.5 = 0.02` m. `run()` reports 20.24 mm.
+
+![Two bench arms hold a ball over the marker while one loses its feedforward](../assets/clip-example.mp4)
+
+*Watch the blue arm when its feedforward is switched off: it sinks about 0.04 rad and stops 20 mm from the marker. The green arm keeps it and stays put. Sag is drawn 6 times larger.*
 
 ![The task succeeding](../assets/fig-pick-place-result.png)
 
-*The tip hovers over A, picks, lifts, hovers over B and places. It lags the plan by up to 9 mm while moving, then settles to 0.00 mm at B.*
+*Watch the tip: hover over A, pick, lift, hover over B, place. It lags the plan by up to 9 mm while moving, because the controller reacts only after an error appears, then settles to 0.00 mm at B.*
 
 ![Sag against the plan](../assets/fig-pick-place-sag.png)
 
-*Without feedforward the tip sits 14 to 37 mm off the plan after the start and places 20 mm from B, so the check fails.*
+*Compare with the last picture: without feedforward the tip sits 14 to 37 mm off the plan and places 20 mm from B, so the check fails.*
 
 ## Build It
 
-The new part is the arm itself: `M(q) a + C(q, v) + g(q) = tau`, stepped every millisecond.
+The new part is the arm itself: `M(q) a + C(q, v) + g(q) = tau` (inertia, motion-coupling and gravity terms), stepped every millisecond.
 
 ```python
 q, v = step(q, v, ff * gravity(qd) + kp * (qd - q) + kd * (vd - v))
 ```
 
-`ik()` gives the waypoints, `reference()` gives `qd, vd` along quintic segments, and `ff` scales the feedforward from `gravity()`. `run()` returns the pick error, the place error and `passed` (place error below 5 mm). A free-swing energy test checks the Coriolis terms.
+`ik()` gives the waypoints, `reference()` gives the planned angles and speeds `qd, vd` along quintic segments, and `ff` scales the feedforward from `gravity()`. `run()` returns the pick error, the place error and `passed` (place error below 5 mm). A free-swing energy test checks the Coriolis terms.
 
 ```bash
 cd robotics-engineering-from-scratch

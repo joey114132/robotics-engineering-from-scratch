@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Bolt a 100:1 gearbox on me and the load shrinks to a rumor. My motor barely notices what I am holding.",
-    "mission": "In `code/main.py` change the load inertia `2e-3` to `2e-1`. Will the N = 100 number stay near 1, go near 2, or reach 100? Predict, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change the load inertia `2e-3` to `2e-1`. Will the N = 100 number stay near 1, go near 2, or reach 100? Predict, then run `python3 code/main.py`.",
+    "clip": "Four motor and gearbox sets, each with a motor pinion and an output gear. In each row the bare motor is on the left and the one carrying an amber flywheel load is on the right. In the top row (N = 10) the loaded pinion trails the bare one. In the bottom row (N = 100) the two pinions keep together, so the drive cannot see the load. Rendered from this lesson's `spin_up()`: the first 20 ms at 240 times slower, with each output gear turning N times slower than its pinion."
   },
   "ko": {
     "hook": "100:1 gearbox를 달면 부하는 소문처럼 작아집니다. 제 motor는 제가 뭘 들고 있는지 거의 모릅니다.",
-    "mission": "`code/main.py`에서 부하 관성 `2e-3`을 `2e-1`로 바꾸세요. N = 100의 값이 1 근처일지 2 근처일지 100일지 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 부하 관성 `2e-3`을 `2e-1`로 바꾸세요. N = 100의 값이 1 근처일지 2 근처일지 100일지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "motor와 gearbox 네 벌이고, 각각 motor pinion과 출력 gear가 있습니다. 한 줄에서 왼쪽은 부하 없는 motor이고 오른쪽은 호박색 flywheel 부하를 단 motor입니다. 위 줄(N = 10)에서는 부하를 단 pinion이 부하 없는 pinion보다 뒤처집니다. 아래 줄(N = 100)에서는 두 pinion이 함께 돌아서 drive가 부하를 볼 수 없습니다. 이 레슨의 `spin_up()` 결과에서 처음 20 ms를 240배 느리게 렌더했고, 출력 gear는 pinion보다 N배 느리게 돕니다."
   },
   "toy": null,
-  "motion": "reflected-load",
   "three": "gearbox-shafts-3d"
 }

@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "시연으로 정책을 학습할 때 라벨은 무엇입니까?", "options": ["그 스텝의 reward", "그 상태에서 전문가가 한 행동", "다음 상태"], "answer": 1, "explanation": "모방은 관측에서 전문가의 행동으로 가는 회귀입니다."},
-  {"id": 2, "stage": "check", "question": "전문가가 어떤 시작점에서는 장애물의 왼쪽으로, 다른 곳에서는 오른쪽으로 지나갑니다. 최소제곱 직선은 가운데 근처에서 무엇을 예측합니까?", "options": ["평균이라서 직진합니다", "항상 왼쪽입니다", "항상 오른쪽입니다"], "answer": 0, "explanation": "매끈한 규칙 하나는 두 모드를 평균합니다."},
+  {"id": 1, "stage": "pre", "question": "시연으로 policy를 학습할 때 라벨은 무엇입니까?", "options": ["그 스텝의 reward", "그 상태에서 전문가가 한 행동", "다음 상태"], "answer": 1, "explanation": "모방은 관측에서 전문가의 행동으로 가는 regression입니다."},
+  {"id": 2, "stage": "check", "question": "전문가가 어떤 시작점에서는 장애물의 왼쪽으로, 다른 곳에서는 오른쪽으로 지나갑니다. least squares 직선은 가운데 근처에서 무엇을 예측합니까?", "options": ["평균이라서 직진합니다", "항상 왼쪽입니다", "항상 오른쪽입니다"], "answer": 0, "explanation": "매끈한 규칙 하나는 두 모드를 평균합니다."},
   {"id": 3, "stage": "check", "question": "시연이 하나뿐일 때 3-NN은 왜 거의 성공하지 못합니까?", "options": ["이웃이 없습니다", "대부분의 시작점이 기록된 경로 하나에서 멉니다", "전문가에 noise가 있습니다"], "answer": 1, "explanation": "먼 이웃의 행동은 다른 상황을 위한 것입니다."},
   {"id": 4, "stage": "check", "question": "success()가 요구하는 것은 무엇입니까?", "options": ["목표 도달만", "장애물에 들어가지 않고 목표 근처에서 끝남", "전문가 경로와 똑같음"], "answer": 1, "explanation": "목표에 닿아도 장애물을 건드렸으면 실패입니다."},
-  {"id": 5, "stage": "post", "question": "최근접 이웃 정책의 성공률을 가장 확실하게 올리는 것은 무엇입니까?", "options": ["더 많은 시작점을 덮는 시연", "더 작은 dt", "더 긴 horizon"], "answer": 0, "explanation": "정책이 만날 상태를 덮는 범위가 부족한 것입니다."},
+  {"id": 5, "stage": "post", "question": "nearest neighbour policy의 성공률을 가장 확실하게 올리는 것은 무엇입니까?", "options": ["더 많은 시작점을 덮는 시연", "더 작은 dt", "더 긴 horizon"], "answer": 0, "explanation": "policy가 만날 상태를 덮는 범위가 부족한 것입니다."},
   {"id": 6, "stage": "post", "question": "시연 데이터에는 있고 reward에는 없는 비용은 무엇입니까?", "options": ["없습니다", "작업을 해낼 수 있는 전문가가 필요합니다", "동역학 모델이 필요합니다"], "answer": 1, "explanation": "데이터는 그것을 만든 사람이나 제어기만큼만 좋습니다."}
 ]

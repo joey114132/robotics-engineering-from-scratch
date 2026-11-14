@@ -6,33 +6,35 @@
 
 ## In Plain Words
 
-Students record a ball relay on separate watches. A watch running ahead can make an earlier handoff appear
-later. Correcting its offset restores the sequence; an exchange timed at both ends estimates that offset, with
-unequal travel delays leaving error.
-
-A robot has the same clock problem across computers. Its trace also needs the state before and after each
-action. Comparing those records with the intended handoffs reveals the first missing action, unchanged state,
-or wrong result.
+A car carries an IMU that feels motion and a camera that sees the road, on separate computers. A filter, the program that merges their readings, trusts each reading's time stamp. The camera's clock runs ahead, so its readings carry stamps from the future, the filter sees events in the wrong order, and its idea of where the car is jumps ahead and back. Subtracting the clock offset fixes this. Measuring the offset takes a request and a reply with noted times.
 
 ## The Problem
 
-A fusion filter gets camera and IMU samples from two computers and behaves as if the robot jerks backwards. Every sample is correct, but the camera clock runs 30 ms ahead, so the filter sees events in the wrong order. When the run later fails, nobody can tell which step first went wrong.
+A fusion filter merges camera and IMU samples from two computers, and the car it tracks jumps ahead and back. Every sample is correct, but the camera clock runs 30 ms ahead, so a camera sample taken first can get a later stamp than an IMU sample taken after it. When a run later fails, nobody can tell which step went wrong first, unless each step logged its state.
 
 ## The Concept
 
 ![Four timestamps](../assets/diagram-offset-exchange.png)
 
-*A request and reply give four timestamps. Half of the sum of the two one-way differences is the offset.*
+*Follow the numbers 1 to 5. The offset is half the sum of `t1 - t0` and `t2 - t3`.*
 
-The formula is exact when the way out and the way back take equally long. With unequal delays the error is half the difference, and never more than half the round trip, so the exchange with the smallest round trip is the one to trust.
+The client sends a request at t0 and gets the reply at t3, on its own clock. The server receives at t1 and replies at t2, on its clock. Example: the server clock is 50 ms ahead and each trip takes 20 ms, so `t1 - t0` is 70 ms and `t2 - t3` is 30 ms. Their average is 50 ms, because the trip time is added once and subtracted once. With 30 ms out and 10 ms back it is 60 ms, off by half the difference of the delays. The error never exceeds half the round trip, so trust the exchange with the smallest round trip.
 
 ![Offset estimate and order errors](../assets/fig-time-sync.png)
 
-*Left: the lowest-delay exchange of 8 has a much tighter error than a single one. Right: with sensors 10 ms apart, an offset above 10 ms reorders them, and removing a 1 ms-accurate estimate restores the order.*
+*Left: the best of 8 exchanges has a tighter error than one. Right: sensors 10 ms apart swap order when the offset exceeds 10 ms; an estimate 1 ms off restores it.*
+
+A trace is a log with one JSON line (a plain-text record) per step, holding the state before (`pre`) and after (`post`). An intent is what the step should achieve. The reader names the first failure: `not_executed`, `no_motion` (state unchanged) or `wrong_motion` (ended elsewhere).
 
 ![Trace reader](../assets/diagram-trace-reader.png)
 
-*Each trace line holds the state before and after one step. The reader checks each intent in order and stops at the first record that does not match.*
+*The reader checks intents in order and stops at the first mismatch.*
+
+Example: three targets, but step 2 leaves `pre` and `post` identical. `first_mismatch()` returns step 2, `no_motion`, and never looks at step 3.
+
+![Arm skips target two, reader stops](../assets/clip-example.mp4)
+
+*The arm misses the middle target. The reader turns the first green and the second red, then stops.*
 
 ## Build It
 
@@ -41,7 +43,7 @@ def estimate(t0, t1, t2, t3):
     return ((t1 - t0) + (t2 - t3)) / 2, (t3 - t0) - (t2 - t1)
 ```
 
-`order_errors()` sorts two sensor streams by stamp and counts slots that differ from the true order. `trace_line()` writes one JSON object per step with `pre` and `post`. `first_mismatch()` returns `not_executed`, `no_motion` or `wrong_motion` for the first intent that fails.
+`order_errors()` counts slots where sorting by stamp differs from the true order. `trace_line()` writes one JSON object per step. `first_mismatch()` returns the first failing intent.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -50,13 +52,13 @@ python3 -m pytest phases/05-robot-software/04-time-sync-and-traces -q
 
 ## Use It
 
-In practice the system clock is synchronised by a service such as NTP, and ROS 2 asks for synchronised system clocks across a network. Compare `estimate()` with the offset and delay definitions in the NTP specification.
+Compare `estimate()` with the offset and delay definitions in the NTP specification.
 
 Sources: RFC 5905 (https://datatracker.ietf.org/doc/html/rfc5905) and ROS 2 design article "Clock and Time" (https://design.ros2.org/articles/clock_and_time.html), both read 2026-11-09.
 
 ## Ship It
 
-`outputs/skill-trace-first-mismatch.md` reads a trace and names the first step that did not do what it was meant to.
+`outputs/skill-trace-first-mismatch.md` reads a trace and names the first failing step.
 
 ## Exercises
 

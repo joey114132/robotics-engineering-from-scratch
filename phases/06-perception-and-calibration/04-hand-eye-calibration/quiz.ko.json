@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "gripper에 단 카메라가 가리키는 목표가 늘 같은 만큼 어긋납니다. 가장 의심스러운 변환은 무엇입니까?", "options": ["로봇 base frame", "카메라에서 gripper로 가는 X", "영상 너비"], "answer": 1, "explanation": "카메라와 gripper 사이의 고정 오프셋은 모든 목표를 같은 방향으로 밀어냅니다."},
+  {"id": 1, "stage": "pre", "question": "gripper에 단 카메라로 구한 목표 위치가 늘 같은 만큼 어긋납니다. 가장 의심스러운 변환은 무엇입니까?", "options": ["로봇 base frame", "카메라에서 gripper로 가는 X", "영상 너비"], "answer": 1, "explanation": "카메라와 gripper 사이의 고정 오프셋은 모든 목표를 같은 방향으로 밀어냅니다."},
   {"id": 2, "stage": "check", "question": "모든 움직임에서 A X = X B가 성립하는 이유는 무엇입니까?", "options": ["카메라가 gripper에 고정되어 X가 변하지 않기 때문이다", "A와 B가 항상 같기 때문이다", "타깃이 로봇과 함께 움직이기 때문이다"], "answer": 0, "explanation": "같은 움직임을 상수 X로 이어진 두 frame에서 본 것입니다."},
   {"id": 3, "stage": "check", "question": "R_X는 어떻게 구합니까?", "options": ["이동을 평균 낸다", "카메라 행렬을 역행렬로 만든다", "A와 B의 회전축을 SVD로 정렬한다"], "answer": 2, "explanation": "log(R_A) = R_X log(R_B)는 회전 정렬 문제입니다."},
   {"id": 4, "stage": "check", "question": "R_X를 구한 뒤 t_X는 어떻게 구합니까?", "options": ["축에 SVD를 한 번 더 쓴다", "(R_A - I) t = R_X t_B - t_A에 선형 최소제곱을 쓴다", "영상에서 읽는다"], "answer": 1, "explanation": "이동 식은 t_X에 대해 선형입니다."},
   {"id": 5, "stage": "post", "question": "보정 움직임이 모두 같은 축으로만 회전합니다. 정해지지 않는 것은 무엇입니까?", "options": ["그 축 주위의 비틀림과 그 축 방향 오프셋", "없다", "영상 스케일뿐이다"], "answer": 0, "explanation": "모든 R_A - I의 null space에 그 축이 들어 있습니다."},
-  {"id": 6, "stage": "post", "question": "로봇을 움직이기 전에 이 문제를 알려 주는 값은 무엇입니까?", "options": ["영상 해상도", "타깃의 픽셀 수", "축 상관 행렬의 둘째/첫째 singular value 비율"], "answer": 2, "explanation": "비율이 0에 가까우면 축이 거의 평행합니다."}
+  {"id": 6, "stage": "post", "question": "로봇을 움직이기 전에 이 문제를 알려 주는 값은 무엇입니까?", "options": ["영상 해상도", "타깃의 pixel 수", "축 상관 행렬의 둘째/첫째 singular value 비율"], "answer": 2, "explanation": "비율이 0에 가까우면 축이 거의 평행합니다."}
 ]

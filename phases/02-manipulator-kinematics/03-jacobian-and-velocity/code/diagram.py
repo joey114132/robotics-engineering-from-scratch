@@ -9,33 +9,33 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def bridge():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("One matrix J, used twice")
-    qd = d.box("Joint speeds\nq-dot", 0, 0, "blue", w=210)
-    v = d.box("Tip speed\nv = J q-dot", 2, 0, "green", w=220)
-    tau = d.box("Joint torques\ntau = J^T F", 0, 1, "green", w=220)
-    f = d.box("Tip force\nF", 2, 1, "blue", w=210)
-    j = d.box("J(q)\nchanges with pose", 1, 0.5, "purple", w=210)
-    d.arrow(qd, j)
-    d.arrow(j, v)
-    d.arrow(f, j)
-    d.arrow(j, tau)
-    d.note("Speeds go through J, forces come back through J transposed.", d.margin, d.margin + 60 + 2 * d.ch - 10, size=22)
+    qd = d.box("Speeds\nq-dot", col=0, row=0, color="blue")
+    j1 = d.box("Times J", col=1, row=0, color="purple")
+    v = d.box("Tip speed\nv = J q-dot", col=2, row=0, color="green")
+    f = d.box("Force F\n(2 kg block)", col=0, row=1, color="blue")
+    j2 = d.box("Times J^T", col=1, row=1, color="purple")
+    tau = d.box("Torques\ntau = J^T F", col=2, row=1, color="green")
+    d.arrow(qd, j1)
+    d.arrow(j1, v)
+    d.arrow(f, j2)
+    d.arrow(j2, tau)
     d.save(OUT / "diagram-bridge.excalidraw")
 
 
 def two_ways():
-    d = Diagram(cell=(340, 150))
+    d = Diagram()
     d.title("Two ways to build J, one answer")
-    a = d.box("Analytic\ndifferentiate FK by hand", 1, 0, "purple", w=260)
-    b = d.box("Finite difference\nnudge a joint, watch the tip", 1, 1, "purple", w=290)
-    fk = d.box("FK(q)", 0, 0.5, "blue", w=140)
-    c = d.box("Compare the\ntwo matrices", 2, 0.5, "yellow", w=210)
-    ok = d.box("Agree to 1e-8:\nboth are right", 3, 0, "green", w=220)
-    no = d.box("Disagree:\nfind the bug", 3, 1, "red", w=220)
-    for s, t in ((fk, a), (fk, b), (a, c), (b, c), (c, ok), (c, no)):
-        d.arrow(s, t)
+    a = d.box("Build J twice:\nby formula, by nudging", col=0, row=0.5, color="purple")
+    c = d.box("Same J?", col=1, row=0.5, color="yellow", shape="diamond")
+    ok = d.box("Yes: both\nare right", col=2, row=0, color="green")
+    no = d.box("No: find\nthe bug", col=2, row=1, color="red")
+    d.arrow(a, c)
+    d.arrow(c, ok, label="yes")
+    d.arrow(c, no, label="no")
     d.save(OUT / "diagram-two-ways.excalidraw")
+    print(d.warnings)
 
 
 if __name__ == "__main__":

@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Can't write a reward? Fine, I'll watch you and copy. Lazy, but it works once I've seen enough runs.",
-    "mission": "Change `(1, 3, 10, 30)` to `(2, 5, 20)` in `code/main.py`. Guess how many demos 3-NN needs to reach 90%, then run `python3 code/main.py`."
+    "mission": "Change `(1, 3, 10, 30)` to `(2, 5, 20)` in `code/main.py`. Guess how many demos 3-NN needs to reach 90%, then run `python3 code/main.py`.",
+    "clip": "Two rovers learned from the same ten demonstrations, the grey lines, and now drive alone. The green one uses 3-nearest-neighbours and goes around the pillar to the goal. The blue one uses a straight-line fit and runs into the pillar's grey keep-out disc, where it stops. Paths come from this lesson's `collect()`, `fit_knn()`, `fit_linear()` and `rollout()`, played 1.5 times slower."
   },
   "ko": {
     "hook": "reward를 못 쓰겠다고요? 그럼 보고 따라 할게요. 게으른 방법이지만 시연이 충분하면 꽤 통합니다.",
-    "mission": "`code/main.py`의 `(1, 3, 10, 30)`을 `(2, 5, 20)`으로 바꾸세요. 3-NN이 90%에 닿으려면 시연이 몇 개 필요할지 짐작한 뒤 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`의 `(1, 3, 10, 30)`을 `(2, 5, 20)`으로 바꾸세요. 3-NN이 90%에 닿으려면 시연이 몇 개 필요할지 짐작한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 로버가 같은 시연 10개(회색 선)를 보고 배운 뒤 혼자 달립니다. 초록 로버는 3-nearest-neighbours를 써서 기둥을 돌아 목표에 닿습니다. 파랑 로버는 직선 fit을 써서 기둥 주위의 회색 금지 원판에 들어가 멈춥니다. 경로는 이 레슨의 `collect()`, `fit_knn()`, `fit_linear()`, `rollout()`으로 계산했고 1.5배 느리게 재생합니다."
   },
   "toy": null,
-  "motion": "demos-fan-in",
   "three": "imitation-demos-3d"
 }

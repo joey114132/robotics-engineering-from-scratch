@@ -1,4 +1,4 @@
-# 레슨 01/04 도해: 이름 붙은 frame 트리와 공통 조상을 거치는 조회 경로를 Excalidraw 로 그린다
+# 레슨 01/04 도해: 카메라, 손(tool), 컵이 달린 frame 트리와 공통 조상 base 를 거치는 조회 경로를 Excalidraw 로 그린다
 import pathlib
 import sys
 
@@ -9,28 +9,28 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def tree():
-    d = Diagram(cell=(300, 150))
+    d = Diagram()
     d.title("A transform tree: one parent per frame")
-    w = d.box("world", 0, 0.5, "gray", w=180)
-    b = d.box("base", 1, 0.5, "blue", w=180)
-    c = d.box("cam", 2, 0, "purple", w=180)
-    t = d.box("tool", 2, 1, "purple", w=180)
-    cup = d.box("cup", 3, 0, "yellow", w=180)
+    w = d.box("world", 0, 0, "gray")
+    b = d.box("base\narm foot", 1, 0, "blue")
+    c = d.box("cam\ncamera", 2, 0, "purple")
+    t = d.box("tool\nhand", 1, 1, "purple")
+    cup = d.box("cup", 2, 1, "yellow")
     for s, e in ((w, b), (b, c), (b, t), (c, cup)):
         d.arrow(s, e)
-    d.note("Each arrow stores T_parent_child.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=20)
     d.save(OUT / "diagram-tf-tree.excalidraw")
 
 
 def lookup():
-    d = Diagram(cell=(330, 170))
+    d = Diagram(numbered=True)
     d.title("lookup(tool, cup) = T_tool_cup")
-    a = d.box("Up from cup\ncup, cam, base", 0, 0, "blue", w=240)
-    b = d.box("Up from tool\ntool, base", 0, 1, "blue", w=240)
-    c = d.box("Common ancestor\nbase", 1, 0.5, "yellow", w=220)
-    r = d.box("inv(T_base_tool) @\nT_base_cup", 2, 0.5, "green", w=260)
-    for s, e in ((a, c), (b, c), (c, r)):
-        d.arrow(s, e)
+    a = d.box("Climb from cup\ncup, cam, base", 0, 0, "blue", step=1)
+    c = d.box("Meet at\nbase", 1, 0, "yellow", step=3)
+    b = d.box("Climb from tool\ntool, base", 2, 0, "blue", step=2)
+    r = d.box("inv(T_base_tool) @\nT_base_cup", 1, 1, "green", step=4)
+    d.arrow(a, c)
+    d.arrow(b, c)
+    d.arrow(c, r)
     d.save(OUT / "diagram-tf-lookup.excalidraw")
 
 

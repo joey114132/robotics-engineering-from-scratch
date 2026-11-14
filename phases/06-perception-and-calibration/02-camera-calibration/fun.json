@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "My datasheet swears the focal length is perfect and my camera begs to differ. A few tilted views of a grid will settle it.",
-    "mission": "In `code/main.py` change `make_views(K, 6, 0.5, 1)` to use 3 views and run `python3 code/main.py`. Predict whether the pixel error rises or falls, then compare with the original 2.24."
+    "mission": "In `code/main.py` change `make_views(K, 6, 0.5, 1)` to use 3 views and run `python3 code/main.py`. Predict whether the pixel error rises or falls, then compare with the original 2.24.",
+    "clip": "A checkerboard visits six tilted poses in front of a camera, and this lesson's `calibrate()` turns those six views (0.5 px noise) into `fx, fy, cx, cy`. A pixel near the image edge is then turned back into a 3D point. Amber is the truth, green uses the calibrated values (about 0.5 cm off), and blue uses datasheet values (about 6 cm off). Board poses come from `make_views()`, at true scale."
   },
   "ko": {
-    "hook": "데이터시트는 초점 거리가 완벽하다고 우깁니다. 제 카메라는 생각이 다릅니다. 기울인 격자 몇 장이면 결판이 납니다.",
-    "mission": "`code/main.py`에서 `make_views(K, 6, 0.5, 1)`의 6을 3으로 바꾸고 `python3 code/main.py`를 실행하세요. 픽셀 오차가 오를지 내릴지 먼저 예측하고 원래 값 2.24와 비교하세요."
+    "hook": "datasheet는 focal length가 완벽하다고 우깁니다. 제 카메라는 생각이 다릅니다. 기울인 격자 몇 장이면 결판이 납니다.",
+    "mission": "`code/main.py`에서 `make_views(K, 6, 0.5, 1)`의 6을 3으로 바꾸고 `python3 code/main.py`를 실행하세요. pixel 오차가 오를지 내릴지 먼저 예측하고 원래 값 2.24와 비교하세요.",
+    "clip": "체커보드가 카메라 앞에서 기울어진 여섯 자세를 거칩니다. 이 레슨의 `calibrate()`가 그 여섯 장(pixel noise 0.5 px)으로 `fx, fy, cx, cy`를 구합니다. 그다음 영상 가장자리의 pixel 하나를 3D 점으로 되돌립니다. 주황은 실제 위치이고 초록은 보정한 값으로 계산한 점으로 약 0.5 cm, 파랑은 datasheet 값으로 계산한 점으로 약 6 cm 벗어납니다. 보드 자세는 `make_views()`가 뽑은 것이고 크기는 실제 그대로입니다."
   },
   "toy": null,
-  "motion": "calib-views",
   "three": "camera-calibration-3d"
 }

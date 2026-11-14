@@ -9,32 +9,35 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def flow():
-    d = Diagram(cell=(300, 170))
+    d = Diagram()
     d.title("A heartbeat keeps the joint allowed to move")
-    src = d.box("Command source\nplanner or UI", 0, 0, "blue", w=220)
-    loop = d.box("Joint loop\nlatches last command", 1, 0, "yellow", w=240)
-    wd = d.box("Watchdog\nsilence > timeout?", 1, 1.3, "purple", w=240)
-    stop = d.box("Stop action\nramp to rest", 2, 1.3, "green", w=220)
+    src = d.box("Program\nsends commands", col=0, row=0, color="blue")
+    loop = d.box("Arm joint\nkeeps the last command", col=1, row=0, color="yellow")
+    wd = d.box("Watchdog\nno heartbeat for T?", col=0, row=1, color="purple")
+    stop = d.box("Stop action\nbrake to rest", col=1, row=1, color="green")
     d.arrow(src, loop, label="command")
-    d.arrow(src, wd, label="heartbeat", dashed=True, label_dy=-10)
+    d.arrow(src, wd, label="heartbeat", dashed=True)
     d.arrow(wd, stop, label="trip")
     d.arrow(stop, loop, label="takes over")
+    d.note("If the program crashes, the heartbeat stops and the watchdog trips.", d.margin, d.margin + 60 + 2 * d.ch)
     d.save(OUT / "diagram-watchdog-flow.excalidraw")
+    return d
 
 
 def budget():
-    d = Diagram(cell=(300, 170))
-    d.title("The distance budget after the source dies")
-    a = d.box("Source dies\nat speed v", 0, 0, "red", w=210)
-    b = d.box("Timeout T\ntravel v * T", 1, 0, "yellow", w=210)
-    c = d.box("Braking\ntravel v^2 / 2a", 2, 0, "purple", w=210)
-    e = d.box("At rest\nbefore the limit", 3, 0, "green", w=210)
+    d = Diagram(numbered=True)
+    d.title("The distance budget after the program dies")
+    a = d.box("Program dies\narm at speed v", col=0, row=0, color="red")
+    b = d.box("Timeout T\narm travels v * T", col=1, row=0, color="yellow")
+    c = d.box("Braking\narm travels v^2 / 2a", col=2, row=0, color="purple")
+    e = d.box("At rest\nbefore the stop", col=3, row=0, color="green")
     for s, t in ((a, b), (b, c), (c, e)):
         d.arrow(s, t)
-    d.note("v * T + v^2 / (2a) <= room to the limit,  so  T <= (room - v^2 / 2a) / v", d.margin, d.margin + 60 + d.ch - 10, size=22)
+    d.note("v * T + v^2 / (2a) <= room to the stop, so T <= (room - v^2 / 2a) / v", d.margin, d.margin + 60 + 2 * d.ch)
     d.save(OUT / "diagram-stop-budget.excalidraw")
+    return d
 
 
 if __name__ == "__main__":
-    flow()
-    budget()
+    for dd in (flow(), budget()):
+        print(dd.warnings)

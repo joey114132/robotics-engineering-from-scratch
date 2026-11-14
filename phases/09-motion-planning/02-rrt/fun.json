@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Throw darts at the map and grow a twig toward each one. It looks like chaos, yet the tree finds the exit.",
-    "mission": "In `code/main.py` add `step=1.5` as the last argument of the `rrt(...)` call and run `python3 code/main.py`. Predict whether the tree gets more or fewer nodes than the 146 it grew with step 0.4."
+    "mission": "In `code/main.py` add `step=1.5` as the last argument of the `rrt(...)` call and run `python3 code/main.py`. Predict whether the tree gets more or fewer nodes than the 146 it grew with step 0.4.",
+    "clip": "A rover plans a route across a field with three rocks. The grey tree is grown from the start by `rrt()`, the blue line is the first path it finds, and the green line is the same path after `shortcut()`. Planning uses each rock grown by the rover's radius, and 1 lesson unit is drawn as 0.4 m. The rover then drives the green path."
   },
   "ko": {
     "hook": "지도에 다트를 던지고 다트마다 잔가지를 뻗습니다. 난장판 같아도 출구는 찾아냅니다.",
-    "mission": "`code/main.py`의 `rrt(...)` 호출 끝에 `step=1.5`를 인자로 더하고 `python3 code/main.py`를 실행하세요. node 수가 step 0.4일 때의 146개보다 늘지 줄지 먼저 예측하세요."
+    "mission": "`code/main.py`의 `rrt(...)` 호출 끝에 `step=1.5`를 인자로 더하고 `python3 code/main.py`를 실행하세요. node 수가 step 0.4일 때의 146개보다 늘지 줄지 먼저 예측하세요.",
+    "clip": "탐사 로봇이 바위 세 개가 있는 들판을 가로지르는 경로를 계획합니다. 회색 나무는 `rrt()`가 시작점에서 키운 것이고 파란 선은 처음 찾은 경로이며 초록 선은 `shortcut()`을 거친 같은 경로입니다. 계획할 때는 바위를 로봇 반지름만큼 키워서 썼고 레슨의 1 단위를 0.4 m로 그렸습니다. 로봇은 마지막에 초록 경로를 따라 갑니다."
   },
   "toy": "rrt",
-  "motion": "rrt-shortcut",
   "three": "rrt-volume-3d"
 }

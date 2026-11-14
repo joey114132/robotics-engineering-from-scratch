@@ -33,7 +33,7 @@
    "w = 1일 때"
   ],
   "answer": 0,
-  "explanation": "상쇄 뒤에는 감쇠 항만 남습니다."
+  "explanation": "상쇄 뒤에는 damping 항만 남습니다."
  },
  {
   "id": 4,

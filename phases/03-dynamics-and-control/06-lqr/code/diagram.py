@@ -9,27 +9,27 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def flow():
-    d = Diagram()
+    d = Diagram(numbered=True)
     d.title("LQR: say what you hate, get the gain")
-    q = d.box("Q: error hurts\nR: effort hurts", 0, 0.5, "blue")
-    m = d.box("Model\nx+ = A x + B u", 0, 1.5, "yellow")
-    r = d.box("Riccati loop\nrepeat until P is steady", 1, 1, "purple", w=250)
-    k = d.box("Gain K", 2, 1, "green", w=180)
-    u = d.box("u = -K x", 3, 1, "green", w=180)
+    q = d.box("Q: error hurts\nR: effort hurts", 0, 0, "blue", step=1)
+    m = d.box("Car model\nx+ = A x + B u", 1, 0, "yellow", step=2)
+    r = d.box("Riccati loop,\nuntil P is steady", 0.5, 1, "purple", step=3)
+    k = d.box("Gain K", 0.5, 2, "green", step=4)
+    u = d.box("Push: u = -K x", 0.5, 3, "green", step=5)
     for s, t in ((q, r), (m, r), (r, k), (k, u)):
         d.arrow(s, t)
-    d.note("You tune two weights. The math tunes every entry of K.", d.margin, d.margin + 60 + 2.4 * d.ch, size=22)
+    d.note("You tune two weights. The math tunes every entry of K.", near=u, side="b")
     d.save(OUT / "diagram-lqr-flow.excalidraw")
 
 
 def tradeoff():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("R sets how much effort you will pay for")
-    r = d.box("Pick R", 0, 1, "gray", w=200)
-    lo = d.box("R small\neffort is cheap", 1, 0, "red", w=250)
-    hi = d.box("R large\neffort is costly", 1, 2, "blue", w=250)
-    a = d.box("Fast, big peak input,\nmay saturate", 2, 0, "red", w=270)
-    b = d.box("Slow, gentle,\nsmall peak input", 2, 2, "blue", w=270)
+    r = d.box("Pick R", 0.5, 0, "gray")
+    lo = d.box("R small (0.01):\neffort is cheap", 0, 1, "red")
+    hi = d.box("R large (10):\neffort is costly", 1, 1, "blue")
+    a = d.box("Fast, first push\n8.7, may saturate", 0, 2, "red")
+    b = d.box("Slow, gentle,\nfirst push 0.3", 1, 2, "blue")
     for s, t in ((r, lo), (r, hi), (lo, a), (hi, b)):
         d.arrow(s, t)
     d.save(OUT / "diagram-lqr-tradeoff.excalidraw")

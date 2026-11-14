@@ -12,25 +12,33 @@ A robot can make the same mistake. Wheel radius and the distance between the whe
 
 ## The Problem
 
-You drive a mobile robot around a 2 m square and the wheel odometry says it came back to the start. The tape measure says it stopped 18 cm away. The wheels turned exactly as commanded, so the motors are not at fault. The error is in two numbers you typed into a config file.
+A mobile robot drives a 2 m square, and its odometry (a position guess from wheel turns) says it returned to the start. A tape measure says it stopped 18 cm away. The wheels turned as commanded, so two config numbers are wrong: wheel radius and wheel spacing.
 
 ## The Concept
 
 ![From wheel speeds to a pose](../assets/diagram-wheels-to-pose.png)
 
-*Two wheel speeds become a forward speed and a turn rate. Adding them up over time gives the pose.*
+*Wheel speeds become a forward speed and a turn rate, which add up to the pose.*
 
-The forward speed is the average of the two wheel rims, `v = r (wr + wl) / 2`. The turn rate is their difference divided by the track width, `w = r (wr - wl) / b`. Dead reckoning adds `v dt` and `w dt` at every step.
+`wl` and `wr` are the spin speeds of the left and right wheels in rad/s, `r` is the wheel radius and `b` the track width, the distance between the wheels. A wheel's edge moves `r` times its spin, so the forward speed is the average of the two edges, `v = r (wr + wl) / 2`. The turn rate is their difference over `b`, `w = r (wr - wl) / b`.
 
-![Two small errors, two different damages](../assets/diagram-two-errors.png)
+For example, `r = 0.05 m`, `b = 0.30 m`, left wheel 10 rad/s, right wheel 14. Then `v = 0.6 m/s` and `w = 0.67 rad/s`. The right wheel covers more ground, so the robot circles left with radius `v / w = 0.9 m`.
 
-*The estimate uses the same wrong `r` and `b` as the planner, so it still closes the loop and shows no sign of the problem.*
+![Straight and circling rovers](../assets/clip-example.mp4)
+
+*Blue: 10 and 10 rad/s, straight. Green: 10 and 14, circling left.*
+
+Dead reckoning (tracking position by adding up motion) adds each step's `v dt` and `w dt` to the pose.
+
+![Two small errors, one hidden gap](../assets/diagram-two-errors.png)
+
+*The estimate uses the same wrong `r` and `b` as the plan, so it closes the loop and hides the problem.*
 
 ![The real path and the odometry path of one square](../assets/fig-odometry-drift.png)
 
-*Left: a track width 2% too large leaves the real robot 0.18 m from the start. Right: the gap grows linearly, and a radius error of the same size does almost the same damage.*
+*Left: dashed gray is what odometry believes, orange the real route. Right: the gap grows with the error.*
 
-Each corner turns by a wrong angle, and the four sides add up to a vector that no longer cancels. For a turn error `k`, the gap is `L |1 + e^(ia) + e^(2ia) + e^(3ia)|` with `a = (pi/2) / k`, and a test checks it.
+Say the real `b` is 2% larger than the config. Every real turn is then 2% smaller: each corner turns `a = 88.2°`, not 90°, so the four sides no longer cancel and the robot ends 0.18 m from the start. A wrong `r` scales every side and turn alike and opens the loop as much. The gap is `L |1 + e^(ia) + e^(2ia) + e^(3ia)|` for side length `L` (tested).
 
 ## Build It
 
@@ -45,7 +53,7 @@ def dead_reckon(wl, wr, dt, r, b, pose0=(0.0, 0.0, 0.0)):
     th = pose0[2] + np.cumsum(dth) - dth / 2
 ```
 
-`square_wheels()` plans the square with nominal `r` and `b`. `closure_error()` replays the commands with other `r` and `b`.
+`square_wheels()` plans the square with nominal `r` and `b`. `closure_error()` replays it with other values.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -55,7 +63,7 @@ python3 phases/08-mobile-robots/01-differential-drive-and-odometry/code/main.py
 
 ## Use It
 
-ROS 2's diff_drive_controller needs `wheel_separation` and `wheel_radius`. Its docs warn that a wrong separation makes the robot misbehave in curves and a wrong radius makes it move faster or slower than expected. It also offers `wheel_separation_multiplier` as a correction factor. Calibrate with a measured square.
+ROS 2's diff_drive_controller needs `wheel_separation` and `wheel_radius`. Its docs say a wrong separation misbehaves in curves and a wrong radius changes the speed. `wheel_separation_multiplier` corrects it.
 
 Sources: control.ros.org, diff_drive_controller user doc (jazzy), opened 2026-11-09.
 
@@ -65,6 +73,6 @@ Sources: control.ros.org, diff_drive_controller user doc (jazzy), opened 2026-11
 
 ## Exercises
 
-1. Give the two wheels different radii and show that a straight line bends.
-2. Drive the square clockwise and show that the gap vector is the mirror image of the counter-clockwise one.
+1. Give the wheels different radii and show that a line bends.
+2. Drive the square clockwise and show the gap vector mirrors the counter-clockwise one.
 3. Add 1% wheel slip on turns and find which error it looks like.

@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "The scariest faults are the quiet ones: no error, no alarm, just a joint happily walking into its stop.",
-    "mission": "In `code/main.py` change `ranked()` to `ranked(delay=0.3)`. Predict which rank the delay fault moves to, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `ranked()` to `ranked(delay=0.3)`. Predict which rank the delay fault moves to, then run `python3 code/main.py`.",
+    "clip": "Two bench joints run the same PD loop. On the green one the controller reads the sensor correctly and the joint settles. On the blue one the sensor freezes at 0.3 s; the grey ghost shows the reading the controller still believes. The controller keeps pushing against a frozen reading, the joint swings through the target and ends up at the hard stop on the other side, and the lamp lights when a cheap check finally trips. Rendered from this lesson's `simulate('stuck')` and `alarm_time()`, at one third speed."
   },
   "ko": {
     "hook": "제일 무서운 고장은 조용한 고장입니다. 에러도 알람도 없이 관절이 신나게 stop을 향해 걸어갑니다.",
-    "mission": "`code/main.py`에서 `ranked()`를 `ranked(delay=0.3)`으로 바꾸세요. delay 고장이 몇 위로 올라갈지 예측한 뒤 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `ranked()`를 `ranked(delay=0.3)`으로 바꾸세요. delay 고장이 몇 위로 옮겨 갈지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "작업대 위 관절 두 개가 같은 PD loop로 움직입니다. 초록 관절은 센서를 제대로 읽어서 목표에 자리를 잡습니다. 파란 관절은 0.3초에 센서가 얼어붙고, 회색 반투명 팔이 controller가 아직 믿고 있는 값을 보여 줍니다. controller는 멈춘 값에 맞춰 계속 밀고, 관절은 목표를 지나쳐 반대편 hard stop에 닿습니다. 간단한 검사가 마침내 걸리는 순간 램프가 켜집니다. 이 레슨의 `simulate('stuck')`와 `alarm_time()` 결과를 3분의 1 속도로 렌더했습니다."
   },
   "toy": null,
- "motion": "stuck-sensor",
  "three": "fault-joint-3d"
 }

@@ -9,32 +9,34 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def loop():
-    d = Diagram()
+    d = Diagram(numbered=True)
     d.title("One step of foot placement")
-    a = d.box("End of stance:\nread x and v", 0, 0.5, "blue")
-    b = d.box("Pick the next foot\nso v ends at target", 1, 0.5, "purple", w=250)
-    c = d.box("Swing foot lands,\nstance flips", 2, 0.5, "yellow")
-    e = d.box("Body rolls over\nthe new foot", 3, 0.5, "green")
+    a = d.box("Stance ends:\nread x and v", 0, 0, "blue", step=1)
+    b = d.box("Solve for the foot\nthat ends at v target", 1, 0, "purple", step=2)
+    c = d.box("Swing foot lands\nat that spot", 1, 1, "yellow", step=3)
+    e = d.box("Body rolls over\nthe new foot", 0, 1, "green", step=4)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.arrow(e, a, label="next step", route="below")
+    d.arrow(e, a, label="next step")
+    d.note("Deadbeat: the speed is exact after one step.", near=b, side="t")
     d.save(OUT / "diagram-foot-placement-loop.excalidraw")
+    print("warnings", d.warnings)
 
 
 def lengths():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("What the step length does to speed")
-    m = d.box("Step length\nvs the right one", 0, 1, "gray", w=240)
-    s = d.box("Too short", 1, 0, "red", w=220)
-    r = d.box("Right", 1, 1, "green", w=220)
-    l = d.box("Too long", 1, 2, "yellow", w=220)
-    rs = d.box("Speed grows every\nstep: runs away", 2, 0, "red", w=260)
-    rr = d.box("Speed locks on\nthe target", 2, 1, "green", w=260)
-    rl = d.box("Speed swings and\nthe body reverses", 2, 2, "yellow", w=260)
-    for p, q in ((m, s), (m, r), (m, l), (s, rs), (r, rr), (l, rl)):
+    s = d.box("Step 0.6x\n(too short)", 0, 0, "red")
+    rs = d.box("Speed 3.6 m/s by\nstep 5, still rising", 1, 0, "red")
+    r = d.box("Step 1.0x\n(deadbeat)", 0, 1, "green")
+    rr = d.box("Speed locks on\n0.6 m/s", 1, 1, "green")
+    l = d.box("Step 1.5x\n(too long)", 0, 2, "yellow")
+    rl = d.box("Speed swings, then\nreverses at step 5", 1, 2, "yellow")
+    for p, q in ((s, rs), (r, rr), (l, rl)):
         d.arrow(p, q)
     d.save(OUT / "diagram-step-length-outcomes.excalidraw")
+    print("warnings", d.warnings)
 
 
 if __name__ == "__main__":

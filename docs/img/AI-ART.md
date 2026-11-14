@@ -36,4 +36,12 @@ Scene sentence per phase (placed before the style sentence):
 | 15 | A robot arm inside a soft glowing protective bubble, with a red emergency-stop button and a small shield. |
 | 16 | A finished little robot built from many parts, standing on a podium with a small golden trophy, pastel confetti. |
 
-The pictures were checked by eye only. A Codex visual check is still pending.
+## Phase opening clips
+
+`phases/NN-*/opener.mp4` (and the poster `opener.jpg`) were made on 2026-11-13 with Higgsfield Kling 3.0 Turbo, image-to-video, 5 s, one per phase, each starting from that phase's cover above. They were scaled to 640 x 476 at 24 fps with ffmpeg (about 1.0 MB for all 17). The website plays one on the first lesson of each phase.
+
+## What is not AI-generated
+
+The lesson clips (`phases/*/*/assets/clip*.mp4`) are Blender renders from `code/clip*.py`, driven by the lesson's own `code/main.py` (see `scripts/blender/kit.py` and `scripts/build_clips.py`). Their look, including the "real" look with textures and the room, is made inside Blender. `scripts/restyle_clips.py` can restyle a clip with an AI video model, which writes a separate `*.real.mp4`; no such file ships with the course today.
+
+The pictures and opening clips were checked by eye only. A Codex visual check is still pending.

@@ -1,4 +1,4 @@
-# 레슨 16/03 도해: 학습 정책과 안전 wrapper 의 시스템 구성도, 정책 spike 와 관측 유실을 wrapper 가 막는 흐름을 Excalidraw 로 그린다
+# 레슨 16/03 도해: 학습 정책과 안전 wrapper 의 시스템 구성도, spike 와 관측 유실을 wrapper 가 막는 흐름을 Excalidraw 로 그린다
 import pathlib
 import sys
 
@@ -9,35 +9,34 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def system():
-    d = Diagram()
-    d.title("Learned policy inside a safety wrapper")
-    demo = d.box("Expert demos\nPD, lesson 03/04", 0, 0, "blue")
-    pol = d.box("Nearest-neighbour\npolicy, new here", 1, 0, "purple")
-    wrap = d.box("Safety wrapper\nclip, rate, hold", 2, 0, "green")
-    joint = d.box("Simulated joint\nlesson 03/01", 2, 1, "yellow")
-    obs = d.box("Observation\n+ age counter", 1, 1, "yellow")
-    for a, b in ((demo, pol), (pol, wrap), (wrap, joint), (joint, obs), (obs, pol)):
+    d = Diagram(numbered=True, columns=2)
+    d.title("A policy inside a safety wrapper")
+    demo = d.box("Expert demos\n(PD, 03/04)", 0, 0, "blue", step=1)
+    pol = d.box("Policy averages\nclose demos", 1, 0, "purple", step=2)
+    wrap = d.box("Wrapper: hold,\nclip, rate limit", 2, 0, "green", step=3)
+    arm = d.box("Arm joint\nmoves", 2, 1, "yellow", step=4)
+    cam = d.box("Camera picture\nof the joint", 1, 1, "yellow", step=5)
+    for a, b in ((demo, pol), (pol, wrap), (wrap, arm), (arm, cam)):
         d.arrow(a, b)
-    d.arrow(obs, wrap, dashed=True, label="age", label_dx=30)
-    d.note("The policy is learned. The wrapper is plain code that never learns and always runs.", d.margin, d.margin + 60 + 2 * d.ch - 10, size=18)
+    d.arrow(cam, pol, label="picture", dashed=True)
     d.save(OUT / "diagram-policy-system.excalidraw")
+    return d.warnings
 
 
 def broken():
-    d = Diagram()
-    d.title("Break test: two faults, one wrapper")
-    a = d.box("Policy spike\n+40 Nm, one step", 0, 0, "red")
-    b = d.box("Clip to the limit,\nlimit the rate", 1, 0, "green")
-    c = d.box("Joint barely\nnotices", 2, 0, "green")
-    e = d.box("Observation lost\n26 steps", 0, 1, "red")
-    f = d.box("Age over 3 steps:\nhold zero torque", 1, 1, "green")
-    g = d.box("Joint stays inside\nits limit", 2, 1, "green")
+    d = Diagram(columns=2)
+    d.title("Two faults, one wrapper")
+    a = d.box("Spike: policy\nasks 40 Nm", 0, 0, "red")
+    b = d.box("Clip to 3 Nm,\nrate limit", 1, 0, "green")
+    c = d.box("Joint gets\n0.81 Nm", 2, 0, "green")
+    e = d.box("Camera lost\nfor 26 steps", 0, 1, "red")
+    f = d.box("Picture older\nthan 3 steps: hold", 1, 1, "green")
+    g = d.box("Peak 1.01 rad,\nlimit 1.3 rad", 2, 1, "green")
     for x, y in ((a, b), (b, c), (e, f), (f, g)):
         d.arrow(x, y)
-    d.note("Without the wrapper the same faults kick the joint and push it past its limit.", d.margin, d.margin + 60 + 2 * d.ch - 10, size=18)
     d.save(OUT / "diagram-policy-broken.excalidraw")
+    return d.warnings
 
 
 if __name__ == "__main__":
-    system()
-    broken()
+    print(system(), broken())

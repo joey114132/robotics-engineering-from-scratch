@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "I know where the goal is, so I whisper its value to my neighbours, and they whisper it on. Each sweep carries the goal's value farther across the map.",
-  "mission": "In `code/main.py` change `slip=0.2` to `0.5` and run it. Guess whether the printed start value goes up or down, then check it."
- },
- "ko": {
-  "hook": "저는 목표가 어디인지 알아서 이웃에게 그 value를 속삭이고 이웃은 또 옆으로 전합니다. sweep마다 목표의 value가 지도에서 더 멀리 퍼집니다.",
-  "mission": "`code/main.py`에서 `slip=0.2`를 `0.5`로 바꿔 실행하세요. 출력되는 시작 칸의 value가 오를지 내릴지 예측한 뒤 확인하세요."
- },
- "toy": "value-spread",
-  "motion": "bellman-backup",
+  "en": {
+    "hook": "I know where the goal is, so I whisper its value to my neighbours, and they whisper it on. Each sweep carries the goal's value farther across the map.",
+    "mission": "In `code/main.py` change `slip=0.2` to `0.5` and run it. Guess whether the printed start value goes up or down, then check it.",
+    "clip": "A rover on a floor that slips: about one move in five turns sideways. First the tile heights and colours follow value iteration as it spreads out from the amber goal; tall and green is a good place to be, and the red tile is the pit. Then the rover follows the greedy policy, one slide takes it off its line, and it still reaches the goal. Values come from this lesson's `value_iteration()` (29 sweeps in 2 s, 0.15 m of height per unit of value), and the moves are sampled from the model's `P`."
+  },
+  "ko": {
+    "hook": "저는 목표가 어디인지 알아서 이웃에게 그 value를 속삭이고 이웃은 또 옆으로 전합니다. sweep마다 목표의 value가 지도에서 더 멀리 퍼집니다.",
+    "mission": "`code/main.py`에서 `slip=0.2`를 `0.5`로 바꿔 실행하세요. 출력되는 시작 칸의 value가 오를지 내릴지 예측한 뒤 확인하세요.",
+    "clip": "미끄러운 바닥 위의 로버입니다. 다섯 번 중 한 번쯤은 옆으로 미끄러집니다. 먼저 타일의 높이와 색이 주황색 목표에서 퍼져 나가는 value iteration을 따라갑니다. 높고 초록색인 곳이 좋은 자리이고 빨간 타일은 구덩이입니다. 그다음 로버가 greedy policy를 따라가고 한 번 미끄러져 경로를 벗어나도 목표에 닿습니다. 값은 이 레슨의 `value_iteration()`으로 계산했고(sweep 29번을 2초에 재생, V 1당 높이 0.15 m) 움직임은 모델의 `P`에서 뽑았습니다."
+  },
+  "toy": "value-spread",
   "three": "value-bars-3d"
 }

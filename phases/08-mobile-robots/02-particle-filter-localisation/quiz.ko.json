@@ -1,6 +1,6 @@
 [
   {"id": 1, "stage": "pre", "question": "알려진 지도 위의 로봇에 가우시안 하나가 아니라 particle 구름이 필요한 이유는 무엇입니까?", "options": ["구름은 서로 떨어진 여러 추정을 동시에 담을 수 있다", "가우시안은 계산할 수 없다", "구름은 센서가 필요 없다"], "answer": 0, "explanation": "같은 측정에 맞는 장소가 여럿일 수 있는데 가우시안은 봉우리가 하나입니다."},
-  {"id": 2, "stage": "check", "question": "exp 전에 가장 큰 log weight를 빼는 이유는 무엇입니까?", "options": ["먼 particle 때문에 weight가 전부 0으로 underflow하는 것을 막으려고", "weight 합을 2로 만들려고", "resampling을 빠르게 하려고"], "answer": 0, "explanation": "비율만 중요합니다. 이동하면 적어도 weight 하나는 1로 남습니다."},
+  {"id": 2, "stage": "check", "question": "exp 전에 가장 큰 log weight를 빼는 이유는 무엇입니까?", "options": ["먼 particle 때문에 weight가 전부 0으로 underflow하는 것을 막으려고", "weight 합을 2로 만들려고", "resampling을 빠르게 하려고"], "answer": 0, "explanation": "비율만 중요합니다. 가장 큰 값을 빼면 적어도 weight 하나는 1로 남습니다."},
   {"id": 3, "stage": "check", "question": "systematic resampling이 고정해 두는 것은 무엇입니까?", "options": ["particle 수", "자세 추정값", "측정 noise"], "answer": 0, "explanation": "무작위 offset 하나에서 포인터 N개를 뽑으므로 결과도 N개입니다."},
   {"id": 4, "stage": "check", "question": "로봇이 다른 곳으로 옮겨졌는데 filter가 회복하지 못합니다. 원인은 무엇입니까?", "options": ["새 자세 근처에 particle이 없다", "센서가 멈췄다", "landmark가 움직였다"], "answer": 0, "explanation": "붕괴한 구름에는 새 자세 근처에 복제할 것이 없습니다."},
   {"id": 5, "stage": "post", "question": "random particle을 5% 주입하면 어떤 비용이 듭니까?", "options": ["평소 추정이 조금 더 흔들린다", "지도가 커진다", "odometry가 느려진다"], "answer": 0, "explanation": "일부 particle은 늘 틀린 추정이라 구름이 조금 덜 조밀합니다."},

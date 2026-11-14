@@ -9,32 +9,30 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def backup():
-    d = Diagram(cell=(330, 170))
-    d.title("One state, one backup")
-    s = d.box("State s", 0, 0.5, "gray", w=170)
-    a = d.box("Try each action:\nreward now", 1, 0, "yellow", w=250)
-    b = d.box("Plus gamma times the\nvalue of where it leads", 1, 1, "purple", w=250)
-    m = d.box("Keep the\nbest action", 2, 0.5, "blue", w=200)
-    v = d.box("New V(s)", 3, 0.5, "green", w=170)
-    for x, y in ((s, a), (s, b), (a, m), (b, m), (m, v)):
-        d.arrow(x, y)
+    d = Diagram(numbered=True)
+    d.title("One tile, one backup")
+    a = d.box("Rover on the tile\nright of the pit", 0, 0, "gray", step=1)
+    b = d.box("Score each move:\nreward now", 1, 0, "yellow", step=2)
+    c = d.box("Add gamma times\nthe next value", 2, 0, "purple", step=3)
+    e = d.box("Keep the best\nmove's score", 2, 1, "blue", step=4)
+    f = d.box("That is the\ntile's new value", 1, 1, "green", step=5)
+    for s, t in ((a, b), (b, c), (c, e), (e, f)):
+        d.arrow(s, t)
     d.save(OUT / "diagram-bellman-backup.excalidraw")
 
 
 def loop():
-    d = Diagram(cell=(310, 170))
-    d.title("Value iteration: sweep until nothing moves")
-    z = d.box("Start: V = 0\neverywhere", 0, 0, "gray", w=210)
-    s = d.box("Sweep: back up\nevery state", 1, 0, "purple", w=210)
-    c = d.box("Change below\ntolerance?", 2, 0, "yellow", w=210, shape="diamond")
-    f = d.box("Fixed point V*", 3, 0, "green", w=190)
-    p = d.box("Greedy policy:\nbest action", 3, 1, "blue", w=210)
+    d = Diagram(numbered=True)
+    d.title("Sweep until nothing moves")
+    z = d.box("Start: every\ntile is 0", 0, 0, "gray", step=1)
+    s = d.box("Sweep: back up\nevery tile", 1, 0, "purple", step=2)
+    c = d.box("Did any value\nmove much?", 2, 0, "yellow", step=3)
+    p = d.box("No: pick the best\nmove per tile", 3, 0, "green", step=4)
     d.arrow(z, s)
     d.arrow(s, c)
-    d.arrow(c, f, label="yes")
-    d.arrow(c, s, label="no", route="below", dashed=True)
-    d.arrow(f, p)
-    d.note("Each sweep shrinks the error by gamma.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=22)
+    d.arrow(c, p, label="no")
+    d.arrow(c, s, label="yes", dashed=True)
+    d.note("Each sweep shrinks the error by gamma.", near=p, side="b")
     d.save(OUT / "diagram-value-iteration-loop.excalidraw")
 
 

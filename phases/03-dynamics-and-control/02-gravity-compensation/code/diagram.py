@@ -9,33 +9,30 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def flow():
-    d = Diagram()
+    d = Diagram(numbered=True)
     d.title("Why a soft arm sags")
-    a = d.box("Model says\ngravity = ff", 0, 0, "blue")
-    b = d.box("Real arm needs\ngravity = tau_g", 0, 1, "yellow")
-    c = d.box("Residual\nff - tau_g", 1, 0.5, "red", shape="rectangle")
-    e = d.box("Divide by kp\n(the spring)", 2, 0.5, "purple")
-    f = d.box("Sag\n= residual / kp", 3, 0.5, "green")
+    a = d.box("Model feeds\nforward: ff", 0, 0, "blue")
+    b = d.box("Gravity really\npulls: tau_g", 0, 1, "yellow")
+    c = d.box("Residual\nff - tau_g", 1, 0.5, "red")
+    e = d.box("Spring pushes\nback: kp per rad", 2, 0.5, "purple")
+    f = d.box("Sag = residual\ndivided by kp", 3, 0.5, "green")
     d.arrow(a, c)
     d.arrow(b, c)
     d.arrow(c, e)
     d.arrow(e, f)
-    d.note("Soft kp = big sag.  Exact model = no sag.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=22)
+    d.note("Soft kp = big sag. Exact model = no sag.", near=f, side="b")
     d.save(OUT / "diagram-sag-flow.excalidraw")
 
 
 def cases():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("Which way does the model error push?")
-    m = d.box("Compare the model\nwith the real arm", 0, 0.5, "gray", w=240)
-    l = d.box("Model too LIGHT\nff < tau_g", 1, 0, "red", w=250)
-    x = d.box("Model exact\nff = tau_g", 1, 1, "green", w=250)
-    h = d.box("Model too HEAVY\nff > tau_g", 1, 2, "blue", w=250)
-    rl = d.box("Arm droops", 2, 0, "red", w=200)
-    rx = d.box("Arm holds", 2, 1, "green", w=200)
-    rh = d.box("Arm floats up", 2, 2, "blue", w=200)
-    for s, t in ((m, l), (m, x), (m, h), (l, rl), (x, rx), (h, rh)):
-        d.arrow(s, t)
+    m = d.box("Same arm, kp = 30\nmodel vs real", 0, 1, "gray")
+    l = d.box("Too light: ff < tau_g\narm droops 3.7 deg", 1, 0, "red")
+    x = d.box("Exact: ff = tau_g\narm holds", 1, 1, "green")
+    h = d.box("Too heavy: ff > tau_g\narm floats up 3.8 deg", 1, 2, "red")
+    for t in (l, x, h):
+        d.arrow(m, t)
     d.save(OUT / "diagram-sag-cases.excalidraw")
 
 

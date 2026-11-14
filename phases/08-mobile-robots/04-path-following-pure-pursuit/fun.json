@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Aim too close and I snake like a nervous noodle. Aim too far and I cut the corner. Both come from one number.",
-    "mission": "In `code/main.py` change the `4.0` in `(0.4, 1.5, 4.0)` to `2.5` and run `python3 code/main.py`. Predict the corner cut, somewhere between 0.41 m and 1.37 m, before you look."
+    "mission": "In `code/main.py` change the `4.0` in `(0.4, 1.5, 4.0)` to `2.5` and run `python3 code/main.py`. Predict the corner cut, somewhere between 0.41 m and 1.37 m, before you look.",
+    "clip": "Three cars follow the same L-shaped path with the lesson's `follow()`, each with a different lookahead distance: 0.4 m (blue), 1.5 m (green) and 4.0 m (red). The amber balls are the lookahead points they chase, and the dots mark where each car has been. The three runs are drawn side by side on parallel lanes, not on one road. The short lookahead weaves, the middle one tracks the path, and the long one cuts the corner. Lengths are drawn at half scale, the second leg is 6 m instead of 10 m, and time is sped up about 4x."
   },
   "ko": {
     "hook": "너무 가까이 겨냥하면 겁먹은 국수처럼 휘청대고 너무 멀리 겨냥하면 코너를 가로지릅니다. 둘 다 숫자 하나에서 나옵니다.",
-    "mission": "`code/main.py`에서 `(0.4, 1.5, 4.0)`의 `4.0`을 `2.5`로 바꾸고 `python3 code/main.py`를 실행하세요. 코너 절단이 0.41 m와 1.37 m 사이 어디쯤일지 먼저 예측하세요."
+    "mission": "`code/main.py`에서 `(0.4, 1.5, 4.0)`의 `4.0`을 `2.5`로 바꾸고 `python3 code/main.py`를 실행하세요. 코너 절단이 0.41 m와 1.37 m 사이 어디쯤일지 먼저 예측하세요.",
+    "clip": "자동차 세 대가 레슨의 `follow()`로 같은 L자 경로를 따라갑니다. lookahead 거리는 0.4 m(파랑), 1.5 m(초록), 4.0 m(빨강)입니다. 주황 공은 차가 쫓는 lookahead 점이고 점들은 지나간 자리입니다. 세 번의 주행은 같은 도로가 아니라 나란한 세 차선에 따로 그렸습니다. lookahead가 짧으면 흔들리고 중간이면 경로를 따라가며 길면 코너를 자릅니다. 길이는 절반 크기로 그렸고 두 번째 직선은 10 m 대신 6 m이며 재생 속도는 약 4배입니다."
   },
   "toy": null,
-  "motion": "lookahead-race",
   "three": "pure-pursuit-3d"
 }

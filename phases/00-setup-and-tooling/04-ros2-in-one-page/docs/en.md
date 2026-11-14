@@ -6,36 +6,41 @@
 
 ## In Plain Words
 
-Class chat messages arrive faster than you can read them. If you always read the oldest unread message, a
-larger inbox lets you spend longer catching up with news that is already out of date.
+A cup slides along a rail. A sensor reports its position faster than the arm's controller can read. Unread reports wait in a queue, and the controller always takes the oldest one.
 
-A subscriber queue works like that inbox. With keep last, new messages evict the oldest when it fills.
-Increasing depth preserves more waiting messages, but it does not make a slow reader faster. Under a steady
-overload, the reader gets older data.
+When the queue is full, each new report pushes the oldest out. A long queue means the oldest waiting report can be half a second old, so the arm aims where the cup was. A queue that holds one report means the arm reads the newest.
 
 ## The Problem
 
-Your controller reads joint states at 40 Hz while the driver publishes at 100 Hz. You raise the queue depth to 50 to stop losing messages, and the arm now reacts half a second late. The setting that looked like a safety margin turned old data into the thing you read.
+Your controller (the program commanding the arm) reads joint states (joint angles) at 40 Hz, times per second. The driver, the motor program, publishes them at 100 Hz. You raise the queue depth to 50 to stop losing messages. A message arrives every 10 ms, so 50 queued messages reach back 0.5 s, and the arm reacts half a second late.
 
 ## The Concept
 
-![Nodes talk over topics and services](../assets/diagram-ros-parts.png)
+Look at the two lanes: a stream on top, a question and one answer below.
 
-*A node is a program. A topic carries a stream from publishers to subscribers. A service answers one request with one reply.*
+![Topics and services](../assets/diagram-ros-parts.png)
 
-A subscriber owns a queue. With the history policy "keep last", the queue holds at most `depth` messages, and a new message pushes out the oldest one when it is full.
+*A node is a program. A topic carries a stream from publishers (senders) to subscribers (receivers). A service answers one request with one reply.*
 
-![A slow subscriber and a short queue](../assets/diagram-queue-depth.png)
+A subscriber owns a queue, a waiting line of messages. With the "keep last" history setting, the queue holds the newest `depth` messages and a new one pushes out the oldest when it is full.
 
-*The publisher is faster than the subscriber, so the queue is always full and the oldest message is dropped on every publish.*
+![Slow subscriber](../assets/diagram-queue-depth.png)
 
-![Queue depth against message age](../assets/fig-queue-depth.png)
+*The publisher is faster, so the queue stays full and the oldest message is dropped on every publish.*
 
-*Left: the subscriber reads messages about `(depth - 1)` publish periods old. Right: the same 400 messages are delivered at every depth. Depth only moves messages between "dropped" and "still queued".*
+Run 10 s with a 100 Hz publisher and a 40 Hz reader. The publisher sends 1000 messages and the reader takes 400 at every depth. The last message read is 5 ms old at depth 1, and each extra queued message adds 10 ms, one publish period: 95 ms at depth 10, 495 ms at depth 50.
+
+![Three arms, three queue depths](../assets/clip-example.mp4)
+
+*Three arms, one per depth. Each pale cup is where that arm believes the cup is. Green (depth 1) stays on the cup, pale blue (depth 10) trails a little, blue (depth 50) chases old positions.*
+
+![Queue depth](../assets/fig-queue-depth.png)
+
+*Left: watch message age grow with depth, about `(depth - 1)` publish periods. Right: of 1000 published, 400 are delivered at every depth. Depth only moves the other 600 between "dropped" and "still queued".*
 
 ## Build It
 
-A `Bus` with named topics and one queue per subscription. No ROS install is needed.
+A `Bus` with named topics and one queue per subscription.
 
 ```python
 def publish(self, topic, msg):
@@ -46,7 +51,7 @@ def publish(self, topic, msg):
         s.q.append(msg)
 ```
 
-`run(pub_hz, sub_hz, depth, seconds)` stamps each message with its send time and takes one per subscriber tick, so it can report drops and the age of what was read. `burst_drops()` shows the case where depth does help: a burst shorter than the queue.
+`run(pub_hz, sub_hz, depth, seconds)` stamps each message with its send time and takes one per subscriber tick (one read), so it reports drops and the age of what was read. `burst_drops()` shows where depth does help: a burst, many messages at once, shorter than the queue.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -56,7 +61,7 @@ python3 phases/00-setup-and-tooling/04-ros2-in-one-page/code/main.py
 
 ## Use It
 
-In ROS 2 the same setting is the QoS history policy `keep last` with a queue depth; the QoS page supports only that. The advice that follows is this lesson's own: keep a small depth for control signals where only the newest value matters, and size a larger one for bursts. Match the subscriber rate to the publisher before raising depth.
+In ROS 2 the same setting is the QoS (quality of service) history policy `keep last` with a queue depth; the QoS page supports only that. Our own advice: keep a small depth for control signals where only the newest value matters, and size a larger one for bursts. Match the subscriber rate to the publisher before raising depth.
 
 Sources: https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Quality-of-Service-Settings.html
 

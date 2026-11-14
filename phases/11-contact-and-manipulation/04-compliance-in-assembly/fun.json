@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Shoving a jammed peg harder is like shouting at a stuck door. Let the tool give a little and the door stops fighting back.",
-    "mission": "Add `3e4` to the `kx` tuple in `code/main.py`. Guess whether it jams or inserts, and at what depth, then run `python3 code/main.py`."
+    "mission": "Add `3e4` to the `kx` tuple in `code/main.py`. Guess whether it jams or inserts, and at what depth, then run `python3 code/main.py`.",
+    "clip": "Two arms push a thin peg into a tight slot with the same 5 N and a 1 mm side offset. The blue arm has a stiff wrist, kx = 100000 N/m: the peg wedges against the walls and stops partway while the arm keeps pushing. The green arm has a soft wrist, kx = 1000 N/m: the peg slides all the way in. Depth and tilt come from this lesson's `insert()`, drawn 9 times larger at a steady insertion speed. The walls are drawn see-through."
   },
   "ko": {
-    "hook": "끼인 peg를 더 세게 미는 건 닫힌 문에 소리치는 것과 같습니다. 도구가 조금 물러서 주면 문도 버티기를 멈춥니다.",
-    "mission": "`code/main.py`의 `kx` 튜플에 `3e4`를 추가하세요. 끼일지 들어갈지와 깊이를 짐작한 뒤 `python3 code/main.py`를 실행하세요."
+    "hook": "끼인 peg를 더 세게 미는 건 꽉 낀 문에 소리치는 것과 같습니다. 도구가 조금 물러서 주면 문도 버티기를 멈춥니다.",
+    "mission": "`code/main.py`의 `kx` 튜플에 `3e4`를 추가하세요. 끼일지 들어갈지와 깊이를 짐작한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "얇은 peg를 꼭 맞는 slot에 넣는 두 팔이 있습니다. 둘 다 5 N으로 밀고 옆으로 1 mm 어긋나 있습니다. 파란 팔은 손목이 뻣뻣해서(kx = 100000 N/m) peg가 벽에 끼어 중간에서 멈추고 팔은 계속 밀기만 합니다. 초록 팔은 손목이 부드러워서(kx = 1000 N/m) peg가 끝까지 들어갑니다. 깊이와 기울기는 이 레슨의 `insert()` 결과이고 9배로 크게 그렸고 삽입 속도는 일정하게 맞췄습니다. 벽은 투명하게 그렸습니다."
   },
   "toy": null,
-  "motion": "peg-wrist-stiffness",
   "three": "peg-wrist-compliance-3d"
 }

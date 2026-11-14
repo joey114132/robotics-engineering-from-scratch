@@ -10,29 +10,29 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 def graph():
     d = Diagram()
-    d.title("A pose graph: poses are unknowns, edges are springs")
-    p0 = d.box("Pose 0\n(held fixed)", 0, 0, "gray", w=190)
-    p1 = d.box("Pose 1", 1, 0, "blue", w=160)
-    p2 = d.box("Pose 2 ...", 2, 0, "blue", w=170)
-    pn = d.box("Pose 20\n(same place)", 3, 0, "blue", w=190)
+    d.title("Poses are unknowns, edges are springs")
+    p0 = d.box("Pose 0\nstart, held fixed", 0, 0, "gray")
+    p1 = d.box("Pose 1\nafter 1 m", 1, 0, "blue")
+    p2 = d.box("Pose 2 ...\nafter 2 m", 1, 1, "blue")
+    pn = d.box("Pose 20\nsame place as 0", 0, 1, "blue")
     d.arrow(p0, p1, label="odometry")
     d.arrow(p1, p2, label="odometry")
     d.arrow(p2, pn, label="odometry")
-    d.arrow(pn, p0, route="below", label="loop closure: we are back here")
-    d.note("Solving = find poses that stretch every spring as little as possible.", d.margin, d.margin + 60 + d.ch + 60, size=22)
+    d.arrow(pn, p0, label="loop closure")
+    d.note("solve: least total stretch", near=pn, side="b")
     d.save(OUT / "diagram-posegraph-springs.excalidraw")
 
 
 def pipeline():
-    d = Diagram(cell=(330, 170))
+    d = Diagram(numbered=True)
     d.title("How a late correction repairs old poses")
-    a = d.box("Odometry drifts\nthe loop is open", 0, 0, "red", w=230)
-    b = d.box("Scan match sees\nthe start again", 1, 0, "yellow", w=240)
-    c = d.box("Add one\nclosure edge", 2, 0, "purple", w=210)
-    e = d.box("Gauss-Newton\nre-solves all poses", 3, 0, "purple", w=240)
-    g = d.box("Loop snaps shut,\nerror spread out", 3, 1, "green", w=240)
-    for s, t in ((a, b), (b, c), (c, e), (e, g)):
-        d.arrow(s, t)
+    a = d.box("Odometry drifts,\nthe loop is open", 0, 0, "red", step=1)
+    b = d.box("Scan match sees\nthe start again", 1, 0, "yellow", step=2)
+    c = d.box("Add one\nclosure edge", 1, 1, "purple", step=3)
+    e = d.box("Gauss-Newton\nre-solves all poses", 0, 1, "purple", step=4)
+    g = d.box("Loop snaps shut,\nerror spread out", 0, 2, "green", step=5)
+    for s_, t in ((a, b), (b, c), (c, e), (e, g)):
+        d.arrow(s_, t)
     d.save(OUT / "diagram-posegraph-pipeline.excalidraw")
 
 

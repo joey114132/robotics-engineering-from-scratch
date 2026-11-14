@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Two scans, one room, zero labels. I guess nearest points, fit, and repeat until I stop improving or get stuck.",
-  "mission": "In `code/main.py` try start rotations 1.0, 1.2 and 1.4 rad in the demo loop. Find which one first ends with a final rms above 0.1 m."
- },
- "ko": {
-  "hook": "스캔 두 장에 방 하나, 라벨은 없습니다. 최근접점으로 짝을 추측하고 맞추기를 더 나아지지 않거나 갇힐 때까지 반복합니다.",
-  "mission": "`code/main.py`의 데모 반복문에서 시작 회전을 1.0, 1.2, 1.4 rad으로 바꿔 보세요. 어느 값부터 final rms가 0.1 m를 넘는지 찾으세요."
- },
- "toy": "icp-steps",
- "motion": "icp-two-starts",
- "three": "icp-room-3d"
+  "en": {
+    "hook": "Two scans, one room, zero labels. I guess nearest points, fit, and repeat until I stop improving or get stuck.",
+    "mission": "In `code/main.py` try start rotations 1.0, 1.2 and 1.4 rad in the demo loop. Find which one first ends with a final rms above 0.1 m.",
+    "clip": "A rover scanned an L-shaped room (grey dots). A second scan of the same room (amber dots) is placed with a 0.6 rad turn and a 0.36 m shift, and the blue rover carries it. Each iteration of the lesson's `icp()` matches nearest points, finds the best rigid motion with `kabsch()`, and moves the second scan. After about a dozen iterations the amber dots sit on the grey ones and the rover lands on its true spot (green disc). One iteration lasts five frames."
+  },
+  "ko": {
+    "hook": "스캔 두 장에 방 하나, 라벨은 없습니다. 최근접점으로 짝을 추측하고 맞추는 일을 더 나아지지 않거나 갇힐 때까지 반복합니다.",
+    "mission": "`code/main.py`의 데모 반복문에서 시작 회전을 1.0, 1.2, 1.4 rad으로 바꿔 보세요. 어느 값부터 final rms가 0.1 m를 넘는지 찾으세요.",
+    "clip": "로버가 L자 방을 스캔했습니다(회색 점). 같은 방의 두 번째 스캔(주황 점)은 0.6 rad 돌고 0.36 m 어긋난 채 놓였고 파란 로버가 이것을 들고 있습니다. 레슨의 `icp()`가 반복할 때마다 가장 가까운 점을 짝짓고 `kabsch()`로 최적 강체 이동을 구해 두 번째 스캔을 옮깁니다. 열 번 남짓 반복하면 주황 점이 회색 점 위에 놓이고 로버가 실제 자리(초록 원판)에 도착합니다. 반복 한 번이 5프레임입니다."
+  },
+  "toy": "icp-steps",
+  "three": "icp-room-3d"
 }

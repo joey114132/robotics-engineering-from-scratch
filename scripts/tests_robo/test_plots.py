@@ -1,13 +1,8 @@
-# 점자 plot 과 toy 시뮬레이션 테스트 (상수는 scripts/toys/*.js 에서 읽어 대조)
-import re
-from pathlib import Path
-
+# 점자 plot 과 toy 시뮬레이션 테스트
 import pytest
 from rich.cells import cell_len
 
 from robo import plots
-
-TOYS = Path(__file__).resolve().parents[1] / "toys"
 
 
 def test_braille_cell_bits():
@@ -29,14 +24,11 @@ def test_braille_line_is_connected():
     assert dots >= 20
 
 
-def test_toy_constants_match_js_source():
-    js = (TOYS / "10-control-arm.js").read_text()
-    assert f"DT = {plots.PD_DT}" in js and f"T = {plots.PD_T}" in js and f"B = {plots.PD_B}" in js
-    assert "kp = 30, kd = 4" in js
-    assert f"N = {plots.SL_N}" in js and f"RMAX = {plots.SL_RMAX}" in js and f"YM = {plots.SL_YM}" in js
-    k = (TOYS / "20-estimation-mobile-planning.js").read_text()
-    m = re.search(r"DT = ([\d.]+), N = (\d+), RATE = \d+, TRUE_SA = ([\d.]+), TRUE_R = ([\d.]+)", k)
-    assert (plots.K_DT, plots.K_N, plots.K_SA, plots.K_R) == (float(m[1]), int(m[2]), float(m[3]), float(m[4]))
+def test_toy_constants():
+    # the website's toys (scripts/toys/*.js in the site repo) use the same values; the site repo's tests compare them with the JS
+    assert (plots.PD_DT, plots.PD_T, plots.PD_B) == (0.002, 3, 0.2)
+    assert (plots.SL_N, plots.SL_RMAX, plots.SL_YM) == (40, 2.5, 1.5)
+    assert (plots.K_DT, plots.K_N, plots.K_SA, plots.K_R) == (1.0, 60, 0.1, 2.0)
 
 
 def test_pd_step_first_step_matches_hand_calc():

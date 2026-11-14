@@ -6,38 +6,41 @@
 
 ## In Plain Words
 
-An old camera view can make you keep powering a toy boat toward a target it has already reached. Cutting motor power lets it coast; it
-does not lock the boat in place.
+A learned policy is a program that picks an arm's push from what a camera sees. If the camera freezes, the arm keeps acting on the last picture, which says it is still short of the target. It keeps pushing and swings past its safe limit.
 
-This capstone trains a policy from demonstrations, then puts a wrapper between its output and a simulated joint. Stale observations
-request zero torque, oversized outputs are clipped, and torque changes are limited. Faulty runs measure the actual motion and count
-interventions to check how those rules limit the faults' effects.
+A wrapper is plain code between the policy and the motor. It notices that the picture is old and cuts the push to zero, so the arm coasts and slows through its own friction. It also clips any huge push.
 
 ## The Problem
 
-A policy trained from demonstrations works in every test, then one bad network output or one lost camera frame sends a joint into its limit. Nobody can prove a learned model never does this. What you can do is put a small piece of plain code between the model and the motor, and prove that piece.
+A trained policy passes every test, then one bad output or one lost camera frame sends a joint into its limit. Nobody can prove a model never does this, but plain code around it can be proved.
 
 ## The Concept
 
 ![Learned policy inside a safety wrapper](../assets/diagram-policy-system.png)
 
-*Demonstrations train a nearest-neighbour policy. Its action passes through a wrapper before it reaches the joint, and the wrapper also sees how old the observation is.*
+*Follow the arrows. A nearest-neighbour policy averages the closest of an expert's recorded demonstrations. Its action passes through the wrapper, which also checks how old the picture is.*
 
 ![Two faults, one wrapper](../assets/diagram-policy-broken.png)
 
-*A spike is clipped and rate limited. A lost observation becomes a hold command once it is too old.*
+*Compare the rows. A spike is clipped and rate limited. A picture older than 3 steps becomes a hold command (zero torque).*
+
+The wrapper has three rules: hold zero torque if the picture is over 3 steps old (a step is 0.02 s), clip torque to 3 Nm, and let torque change by at most 0.5 Nm per step. At step 30 a spike makes the policy ask for 39.9 Nm (its usual output plus 40). Clipping gives 3 Nm, but the torque was 0.31 Nm, so the rate limit allows only 0.81 Nm. Unwrapped, the joint takes all 39.9 Nm.
+
+![Two arms receive the same torque spike and only the wrapped one stays calm](../assets/clip-example.mp4)
+
+*Watch blue after the red arrow flashes. The kick sends it past the target and the red bar (the 1.3 rad limit) before it returns. The wrapped green arm hardly notices.*
 
 ![The task succeeding](../assets/fig-policy-result.png)
 
-*On a clean run the cloned policy follows the expert to the target. The wrapper only slows the first torque ramp.*
+*Look at both curves. On a clean run the learned policy follows the expert to the target, and the wrapper only slows the first torque ramp.*
 
 ![Faults with and without the wrapper](../assets/fig-policy-faults.png)
 
-*Spike: peak torque 40 Nm without the wrapper, 3 Nm with it, and the joint peaks at 1.36 rad against 1.01 rad. Lost observation: 1.47 rad against 1.01 rad. The limit is 1.3 rad.*
+*Compare each pair of curves. Spike: peak torque about 40 Nm without the wrapper, 3 Nm with it, and the joint peaks at 1.36 rad against 1.01 rad. Lost observation: 1.47 rad against 1.01 rad. The limit is 1.3 rad.*
 
 ## Build It
 
-The wrapper is three rules in a fixed order. It holds if the observation is stale, clips to the torque limit, then limits the change per step.
+The code runs the three rules in that order.
 
 ```python
 if age > self.max_age: raw = 0.0
@@ -45,7 +48,7 @@ c = np.clip(raw, -self.umax, self.umax)
 r = self.u + np.clip(c - self.u, -self.du, self.du)
 ```
 
-Each rule counts how often it changed the action. Counts are the evidence. The spike run shows 1 clip, the lost-observation run shows 23 hold steps, and a clean run shows no clip and no hold.
+Each rule counts how often it changed the action. The spike run shows 1 clip, the lost-observation run shows 23 hold steps, and a clean run shows no clip and no hold.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -55,7 +58,7 @@ python3 phases/16-capstones/03-learned-policy-with-safety-wrapper/code/main.py
 
 ## Use It
 
-ros2_control provides joint-limit handling for hardware interfaces, and the `enforce_command_limits` parameter on `ros2_control_node` sets joint-limit handling globally for all interfaces. At startup the controller manager logs which limits each joint has. Compare them with the three rules here.
+ros2_control provides joint-limit handling for hardware interfaces, and the `enforce_command_limits` parameter on `ros2_control_node` sets it globally. At startup the controller manager logs which limits each joint has. Compare them with the three rules here.
 
 Sources: [ros2_control joint limiting](https://control.ros.org/rolling/doc/ros2_control/hardware_interface/doc/joint_limiting.html), read 2026-11-09.
 

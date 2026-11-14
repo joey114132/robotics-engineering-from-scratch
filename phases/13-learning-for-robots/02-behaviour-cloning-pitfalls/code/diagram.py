@@ -9,30 +9,30 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def drift():
-    d = Diagram(cell=(310, 170))
+    d = Diagram(numbered=True)
     d.title("Why small errors snowball")
-    a = d.box("Small action error", 0, 0.5, "yellow", w=230)
-    b = d.box("Next state is off\nthe demo path", 1, 0.5, "red", w=230)
-    c = d.box("Policy never saw\nthis state", 2, 0.5, "red", w=230)
-    e = d.box("Bigger error", 3, 0.5, "red", w=200)
+    a = d.box("A bump pushes the\nrover off the demos", 0, 0, "yellow", step=1)
+    b = d.box("No demo covers\nthis spot", 1, 0, "red", step=2)
+    c = d.box("Steering is\na poor guess", 1, 1, "red", step=3)
+    e = d.box("The next error\nis bigger", 0, 1, "red", step=4)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.arrow(e, b, route="below", label="repeats every step", dashed=True)
+    d.arrow(e, a, label="repeats every step", dashed=True)
     d.save(OUT / "diagram-drift-loop.excalidraw")
 
 
 def loop():
-    d = Diagram(cell=(310, 170))
-    d.title("DAgger: label the states the learner visits")
-    a = d.box("Learner drives\n(with noise)", 0, 0, "blue", w=230)
-    b = d.box("Expert labels\nevery visited state", 1, 0, "purple", w=230)
-    c = d.box("Add to the\ndata set", 2, 0, "yellow", w=210)
-    e = d.box("Refit the policy", 3, 0, "green", w=210)
+    d = Diagram(numbered=True)
+    d.title("DAgger: label the spots the rover reaches")
+    a = d.box("Rover drives\n(with wheel noise)", 0, 0, "blue", step=1)
+    b = d.box("Expert labels every\nspot it reached", 1, 0, "purple", step=2)
+    c = d.box("Add the pairs to\nthe data set", 1, 1, "yellow", step=3)
+    e = d.box("Refit the policy", 0, 1, "green", step=4)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.arrow(e, a, route="below", label="repeat for a few rounds", dashed=True)
+    d.arrow(e, a, label="repeat a few rounds", dashed=True)
     d.save(OUT / "diagram-dagger-loop.excalidraw")
 
 

@@ -9,28 +9,29 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def pipeline():
-    d = Diagram(cell=(280, 170))
-    d.title("The wrapper sits between the policy and the actuator")
-    o = d.box("Observation\n(may be late)", 0, 0, "yellow", w=210)
-    g = d.box("Fresh enough?\nelse hold or fall back", 1, 0, "purple", w=250, size=18)
-    p = d.box("Learned policy\n(varies run to run)", 2, 0, "red", w=220, size=18)
-    c = d.box("Clip, then limit\nthe change per tick", 3, 0, "purple", w=230, size=18)
-    a = d.box("Actuator", 4, 0, "green", w=170)
-    lg = d.box("Intervention log", 2, 1.3, "gray", w=240)
-    for s, t in ((o, g), (g, p), (p, c), (c, a), (g, lg), (c, lg)):
+    d = Diagram(numbered=True)
+    d.title("The wrapper sits between the policy and the motor")
+    o = d.box("Camera frame\n(may be late)", 0, 0, "yellow", step=1)
+    g = d.box("Fresh enough?\nelse hold", 1, 0, "purple", step=2)
+    p = d.box("Learned\npolicy", 2, 0, "red", step=3)
+    c = d.box("Clip and cap\nthe change", 2, 1, "purple", step=4)
+    a = d.box("Motor\ncommand", 1, 1, "green", step=5)
+    for s, t in ((o, g), (g, p), (p, c), (c, a)):
         d.arrow(s, t)
+    d.note("Every change goes to a log", near=c, side="b")
     d.save(OUT / "diagram-wrapper-pipeline.excalidraw")
 
 
 def ladder():
-    d = Diagram(cell=(330, 170))
-    d.title("What the wrapper does as the observation ages")
-    q = d.box("Is the latest\nobservation usable?", 0, 1, "gray", w=240)
-    a = d.box("Yes: run the policy,\nthen clip and rate-limit", 1, 0, "green", w=290, size=18)
-    b = d.box("No, for a short while:\nhold the last command", 1, 1, "yellow", w=290, size=18)
-    c = d.box("No, past the deadline:\nfall back, ramped down", 1, 2, "red", w=290, size=18)
-    for t in (a, b, c):
-        d.arrow(q, t)
+    d = Diagram()
+    d.title("What the wrapper does as the camera frame ages")
+    for row, (cond, act, color) in enumerate((
+            ("Frame is fresh\n(1 tick old at most)", "Run the policy, then\nclip and rate-limit", "green"),
+            ("Frame is late\n(gone up to 10 ticks)", "Hold the last\ncommand", "yellow"),
+            ("Frame gone for\nover 10 ticks", "Ramp down to the\nfallback, a stop", "red"))):
+        a = d.box(cond, 0, row, "gray")
+        b = d.box(act, 1, row, color)
+        d.arrow(a, b)
     d.save(OUT / "diagram-wrapper-ladder.excalidraw")
 
 

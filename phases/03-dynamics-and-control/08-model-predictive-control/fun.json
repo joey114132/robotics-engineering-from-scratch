@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "I plan twenty steps ahead and then use exactly one. A clipped controller brakes late. I saw the wall coming.",
-  "mission": "In `code/main.py` run `simulate` with `N` = 2, 5 and 20 and `umax` = 0.5, starting at `[4.0, 0.0]`. Print the lowest position of each run and see which one overshoots most."
- },
- "ko": {
-  "hook": "스무 걸음 앞을 계획하고 딱 한 걸음만 씁니다. 잘린 컨트롤러는 늦게 브레이크를 밟지만 저는 벽이 오는 걸 봤습니다.",
-  "mission": "`code/main.py`에서 `[4.0, 0.0]`에서 출발해 `umax` 0.5로 `N`을 2, 5, 20으로 `simulate`를 돌리세요. 각 실행의 최저 위치를 출력해 어느 쪽이 가장 많이 넘치는지 보세요."
- },
- "toy": "mpc-horizon",
- "motion": "replan-loop",
-  "three": "mpc-horizon-rail-3d"
+  "en": {
+    "hook": "I plan twenty steps ahead and then use exactly one. A clipped controller brakes late. I saw the wall coming.",
+    "mission": "In `code/main.py` run `simulate` with `N` = 2, 5 and 20 and `umax` = 0.5, starting at `[4.0, 0.0]`. Print the lowest position of each run and see which one overshoots most.",
+    "clip": "Two cars start 4 m from the stop line and the push is limited to 0.5 m/s². The blue car is a clipped LQR: it does not know about the limit, brakes too late and overshoots by 1.28 m. The green car is MPC with a 20-step (2 s) plan, shown as green beads, and overshoots by only 0.31 m. Rendered from `simulate()` and `riccati()` at 2x speed, with 1 m drawn as 0.55 m and the cars drawn 1.6 times larger."
+  },
+  "ko": {
+    "hook": "스무 걸음 앞을 계획하고 딱 한 걸음만 씁니다. 잘린 컨트롤러는 늦게 브레이크를 밟지만 저는 벽이 오는 걸 봤습니다.",
+    "mission": "`code/main.py`에서 `[4.0, 0.0]`에서 출발해 `umax` 0.5로 `N`을 2, 5, 20으로 `simulate`를 돌리세요. 각 실행의 최저 위치를 출력해 어느 쪽이 가장 많이 넘치는지 보세요.",
+    "clip": "두 차가 정지선에서 4 m 떨어진 곳에서 출발하고 미는 힘은 0.5 m/s²로 제한됩니다. 파란 차는 잘린 LQR이라 한계를 모르고 브레이크를 늦게 밟아 1.28 m를 넘어갑니다. 초록 차는 MPC이고 20 step(2초) 계획을 초록 구슬로 보여 주며 0.31 m만 넘어갑니다. `simulate()`와 `riccati()` 결과를 2배속으로 렌더했고 1 m를 0.55 m로, 자동차를 1.6배로 그렸습니다."
+  },
+  "toy": "mpc-horizon",
+  "three": "mpc-horizon-car-3d"
 }

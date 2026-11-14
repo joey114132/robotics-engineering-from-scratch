@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Computed torque is me doing my own physics homework so the controller does not have to. Wrong homework still loses points.",
-    "mission": "Run `cd code && python3 -c \"from main import *; h=dict(PARAMS,m2=1.2); print([tracking_error(c,PARAMS,h).max() for c in (pd_control,computed_torque)])\"`. Plant 20% heavier. Does computed torque still win?"
+    "mission": "Run `cd code && python3 -c \"from main import *; h=dict(PARAMS,m2=1.2); print([tracking_error(c,PARAMS,h).max() for c in (pd_control,computed_torque)])\"`. The real arm's second link is 20% heavier than the controller's model says. Does computed torque still win?",
+    "clip": "Two arms in a horizontal plane follow the same fast trajectory, and the translucent arm above each one is the reference. The blue arm uses joint PD and lags it by up to about 0.2 rad. The green arm uses computed torque and stays on it, within about 0.001 rad. Rendered from `tracking_error()` with an exact model, at 0.4 speed."
   },
   "ko": {
     "hook": "computed torque는 제가 물리 숙제를 직접 해서 제어기가 안 해도 되게 하는 방법입니다. 숙제가 틀리면 점수도 깎입니다.",
-    "mission": "`cd code && python3 -c \"from main import *; h=dict(PARAMS,m2=1.2); print([tracking_error(c,PARAMS,h).max() for c in (pd_control,computed_torque)])\"`를 실행해 보세요. plant가 model보다 20% 무겁습니다. computed torque가 여전히 이길지 예측해 보세요."
+    "mission": "`cd code && python3 -c \"from main import *; h=dict(PARAMS,m2=1.2); print([tracking_error(c,PARAMS,h).max() for c in (pd_control,computed_torque)])\"`를 실행해 보세요. 실제 팔의 둘째 링크가 controller의 model보다 20% 무겁습니다. computed torque가 여전히 이길지 예측해 보세요.",
+    "clip": "수평면의 두 팔이 같은 빠른 궤적을 따라가고 각 팔 위의 반투명 팔이 기준입니다. 파란 팔은 관절 PD라서 기준보다 최대 약 0.2 rad 뒤처집니다. 초록 팔은 computed torque라서 기준에서 약 0.001 rad 안쪽으로 붙어 갑니다. 모델이 정확한 `tracking_error()` 결과를 0.4배 속도로 렌더했습니다."
   },
   "toy": null,
-  "motion": "tracking-arms",
   "three": "computed-torque-pair-3d"
 }

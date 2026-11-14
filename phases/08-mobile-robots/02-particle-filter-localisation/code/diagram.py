@@ -9,30 +9,30 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def loop():
-    d = Diagram(cell=(330, 170))
+    d = Diagram(numbered=True)
     d.title("One cycle of a particle filter")
-    p = d.box("Cloud of guesses\n(many poses)", 0, 0, "blue", w=240)
-    a = d.box("Predict\nmove each guess + noise", 1, 0, "purple", w=270)
-    b = d.box("Weight\nhow well do the ranges fit?", 2, 0, "purple", w=300)
-    c = d.box("Resample\ncopy good, drop bad", 2, 1, "green", w=270)
+    p = d.box("Cloud of guesses\n1000 poses", 0, 0, "blue", step=1)
+    a = d.box("Predict\nmove each guess + noise", 1, 0, "purple", step=2)
+    b = d.box("Weight\ndo distances to posts fit?", 1, 1, "purple", step=3)
+    c = d.box("Resample\ncopy good, drop bad", 0, 1, "green", step=4)
     d.arrow(p, a)
     d.arrow(a, b)
     d.arrow(b, c)
-    d.arrow(c, p, route="below")
-    d.note("The pose estimate is the mean of the cloud.", d.margin, d.margin + 60 + 2 * d.ch + 110, size=20)
+    d.arrow(c, p)
+    d.note("estimate = mean of the cloud", near=c, side="b")
     d.save(OUT / "diagram-pf-cycle.excalidraw")
 
 
 def kidnap():
-    d = Diagram(cell=(330, 170))
-    d.title("Why a collapsed cloud cannot find a moved robot")
-    a = d.box("Cloud has collapsed\nonto the true pose", 0, 0.5, "green", w=250)
-    b = d.box("Robot is carried\nto a new place", 1, 0.5, "yellow", w=250)
-    c = d.box("Every guess fits\nthe ranges badly", 2, 0, "red", w=270)
-    e = d.box("No guess is near\nthe new pose", 2, 1, "red", w=270)
-    f = d.box("Add a few random\nguesses each step", 3, 0.5, "blue", w=250)
-    for s, t in ((a, b), (b, c), (b, e), (c, f), (e, f)):
-        d.arrow(s, t)
+    d = Diagram(numbered=True)
+    d.title("Why a collapsed cloud stays lost")
+    a = d.box("Cloud has collapsed\nonto the rover", 0, 0, "green", step=1)
+    b = d.box("Rover is carried\nto another corner", 1, 0, "yellow", step=2)
+    c = d.box("Every guess is far\nfrom the new spot", 2, 0, "red", step=3)
+    e = d.box("Copying them keeps\nthe cloud at the old spot", 2, 1, "red", step=4)
+    f = d.box("Random guesses:\nsome land near it", 1, 1, "blue", step=5)
+    for s_, t in ((a, b), (b, c), (c, e), (e, f)):
+        d.arrow(s_, t)
     d.save(OUT / "diagram-pf-kidnap.excalidraw")
 
 

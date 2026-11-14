@@ -10,31 +10,32 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 def steps():
     d = Diagram()
-    d.title("Intrinsics from a flat target in four linear steps")
-    a = d.box("Known grid points\n(X, Y) on a plane", 0, 0, "blue")
-    b = d.box("Detected pixels\n(u, v), several views", 0, 1, "yellow")
-    c = d.box("Per view\nhomography H (DLT)", 1.2, 0.5, "purple", w=250)
-    e = d.box("Stack constraints\non B = K^-T K^-1", 2.4, 0.5, "purple", w=250)
-    f = d.box("Read off\nfx, fy, cx, cy", 3.6, 0.5, "green", w=230)
+    d.title("fx, fy, cx, cy from a checkerboard")
+    a = d.box("Board corners\n(X, Y) on the board", col=0, row=0, color="blue")
+    b = d.box("Corners found\nin each photo (u, v)", col=0, row=1, color="yellow")
+    c = d.box("One matrix H\nper view", col=1, row=0.5, color="purple")
+    e = d.box("Stack the clues\ninto B", col=2, row=0.5, color="purple")
+    f = d.box("Read off\nfx, fy, cx, cy", col=3, row=0.5, color="green")
     for s, t in ((a, c), (b, c), (c, e), (e, f)):
         d.arrow(s, t)
-    d.note("Every step is a least-squares or an SVD. No iteration.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=22)
+    d.note("No iteration: least squares and one SVD.", near=e, side="b")
     d.save(OUT / "diagram-calib-steps.excalidraw")
+    return d.warnings
 
 
 def views():
-    d = Diagram(cell=(330, 170))
-    d.title("Which views make the problem solvable?")
-    m = d.box("Views of the\nflat target", 0, 0.5, "gray", w=230)
-    a = d.box("Same orientation,\nonly shifted", 1, 0, "red", w=250)
-    b = d.box("Several different\ntilts", 1, 1, "green", w=250)
-    ra = d.box("Constraints repeat:\nrejected as degenerate", 2, 0, "red", w=250, h=100)
-    rb = d.box("Constraints differ:\nintrinsics are unique", 2, 1, "green", w=250, h=100)
+    d = Diagram()
+    d.title("Which board views can be solved?")
+    m = d.box("Board views", col=0, row=0.5, color="gray")
+    a = d.box("Only slid: closer,\nfarther, sideways", col=1, row=0, color="red")
+    b = d.box("Tilted a new\nway each time", col=1, row=1, color="green")
+    ra = d.box("Same clue again:\nrejected", col=2, row=0, color="red")
+    rb = d.box("New clue each time:\nK is unique", col=2, row=1, color="green")
     for s, t in ((m, a), (m, b), (a, ra), (b, rb)):
         d.arrow(s, t)
     d.save(OUT / "diagram-calib-views.excalidraw")
+    return d.warnings
 
 
 if __name__ == "__main__":
-    steps()
-    views()
+    print(steps(), views())

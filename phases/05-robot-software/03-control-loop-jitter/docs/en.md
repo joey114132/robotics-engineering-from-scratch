@@ -6,32 +6,33 @@
 
 ## In Plain Words
 
-Skipping rope to a steady beat works until a jump comes late and your feet catch the rope. Catching up on the
-next beat can keep your average pace correct, but it cannot undo that missed jump.
-
-Control-loop jitter is the variation between scheduled and actual timing. Absolute deadlines prevent work time
-from accumulating into drift, yet rare late wake-ups still happen. Their effect can disappear in the mean.
-Check the worst delay and missed deadlines as well as the average period.
+A control loop gives an arm a new target on every beat, like a metronome. If each beat waits one period after the previous move finishes, every beat comes a little later and the arm falls behind. If each beat is fixed on the clock, the beats stay on schedule. Rarely, another program holds the processor and one wake-up comes late, so the arm twitches. The average hides that one late beat, so check the worst delay and the missed deadlines too.
 
 ## The Problem
 
-A 1 kHz control loop reports a mean period of exactly 1.000 ms, and the arm twitches once every few seconds. The mean was computed over thousands of good cycles and a single bad one barely moves it. The twitch comes from the bad one.
+A 1 kHz control loop, which wakes 1000 times a second to command an arm, reports a mean period of exactly 1.000 ms. Yet the arm twitches once every few seconds. The mean covers thousands of good cycles, so a single bad one barely moves it, but the twitch comes from that bad one.
 
 ## The Concept
 
 ![One turn of a fixed-rate loop](../assets/diagram-loop-anatomy.png)
 
-*Each turn sleeps until a fixed time, wakes a little late, works, and must finish before the next deadline.*
+*Follow the numbers: each turn sleeps until a fixed time, wakes a little late, works, and must finish before the next deadline, when the next turn is due.*
 
-Jitter is the period minus the target period. Sleeping until `i * T` keeps the mean at `T`, so late wake-ups only show up as spread. Sleeping `T` after the work adds the work time to every cycle, and the loop drifts slow.
+Jitter is the period minus the target period T. Sleeping until `i * T` (turn i's own fixed time) keeps the mean at T, so late wake-ups show up only as spread. Sleeping T after the work adds the work time to every cycle, and the loop drifts slow.
 
 ![Mean versus worst](../assets/diagram-average-hides.png)
 
-*Mean, standard deviation and even p99 can look healthy. The motor is driven by the single worst cycle.*
+*Mean, standard deviation and even p99 (the delay 99% of cycles stay under) can look healthy. The motor is driven by the single worst cycle.*
+
+Example: in this run, cycle 2098 wakes 1.5 ms late. Its 0.2 ms of work ends 0.7 ms after the next slot (1.5 + 0.2 - 1.0), so the next cycle starts 0.7 ms late too. So the arm's command goes out late and the arm waits while the target moves on.
+
+![An arm falling behind its target at one late wake-up](../assets/clip-example.mp4)
+
+*Watch the arm and the amber ball. The ball steps on schedule and the arm steps when its command really goes out, so it stays behind once and then jumps. The motion is drawn ten cycles long and played 450 times slower.*
 
 ![Jitter histogram and timeline](../assets/fig-jitter.png)
 
-*In this seeded run of 5000 cycles the mean jitter is 0 us and p99 is 113 us, but the worst is 1498 us and 5 deadlines are missed.*
+*In this run of 5000 cycles (random numbers fixed by a seed) the mean jitter is 0 us (microseconds) and p99 is 113 us, but the worst is 1498 us, 1.5 ms, and 5 deadlines are missed.*
 
 ## Build It
 
@@ -41,7 +42,7 @@ s[i] = max(wake, done)
 d[i] = done = s[i] + work
 ```
 
-`simulate()` draws exponential wake-up latency plus rare spikes of 0.5 to 1.5 periods. `stats()` reports mean, p99 and worst jitter, and counts iterations that finish after their next deadline. The spikes are a model of preemption, not a measurement.
+`simulate()` draws small random wake-up delays (exponential) plus rare spikes of 0.5 to 1.5 periods. `stats()` reports mean, p99 and worst jitter, and counts iterations that finish after their next deadline. The spikes are a model of preemption, not a measurement.
 
 ```bash
 cd robotics-engineering-from-scratch

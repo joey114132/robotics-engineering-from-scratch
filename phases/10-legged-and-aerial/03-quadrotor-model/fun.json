@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Tell me to go right and I stare at the floor first. I can't push sideways, so I lean and let the thrust do the work.",
-  "mission": "In `code/main.py` change the torque `0.002` in `(hover_thrust(m), 0.002)` to `0.004` and run `python3 code/main.py`. Predict pitch and sideways distance after 1 s, then compare with 14.3 deg and 0.204 m."
- },
- "ko": {
-  "hook": "오른쪽으로 가라고 하면 저는 먼저 바닥을 봅니다. 옆으로 못 미니 기울이고 추력이 밀어 주길 기다려요.",
-  "mission": "`code/main.py`의 `hover_thrust(m), 0.002`에서 토크 `0.002`를 `0.004`로 바꾸고 `python3 code/main.py`를 실행하세요. 1초 뒤 pitch와 옆 이동을 예측하고 14.3도, 0.204 m와 비교하세요."
- },
- "toy": null,
- "motion": "quad-thrust",
+  "en": {
+    "hook": "Tell me to go right and I stare at the floor first. I can't push sideways, so I lean and let the thrust do the work.",
+    "mission": "In `code/main.py` change the torque `0.002` in `(hover_thrust(m), 0.002)` to `0.004` and run `python3 code/main.py`. Predict pitch and sideways distance after 1 s, then compare with 14.3 deg and 0.204 m.",
+    "clip": "Two identical quadrotors get different inputs. The blue one gets 10% more thrust and only climbs. The green one gets a small pitch torque at hover thrust: it tilts first and moves sideways only after it has tilted. Rendered from this lesson's `simulate()` at half speed; the drones are drawn 1.6 times larger and the white balls mark the start."
+  },
+  "ko": {
+    "hook": "오른쪽으로 가라고 하면 저는 먼저 바닥을 봅니다. 옆으로 못 미니 기울이고 추력이 밀어 주길 기다려요.",
+    "mission": "`code/main.py`의 `hover_thrust(m), 0.002`에서 토크 `0.002`를 `0.004`로 바꾸고 `python3 code/main.py`를 실행하세요. 1초 뒤 pitch와 옆 이동을 예측하고 14.3도, 0.204 m와 비교하세요.",
+    "clip": "똑같은 쿼드로터 둘에 서로 다른 입력을 줍니다. 파란 쪽은 추력을 10% 올리면 위로만 올라갑니다. 초록 쪽은 호버 추력에 작은 pitch 토크를 주면 먼저 기울고 기운 뒤에야 옆으로 움직입니다. 이 레슨의 `simulate()` 결과를 절반 속도로 렌더했습니다. 드론은 1.6배 크게 그렸고 흰 공은 출발 위치입니다."
+  },
+  "toy": null,
   "three": "quad-differential-3d"
 }

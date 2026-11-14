@@ -4,7 +4,7 @@
   "stage": "pre",
   "question": "DH 표를 FK 코드에 붙여 넣었더니 zero pose가 그림과 맞습니다. 이것이 증명하는 것은 무엇입니까?",
   "options": [
-   "거의 없다. 틀린 convention도 zero에서는 맞을 수 있다",
+   "거의 없다. 틀린 convention도 q = 0에서는 맞을 수 있다",
    "표가 맞다",
    "joint 축이 맞다"
   ],
@@ -52,7 +52,7 @@
   "stage": "post",
   "question": "직접 유도하지 않은 DH 표를 시험하는 가장 좋은 방법은 무엇입니까?",
   "options": [
-   "무작위 pose 다섯 곳 이상에서 두 번째 표기와 FK 비교",
+   "무작위 pose 다섯 곳 이상에서 FK를 두 번째 표기와 비교",
    "zero pose에서 FK",
    "표를 두 번 읽기"
   ],
@@ -64,7 +64,7 @@
   "stage": "post",
   "question": "다른 convention의 표를 넣어도 routine이 에러를 내지 않는 이유는 무엇입니까?",
   "options": [
-   "DH 코드는 형식만 보고 숫자 네 개면 받아들인다",
+   "DH 코드는 자료형만 확인해서 숫자 네 개면 모두 받아들인다",
    "표가 사실은 같은 뜻이다",
    "numpy가 고쳐 준다"
   ],

@@ -6,35 +6,41 @@
 
 ## In Plain Words
 
-Steer a game cursor onto a target while the screen is delayed. You keep steering right because the picture
-still shows it left of the target. By the time you see the crossing, your correction has already sent it too
-far.
+A bench arm pulls its hand toward a target using the angle it measured a few milliseconds ago. By then the hand has moved on, so the pull arrives late. The hand is already back on target while the arm still pulls, so it overshoots, and the next late pull overshoots more.
 
-Sensor, filter and communication delays add up in a robot loop. The same delay consumes more of a cycle when
-corrections happen faster. Increasing damping can raise that correction frequency enough to reduce delay
-tolerance, so gains must fit the whole latency budget.
+Every stage from sensor to motor adds delay. A stronger damping gain `kd` (brake force per unit of speed) makes the arm correct faster, so a given delay eats more of each swing.
 
 ## The Problem
 
-A joint is stable on the bench with `kd = 8` and starts to buzz once it is on the real controller. Nothing in the gains changed. What changed is that the command now takes a few milliseconds to travel from the sensor to the drive, and nobody added those milliseconds up.
+A joint is stable on the bench with `kd = 30` and buzzes on the real controller with the same gains. The command now takes a few milliseconds from sensor to drive.
 
 ## The Concept
 
-![Latency budget](../assets/diagram-latency-budget.png)
+Delays add: sensor 0.5 ms, filter 2 ms, bus 1 ms, compute 0.5 ms, drive 1 ms, plus 0.5 ms because a command held until the next 1 ms update is half a period old on average. Total 5.5 ms.
 
-*Each stage delays the signal and the delays add. A held command also lags by half a period.*
+![Delay budget](../assets/diagram-latency-budget.png)
 
-For a PD loop on an inertia `J`, the gain crossover `wc` solves `J^2 wc^4 = kd^2 wc^2 + kp^2`. A delay `T` adds lag `wc*T` and leaves the gain alone, so the phase margin falls to `PM - wc*T`. The delay margin is `PM / wc`.
+*Each stage adds delay.*
+
+For a PD loop (pull `kp` Nm per radian, brake `kd` per unit of speed) on an inertia `J`, the gain crossover `wc` is the rate in rad/s where the loop stops amplifying. It solves `J^2 wc^4 = kd^2 wc^2 + kp^2`. The phase margin `PM = atan(kd*wc/kp)` is how much lag, as an angle, the loop can absorb at `wc` before it oscillates.
+
+A delay `T` turns a wave of rate `wc` by an extra angle `wc*T`, so the margin falls to `PM - wc*T`. The delay margin `PM / wc` is the longest delay the loop survives.
 
 ![Delay spends the phase margin](../assets/diagram-delay-margin.png)
 
-*Delay lowers the margin until it reaches zero, and the fix is a lower crossover.*
+*Delay eats the margin; the fix is a lower crossover.*
 
-A larger `kd` raises `wc` faster than it raises `PM`, so past a point the delay margin shrinks. Given a loop delay, there is a largest `kd` that still works.
+More `kd` is not always safer. It raises `wc` almost in proportion, but `PM` stops near a quarter turn, so past a point delay costs more angle than `kd` adds. Too little `kd` also fails: `PM` is small and a short delay uses it up.
 
-![Delay margin against kd and simulated responses](../assets/fig-latency-margin.png)
+Take `J = 0.05`, `kp = 100` and the 5.5 ms above. For `kd = 2`: `wc = 54.4`, `PM = 0.827` rad, so the margin is `0.827 / 54.4 = 15.2` ms, the delay is 0.36 of it so the arm settles. For `kd = 30`: `wc = 600` and the margin is 2.6 ms, so the delay is 2.1 times it and the swings grow. Watch the blue arm.
 
-*Left: the 5.5 ms budget rules out kd above about 14, and also very small kd. Right: a delay of 0.6 times the margin settles, 1.5 times grows.*
+![Same delay, different kd](../assets/clip-example.mp4)
+
+*Same delay. Green (kd = 2) settles, blue (kd = 30) swings wider until it hits the stop.*
+
+![Margin against kd](../assets/fig-latency-margin.png)
+
+*Left: 5.5 ms rules out kd above about 14 and very small kd. Right: 0.6 times the margin settles, 1.5 times grows.*
 
 ## Build It
 
@@ -50,7 +56,7 @@ def delay_margin(kp, kd, J):
     return phase_margin(kp, kd, J) / crossover(kp, kd, J)
 ```
 
-`simulate()` runs the delayed loop. Tests check the crossover against a numeric gain of one, and that the simulation is stable at 0.6 and unstable at 1.5 times `delay_margin()`.
+`simulate()` runs the delayed loop. Tests check `wc` against a numeric gain of one, and stability at 0.6 and instability at 1.5 times `delay_margin()`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -60,7 +66,7 @@ python3 phases/04-actuators-and-sensors/04-latency-budget/code/figure.py
 
 ## Use It
 
-Delay margin is a phase-margin reading on a Bode plot divided by the crossover frequency, as derived in this lesson. Compare your result with a frequency-response tool such as `scipy.signal` or a MATLAB-style Bode plot of the same loop.
+Delay margin is the Bode-plot phase margin divided by the crossover. Compare with `scipy.signal` on the same loop.
 
 ## Ship It
 

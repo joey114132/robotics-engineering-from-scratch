@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Final boss: IK, trajectory, gravity feedforward and feedback in one arm. Pull the quietest part and see who survives.",
-  "mission": "Victory lap: in `code/main.py` change `(1.0, 0.0)` to `(1.0, 0.9, 0.5, 0.0)`. Guess where PASS flips to FAIL, then run `python3 code/main.py`."
- },
- "ko": {
-  "hook": "최종 보스입니다. IK와 trajectory와 gravity feedforward와 feedback이 한 팔에 모였습니다. 가장 조용한 부품을 빼고 누가 살아남는지 봅시다.",
-  "mission": "마무리 과제입니다. `code/main.py`의 `(1.0, 0.0)`을 `(1.0, 0.9, 0.5, 0.0)`으로 바꾸세요. PASS가 FAIL로 뒤집히는 지점을 짐작한 뒤 `python3 code/main.py`를 실행하세요."
- },
- "toy": null,
- "motion": "ff-sag-knob",
+  "en": {
+    "hook": "Final boss: IK, trajectory, gravity feedforward and feedback in one arm. Pull the quietest part and see who survives.",
+    "mission": "Victory lap: in `code/main.py` change `(1.0, 0.0)` to `(1.0, 0.9, 0.5, 0.0)`. Guess where PASS flips to FAIL, then run `python3 code/main.py`.",
+    "clip": "Two bench arms lift a ball off its post and carry it to the target marker. The blue arm has no gravity feedforward, so it sags below its plan and puts the ball off the marker. The green arm has feedforward and puts the ball on the marker. The angles come from this lesson's `run()` with feedforward 0 and 1, the sag from the plan is drawn 6 times larger, and the grasp is drawn as a snap."
+  },
+  "ko": {
+    "hook": "최종 보스입니다. IK와 trajectory와 gravity feedforward와 feedback이 한 팔에 모였습니다. 가장 조용한 부품을 빼고 누가 살아남는지 봅시다.",
+    "mission": "마무리 과제입니다. `code/main.py`의 `(1.0, 0.0)`을 `(1.0, 0.9, 0.5, 0.0)`으로 바꾸세요. PASS가 FAIL로 뒤집히는 지점을 짐작한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "bench arm 두 대가 받침 위의 공을 집어 올려 목표 표시까지 옮깁니다. 파란 팔은 gravity feedforward가 없어서 계획보다 처지고 공을 표시에서 벗어난 곳에 놓습니다. 초록 팔은 feedforward가 있어서 공을 표시 위에 놓습니다. 각도는 이 레슨의 `run()`에서 feedforward를 0과 1로 두고 가져왔고 계획에서 처진 정도는 6배로 그렸으며 공을 쥐는 순간은 한 번에 붙는 것으로 그렸습니다."
+  },
+  "toy": null,
   "three": "pick-place-arm-3d"
 }

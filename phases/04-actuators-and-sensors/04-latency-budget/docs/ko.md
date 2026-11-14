@@ -6,34 +6,48 @@
 
 ## 쉽게 말하면
 
-화면이 늦게 나오는 게임에서 cursor를 목표에 맞춰 보세요. 화면에는 아직 왼쪽에 있어서 오른쪽으로 계속 조작해요. 목표를 지난 모습이 보일 때는 이미 너무 멀리 보낸 뒤예요.
+bench 팔이 몇 ms 전에 잰 각도를 보고 손을 목표 쪽으로 끌어당겨요. 그 사이 손은 이미 움직였으니 끌어당기는 힘이 늦게 도착해요.
+손이 벌써 목표로 돌아왔는데도 팔은 계속 끌어당겨서 목표를 지나치고 다음에 늦게 오는 힘은 더 크게 지나치게 해요.
 
-로봇 loop에서도 sensor와 filter와 통신의 지연이 더해져요. 보정이 더 빠르게 반복되면 같은 지연도 한 주기에서 더 큰 몫을 차지해요. damping을 키우다가 보정 주파수가 높아지면
-지연을 버티는 여유가 줄 수 있어요. gain은 전체 latency budget에 맞아야 해요.
+센서에서 모터까지 모든 단계가 지연을 더해요. damping gain `kd`(팔이 속도에 맞서 얼마나 세게 제동하는지)를 키우면 팔이 더 빨리 보정해서 같은 지연이 한 번 흔들리는 시간을 더 많이 차지해요.
 
 ## 문제
 
-관절이 bench에서는 `kd = 8`로 안정적인데 실제 controller에 올리면 떨기 시작합니다. gain은 하나도 바뀌지 않았습니다. 바뀐 것은 명령이 센서에서 drive까지 가는 데 몇 ms가 걸린다는 점입니다. 아무도 그 ms를 더해 보지 않았습니다.
+관절이 bench에서는 `kd = 30`으로 안정적인데 같은 gain으로 실제 controller에 올리면 떨기 시작합니다. 명령이 센서에서 drive까지 가는 데 이제 몇 ms가 걸립니다.
 
 ## 개념
 
+지연은 더해집니다. 센서 0.5 ms, 필터 2 ms, bus 1 ms, 계산 0.5 ms, drive 1 ms에 더해서 다음 1 ms 갱신까지 유지되는 명령은 평균 반 주기 묵은 값이므로 0.5 ms가 더 붙습니다. 합계는 5.5 ms입니다.
+
 ![지연 예산](../assets/diagram-latency-budget.png)
 
-*단계마다 신호가 늦어지고 지연은 더해집니다. 유지된(hold) 명령은 반 주기만큼 더 늦습니다.*
+*단계마다 지연이 붙습니다.*
 
-관성 `J`에 PD loop를 건 경우, gain crossover `wc`는 `J^2 wc^4 = kd^2 wc^2 + kp^2`의 해입니다.
+관성 `J`에 PD loop(오차 1 rad당 `kp` Nm로 끌어당기고 속도에 `kd`로 제동)를 건 경우 gain crossover `wc`는 loop가 신호를 키우기를 멈추는 rad/s 단위의 빠르기입니다.
+`J^2 wc^4 = kd^2 wc^2 + kp^2`의 해입니다.
 
-지연 `T`는 `wc*T`만큼의 위상 지연을 더하고 gain은 건드리지 않으므로 phase margin은 `PM - wc*T`로 줄어듭니다. delay margin은 `PM / wc`입니다.
+phase margin `PM = atan(kd*wc/kp)`는 loop가 진동하기 전까지 `wc`에서 견딜 수 있는 위상 지연(각도)의 양입니다.
+
+지연 `T`는 빠르기 `wc`로 도는 파동을 `wc*T`만큼 더 돌려 놓으므로 margin은 `PM - wc*T`로 줄어듭니다.
+delay margin `PM / wc`는 loop가 견디는 가장 긴 지연입니다.
 
 ![지연이 phase margin을 소모한다](../assets/diagram-delay-margin.png)
 
-*지연은 margin을 0이 될 때까지 낮춥니다. 해결책은 crossover를 낮추는 것입니다.*
+*지연이 margin을 깎으므로 crossover를 낮춰야 합니다.*
 
-`kd`를 키우면 `wc`가 `PM`보다 빨리 올라가므로 어느 지점부터는 delay margin이 줄어듭니다. loop 지연이 정해지면 그래도 동작하는 가장 큰 `kd`가 있습니다.
+`kd`를 키운다고 항상 안전하지는 않습니다. `kd`는 `wc`를 거의 비례해서 올리지만 `PM`은 4분의 1바퀴 근처에서 멈추므로 어느 지점부터는 지연이 `kd`가 더하는 것보다 더 많은 각도를 깎습니다.
+`kd`가 너무 작아도 실패합니다. `PM`이 작아서 짧은 지연에도 다 소모되기 때문입니다.
 
-![kd에 따른 delay margin과 시뮬레이션 응답](../assets/fig-latency-margin.png)
+`J = 0.05`, `kp = 100`, 위의 5.5 ms를 넣어 봅니다. `kd = 2`이면 `wc = 54.4`이고 `PM = 0.827` rad이므로 margin은 `0.827 / 54.4 = 15.2` ms이고 지연은 그것의 0.36배여서 팔이 가라앉습니다.
+`kd = 30`이면 `wc = 600`이고 margin은 2.6 ms이므로 지연이 그것의 2.1배여서 흔들림이 커집니다. 파란 팔을 보세요.
 
-*왼쪽은 5.5 ms 예산이 약 14보다 큰 kd와 아주 작은 kd를 모두 막는 모습입니다. 오른쪽은 margin의 0.6배 지연에서는 가라앉고 1.5배에서는 커지는 모습입니다.*
+![같은 지연, 다른 kd](../assets/clip-example.mp4)
+
+*같은 지연입니다. 초록(kd = 2)은 가라앉고 파랑(kd = 30)은 stop에 부딪힐 때까지 더 크게 흔들립니다.*
+
+![kd에 따른 margin](../assets/fig-latency-margin.png)
+
+*왼쪽은 5.5 ms가 약 14보다 큰 kd와 아주 작은 kd를 모두 막는 모습입니다. 오른쪽은 margin의 0.6배에서는 가라앉고 1.5배에서는 커지는 모습입니다.*
 
 ## 만들기
 
@@ -59,7 +73,7 @@ python3 phases/04-actuators-and-sensors/04-latency-budget/code/figure.py
 
 ## 실제 도구로 보기
 
-delay margin은 Bode plot에서 읽은 phase margin을 crossover 주파수로 나눈 값입니다. 이 레슨에서 유도했습니다. 같은 loop를 `scipy.signal` 같은 주파수 응답 도구나 MATLAB 방식 Bode plot으로 그려서 결과를 비교해 보세요.
+delay margin은 Bode plot의 phase margin을 crossover 주파수로 나눈 값입니다. 같은 loop를 `scipy.signal` 같은 주파수 응답 도구로 그려서 결과를 비교해 보세요.
 
 ## 결과물
 

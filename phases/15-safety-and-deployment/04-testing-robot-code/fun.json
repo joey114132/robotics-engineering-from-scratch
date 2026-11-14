@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "sleep() in a test means time is a hidden dependency. I'd rather own the clock, fake it, and replay the past.",
-    "mission": "In `Controller` in `code/main.py` change `kp=40.0` to `kp=20.0`. Run `python3 -m pytest code/tests -q`, name the test that fails and why, then undo the edit."
+    "mission": "In `Controller` in `code/main.py` change `kp=40.0` to `kp=20.0`. Run `python3 -m pytest code/tests -q`, name the test that fails and why, then undo the edit.",
+    "clip": "The same step test runs on two controllers: after 0.3 s of a step to 1.0 rad (the amber ghost), the joint must be closer to the target. The green controller moves toward it and passes. The blue controller has its sign flipped (`polarity=-1`), moves away and fails. A fake clock steps 10 ms at a time, so no real waiting is needed. Rendered from this lesson's `Controller`, `MockJoint` and `run()`, at one tenth speed."
   },
   "ko": {
     "hook": "테스트에 sleep()이 있으면 시간이 숨은 dependency라는 뜻입니다. 저는 시계를 직접 쥐고 가짜로 돌리고 과거를 다시 재생하겠습니다.",
-    "mission": "`code/main.py`의 `Controller`에서 `kp=40.0`을 `kp=20.0`으로 바꾸세요. `python3 -m pytest code/tests -q`를 돌려 실패하는 테스트와 이유를 말한 뒤 원래대로 되돌리세요."
+    "mission": "`code/main.py`의 `Controller`에서 `kp=40.0`을 `kp=20.0`으로 바꾸세요. `python3 -m pytest code/tests -q`를 돌려 실패하는 테스트와 이유를 말한 뒤 원래대로 되돌리세요.",
+    "clip": "같은 step 테스트를 controller 두 개에 겁니다. 목표 1.0 rad(주황색 반투명 팔)로 step을 준 뒤 0.3초 안에 관절이 목표에 더 가까워져야 합니다. 초록 controller는 목표 쪽으로 움직여서 통과합니다. 파란 controller는 부호가 뒤집혀(`polarity=-1`) 반대로 가서 실패합니다. fake clock이 10 ms씩 시간을 넘기므로 실제로 기다릴 필요가 없습니다. 이 레슨의 `Controller`, `MockJoint`, `run()` 결과를 10분의 1 속도로 렌더했습니다."
   },
   "toy": null,
- "motion": "fake-clock",
  "three": "sign-bug-replay-3d"
 }

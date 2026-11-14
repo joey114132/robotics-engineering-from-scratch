@@ -6,37 +6,41 @@
 
 ## In Plain Words
 
-Your phone sketches your school walk from counted steps and turns. If those estimates drift, it may show you beside the right corridor
-while you are beside another. Following a good route from that wrong starting belief sends you the wrong way.
+A rover steers along a planned route by checking where it believes it is. It forms that belief by adding wheel turns, which is called odometry. If the wheels read a little wrong, each step adds error to the belief.
 
-This navigation system plans around obstacles, then steers using an estimated pose. Biased wheel readings separate that estimate from
-the real robot. Observing known landmarks corrects position and heading, so the same follower can use the route successfully again.
+The rover keeps steering to put its belief on the route, so the real rover drifts off into a wall. Two posts at known spots fix this. The direction between them shows which way the rover faces, and one post then shows where it is, so it resets its belief.
 
 ## The Problem
 
-The planner found a clean route and the follower tracks it well in tests. On a longer run the robot ends up metres from the goal, pressed against a wall, while its own display says it is on the path. The plan was fine. The belief was wrong.
+The route was clean and the follower tracked it in tests. On a longer run the rover ends pressed against a wall while its display says it is on the path. The plan was fine. The belief was wrong.
 
 ## The Concept
 
 ![Parts of the navigation system](../assets/diagram-nav-system.png)
 
-*A grid is inflated by the robot radius, A\* finds a route, shortcuts trim it, and pure pursuit steers a differential-drive robot from its odometry estimate.*
+*Follow the numbers: A\* (a shortest-route search) plans on a grid padded by the rover's radius, shortcuts trim the route, and pure pursuit steers along it by the odometry belief.*
 
 ![Break test diagram](../assets/diagram-nav-broken.png)
 
-*Odometry error grows the longer the robot drives. A landmark fix resets it before it matters.*
+*Compare the rows: same wheel error, but only the bottom row uses landmark posts.*
+
+Drive straight at 0.6 m/s with the lesson's wheel error: speed read 3% high, turn rate read 0.03 rad/s off (it is not turning), plus noise. After 10 s the facing is wrong by `0.03 × 10 = 0.3` rad. The belief is off by 0.015 m after 1 s, 0.26 m after 5 s and 0.97 m after 10 s. It grows faster than time because the facing error turns each later metre sideways. A fix each second keeps the 10 s gap at 0.012 m.
+
+![Two rovers drive straight and only one resets its belief](../assets/clip-example.mp4)
+
+*Watch the pale rover (the belief). Blue's stays on the line while the real rover curves away. Green is fixed every second.*
 
 ![The task succeeding](../assets/fig-nav-result.png)
 
-*A\* gives 77 waypoints and 21.1 m. Shortcuts keep 6 waypoints and 19.8 m. With small odometry error the robot ends 0.28 m from the goal without touching a wall.*
+*Follow the orange line: A\* gives 77 waypoints (21.1 m), shortcuts keep 6 (19.8 m), and the rover ends 0.28 m from the goal, clear of the walls.*
 
 ![Drift with and without the fix](../assets/fig-nav-drift.png)
 
-*Without a fix the belief ends 4.7 m from the truth and the robot hits a wall. With a fix once per second the belief stays within 0.11 m and the goal error is 0.15 m.*
+*Panels one and two: without a fix the belief ends 4.7 m off and the rover hits a wall; with a fix once per second it stays within 0.11 m, goal error 0.15 m.*
 
 ## Build It
 
-The robot steers from `est`, while the true pose moves as commanded. Wheel readings carry a speed error, a turn-rate bias and noise.
+The rover steers from `est`, its belief, while the true pose moves as commanded. Wheel readings carry a speed error, a turn-rate bias and noise.
 
 ```python
 vm = v * (1 + scale_err) + rng.normal(0, sigma)
@@ -44,7 +48,7 @@ wm = w + w_bias + rng.normal(0, sigma)
 est = est + dt * np.array([vm * np.cos(est[2]), vm * np.sin(est[2]), wm])
 ```
 
-`pose_fix()` recovers the pose from two landmarks seen in the robot frame: heading from the direction between them, position from the first. Walls do not block the beacons in this model.
+`pose_fix()` recovers the pose from two landmarks seen in the rover frame: heading from the direction between them, position from the first. Walls do not block the beacons in this model.
 
 ```bash
 cd robotics-engineering-from-scratch

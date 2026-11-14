@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "학습 정책을 결정론적인 층으로 감싸는 이유는 무엇입니까?", "options": ["학습은 NaN, spike, 오래된 입력에 대해 아무것도 보장하지 않습니다", "정책이 더 정확해집니다", "테스트가 필요 없어집니다"], "answer": 0, "explanation": "wrapper의 보장은 정책이 무엇을 내든 성립합니다."},
-  {"id": 2, "stage": "check", "question": "정책이 NaN을 냈을 때 wrapper는 무엇을 명령합니까?", "options": ["NaN", "fallback을 변화율 제한에 통과시킨 값", "직전의 원시 값"], "answer": 1, "explanation": "유한하지 않은 값은 바뀌고, 그 값도 변화율 제한기를 지납니다."},
-  {"id": 3, "stage": "check", "question": "카메라가 마감 시한보다 오래 끊기면 어떻게 됩니까?", "options": ["wrapper가 영원히 hold합니다", "한동안 hold하다가 fallback으로 서서히 내립니다", "정책에 0 이미지를 넣습니다"], "answer": 1, "explanation": "hold는 짧은 공백에서만 안전합니다."},
-  {"id": 4, "stage": "check", "question": "fuzz 테스트에 NaN과 무한대를 넣는 이유는 무엇입니까?", "options": ["plant가 받을 수 있는 입력이라서", "wrapper의 제한이 어떤 정책 출력에도 성립해야 해서", "테스트를 느리게 하려고"], "answer": 1, "explanation": "모든 출력에 대한 보장은 최악의 출력으로 시험해야 합니다."},
+  {"id": 1, "stage": "pre", "question": "학습된 policy를 결정론적인 층으로 감싸는 이유는 무엇입니까?", "options": ["학습은 NaN, spike, 오래된 입력에 대해 아무것도 보장하지 않습니다", "policy가 더 정확해집니다", "테스트가 필요 없어집니다"], "answer": 0, "explanation": "wrapper의 보장은 policy가 무엇을 내든 성립합니다."},
+  {"id": 2, "stage": "check", "question": "policy가 NaN을 냈을 때 wrapper는 무엇을 명령합니까?", "options": ["NaN", "fallback을 rate limit에 통과시킨 값", "직전의 원시 값"], "answer": 1, "explanation": "유한하지 않은 값은 바뀌고, 그 값도 rate limiter를 지납니다."},
+  {"id": 3, "stage": "check", "question": "카메라가 마감 시한보다 오래 끊기면 어떻게 됩니까?", "options": ["wrapper가 영원히 hold합니다", "한동안 hold하다가 fallback으로 서서히 내립니다", "policy에 0 이미지를 넣습니다"], "answer": 1, "explanation": "hold는 짧은 공백에서만 안전합니다."},
+  {"id": 4, "stage": "check", "question": "fuzz 테스트에 NaN과 무한대를 넣는 이유는 무엇입니까?", "options": ["plant가 받을 수 있는 입력이라서", "wrapper의 제한이 어떤 policy 출력에도 성립해야 해서", "테스트를 느리게 하려고"], "answer": 1, "explanation": "모든 출력에 대한 보장은 최악의 출력으로 시험해야 합니다."},
   {"id": 5, "stage": "post", "question": "wrapper를 평범한 assert로 테스트할 수 있는 이유는 무엇입니까?", "options": ["작고 결정론적이기 때문입니다", "신경망을 쓰기 때문입니다", "시계를 읽기 때문입니다"], "answer": 0, "explanation": "같은 입력에서 같은 출력과 같은 로그가 나옵니다."},
-  {"id": 6, "stage": "post", "question": "로그에 clip 항목이 많다면 가장 가능성 높은 원인은 무엇입니까?", "options": ["wrapper가 고장 났습니다", "정책이 제한보다 큰 값을 자주 요구합니다", "로그가 가득 찼습니다"], "answer": 1, "explanation": "자주 clip된다면 제한을 넓힐 것이 아니라 정책을 다시 학습하거나 조정할 신호입니다."}
+  {"id": 6, "stage": "post", "question": "로그에 clip 항목이 많다면 가장 가능성 높은 원인은 무엇입니까?", "options": ["wrapper가 고장 났습니다", "policy가 제한보다 큰 값을 자주 요구합니다", "로그가 가득 찼습니다"], "answer": 1, "explanation": "자주 clip된다면 제한을 넓힐 것이 아니라 policy를 다시 학습하거나 조정할 신호입니다."}
 ]

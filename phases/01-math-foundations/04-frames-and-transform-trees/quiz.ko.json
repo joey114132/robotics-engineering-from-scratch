@@ -3,6 +3,6 @@
   {"id": 2, "stage": "check", "question": "유효한 곱은 어느 것입니까?", "options": ["T_a_b @ T_c_b", "T_b_a @ T_b_c", "T_a_b @ T_b_c"], "answer": 2, "explanation": "안쪽 이름이 같아야 서로 상쇄됩니다."},
   {"id": 3, "stage": "check", "question": "tool과 cup이 다른 가지에 있을 때 트리는 T_tool_cup을 어떻게 구합니까?", "options": ["공통 조상까지 올라간 뒤 한쪽을 inverse로 내려간다", "트리 전체를 뒤집는다", "저장된 transform을 전부 곱한다"], "answer": 0, "explanation": "inv(T_anc_tool) @ T_anc_cup입니다."},
   {"id": 4, "stage": "check", "question": "add()가 두 번째 부모를 거부하는 이유는 무엇입니까?", "options": ["메모리를 아끼려고", "부모가 둘이면 경로가 둘이라 조회가 모호해진다", "트리가 이진이어야 해서"], "answer": 1, "explanation": "각 frame은 root까지 경로가 정확히 하나여야 합니다."},
-  {"id": 5, "stage": "post", "question": "서로 이어지지 않은 트리의 두 frame을 조회하면 어떻게 해야 합니까?", "options": ["identity를 돌려준다", "마지막으로 알던 transform을 돌려준다", "큰 소리로 실패한다"], "answer": 2, "explanation": "조용히 identity를 돌려주면 엉뚱한 곳을 가리키는 그럴듯한 pose가 됩니다."},
+  {"id": 5, "stage": "post", "question": "서로 이어지지 않은 트리의 두 frame을 조회하면 어떻게 해야 합니까?", "options": ["identity를 돌려준다", "마지막으로 알던 transform을 돌려준다", "분명하게 에러를 낸다"], "answer": 2, "explanation": "조용히 identity를 돌려주면 엉뚱한 곳을 가리키는 그럴듯한 pose가 됩니다."},
   {"id": 6, "stage": "post", "question": "cup이 엉뚱한 곳에 놓였는데 pose는 유효한 회전과 위치입니다. 가장 먼저 볼 것은 무엇입니까?", "options": ["곱의 순서와 T_to_from 이름", "제어 루프 주기", "카메라 노출"], "answer": 0, "explanation": "잘못된 곱도 rigid하므로 이름 확인으로만 찾을 수 있습니다."}
 ]

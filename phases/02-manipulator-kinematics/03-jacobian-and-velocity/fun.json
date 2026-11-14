@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "One matrix turns my joint speeds into hand speed. Its transpose turns a push on my hand into joint torque. Cheap trick.",
-    "mission": "Run `cd code && python3 -c \"from main import *; q=np.array([.3,.8]); L=(.5,.4); print(abs(jacobian(q,L)-jacobian_fd(q,L,eps=1e-2)).max())\"`. Is it bigger or smaller than the 2.8e-11 from `python3 code/main.py`?"
+    "mission": "Run `cd code && python3 -c \"from main import *; q=np.array([.3,.8]); L=(.5,.4); print(abs(jacobian(q,L)-jacobian_fd(q,L,eps=1e-2)).max())\"`. Is it bigger or smaller than the 2.8e-11 from `python3 code/main.py`?",
+    "clip": "Both arms drive their two joints around the same small circle, 0.3 rad in radius, one lap in 4 s. The dark loop is where the tip really goes, and the amber arrow is the tip velocity from `jacobian()` times the joint speeds, drawn 0.9 s long. The bent green arm (q2 = 1.5) draws a fat loop. The nearly straight blue arm (q2 = 0.35) draws a thin one, because it can barely move its tip along the arm."
   },
   "ko": {
-    "hook": "행렬 하나가 제 관절 속도를 손끝 속도로 바꿉니다. 그 transpose는 손끝을 미는 힘을 관절 토크로 바꿉니다. 싸게 쓰는 마법입니다.",
-    "mission": "`cd code && python3 -c \"from main import *; q=np.array([.3,.8]); L=(.5,.4); print(abs(jacobian(q,L)-jacobian_fd(q,L,eps=1e-2)).max())\"`를 실행하세요. 이 숫자가 `python3 code/main.py`가 출력하는 2.8e-11보다 클지 작을지 먼저 예측해 보세요."
+    "hook": "행렬 하나가 제 joint 속도를 손끝 속도로 바꿉니다. 그 transpose는 손끝을 미는 힘을 joint torque로 바꿉니다. 행렬 하나로 둘 다 해결하는 값싼 요령입니다.",
+    "mission": "`cd code && python3 -c \"from main import *; q=np.array([.3,.8]); L=(.5,.4); print(abs(jacobian(q,L)-jacobian_fd(q,L,eps=1e-2)).max())\"`를 실행하세요. 이 숫자가 `python3 code/main.py`가 출력하는 2.8e-11보다 클지 작을지 먼저 예측해 보세요.",
+    "clip": "두 팔이 두 관절을 같은 작은 원(반지름 0.3 rad) 위로 4초에 한 바퀴 돌립니다. 검은 고리는 손끝이 실제로 지나가는 길이고, 주황색 화살표는 `jacobian()`에 관절 속도를 곱한 손끝 속도를 0.9초 길이로 그린 것입니다. 굽힌 초록 팔(q2 = 1.5)은 뚱뚱한 고리를 그립니다. 거의 편 파란 팔(q2 = 0.35)은 팔 방향으로 손끝을 거의 못 움직여서 가는 고리를 그립니다."
   },
   "toy": null,
- "motion": "jacobian-ellipse",
   "three": "jacobian-push-arm-3d"
 }

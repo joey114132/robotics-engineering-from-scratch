@@ -1,4 +1,4 @@
-# 쉬운 설명의 구조, 분량, 숫자 근거와 웹 및 terminal 출력 회귀를 검사한다.
+# 쉬운 설명의 구조, 분량, 숫자 근거와 terminal 출력 회귀를 검사한다.
 import io
 
 import pytest
@@ -95,9 +95,9 @@ def test_heading_in_code_is_not_a_section(lesson):
     assert any("missing" in e for e in checks.check_doc(lesson, "en"))
 
 
-def test_entire_english_lesson_cap_is_540(lesson):
-    edit(lesson, "en", "## The Concept", "extra " * 541 + "\n\n## The Concept")
-    assert any("prose words, limit 540" in e for e in checks.check_doc(lesson, "en"))
+def test_entire_english_lesson_cap_is_600(lesson):
+    edit(lesson, "en", "## The Concept", "extra " * 601 + "\n\n## The Concept")
+    assert any("prose words, limit 600" in e for e in checks.check_doc(lesson, "en"))
 
 
 def test_no_extra_content_between_metadata_and_explainer(lesson):
@@ -127,24 +127,6 @@ def test_terminal_shows_explainer_before_hook_and_problem(course, lang):
     hook = "Hook text." if lang == "en" else "훅 문장입니다."
     assert out.index(PLAIN[lang]) < out.index("A tray tips.") < out.index(hook) < out.index(heading)
     assert out.count("A tray tips.") == 1
-
-
-@pytest.mark.parametrize("lang", BASE)
-def test_web_and_single_bundle_keep_callout_first_and_glossary_active(lang):
-    import build_site as site
-    from build_single import lesson_fragments
-
-    text = f"# Title\n\n> Idea\n\n**Type:** Build\n\n## {PLAIN[lang]}\n\nThe torque turns a tray.\n\n## {BASE[lang][0]}\n\nThe torque turns a wheel."
-    _, h = site.md_to_html(text, "assets/")
-    h = site.gloss(h, {"num": "03"}, "A generic lesson")
-    intro, rest = site.split_intro(h)
-    assert 'class="plain-words"' in intro
-    assert '<h2 data-section="plain-words">' in intro
-    assert "A tray" not in rest
-    assert intro.count('class="gl"') == 1 and rest.count('class="gl"') == 1
-    head, deferred, tail = lesson_fragments(intro + '<span hidden data-rest="a"></span>' + rest + '<span hidden data-rest="b"></span>End')
-    assert "tray" in head and "wheel" in deferred and tail == "End"
-    assert f">{PLAIN[lang]}</h2>" in head
 
 
 def test_humanizer_guard_keeps_new_heading_and_facts_locked():

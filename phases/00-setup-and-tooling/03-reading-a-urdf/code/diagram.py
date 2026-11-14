@@ -9,31 +9,31 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def tree():
-    d = Diagram(cell=(280, 150))
+    d = Diagram()
     d.title("A URDF is a tree of links and joints")
-    b = d.box("base\n(root)", 0, 0.5, "blue", w=190)
-    u = d.box("upper\nvia shoulder", 1, 0.5, "blue", w=190)
-    f = d.box("fore\nvia elbow", 2, 0, "blue", w=190)
-    c = d.box("camera\nvia cam_mount", 2, 1, "gray", w=190)
-    h = d.box("hand\nvia wrist", 3, 0, "green", w=190)
-    d.arrow(b, u)
-    d.arrow(u, f)
+    b = d.box("base\n(root)", col=0, row=0, color="blue")
+    u = d.box("upper\nvia shoulder", col=1, row=0, color="blue")
+    f = d.box("fore\nvia elbow", col=2, row=0, color="blue")
+    c = d.box("camera\nvia cam_mount", col=1, row=1, color="gray")
+    h = d.box("hand\nvia wrist", col=2, row=1, color="green")
+    for s, t in ((b, u), (u, f), (f, h)):
+        d.arrow(s, t)
     d.arrow(u, c, dashed=True)
-    d.arrow(f, h)
-    d.note("Joints are the edges (shown as 'via'). Every link has one parent joint.", d.margin, d.margin + 60 + 2 * d.ch - 40, size=20)
+    d.note("The joint name sits on the link it leads to. Every link has one parent joint.", near=h, side="b")
     d.save(OUT / "diagram-urdf-tree.excalidraw")
 
 
 def frames():
-    d = Diagram(cell=(300, 170))
+    d = Diagram()
     d.title("Which frame is the origin written in?")
-    a = d.box("<origin xyz=0.3 0 0>\non joint elbow", 0, 0.5, "yellow", w=250)
-    ok = d.box("Parent frame\n(upper link)", 1, 0, "green", w=220)
-    bad = d.box("World frame\n(what a naive sum does)", 1, 1, "red", w=250)
-    r1 = d.box("Offset follows\nthe rotated link", 2, 0, "green", w=230)
-    r2 = d.box("Offset ignores\nthe shoulder yaw", 2, 1, "red", w=230)
-    for s, t in ((a, ok), (a, bad), (ok, r1), (bad, r2)):
+    a = d.box("Elbow offset\n(0.3, 0, 0)", col=0, row=0.5, color="yellow")
+    p = d.box("Parent frame\n(correct)", col=1, row=0, color="green")
+    w = d.box("World frame\n(naive sum)", col=1, row=1, color="red")
+    pr = d.box("Elbow at\n(0, 0.3, 0.1)", col=2, row=0, color="green")
+    wr = d.box("Elbow at\n(0.3, 0, 0.1)", col=2, row=1, color="red")
+    for s, t in ((a, p), (a, w), (p, pr), (w, wr)):
         d.arrow(s, t)
+    d.note("The shoulder turned the parent frame by 90 degrees", near=pr, side="b")
     d.save(OUT / "diagram-origin-frame.excalidraw")
 
 

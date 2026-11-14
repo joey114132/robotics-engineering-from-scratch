@@ -11,27 +11,26 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 def orders():
     d = Diagram()
     d.title("Each integral raises the drift order")
-    g = d.box("Gyro rate\n+ small bias b", 0, 0, "yellow", w=210)
-    gi = d.box("Integrate\nonce", 1, 0, "purple", w=190)
-    ge = d.box("Angle error\n= b t  (linear)", 2, 0, "red", w=230)
-    a = d.box("Accel\n+ small bias a", 0, 1, "yellow", w=210)
-    ai = d.box("Integrate\ntwice", 1, 1, "purple", w=190)
-    ae = d.box("Position error\n= a t^2 / 2", 2, 1, "red", w=230)
-    for s, t in ((g, gi), (gi, ge), (a, ai), (ai, ae)):
-        d.arrow(s, t)
+    g = d.box("Gyro bias\n(robot still)", col=0, row=0, color="yellow")
+    gi = d.box("Add up\nonce", col=1, row=0, color="purple")
+    ge = d.box("Angle error\nb t", col=2, row=0, color="red")
+    a = d.box("Accel bias\n(robot still)", col=0, row=1, color="yellow")
+    ai = d.box("Add up\ntwice", col=1, row=1, color="purple")
+    ae = d.box("Position\na t^2 / 2", col=2, row=1, color="red")
+    for s, t_ in ((g, gi), (gi, ge), (a, ai), (ai, ae)):
+        d.arrow(s, t_)
     d.save(OUT / "diagram-drift-orders.excalidraw")
 
 
 def leak():
-    d = Diagram(cell=(310, 170))
+    d = Diagram(numbered=True)
     d.title("Gyro bias leaks into position through gravity")
-    b = d.box("Gyro bias b", 0, 0, "yellow", w=200)
-    t = d.box("Tilt estimate\nwrong by b t", 1, 0, "purple", w=220)
-    g = d.box("Gravity seen\nas g sin(b t)", 2, 0, "purple", w=220)
-    p = d.box("Position error\n~ g b t^3 / 6", 3, 0, "red", w=240)
+    b = d.box("Gyro bias b\nrobot still", col=0, row=0, color="yellow")
+    t = d.box("Tilt guess\noff by b t", col=1, row=0, color="purple")
+    g = d.box("Fake push:\ng sin(b t)", col=2, row=0, color="purple")
+    p = d.box("Position\ng b t^3 / 6", col=2, row=1, color="red")
     for s, e in ((b, t), (t, g), (g, p)):
         d.arrow(s, e)
-    d.note("Over a long run, t^3 overtakes t^2.", d.margin, d.margin + 60 + d.ch - 20, size=22)
     d.save(OUT / "diagram-gravity-leak.excalidraw")
 
 

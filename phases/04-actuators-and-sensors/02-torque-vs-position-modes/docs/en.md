@@ -6,32 +6,41 @@
 
 ## In Plain Words
 
-Ask a friend to hold a ruler at a mark while you push it sideways. If you specify only the mark, your friend
-decides how hard to push back.
+Press up on the hand of a bench arm. Inside the joint, the drive pulls the hand back toward its target angle like a spring, and the strength of that spring is fixed in the drive. Your program can ask for a softer spring, but in position mode the request never reaches it, so the arm barely gives way.
 
-Position mode likewise lets the drive's inner loop choose torque from position error. An outer stiffness
-request alone cannot change its gain. Torque mode lets your controller set that response; admittance instead
-measures the push and moves the position target.
+In torque mode your program writes the pull itself, so it decides how much pull each unit of error gets.
 
 ## The Problem
 
-You write an impedance controller that should make a joint yield like a soft spring with `K = 20`. On the drive you have, the joint stays stiff and barely moves when you push it. The outer loop asked for softness, but the drive's own position loop was never told.
+You write an impedance controller, one that lets a joint give way like a spring, with stiffness `K = 20` Nm per radian. On the drive you have, the joint stays stiff and barely moves when you push it. Your program asked for softness, but the drive's own position controller never heard it.
 
 ## The Concept
 
-![Who closes the loop](../assets/diagram-mode-loops.png)
+A PD controller pulls back with `kp` Nm per radian of error and brakes with `kd` in proportion to speed. In each row of the picture, look at who runs one: your program in torque mode, the drive in position mode.
 
-*In torque mode your loop writes the torque. In position mode the drive's inner PD does, with gains you cannot change.*
+![Who writes the torque](../assets/diagram-mode-loops.png)
 
-With a constant push `tau_ext` the joint settles where the spring force balances it. In torque mode that is `tau_ext / K`, so `K` is yours to choose. In position mode it is `tau_ext / kp_in`, whatever you send as `K`.
+*In torque mode your program writes the torque. In position mode the drive's inner PD, a spring with fixed gains, does.*
+
+The drive's inner one has fixed `kp_in` and `kd_in`. A constant push `tau_ext` moves the joint until the spring balances it: `tau_ext / K` in torque mode, so `K` is yours to choose, but `tau_ext / kp_in` in position mode, whatever `K` you send.
+
+With a 2 Nm push and `kp_in = 400`, torque mode with `K = 20` gives way `2 / 20 = 0.1` rad and position mode only `2 / 400 = 0.005` rad. An admittance layer wants the joint to act like a spring of stiffness `K`, so it measures the push and lifts the target by `tau_ext / K = 0.1` rad. With the inner spring's `0.005` the total is `tau_ext * (1/K + 1/kp_in) = 0.105` rad, never stiffer than `kp_in`.
+
+Watch the green target rise.
+
+![Position mode without and with an admittance layer](../assets/clip-example.mp4)
+
+*Both in position mode. Blue: no layer, the hand barely moves. Green: the layer lifts the amber target and the hand follows.*
+
+Follow the boxes from the wish for a soft joint.
 
 ![What the outer controller can ask for](../assets/diagram-mode-options.png)
 
-*Impedance needs a torque interface. A position-only drive needs a compliance layer outside, and that layer needs a measured torque.*
+*Impedance needs torque commands. A position-only drive needs an outside torque-measuring layer.*
 
 ![Response to a push and felt stiffness](../assets/fig-mode-stiffness.png)
 
-*Left: the same 2 Nm push gives three different joints. Right: the stiffness you feel follows your request only in torque mode, and the admittance layer is capped below the inner gain.*
+*Left: the same 2 Nm push moves three joints by different amounts. Right: stiffness requested against stiffness felt, and only torque mode follows the dotted line.*
 
 ## Build It
 
@@ -46,7 +55,7 @@ elif mode == "admittance":
     tau = kp_in * (q_des + ext / K - q) - kd_in * qd
 ```
 
-A test shows `position` equals `torque` with `K = kp_in, D = kd_in`. The admittance deflection is `tau_ext * (1/K + 1/kp_in)`.
+A test shows `position` equals `torque` with `K = kp_in, D = kd_in`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -56,13 +65,13 @@ python3 phases/04-actuators-and-sensors/02-torque-vs-position-modes/code/figure.
 
 ## Use It
 
-ros2_control lets each joint declare command interfaces, usually position, velocity, acceleration or effort, and a controller fails if it requests an interface the hardware does not offer. Check which your drive exports before choosing impedance or admittance.
+ros2_control joints declare command interfaces (the commands a drive accepts), such as position or effort, and a controller fails if it asks for one the hardware lacks. Check your drive's first.
 
 Sources: [ros2_control full tutorial](https://control.ros.org/master/doc/ros2_control_demos/example_7/doc/userdoc.html), accessed 2026-11-09.
 
 ## Ship It
 
-`outputs/skill-drive-mode-check.md` decides whether a drive can host impedance control directly.
+`outputs/skill-drive-mode-check.md` decides whether a drive can host impedance control.
 
 ## Exercises
 

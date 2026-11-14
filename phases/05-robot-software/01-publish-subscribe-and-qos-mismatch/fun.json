@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Ask for more than the publisher offers and nothing connects. Nothing complains either, which is what makes it so annoying.",
-  "mission": "In `code/main.py` change the first line's `Qos(\"reliable\")` to `Qos(\"best_effort\")`. Predict `connected` and `delivered`, then run `python3 code/main.py`."
- },
- "ko": {
-  "hook": "구독자가 발행자가 줄 수 있는 것보다 더 요구하면 연결도 안 되고 불평도 없습니다. 에러가 안 나서 오히려 더 답답합니다.",
-  "mission": "`code/main.py`의 첫 줄에서 `Qos(\"reliable\")`을 `Qos(\"best_effort\")`로 바꾸세요. `connected`와 `delivered`를 예측한 다음 `python3 code/main.py`를 실행하세요."
- },
- "toy": null,
- "motion": "pubsub-flow",
- "three": "qos-queue-3d"
+  "en": {
+    "hook": "Ask for more than the publisher offers and nothing connects. Nothing complains either, which is what makes it so annoying.",
+    "mission": "In `code/main.py` change the first line's `Qos(\"reliable\")` to `Qos(\"best_effort\")`. Predict `connected` and `delivered`, then run `python3 code/main.py`.",
+    "clip": "A rover publishes its position every 0.25 s, and an arm follows it using only the messages it receives. In the green pair both ends are reliable, so every message arrives and the arm tracks the rover. In the blue pair the publisher is best effort and the subscriber asks for reliable, so `compatible()` refuses the match and the lesson's `run()` delivers nothing. The red packets are lost, the arm never moves and nothing reports an error."
+  },
+  "ko": {
+    "hook": "subscriber가 publisher가 줄 수 있는 것보다 더 요구하면 연결도 안 되고 불평도 없습니다. 에러가 안 나서 오히려 더 답답합니다.",
+    "mission": "`code/main.py`의 첫 줄에서 `Qos(\"reliable\")`을 `Qos(\"best_effort\")`로 바꾸세요. `connected`와 `delivered`를 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "로버가 0.25초마다 자기 위치를 publish하고 팔은 받은 메시지만으로 그 로버를 따라갑니다. 초록 쌍은 양쪽이 모두 reliable이라 메시지가 전부 도착해서 팔이 로버를 따라갑니다. 파란 쌍은 publisher가 best effort이고 subscriber가 reliable을 요구하므로 `compatible()`이 연결을 거부하고 이 레슨의 `run()`은 아무것도 전달하지 않습니다. 빨간 packet은 사라지고 팔은 움직이지 않으며 오류도 나오지 않습니다."
+  },
+  "toy": null,
+  "three": "qos-queue-3d"
 }

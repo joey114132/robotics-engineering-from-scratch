@@ -6,33 +6,39 @@
 
 ## In Plain Words
 
-At a skating rink, you estimate where a friend is from their last position and speed. A shouted position
-report arrives with some error. If the report is usually unreliable, you move your estimate toward it only a
-little; if your motion prediction is uncertain, you correct more.
+A toy car drives along a road while a position sensor reports where it is, but each report is off by a couple of metres. You also know roughly how fast the car goes, so you can predict its next position. If the sensor is very noisy, move your estimate only a little toward its report. If your prediction is shakier, move more.
 
-The Kalman gain sets that balance. The filter updates estimated position and velocity, while covariance tracks
-its remaining uncertainty. A corrected estimate is still a guess, and its uncertainty should match errors
-measured over repeated trials.
+The Kalman gain is that balance. It also tracks how unsure the estimate is, its covariance.
 
 ## The Problem
 
-A position sensor is off by about 2 m on every reading. Plotting its raw output makes the robot look as if it jitters, and differencing it for speed makes the jitter worse. Averaging the last few readings removes the jitter but lags behind every turn.
+A position sensor is off by about 2 m on every reading. Plotted raw, the robot looks jittery. Averaging recent readings removes the jitter but lags every turn.
 
 ## The Concept
 
 ![One Kalman cycle](../assets/diagram-kalman-loop.png)
 
-*Predict with the motion model, then correct with the reading. The corrected estimate feeds the next cycle.*
+*Predict with the motion model, then correct with the reading. The result feeds the next cycle.*
 
-The state is `x = [position, velocity]` and velocity changes by small random accelerations. Predict: `x = F x`, `P = F P F^T + Q`. A reading `z = H x + noise` has variance `R`. The correction is `x = x + K (z - H x)`, and its error covariance in Joseph form is `P = (I - K H) P (I - K H)^T + K R K^T`. Setting the derivative of its trace to zero gives `K = P H^T (H P H^T + R)^-1`.
+The state `x` is `[position, velocity]`. `P` is its variance, the spread squared, so 2 m of doubt is `P = 4`.
+
+Predict: `x = F x` and `P = F P F^T + Q`. `F` moves the state one step (position + velocity * time) and `Q` adds doubt, because the real speed may change a little.
+
+A reading `z = H x + noise` sees only the position (`H` picks it out), with noise variance `R`. Correct: `x = x + K (z - H x)`, so the estimate moves by `K` times the surprise `z - H x`. The best `K = P H^T (H P H^T + R)^-1` leaves the least doubt, with `P = (I - K H) P (I - K H)^T + K R K^T` (Joseph form).
+
+For the position alone, `K = P / (P + R)`. Start at 0 with `P = 4` and a reading of 3 m. With `R = 4` the gain is `K = 4 / (4 + 4) = 0.5`, so the estimate moves 1.5 m and `P` falls to 2. A sensor with 6 m of noise has `R = 36`, so `K = 4 / 40 = 0.1` and it moves only 0.3 m.
+
+![Same reading, two roads](../assets/clip-example.mp4)
+
+*Watch the pin slide to the amber reading. Blue road: noisy sensor (6 m), the pin barely moves. Green road: it moves halfway and the plus or minus 2 sigma strip (`sigma = sqrt(P)`, spread in metres) shrinks more.*
 
 ![The gain is a trust dial](../assets/diagram-kalman-trust.png)
 
-*Big sensor noise makes K small and the filter follows its model. Large model uncertainty makes K large and the filter follows the sensor.*
+*A noisy sensor makes K small, so the filter follows its model. A shaky model makes K large, so it follows the sensor.*
 
-![Estimate, band and measured error](../assets/fig-kalman-band.png)
+![Estimate and measured error](../assets/fig-kalman-band.png)
 
-*Left: one run, with the estimate inside its 2-sigma band. Right: over 4000 runs the actual error settles near 1.0 m, half the raw 2.0 m, and sits on the filter's own `sqrt(P)`.*
+*Left: one run, estimate inside its 2-sigma band. Right: over 4000 runs the error settles near 1.0 m, half the raw 2.0 m, matching `sqrt(P)`.*
 
 ## Build It
 
@@ -46,7 +52,7 @@ x = x + K @ (z[None, :] - H @ x)     # update
 P = (np.eye(2) - K @ H) @ P
 ```
 
-Tests check that perturbing `K` raises the Joseph trace, that the error covariance over 4000 runs equals `P`, and that about 95% of errors fall inside 2 sigma.
+Tests check that any other `K` raises the Joseph trace, that 4000 runs match `P`, and that 95% of errors fall inside 2 sigma.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -55,16 +61,16 @@ python3 -m pytest phases/07-state-estimation/02-kalman-filter -q
 
 ## Use It
 
-ROS's `robot_localization` ships `ekf_localization_node`, an extended Kalman filter that projects a motion model forward and corrects it with sensor data. SciPy's `solve_discrete_are` gives the steady-state `P`, and the last test compares it with the loop above.
+ROS's `robot_localization` ships `ekf_localization_node`, an extended Kalman filter. SciPy's `solve_discrete_are` gives the settled `P`.
 
 Sources: robot_localization state estimation nodes, https://docs.ros.org/en/melodic/api/robot_localization/html/state_estimation_nodes.html (opened 2026-11-09).
 
 ## Ship It
 
-`outputs/skill-kalman-filter-check.md` reviews a filter for the usual silent mistakes in `Q`, `R` and `P`.
+`outputs/skill-kalman-filter-check.md` reviews a filter for silent mistakes in `Q`, `R` and `P`.
 
 ## Exercises
 
-1. Double `R_STD` and predict, before running, whether the steady-state `sqrt(P)` rises or falls.
-2. Feed the filter `R` ten times too small and compare the 2-sigma coverage with 95%.
-3. Set `SA` to 0 and watch `K` shrink toward zero until the filter ignores the sensor.
+1. Double `R_STD` and predict whether the settled `sqrt(P)` rises or falls.
+2. Make `R` ten times too small and compare 2-sigma coverage with 95%.
+3. Set `SA` to 0 and watch `K` shrink until the filter ignores the sensor.

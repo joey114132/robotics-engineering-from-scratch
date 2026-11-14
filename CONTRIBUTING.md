@@ -10,19 +10,19 @@ cd robotics-engineering-from-scratch
 pip install -r requirements.txt
 python scripts/check_lessons.py
 python -m pytest phases scripts/tests_robo -q
-python scripts/build_site.py && xdg-open site/index.html
+python scripts/robo.py        # read the course in the terminal
 ```
 
-The tests for the 3D scenes run the scene code with Node.js, so `node` has to be on your PATH. On Windows, set `PYTHONUTF8=1` first, because the scripts read Korean text as UTF-8.
+Rendering a lesson clip (`python3 scripts/build_clips.py <lesson>`) needs Blender 5 and ffmpeg; you do not need them to edit text, code or tests, because the rendered clips are committed. On Windows, set `PYTHONUTF8=1` first, because the scripts read Korean text as UTF-8.
 
-The same two checks run on every push through GitHub Actions, so your fork tells you if something broke. To put your fork's site online, set Settings > Pages > Source to "GitHub Actions" and run the `site` workflow by hand.
+The same two checks run on every push through GitHub Actions, so your fork tells you if something broke.
 
 ## Ways to help
 
 - **Fix a lesson.** Edit `phases/<phase>/<lesson>/docs/en.md` and `ko.md`. Keep the headings, code blocks and images the same in both languages.
 - **Add a lesson.** Read [LESSON_SPEC.md](LESSON_SPEC.md) first: one folder per lesson, diagrams drawn with `scripts/excal.py`, a data figure, `code/main.py`, five or more tests written first, a six-question quiz, and a reusable `outputs/skill-*.md`.
 - **Improve the Korean.** The Korean text was drafted and checked with tooling, not by a native editor. Plain corrections are the most useful contribution.
-- **Translate.** Lessons accept `docs/<code>.md` files. The website and `robo` currently switch between English and Korean only, so a third language needs a change in `scripts/build_site.py` as well. Open an issue first and we will plan it together.
+- **Translate.** Lessons accept `docs/<code>.md` files. `robo` currently switches between English and Korean only, so a third language needs a change in `scripts/robo/` as well. Open an issue first and we will plan it together.
 
 ## Rules that keep the course honest
 

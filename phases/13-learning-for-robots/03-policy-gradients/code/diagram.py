@@ -9,29 +9,30 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def loop():
-    d = Diagram(cell=(310, 170))
+    d = Diagram(numbered=True)
     d.title("REINFORCE: try, score, nudge")
-    a = d.box("Sample actions\nfrom the Gaussian", 0, 0, "blue", w=230)
-    b = d.box("Run episodes,\nadd up rewards", 1, 0, "yellow", w=230)
-    c = d.box("Weight each action's\nscore by its return", 2, 0, "purple", w=230)
-    e = d.box("Step the\npolicy parameters", 3, 0, "green", w=210)
+    a = d.box("Car steers with\nsome random noise", 0, 0, "blue", step=1)
+    b = d.box("Each try ends with\na total reward", 1, 0, "yellow", step=2)
+    c = d.box("Weight each move\nby that return", 1, 1, "purple", step=3)
+    e = d.box("Nudge the\nsteering rule", 0, 1, "green", step=4)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.arrow(e, a, route="below", label="repeat", dashed=True)
+    d.arrow(e, a, label="repeat", dashed=True)
     d.save(OUT / "diagram-reinforce-loop.excalidraw")
 
 
 def baseline():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("What a baseline changes")
-    r = d.box("Return of an episode", 0, 0.5, "yellow", w=230)
-    raw = d.box("Use it as is:\nevery action pushed up", 1, 0, "red", w=250)
-    sub = d.box("Subtract the average\nof the other episodes", 1, 1, "purple", w=250)
-    nr = d.box("Noisy step\n(same average)", 2, 0, "red", w=290)
-    ns = d.box("Better than average: up\nWorse: down", 2, 1, "green", w=290)
-    for s, t in ((r, raw), (r, sub), (raw, nr), (sub, ns)):
-        d.arrow(s, t)
+    for row, (first, second, color) in enumerate((
+            ("Use the return\nas it is", "Every move is\npushed up", "red"),
+            ("Subtract the\nothers' average", "Better up,\nworse down", "green"))):
+        a = d.box("Try returns\n35.9, 34.9, 27.6, 27.3" if row == 0 else "Same returns", 0, row, "yellow")
+        b = d.box(first, 1, row, "purple" if row else "gray")
+        c = d.box(second, 2, row, color)
+        d.arrow(a, b)
+        d.arrow(b, c)
     d.save(OUT / "diagram-baseline-effect.excalidraw")
 
 

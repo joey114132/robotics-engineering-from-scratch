@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "One thread runs one callback at a time. A slow callback is one coffee machine with a long line, and my heartbeat is in it.",
-    "mission": "In `code/main.py` change the slow callback's `60` to `30`. Predict the worst timer wait with 1 thread, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change the slow callback's `60` to `30`. Predict the worst timer wait with 1 thread, then run `python3 code/main.py`.",
+    "clip": "Each car drives only while its timer keeps sending a heartbeat every 10 ms, and a watchdog stops it when the last heartbeat is older than 25 ms. With one thread (blue) the 60 ms slow callback blocks the timer for up to 59 ms, so the car keeps stopping and covers 1.5 m. With two threads in separate callback groups (green) the timer never waits and the car covers 2.6 m. The heartbeat times come from the lesson's `simulate()`; the 25 ms limit and the 2.6 m/s speed are our choices, and the first second is played five times slower."
   },
   "ko": {
     "hook": "thread 하나는 callback을 한 번에 하나만 돌립니다. 느린 callback은 커피머신이 하나뿐인 긴 줄이고 제 heartbeat도 그 줄에 서 있습니다.",
-    "mission": "`code/main.py`에서 느린 callback의 `60`을 `30`으로 바꾸세요. thread 1개일 때 timer의 최악 대기를 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 느린 callback의 `60`을 `30`으로 바꾸세요. thread 1개일 때 timer의 최악 대기를 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "자동차는 timer가 10 ms마다 heartbeat를 보내는 동안에만 달리고 마지막 heartbeat가 25 ms보다 오래되면 watchdog이 차를 세웁니다. 스레드가 하나인 파란 차는 60 ms짜리 느린 callback 때문에 timer가 최대 59 ms 기다려서 계속 멈추고 1.5 m만 갑니다. callback group을 나눈 스레드 두 개의 초록 차는 timer가 전혀 기다리지 않아 2.6 m를 갑니다. timer 시작 시각은 이 레슨의 `simulate()`에서 가져왔고 25 ms 제한과 2.6 m/s 속도는 이 클립에서 정했으며 처음 1초를 5배 느리게 재생했습니다."
   },
   "toy": null,
-  "motion": "executor-queue",
   "three": "executor-lanes-3d"
 }

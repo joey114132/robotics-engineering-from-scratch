@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A least-squares plane is the friend who believes every rumor. RANSAC picks three random points and trusts the crowd.",
-    "mission": "In `code/main.py` change the `150` in `ransac_plane(P, 0.012, 150)` to `3` and run `python3 code/main.py`. Guess whether it still beats least squares (4.8 deg off), then read the number."
+    "mission": "In `code/main.py` change the `150` in `ransac_plane(P, 0.012, 150)` to `3` and run `python3 code/main.py`. Guess whether it still beats least squares (4.8 deg off), then read the number.",
+    "clip": "A depth camera looks down at a tilted table with a box on it. The cloud comes from this lesson's `depth_to_points()` and `voxel_downsample()`, and the red points (box top, stray readings) are what a plane fit must ignore. The blue plane from `fit_plane()` is about 5 degrees off the table, so the block stood up by it leans, while the green plane from `ransac_plane()` lies on the table and its block stands straight. True scale."
   },
   "ko": {
-    "hook": "최소제곱 평면은 소문을 전부 믿는 친구입니다. RANSAC은 점 세 개만 뽑아 보고 다수결로 판단합니다.",
-    "mission": "`code/main.py`의 `ransac_plane(P, 0.012, 150)`에서 `150`을 `3`으로 바꾸고 `python3 code/main.py`를 실행하세요. 최소제곱(4.8도 틀림)을 여전히 이길지 예측한 뒤 결과를 읽으세요."
+    "hook": "최소제곱 평면은 소문을 전부 믿는 친구입니다. RANSAC은 무작위로 점 세 개를 뽑고 다수를 믿습니다.",
+    "mission": "`code/main.py`의 `ransac_plane(P, 0.012, 150)`에서 `150`을 `3`으로 바꾸고 `python3 code/main.py`를 실행하세요. 최소제곱(4.8도 틀림)을 여전히 이길지 예측한 뒤 결과를 읽으세요.",
+    "clip": "depth 카메라가 상자가 놓인 비스듬한 테이블을 내려다봅니다. 점군은 이 레슨의 `depth_to_points()`와 `voxel_downsample()`로 만들었습니다. 빨간 점(상자 윗면과 엉뚱한 값)은 평면 맞춤이 무시해야 하는 점입니다. `fit_plane()`의 파란 평면은 테이블에서 약 5도 기울어서 그 평면에 맞춰 세운 블록이 기웁니다. `ransac_plane()`의 초록 평면은 테이블 위에 놓여서 블록이 똑바로 섭니다. 크기는 실제 그대로입니다."
   },
   "toy": null,
-  "motion": "ransac-rounds",
  "three": "depth-cloud-3d"
 }

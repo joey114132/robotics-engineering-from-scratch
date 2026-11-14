@@ -6,28 +6,31 @@
 
 ## In Plain Words
 
-A phone download can be capped by the app, the connection plan and the home router. Raising the app's cap does nothing if a later cap
-is lower. The slowest allowance still wins.
+A bench arm takes orders through three layers. The planner draws the path, the controller pushes the motor, and the drive is the motor's own electronics. Each layer has its own speed limit.
 
-Robot commands pass through limits in the planner, controller and drive in much the same way. A planner that expects more speed than
-the drive permits gets ahead of the real joint. Comparing matching limits across layers before motion reveals which layer will silently
-restrict the request.
+Say the planner allows twice the speed the drive does. The planner thinks the arm moves at its faster speed while the real arm moves at the drive's, so the plan runs ahead and the gap grows. Nothing reports it, because the drive just trims the speed. The slowest limit wins.
 
 ## The Problem
 
-You raise the speed limit in the planner to 3 rad/s and the joint still crawls at half that. Nothing logged a clamp, because the drive quietly cut the speed. Position, velocity and torque are each clamped by the planner, the controller and the drive, and no one checks that the three sets agree.
+You raise the speed limit in the planner to 3 rad/s and the joint still crawls at half that. Nothing logged an error, because the drive quietly clamped (cut) the speed to its own limit. Position, speed and torque each have a limit in all three layers, and no one checks that the three sets agree.
 
 ## The Concept
 
 ![Healthy: each layer is looser than the one before](../assets/diagram-limits-nested.png)
 
-*The planner stays inside what the controller allows, and the controller inside what the drive allows. The outer layers are safety nets.*
+*Speed limits grow: 1.0, 1.5, 2.0. Each layer allows more than the one before, so the later layers are safety nets that never fire in normal use.*
 
-The rule is simple. For each quantity, walk the layers from planner to drive and require every limit to be no looser than the next one that sets the same quantity. A violation means the downstream layer wins.
+The rule: for each quantity, walk from planner to drive. Every limit must be no looser than the next one that sets the same quantity, meaning it must not allow more. If it does, the later layer wins.
 
 ![Mismatch: the tightest layer wins and nobody says so](../assets/diagram-limits-silent.png)
 
-*The planner asks for 3.0 and the controller agrees, but the drive allows 1.5. A startup check compares every pair and reports before the first move.*
+*Follow the request down the layers. The planner asks for 3.0, the controller agrees, the drive allows 1.5. A startup check compares every pair and reports before the first move.*
+
+Worked example. Ask for 2.0 rad with position limits planner 2.2, controller 1.8 and drive 2.0, the `MISMATCHED` values. Planner and drive both allow it, but the controller clamps the target to 1.8, so the joint stops at 1.80 rad. `effective(MISMATCHED, "pos")` returns `(1.8, 'controller')`.
+
+![A bench arm stops short of its goal because one layer's position limit is lower](../assets/clip-example.mp4)
+
+*The dark ghost is where the planner thinks the joint is, and the amber block is the goal. The blue arm stops 0.2 rad short with no warning. On green all three position limits allow 2.0.*
 
 ![Limits per layer in two setups](../assets/fig-limit-stack.png)
 
@@ -57,7 +60,7 @@ python3 phases/15-safety-and-deployment/03-limits-at-every-layer/code/main.py
 
 ## Use It
 
-Real stacks keep limits in a URDF, a controller config and the drive's own parameters. Load all three into one table at startup and run the same pairwise check. Where a source is a drive register, read it from the drive instead of trusting a copy.
+Real stacks keep limits in a URDF, a controller config and the drive's own parameters. Load all three into one table at startup and run the same pairwise check. Read drive limits from the drive, not a copy.
 
 ## Ship It
 

@@ -50,7 +50,7 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "tip에 2 kg 질량이 매달려 있습니다. 이것을 붙잡는 joint 토크는 어떻게 구합니까?",
+  "question": "tip에 2 kg 질량이 매달려 있습니다. 이것을 받치는 joint 토크는 어떻게 구합니까?",
   "options": [
    "tip의 무게 힘에 J^T를 곱한다",
    "무게에 J를 곱한다",
@@ -69,6 +69,6 @@
    "pose는 무작위다"
   ],
   "answer": 0,
-  "explanation": "1번 레슨의 DH 표처럼 무작위 pose 여러 곳을 검사해야 합니다."
+  "explanation": "레슨 1의 DH 표처럼 무작위 pose 여러 곳을 검사해야 합니다."
  }
 ]

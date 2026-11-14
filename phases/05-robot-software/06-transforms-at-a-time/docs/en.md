@@ -6,35 +6,35 @@
 
 ## In Plain Words
 
-Make a panorama while turning with your phone. Each slice sees the room from a different direction. If you
-place every slice as though it were taken facing the final direction, the pieces no longer line up with the
-room.
-
-A moving scanner has the same problem. Each measured point needs the transform at its own timestamp. A buffer
-interpolates between stored poses for that time. Using the newest pose for every point instead can bend a
-straight wall in the reconstructed scan.
+A rover turns while its laser scans a straight wall, and each laser point carries the time it was measured. The rover has turned a little between points, so every point needs the rover's pose, its position and direction, at that point's own time. A pose buffer stores past poses and fills the gaps between them. If every point is placed with the newest pose instead, early points are rotated as if the rover already faced its final direction, and the wall bends.
 
 ## The Problem
 
-A laser scan takes half a second while the robot turns. You place every point with the newest pose, because that is the easy lookup. A straight wall comes out bent, and the faster the robot turns the worse it gets. The scan points carry the times they were measured, and the lookup ignored them.
+A laser scan takes half a second while the rover turns. You place every point with the newest pose. A straight wall comes out bent, and the faster the rover turns the worse it gets.
 
 ## The Concept
 
 ![Which pose places a scan point](../assets/diagram-scan-stamps.png)
 
-*Each point should be placed with the pose at its own stamp. The newest pose is right for only the last point.*
+*Each point has a time stamp. The newest pose bends the wall and fits only the last point. The pose at the stamp keeps it straight.*
 
-A transform tree (01/04) answers "where is frame B in frame A". Add time and the question becomes "where was B in A at time t". Poses arrive at discrete times, so the buffer has three cases.
+A transform tree (01/04) answers "where is frame B in frame A", a frame being a coordinate system attached to a body. Add time and the question becomes "where was B in A at time t". Poses arrive at discrete times, so the buffer has three cases.
 
 ![Three answers for one lookup](../assets/diagram-lookup-rules.png)
 
-*Between two samples it interpolates. Slightly past the newest it may extrapolate within a set limit. Anything else raises an error.*
+*Between two samples it interpolates. Slightly past the newest it may extrapolate, continuing the last motion, within a set limit. Anything else raises an error.*
 
-Position is a plain lerp. Orientation uses the slerp from 01/03, which also fixes a flipped quaternion sign. Refusing is a feature: a guess past the newest sample looks like data and hides a late message.
+Position is a plain lerp, a straight-line blend. Orientation uses the slerp from 01/03, which blends two rotations along the shortest arc. The limit is 0 s by default. Refusing is a feature: a guess past the newest sample looks like data and hides a late message.
+
+Example: the buffer holds the rover's poses at 0 s and 1 s, 1.2 m and 1 rad apart. A lookup at 0.5 s answers 0.6 m and 0.5 rad, where the rover was. A lookup at 1.5 s raises `LookupError`: 0.500 s newer than the newest sample, and the limit is 0.
+
+![Two stored poses, one interpolated answer and one refusal](../assets/clip-example.mp4)
+
+*Grey ghosts are the stored poses. The amber ghost answers 0.5 s, between them. The red cross marks 1.5 s, which is refused.*
 
 ![Smeared and stamped scans](../assets/fig-scan-smear.png)
 
-*Left: a straight wall scanned for 0.5 s while turning 1 rad/s. Right: the newest-pose error grows with turn rate and starts at 0.25 m from driving alone. The stamped error stays at zero.*
+*Left: a straight wall scanned for 0.5 s while turning 1 rad/s. Right: the newest-pose error grows with turn rate and starts at 0.25 m, driving 0.5 m/s for 0.5 s. The stamped error stays at zero.*
 
 ## Build It
 
@@ -54,14 +54,14 @@ python3 phases/05-robot-software/06-transforms-at-a-time/code/main.py
 
 ## Use It
 
-The tf2 buffers in ROS 2 answer the same question and raise an extrapolation exception for the same reason. Read the tf2 "Using time" tutorial, then ask a buffer for a pose slightly in the future and see what it does.
+ROS 2's tf2 buffers answer the same question and raise an extrapolation exception for the same reason. Read the tf2 "Using time" tutorial, then ask a buffer for a pose slightly in the future.
 
 ## Ship It
 
-`outputs/skill-timed-transform-check.md` checks that sensor data is placed with the pose at its own stamp.
+`outputs/skill-timed-transform-check.md` checks that sensor data uses the pose at its own stamp.
 
 ## Exercises
 
 1. Set `max_extrapolation = 0.1` and find the largest turn rate where the guess stays under 1 cm.
-2. Feed samples at 10 Hz and 100 Hz and compare the midpoint error for a robot that accelerates.
+2. Feed samples at 10 Hz and 100 Hz and compare the midpoint error for an accelerating robot.
 3. Add a second buffer for another frame and compose the two lookups at one stamp.

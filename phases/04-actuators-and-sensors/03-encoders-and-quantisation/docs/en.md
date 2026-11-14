@@ -6,35 +6,39 @@
 
 ## In Plain Words
 
-Pour water slowly into a cup on a kitchen scale that shows only whole units. The true weight rises smoothly,
-but the display waits and jumps. Divide each jump by a very short time and the estimated filling rate spikes,
-even though your pouring stayed steady.
+A slotted disc turns slowly past a fixed reader. The reader can only say that one more slot edge went by, which is one count. To estimate speed, you divide the counts by the time you counted for.
 
-Encoder counts do the same to velocity estimates. Faster sampling makes a single count jump represent a larger
-speed. Measuring across a longer window reduces the steps, but the result describes an earlier interval and
-follows speed changes late.
+Check every millisecond and you usually see no edge, then suddenly one, so the speed reads zero and then far too high although the disc turns steadily. Wait longer between checks and the readings steady out, but each one describes a moment further back, so it follows speed changes late.
 
 ## The Problem
 
-You raise the loop rate to make a joint feel smoother, and at slow speed the velocity signal gets worse. It jumps between zero and a large value, and the damping term `kd * velocity` kicks the joint with every jump. You add a filter, the kicks stop, and the joint starts to oscillate because the velocity now arrives late.
+You raise the loop rate to make a joint feel smoother, and at slow speed the velocity signal gets worse. It jumps between zero and a large value, and the damping term `kd * velocity` (a brake that grows with speed) kicks the joint at every jump. A filter stops the kicks, but now the velocity arrives late and the joint oscillates.
 
 ## The Concept
 
+The shaft angle is smooth, the counts are steps, and differencing (subtracting the previous count) turns each step into a spike.
+
 ![Shaft angle to velocity](../assets/diagram-encoder-pipeline.png)
 
-*The shaft moves smoothly, the counts move in steps, and differencing the counts turns each step into a velocity spike.*
+*Smooth shaft, stepped counts, spiky velocity.*
 
-One count is `2*pi / CPR` radians. Dividing by the sample time gives the smallest non-zero velocity a one-sample difference can report, `2*pi / (CPR * dt)`. Below that speed the reading is zero or one step, and the average over time is still right.
+One count is `2*pi / CPR` radians (CPR: counts per revolution). Dividing by the sample time `dt` gives the smallest non-zero speed a one-sample difference can report, `2*pi / (CPR * dt)` (the velocity step): 1.53 rad/s for `CPR = 4096` and `dt = 1 ms`. A joint at 0.1 rad/s makes a count only about every 15 ms, so 14 of every 15 readings are zero and the rest read 1.53. Their average is still right.
 
 ![Window length trade](../assets/diagram-window-tradeoff.png)
 
-*A longer window shrinks the step and the noise but makes the estimate older.*
+*Longer window: smaller steps, less noise, older estimate.*
 
-A window of `n` samples divides the step by `n` and delays a changing signal by `n*dt/2`.
+A window of `n` samples (counts compared `n` samples apart) divides the step by `n` and delays a changing signal by `n*dt/2`, since it describes the window's middle.
 
-![Slow ramp at two loop rates, noise and delay against window](../assets/fig-encoder-velocity.png)
+In the lesson's lag test the speed rises at 2 rad/s^2 and `n = 20` at 1 kHz (`dt` = 1 ms). The estimate is 10 ms old, so it reads `2 * 0.01 = 0.02` rad/s too low.
 
-*Left: at 1 kHz the slow ramp reads as rare tall spikes, at 100 Hz as small steps. Right: noise falls with window length, with dips where the window spans a whole number of counts, while delay grows in a straight line.*
+![Two dials on a shaft that speeds up](../assets/clip-example.mp4)
+
+*A very fine encoder leaves only the delay. The blue needle (one sample) sits on the true speed, the green one (20 samples) trails by 10 ms.*
+
+![Velocity noise and delay against window](../assets/fig-encoder-velocity.png)
+
+*Left: 1 kHz gives rare tall spikes, 100 Hz small steps. Right: noise falls with window length while delay grows linearly.*
 
 ## Build It
 
@@ -49,7 +53,7 @@ def window_lag(n, dt):
     return n * dt / 2
 ```
 
-Tests check that the output is a whole multiple of the step, that the slow ramp has no bias, that its noise matches the duty-cycle prediction `step * sqrt(d * (1 - d))`, and that the lag is `n*dt/2`.
+Tests check whole-step output, no bias, the noise `step * sqrt(d * (1 - d))` (`d`: fraction of readings with a count) and the lag `n*dt/2`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -59,7 +63,7 @@ python3 phases/04-actuators-and-sensors/03-encoders-and-quantisation/code/figure
 
 ## Use It
 
-Drives and microcontrollers estimate speed by counting edges per window or by timing the gap between edges. The maxon page says counting is difficult at very low speed. Compare the fixed-window result here with a period-based estimate on the same ramp.
+Drives estimate speed by counting edges per window or timing the gap between edges, and the maxon page says counting struggles at very low speed. Compare the fixed window here with a period-based estimate on the same ramp.
 
 Sources: [maxon, encoder selection part three](https://www.maxongroup.com/en-us/knowledge-and-support/blog/encoder-selection-part-three-speed-control-25728), accessed 2026-11-09.
 

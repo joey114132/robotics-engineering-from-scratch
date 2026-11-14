@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Two clocks off by a few milliseconds and my sensors swear the effect came first. A trace settles the argument.",
-    "mission": "In `code/main.py` change `exchange(0.123, 0.03, 0.01)` to `exchange(0.123, 0.02, 0.02)`. Predict the offset estimate, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `exchange(0.123, 0.03, 0.01)` to `exchange(0.123, 0.02, 0.02)`. Predict the offset estimate, then run `python3 code/main.py`.",
+    "clip": "The solid car drives at 8 m/s for 0.4 s, and the amber glass car floating above it is where a filter puts the car, at the stamp of the newest sample. In the blue run the camera clock is 30 ms ahead, so every camera sample carries a stamp from the future and the amber car jumps ahead and back. In the green run the offset is removed with an estimate that is 1 ms off, and the amber car stays right above the car. `order_errors()` counts 8 of 100 slots out of order in the blue run and none in the green run, and the clip is played ten times slower."
   },
   "ko": {
     "hook": "시계 둘이 몇 ms만 어긋나도 제 센서들은 결과가 원인보다 먼저라고 우깁니다. 그 다툼은 trace가 판정합니다.",
-    "mission": "`code/main.py`에서 `exchange(0.123, 0.03, 0.01)`을 `exchange(0.123, 0.02, 0.02)`로 바꾸세요. offset 추정값을 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `exchange(0.123, 0.03, 0.01)`을 `exchange(0.123, 0.02, 0.02)`로 바꾸세요. offset 추정값을 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "불투명한 차는 8 m/s로 0.4초 달리는 실제 위치이고 그 위에 떠 있는 호박색 투명한 차는 filter가 가장 최근 샘플의 stamp로 놓은 차의 위치입니다. 파란 실행에서는 camera 시계가 30 ms 앞서서 camera 샘플마다 미래의 stamp가 붙고 호박색 차가 앞으로 튀었다가 돌아옵니다. 초록 실행에서는 1 ms 틀린 offset 추정값을 빼 주어서 호박색 차가 실제 차 바로 위에 있습니다. `order_errors()`는 순서가 어긋난 칸을 파란 실행에서 100칸 중 8칸, 초록 실행에서 0칸으로 세고 클립은 10배 느리게 재생했습니다."
   },
   "toy": null,
-  "motion": "clock-order",
   "three": "clock-offset-3d"
 }

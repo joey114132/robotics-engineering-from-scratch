@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Commanding depth to get a force is like tipping by guessing the menu price. Measure the force and the guess stops mattering.",
-    "mission": "In `code/main.py` change `5e3` to `1e4`. Predict the position-mode force, then run `python3 code/main.py` and check that force mode still lands on 10."
+    "mission": "In `code/main.py` change `5e3` to `1e4`. Predict the position-mode force, then run `python3 code/main.py` and check that force mode still lands on 10.",
+    "clip": "Two arms press a sponge that is softer than they assumed, 1000 N/m instead of 5000 N/m. The blue arm uses position control: it goes to the depth that would give 10 N on the assumed sponge and presses with only 1.6 N. The green arm measures the force and keeps pushing until it reads 10 N. The red arrow is the force the sponge pushes back with. Rendered from this lesson's `probe()` at half speed, depth drawn 10 times larger, arrow 3 cm per newton."
   },
   "ko": {
     "hook": "깊이를 명령해서 힘을 얻는 건 메뉴 가격을 짐작해서 팁을 주는 것과 같습니다. 힘을 직접 재면 짐작은 필요 없어집니다.",
-    "mission": "`code/main.py`에서 `5e3`을 `1e4`로 바꾸세요. position 모드의 힘을 먼저 예측한 뒤 `python3 code/main.py`를 실행해 force 모드가 여전히 10인지 확인하세요."
+    "mission": "`code/main.py`에서 `5e3`을 `1e4`로 바꾸세요. position 모드의 힘을 먼저 예측한 뒤 `python3 code/main.py`를 실행해 force 모드가 여전히 10인지 확인하세요.",
+    "clip": "두 팔이 생각보다 부드러운 스펀지를 누릅니다. 실제 강성은 가정한 5000 N/m가 아니라 1000 N/m입니다. 파란 팔은 position 제어라서 가정한 스펀지에서 10 N이 나올 깊이까지만 내려가고 실제로는 1.6 N으로 누릅니다. 초록 팔은 힘을 재면서 10 N이 될 때까지 더 누릅니다. 빨간 화살표는 스펀지가 되미는 힘입니다. 이 레슨의 `probe()` 결과를 절반 속도로 렌더했고 깊이는 10배로 크게 그렸으며 화살표는 1 N에 3 cm입니다."
   },
   "toy": null,
-  "motion": "force-loop-surface-swap",
   "three": "probe-sponge-3d"
 }

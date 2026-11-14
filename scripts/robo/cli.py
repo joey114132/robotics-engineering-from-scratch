@@ -49,34 +49,34 @@ def _validate_play(args, parsers):
         if v is not None and not math.isfinite(v):
             parsers["play"].error(f"argument --{name}: must be a finite number")
 COMMANDS = [
-    ("home", "", "Progress, level and the next lesson (the default).", "진행 상황과 레벨, 다음 레슨 (기본 화면)."),
-    ("map", "", "All lessons by phase, with done and next markers.", "단계별 전체 레슨과 완료/다음 표시."),
-    ("read", "<lesson>", "Read a lesson with figures, code and Bolt.", "그림과 코드, Bolt 와 함께 레슨 읽기."),
-    ("quiz", "<lesson>", "A six-question game round for the lesson.", "레슨의 여섯 문제를 한 판의 게임으로."),
-    ("mission", "<lesson> [--done]", "Show the lesson mission, or tick it for +20 XP.", "레슨 미션 보기, --done 으로 체크(+20 XP)."),
-    ("daily", "", "Daily 5: five review questions, +5 XP each, 25 XP a day.", "Daily 5: 복습 문제 5개, 문제당 +5 XP, 하루 최대 25 XP."),
-    ("scene", "[NN]", "A looping terminal animation for a phase (02, 03, 05, 08, 09, 14 have their own).", "단계별 반복 터미널 애니메이션 (02, 03, 05, 08, 09, 14 는 전용 장면)."),
-    ("play", "<toy>", "Terminal toys: pd-step, sampling-limit, kalman.", "터미널 toy: pd-step, sampling-limit, kalman."),
-    ("stats", "", "XP, level, streak, badges and a 12-week strip.", "XP, 레벨, 연속일, 배지, 12주 달력."),
-    ("sync", "export | import <code>", "Move progress between the CLI and the website.", "CLI 와 웹사이트 사이로 진행을 옮깁니다."),
+    ("home", "", "Progress, level and the next lesson (the default).", "진행 상황, 레벨, 다음 레슨 보기 (기본 화면)."),
+    ("map", "", "All lessons by phase, with done and next markers.", "phase별 전체 레슨과 완료, 다음 레슨 표시."),
+    ("read", "<lesson>", "Read a lesson with figures, code and Bolt.", "그림, 코드, Bolt와 함께 레슨 읽기."),
+    ("quiz", "<lesson>", "A six-question game round for the lesson.", "레슨의 여섯 문제를 한 라운드 게임으로 풀기."),
+    ("mission", "<lesson> [--done]", "Show the lesson mission, or tick it for +20 XP.", "레슨 미션 보기. --done을 붙이면 완료로 표시(+20 XP)."),
+    ("daily", "", "Daily 5: five review questions, +5 XP each, 25 XP a day.", "오늘의 5문제: 복습 문제 5개, 문제당 +5 XP, 하루 최대 25 XP."),
+    ("scene", "[NN]", "A looping terminal animation for a phase (02, 03, 05, 08, 09, 14 have their own).", "phase별 반복 터미널 애니메이션 (02, 03, 05, 08, 09, 14는 전용 장면이 있음)."),
+    ("play", "<toy>", "Terminal toys: pd-step, sampling-limit, kalman.", "터미널에서 돌려 보는 toy: pd-step, sampling-limit, kalman."),
+    ("stats", "", "XP, level, streak, badges and a 12-week strip.", "XP, 레벨, 연속 학습일, 배지, 12주 달력."),
+    ("sync", "export | import <code>", "Move progress between the CLI and the website.", "진행 상황을 CLI와 웹사이트 사이에서 옮기기."),
     ("completion", "bash | zsh", "Print a shell completion script.", "셸 자동완성 스크립트 출력."),
 ]
 HELP_KO = {
     "Language of lessons and screens (default: from $LANG).": "레슨과 화면 언어 (기본값은 $LANG).",
-    "No colour, no animation, ASCII frames. Also used when piped or NO_COLOR is set.": "색과 애니메이션 없이 ASCII 틀로 출력. 파이프나 NO_COLOR 일 때도 이렇게 나옵니다.",
-    "Print everything at once instead of paging long output through less.": "긴 출력을 less 로 넘기지 않고 한꺼번에 출력.",
+    "No colour, no animation, ASCII frames. Also used when piped or NO_COLOR is set.": "색과 애니메이션 없이 ASCII 테두리로 출력합니다. 파이프로 넘기거나 NO_COLOR가 설정되어 있어도 이렇게 출력합니다.",
+    "Print everything at once instead of paging long output through less.": "긴 출력을 less로 나눠 보여 주지 않고 한꺼번에 출력합니다.",
     "Lesson id like 03-02, or part of its name like gravity.": "레슨 id (03-02) 또는 이름 일부 (gravity).",
-    "Figure drawing: quad (compact, at most 16 rows), half (compact half blocks), full (terminal width, large), off (caption lines).": "그림 그리기: quad(작게, 최대 16줄), half(작은 반블록), full(터미널 폭 가득, 큼), off(캡션 줄).",
-    "Tick the mission (+20 XP, once).": "미션 체크 (+20 XP, 한 번만).",
-    "Seed for the random picks (for repeatable rounds).": "무작위 선택의 seed (같은 판을 다시 만들 때).",
-    "Phase number 00-16 (default: the phase of your next lesson).": "단계 번호 00-16 (기본값은 다음 레슨의 단계).",
+    "Figure drawing: quad (compact, at most 16 rows), half (compact half blocks), full (terminal width, large), off (caption lines).": "그림 표시 방식: quad(작게, 최대 16줄), half(반블록, 작게), full(터미널 폭에 맞춰 크게), off(캡션 줄만 표시).",
+    "Tick the mission (+20 XP, once).": "미션을 완료로 표시합니다 (+20 XP, 한 번만).",
+    "Seed for the random picks (for repeatable rounds).": "무작위 선택에 쓰는 seed (같은 라운드를 다시 만들 때).",
+    "Phase number 00-16 (default: the phase of your next lesson).": "phase 번호 00-16 (기본값은 다음 레슨의 phase).",
     "Which toy to run.": "실행할 toy.",
-    "Proportional gain (pd-step, default 30).": "비례 이득 (pd-step, 기본 30).",
-    "Derivative gain (pd-step, default 4).": "미분 이득 (pd-step, 기본 4).",
-    "r = dt*kd/J for sampling-limit (default 0.6, range 0.1-2.5), or sensor sigma for kalman (default 2.0).": "sampling-limit 은 r = dt*kd/J (기본 0.6, 범위 0.1-2.5), kalman 은 센서 sigma (기본 2.0).",
+    "Proportional gain (pd-step, default 30).": "비례 gain (pd-step, 기본 30).",
+    "Derivative gain (pd-step, default 4).": "미분 gain (pd-step, 기본 4).",
+    "r = dt*kd/J for sampling-limit (default 0.6, range 0.1-2.5), or sensor sigma for kalman (default 2.0).": "sampling-limit에서는 r = dt*kd/J (기본 0.6, 범위 0.1-2.5), kalman에서는 센서 sigma (기본 2.0).",
     "Process noise sigma the Kalman filter believes (default 0.1).": "칼만 필터가 믿는 process noise sigma (기본 0.1).",
-    "export prints a code, import merges a code.": "export 는 코드를 출력하고 import 는 코드를 합칩니다.",
-    "The code printed by export (or by the website).": "export (또는 웹사이트) 가 출력한 코드.",
+    "export prints a code, import merges a code.": "export는 코드를 출력하고 import는 코드를 합칩니다.",
+    "The code printed by export (or by the website).": "export(또는 웹사이트)가 출력한 코드.",
     "Shell to print the script for.": "스크립트를 출력할 셸.",
 }
 
@@ -127,7 +127,7 @@ def _flag_label(a):
 def print_help(u, parsers, cmd):
     w = u.read_width
     if not cmd:
-        U.print_banner(u, tagline=u.t("a course reader and tutor for the terminal", "터미널에서 읽고 풀어 보는 코스 리더"))
+        U.print_banner(u, tagline=u.t("a course reader and tutor for the terminal", "터미널에서 읽고 풀어 보는 코스 리더 겸 튜터"))
         u.print(Text("  ") + Text(u.t("Usage", "사용법"), style="bold") + Text(f"   {PROG} [command] [options]", style="accent"))
         u.print()
         u.rule(u.t("Commands", "명령"), w)
@@ -164,7 +164,7 @@ def _print_options(u, p, w, positionals=False):
         u.rule(title, w)
         rows = [[(_flag_label(a), "bold accent"), (HELP_KO.get(a.help or "", a.help or "") if u.lang == "ko" else (a.help or ""), "")] for a in group]
         if not positionals and group is opt:
-            rows.append([("-h, --help", "bold accent"), (u.t("Show help. Also: robo <command> --help.", "도움말. robo <명령> --help 도 됩니다."), "")])
+            rows.append([("-h, --help", "bold accent"), (u.t("Show help. Also: robo <command> --help.", "도움말을 보여 줍니다. robo <명령> --help로도 볼 수 있습니다."), "")])
         u.columns(rows)
         u.print()
 
@@ -270,11 +270,11 @@ def cmd_quiz(u, course, state, today, les):
                 left.append(f"robo mission {les.short} --done")
             extra.append(Text(u.t("To finish this lesson: ", "레슨을 끝내려면: ") + ", ".join(left), style="muted"))
         for b in new_badges:
-            extra.append(Text(u.g["star"] + " " + u.t(f"Badge earned: phase {b[5:]}", f"배지 획득: {b[5:]}단계"), style="bold warn"))
+            extra.append(Text(u.g["star"] + " " + u.t(f"Badge earned: phase {b[5:]}", f"phase {b[5:]} 배지 획득"), style="bold warn"))
         Qz.results_card(u, score, len(qs), gained, state, u.t("Results", "결과"), extra, animate=True)
         u.print()
         try:
-            again = input(u.t("Play again? Replays award no extra XP. [y/N] ", "한 판 더? 다시 풀어도 XP 는 늘지 않습니다. [y/N] ")).strip().lower()
+            again = input(u.t("Play again? Replays award no extra XP. [y/N] ", "한 라운드 더 할까요? 다시 풀어도 XP는 늘지 않습니다. [y/N] ")).strip().lower()
         except EOFError:
             again = "n"
         if again not in ("y", "yes", "예", "네"):
@@ -300,11 +300,11 @@ def cmd_daily(u, course, state, today, seed):
     got = P.daily_remaining(state, today)
     spent = P.DAILY_CAP - got
     u.print()
-    t = Text("  Daily 5", style="bold accent")
+    t = Text(u.t("  Daily 5", "  오늘의 5문제"), style="bold accent")
     t.append(u.t(f"   {spent}/{P.DAILY_CAP} XP today", f"   오늘 {spent}/{P.DAILY_CAP} XP"), style="ok" if got == 0 else "muted")
     u.print(t)
     if got == 0:
-        u.print(Text("  " + u.t("Today's 25 XP are already earned, so this round is practice only.", "오늘의 25 XP 를 이미 받았으므로 이번 판은 연습입니다."), style="muted"))
+        u.print(Text("  " + u.t("Today's 25 XP are already earned, so this round is practice only.", "오늘의 25 XP를 이미 받았으므로 이번 라운드는 연습입니다."), style="muted"))
 
     def award(q, correct):
         return P.daily_award(state, correct, _today())
@@ -312,7 +312,7 @@ def cmd_daily(u, course, state, today, seed):
     score, gained, finished = Qz.Session(u, picked, award, lambda: P.save(state, path), label_stages=False).run()
     if not finished:
         return 1
-    Qz.results_card(u, score, len(picked), gained, state, "Daily 5",
+    Qz.results_card(u, score, len(picked), gained, state, u.t("Daily 5", "오늘의 5문제"),
                     animate=True, extra_lines=[Text(u.t(f"Today {P.DAILY_CAP - P.daily_remaining(state, _today())}/{P.DAILY_CAP} XP", f"오늘 {P.DAILY_CAP - P.daily_remaining(state, _today())}/{P.DAILY_CAP} XP"), style="muted")])
     if score == len(picked):
         Qz.celebrate(u)
@@ -339,7 +339,7 @@ def cmd_scene(u, args, course, state):
     head.append("   " + u.t(title, title_ko), style="muted")
     u.print(head, no_wrap=True, overflow="crop")
     if near is not None:
-        u.para(Text(u.t(f"No scene for phase {ph:02d}; showing the nearest, phase {near:02d}.", f"{ph:02d}단계 전용 장면이 없어 가장 가까운 {near:02d}단계 장면을 보여 줍니다."), style="muted"))
+        u.para(Text(u.t(f"No scene for phase {ph:02d}; showing the nearest, phase {near:02d}.", f"phase {ph:02d}에는 전용 장면이 없어 가장 가까운 phase {near:02d}의 장면을 보여 줍니다."), style="muted"))
     if motion.anim_enabled(u):
         scenes.run_scene(u, name, ph)
         if u.below_min:                                  # 실행 중 터미널이 60 columns 아래로 줄었다
@@ -354,7 +354,7 @@ def cmd_scene(u, args, course, state):
 def cmd_sync(u, args, state):
     if args.action == "export":
         u.print(Text(u.t('Paste this code on the website home page, in the "Take your progress along" panel, button "Paste progress code". Or run robo sync import <code>.',
-                         '웹사이트 첫 화면의 "진행 상황 옮기기" 패널에서 "진행 코드 붙여넣기" 버튼에 붙여 넣으세요. 또는 robo sync import <코드> 를 실행하세요.'), style="muted"))
+                         '웹사이트 첫 화면의 "진행 상황 옮기기" 패널에서 "진행 코드 붙여넣기" 버튼을 눌러 이 코드를 붙여 넣으세요. 또는 robo sync import <코드>를 실행하세요.'), style="muted"))
         u.console.print(P.export_code(state), soft_wrap=True, markup=False, highlight=False)
         return 0
     if not args.code:
@@ -367,7 +367,7 @@ def cmd_sync(u, args, state):
     P.save(merged, P.progress_path())
     n_q = sum(len(v) for v in merged["q"].values()) - sum(len(v) for v in state["q"].values())
     u.print(Text(u.g["good"] + " " + u.t(f"Merged. XP {state['xp']} -> {merged['xp']}, {max(n_q, 0)} new answers, {len(merged['days']) - len(state['days'])} new days.",
-                                          f"합쳤습니다. XP {state['xp']} -> {merged['xp']}, 새 답 {max(n_q, 0)}개, 새 날짜 {len(merged['days']) - len(state['days'])}일."), style="ok"))
+                                          f"합쳤습니다. XP {state['xp']} -> {merged['xp']}, 새로 푼 문제 {max(n_q, 0)}개, 새 학습일 {len(merged['days']) - len(state['days'])}일."), style="ok"))
     return 0
 
 
@@ -413,9 +413,9 @@ def dispatch(args, u):
                 new = P.award_badges(state, course.phase_ids)
                 P.save(state, P.progress_path())
                 u.print()
-                u.print(Text("  " + (u.g["good"] + " " + u.t(f"Mission ticked. +{gained} XP", f"미션 체크. +{gained} XP") if gained else u.t("Already ticked, so +0 XP.", "이미 체크했으므로 +0 XP.")), style="ok" if gained else "muted"))
+                u.print(Text("  " + (u.g["good"] + " " + u.t(f"Mission ticked. +{gained} XP", f"미션을 완료로 표시했습니다. +{gained} XP") if gained else u.t("Already ticked, so +0 XP.", "이미 완료로 표시했으므로 +0 XP.")), style="ok" if gained else "muted"))
                 for b in new:
-                    u.print(Text("  " + u.g["star"] + " " + u.t(f"Badge earned: phase {b[5:]}", f"배지 획득: {b[5:]}단계"), style="bold warn"))
+                    u.print(Text("  " + u.g["star"] + " " + u.t(f"Badge earned: phase {b[5:]}", f"phase {b[5:]} 배지 획득"), style="bold warn"))
             else:
                 u.print()
                 views.mission_card(u, les, state)

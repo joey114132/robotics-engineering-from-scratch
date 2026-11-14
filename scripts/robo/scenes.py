@@ -21,11 +21,11 @@ INFO = {
     "payload": ("Swinging payload settling", "흔들리는 짐이 가라앉습니다", "A damped swing: the angle trace on the right shrinks until it sits inside the settle band.",
                 "감쇠 진동: 오른쪽 각도 곡선이 줄어들어 정착 띠 안으로 들어옵니다."),
     "pubsub": ("Pub/sub messages on wires", "선을 따라 흐르는 pub/sub 메시지", "Publishers send on a topic, subscribers receive; a node lights up when a message arrives.",
-               "publisher 가 topic 으로 보내면 subscriber 가 받습니다. 메시지가 도착하면 노드가 켜집니다."),
+               "publisher가 topic으로 보내면 subscriber가 받습니다. 메시지가 도착하면 노드가 켜집니다."),
     "lidar": ("Lidar sweep building a map", "라이다가 지도를 만듭니다", "Each beam that hits a surface leaves a dot; the dots add up to a map of the room.",
               "표면에 닿은 빔마다 점이 남고, 점이 쌓여 방의 지도가 됩니다."),
     "tree": ("Tree growing to a goal", "트리가 목표까지 자랍니다 (RRT)", "RRT: random samples pull the tree outward around obstacles until it reaches the goal.",
-             "RRT: 무작위 샘플이 트리를 장애물 사이로 뻗게 하고, 목표에 닿으면 경로가 켜집니다."),
+             "RRT: 무작위 샘플이 트리를 장애물 사이로 끌어당기고, 목표에 닿으면 그 경로가 강조됩니다."),
     "swarm": ("Swarm converging", "무리가 모입니다", "Each agent only moves toward its own slot, yet the swarm forms a ring and spreads out again.",
               "각 개체는 자기 자리만 향해 움직이는데도 무리가 고리를 이루었다가 다시 흩어집니다."),
 }
@@ -401,7 +401,7 @@ def caption_text(u, name, phase_idx, hint=True):
     t.append(u.t(title, title_ko), style="bold")
     t.append("   " + u.t(cap, cap_ko), style="muted")
     if hint:
-        t.append("   " + u.t("Ctrl-C to quit", "Ctrl-C 로 종료"), style="muted")
+        t.append("   " + u.t("Ctrl-C to quit", "Ctrl-C로 종료"), style="muted")
     return t
 
 

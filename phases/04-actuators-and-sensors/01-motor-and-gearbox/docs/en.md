@@ -6,38 +6,45 @@
 
 ## In Plain Words
 
-A bike's low gear makes the pedals turn farther for the same wheel movement. You need less pedal torque to
-move the load, while the wheel turns more slowly for a given pedalling speed.
+A small motor has to spin up a heavy flywheel through a gearbox. The gearbox makes the flywheel turn many times slower than the motor shaft. Spinning energy grows with the square of the speed, so a slow flywheel holds very little of it.
 
-A motor gearbox makes that trade too. The load's inertia seen at the motor shrinks with the square of the
-reduction ratio, so the rotor's own inertia can dominate. The DC motor in this model also loses torque as it
-speeds up at fixed voltage, because back-EMF leaves less voltage to drive current.
+The motor therefore feels the flywheel as far lighter than it is. But the faster a motor spins, the more voltage it generates against its own supply, so less current flows and its push fades.
 
 ## The Problem
 
-You pick a motor for a joint, add a 100:1 gearbox, and the joint moves fast and strong. Then you tune the drive with the arm empty and it behaves the same when the arm holds a heavy tool. The drive has no idea what is on the end of the arm. The cause is two lines of algebra.
+You add a 100:1 gearbox to a joint motor. You tune the drive, the electronics that power the motor, with the arm empty. Later the arm holds a heavy tool and the joint behaves exactly the same, because the drive cannot tell what hangs on it.
 
 ## The Concept
 
-![Voltage to output torque](../assets/diagram-motor-chain.png)
+Follow the arrows from voltage to torque (a twisting push), then the red box feeding back into the current.
 
-*Voltage drives current, current makes torque, and the speed-dependent back-EMF takes some of the voltage back.*
+![Motor voltage, current, torque and back-EMF](../assets/diagram-motor-chain.png)
 
-Current is `(V - kt*w) / R` and torque is `kt * current`, so torque falls on a straight line from stall torque at `w = 0` to zero at the no-load speed `V / kt`. In SI units the torque constant and the back-EMF constant are the same number.
+*More speed, more back-EMF (voltage generated against the supply), so less current and torque.*
 
-![Reflected inertia](../assets/diagram-reflected-inertia.png)
+Here `V` is the supply voltage, `w` the shaft speed, `R` the winding resistance and `kt` the torque constant (torque per amp). Current is `(V - kt*w) / R` and torque is `kt * current`. So torque falls on a straight line from the stall torque (the push at `w = 0`) to zero at the no-load speed `V / kt`.
 
-*Dividing the load inertia by N squared leaves the rotor inertia dominating.*
+Now the gearbox: see the flywheel's inertia shrink.
 
-A gearbox of ratio `N` multiplies torque by `N` and divides speed by `N`. Kinetic energy goes with speed squared, so the load inertia seen at the motor is `J_L / N^2`.
+![Flywheel inertia divided by N squared](../assets/diagram-reflected-inertia.png)
+
+*Dividing the flywheel's inertia by N squared leaves the rotor in charge.*
+
+A gearbox of ratio `N` multiplies torque by `N` and divides speed by `N`. Inertia `J_L` (how hard the flywheel is to spin up) at speed `w/N` stores `J_L*(w/N)^2/2` of spinning energy, which is what an inertia `J_L / N^2` at speed `w` stores. So the motor feels `J_L / N^2`.
+
+Rotor (the motor's spinning part) inertia `J_r = 2e-5` and flywheel inertia `J_L = 2e-3` (kg m^2; 2e-5 means 0.00002). At `N = 1` it feels `2e-3 + 2e-5`, 101 times the rotor's inertia, and needs 0.81 s instead of 8 ms to reach 63% of its final speed. At `N = 100` it feels `2e-5 + 2e-7`, 1.01 times, and needs 8.08 ms.
+
+![The same flywheel with N = 1 and N = 100](../assets/clip-example.mp4)
+
+*Left (N = 1, blue): the rotor creeps. Right (N = 100, green): it races while the flywheel turns 100 times slower.*
 
 ![Torque-speed line and spin-up curves](../assets/fig-motor-gearbox.png)
 
-*Left: the gearbox moves the line but does not bend it. Right: at N = 100 the speed response with and without the load is almost the same.*
+*Left: the gearbox moves the line without bending it. Right: at N = 100 loaded and bare curves coincide.*
 
 ## Build It
 
-Motor-side dynamics with the load torque arriving divided by `N`.
+The load torque arrives divided by `N`.
 
 ```python
 def motor_torque(w, kt, R, V):
@@ -50,7 +57,7 @@ def inertia_sensitivity(J_rotor, J_load, N):
     return (J_rotor + load_at_motor(J_load, N)) / J_rotor
 ```
 
-`spin_up()` integrates `J * dw/dt = motor_torque(w) - tau_load / N`. A sensitivity near 1.0 means the drive cannot see the load.
+`spin_up()` integrates `J * dw/dt = motor_torque(w) - tau_load / N`. A sensitivity of 1.0 means the drive cannot see the load.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -60,7 +67,7 @@ python3 phases/04-actuators-and-sensors/01-motor-and-gearbox/code/figure.py
 
 ## Use It
 
-Simulators use the same model. MuJoCo documents a DC motor actuator with these terms, and a motor tutorial lists the torque constant and terminal resistance. Compare your `kt`, `R` and rotor inertia with a real datasheet before trusting a number.
+MuJoCo documents a DC motor actuator with these terms. Compare your `kt`, `R` and rotor inertia with a datasheet.
 
 Sources: [MuJoCo DC motor model](https://mujoco.readthedocs.io/en/latest/_static/dcmotor.pdf), [Faulhaber DC motor calculations](https://www.faulhaber.com/en/know-how/tutorials/dc-motor-tutorial-motor-calculations-for-coreless-brush-dc-motors/), accessed 2026-11-09.
 

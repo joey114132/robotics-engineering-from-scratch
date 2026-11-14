@@ -6,30 +6,43 @@
 
 ## 쉽게 말하면
 
-학급 채팅방에 글이 읽는 속도보다 빨리 올라와요. 안 읽은 글을 오래된 순서로 읽는다면 보관함을 키울수록 더 지난 소식을 읽게 돼요.
+컵이 레일 위를 미끄러져요. 센서는 컵의 위치를 팔의 controller가 읽는 것보다 빠르게 알려 줘요.
+읽지 못한 보고는 queue에서 기다리고 controller는 언제나 가장 오래된 보고부터 가져가요.
 
-subscriber의 queue도 비슷해요. keep last에서는 가득 찬 queue에 새 메시지가 오면 가장 오래된 메시지를 버려요. depth를 키우면 대기 중인 메시지는 더 남지만 읽는
-속도는 그대로예요. 계속 밀리면 읽는 데이터가 더 오래돼요.
+queue가 가득 차면 새 보고가 올 때마다 가장 오래된 보고가 밀려나요.
+queue가 길면 기다리는 가장 오래된 보고가 반 초 전 것일 수도 있어서 팔은 컵이 있던 자리를 향해요. 보고를 하나만 담는 queue라면 팔은 가장 새 보고를 읽어요.
 
 ## 문제
 
-controller는 joint state를 40 Hz로 읽는데 driver는 100 Hz로 publish합니다. 메시지를 잃지 않으려고 queue depth를 50으로 올렸더니 팔이 반 초씩 늦게 반응합니다. 안전 여유처럼 보였던 설정이 오래된 데이터를 읽게 만든 것입니다.
+controller(팔을 움직이는 프로그램)는 joint state(관절 각도)를 1초에 40번인 40 Hz로 읽는데 driver(모터를 다루는 프로그램)는 100 Hz로 publish합니다. 메시지를 잃지 않으려고 queue depth를 50으로 올렸습니다.
+
+메시지는 10 ms마다 오므로 queue 50개는 0.5초 전까지 거슬러 올라가고 팔은 반 초씩 늦게 반응합니다.
 
 ## 개념
 
-![node는 topic과 service로 대화합니다](../assets/diagram-ros-parts.png)
+두 줄을 보세요. 위쪽은 흐르는 스트림이고 아래쪽은 질문 하나와 답 하나입니다.
 
-*node는 프로그램 하나입니다. topic은 publisher에서 subscriber로 가는 스트림을 나릅니다. service는 요청 하나에 응답 하나를 돌려줍니다.*
+![Topics and services](../assets/diagram-ros-parts.png)
 
-subscriber는 자기 queue를 가집니다. history 정책이 "keep last"이면 queue에는 최대 `depth`개가 들어가고 가득 찬 상태에서 새 메시지가 오면 가장 오래된 메시지가 밀려납니다.
+*node는 프로그램 하나입니다. topic은 publisher(보내는 쪽)에서 subscriber(받는 쪽)로 가는 스트림을 나릅니다. service는 요청 하나에 응답 하나를 돌려줍니다.*
 
-![느린 subscriber와 짧은 queue](../assets/diagram-queue-depth.png)
+subscriber는 메시지가 기다리는 줄인 queue를 가집니다. history 설정이 "keep last"이면 queue는 가장 최근 `depth`개를 담고 가득 찬 상태에서 새 메시지가 오면 가장 오래된 메시지가 밀려납니다.
 
-*publisher가 subscriber보다 빠르므로 queue는 항상 가득 차 있고 publish할 때마다 가장 오래된 메시지가 버려집니다.*
+![Slow subscriber](../assets/diagram-queue-depth.png)
 
-![queue depth와 메시지 나이](../assets/fig-queue-depth.png)
+*publisher가 더 빠르므로 queue는 가득 찬 채로 있고 publish할 때마다 가장 오래된 메시지가 버려집니다.*
 
-*왼쪽은 subscriber가 발행 주기 `(depth - 1)`개만큼 오래된 메시지를 읽는 모습입니다. 오른쪽은 depth와 상관없이 같은 400개가 전달되는 모습입니다. depth는 메시지를 "버려짐"과 "아직 queue에 있음" 사이에서 옮길 뿐입니다.*
+publisher 100 Hz와 reader 40 Hz로 10초를 돌려 봅니다. publisher는 메시지 1000개를 보내고 reader는 depth와 상관없이 400개를 읽습니다.
+
+마지막으로 읽은 메시지는 depth 1에서 5 ms 전 것이고 queue에 메시지가 하나 더 쌓일 때마다 publish 주기 하나인 10 ms가 더해집니다. depth 10은 95 ms, depth 50은 495 ms입니다.
+
+![Three arms, three queue depths](../assets/clip-example.mp4)
+
+*depth마다 팔 한 대씩 세 대입니다. 연한 컵은 그 팔이 컵이 있다고 믿는 자리입니다. 초록(depth 1)은 컵 위에 머물고 연한 파랑(depth 10)은 조금 뒤처지며 파랑(depth 50)은 예전 위치를 쫓아갑니다.*
+
+![Queue depth](../assets/fig-queue-depth.png)
+
+*왼쪽에서는 depth가 클수록 메시지 나이가 커지는 모습을 보세요. 대략 발행 주기 `(depth - 1)`개만큼입니다. 오른쪽은 발행한 1000개 중 400개가 depth와 상관없이 전달됩니다. depth는 나머지 600개를 "버려짐"과 "아직 queue에 있음" 사이에서 옮길 뿐입니다.*
 
 ## 만들기
 
@@ -44,9 +57,9 @@ def publish(self, topic, msg):
         s.q.append(msg)
 ```
 
-`run(pub_hz, sub_hz, depth, seconds)`는 메시지마다 보낸 시각을 찍고 subscriber tick마다 하나씩 꺼냅니다.
+`run(pub_hz, sub_hz, depth, seconds)`는 메시지마다 보낸 시각을 찍고 subscriber tick(읽기 한 번)마다 하나씩 꺼냅니다.
 
-그래서 폐기 개수와 읽은 메시지의 나이를 보고할 수 있습니다. `burst_drops()`는 depth가 도움이 되는 경우, 곧 queue보다 짧은 burst를 보여 줍니다.
+그래서 폐기 개수와 읽은 메시지의 나이를 보고합니다. `burst_drops()`는 depth가 도움이 되는 경우, 곧 queue보다 짧은 burst(한꺼번에 몰려오는 메시지)를 보여 줍니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -56,7 +69,7 @@ python3 phases/00-setup-and-tooling/04-ros2-in-one-page/code/main.py
 
 ## 실제 도구로 보기
 
-ROS 2에서는 같은 설정이 QoS history 정책 `keep last`와 queue depth입니다. QoS 문서가 뒷받침하는 것은 여기까지입니다. 이어지는 조언은 이 레슨의 것입니다.
+ROS 2에서는 같은 설정이 QoS(quality of service) history 정책 `keep last`와 queue depth입니다. QoS 문서가 뒷받침하는 것은 여기까지입니다. 이어지는 조언은 이 레슨의 것입니다.
 
 최신 값만 중요한 제어 신호에는 작은 depth를 두고 burst에 대비할 때만 더 크게 잡습니다. depth를 올리기 전에 subscriber 속도를 publisher에 맞춥니다.
 

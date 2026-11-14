@@ -1,13 +1,14 @@
 {
- "en": {
-  "hook": "Two knobs, Q and R, and I get a whole gain matrix. Cheap effort makes me twitchy. Costly effort makes me a sloth.",
-  "mission": "In `code/main.py` run `dare` with `r` set to 0.01, 1 and 100. Predict which K has the biggest first entry, then print `K` for each and check."
- },
- "ko": {
-  "hook": "손잡이는 Q와 R 두 개뿐인데 게인 행렬이 통째로 나옵니다. 노력이 싸면 저는 들썩이고 비싸면 나무늘보가 됩니다.",
-  "mission": "`code/main.py`에서 `r`을 0.01, 1, 100으로 바꿔 `dare`를 돌리세요. 첫 성분이 가장 큰 K가 어느 것일지 예측한 뒤 `K`를 출력해 확인하세요."
- },
- "toy": "lqr-tradeoff",
- "motion": "riccati-converge",
-  "three": "lqr-cart-rail-3d"
+  "en": {
+    "hook": "Two knobs, Q and R, and I get a whole gain matrix. Cheap effort makes me twitchy. Costly effort makes me a sloth.",
+    "mission": "In `code/main.py` run `dare` with `r` set to 0.01, 1 and 100. Predict which K has the biggest first entry, then print `K` for each and check.",
+    "clip": "Two toy cars reach the stop line from 1 m away with LQR gains from `dare()` and different effort costs. The blue car has `R = 0.01`: pushing is cheap, so it shoves hard at first (8.7 m/s²) and stops in about 1.4 s. The green car has `R = 10`, pushes gently (0.3 m/s²) and is still creeping after 5 s. The red arrow is the push at 0.15 m per m/s², too small to see for the green car; rendered from `rollout()` at real speed, with 1 m drawn as 1.5 m."
+  },
+  "ko": {
+    "hook": "손잡이는 Q와 R 두 개뿐인데 게인 행렬이 통째로 나옵니다. 노력이 싸면 저는 들썩이고 비싸면 나무늘보가 됩니다.",
+    "mission": "`code/main.py`에서 `r`을 0.01, 1, 100으로 바꿔 `dare`를 돌리세요. 첫 성분이 가장 큰 K가 어느 것일지 예측한 뒤 `K`를 출력해 확인하세요.",
+    "clip": "장난감 자동차 두 대가 `dare()`로 구한 LQR 게인을 쓰고 노력 비용을 달리해 1 m 앞의 정지선까지 갑니다. 파란 차는 `R = 0.01`이라 미는 것이 싸서 처음에 세게 밀고(8.7 m/s²) 약 1.4초에 멈춥니다. 초록 차는 `R = 10`이라 살살 밀어서(0.3 m/s²) 5초가 지나도 기어가며 그 힘은 빨간 화살표(m/s²당 0.15 m)로 보이지 않을 만큼 작습니다. `rollout()` 결과를 실제 속도로 렌더했고 1 m를 1.5 m로 그렸습니다."
+  },
+  "toy": "lqr-tradeoff",
+  "three": "lqr-car-stop-line-3d"
 }

@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "A deeper queue won't keep me safe. It just makes the messages I read older, and now I'm reading old news.",
-    "mission": "In `code/main.py` change `(1, 10, 50)` to `(5,)`. Predict the printed last age within 10 ms, then run `python3 code/main.py`."
+    "mission": "In `code/main.py` change `(1, 10, 50)` to `(5,)`. Predict the printed last age within 10 ms, then run `python3 code/main.py`.",
+    "clip": "Two arms follow a cup that slides back and forth and then stops. The green arm reads from a queue of depth 1 and stays on the cup. The blue arm reads from a queue of depth 50, gets messages about 0.5 s old and aims where the cup was, shown by the pale ghost cup. The message ages come from the lesson's `run(100, 40, depth, seconds)` (100 Hz publisher, 40 Hz reader) at real time, and the cup's path was chosen for the picture."
   },
   "ko": {
     "hook": "queue를 깊게 한다고 안전해지지 않습니다. 읽는 메시지만 점점 낡아져서 저는 묵은 소식만 읽게 됩니다.",
-    "mission": "`code/main.py`에서 `(1, 10, 50)`을 `(5,)`로 바꾸세요. 출력될 last age를 10 ms 안으로 예측한 다음 `python3 code/main.py`를 실행하세요."
+    "mission": "`code/main.py`에서 `(1, 10, 50)`을 `(5,)`로 바꾸세요. 출력될 last age를 10 ms 안으로 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "팔 두 대가 앞뒤로 미끄러지다 멈추는 컵을 따라갑니다. 초록 팔은 depth 1 queue에서 읽어서 컵 위에 머뭅니다. 파란 팔은 depth 50 queue에서 약 0.5초 지난 메시지를 받아서 연한 ghost 컵이 보여 주는 예전 위치를 향합니다. 메시지의 나이는 이 레슨의 `run(100, 40, depth, seconds)`(publisher 100 Hz, reader 40 Hz)에서 나왔고 실제 속도이며 컵의 경로는 그림을 위해 정했습니다."
   },
   "toy": null,
- "motion": "queue-depth",
   "three": "topic-queue-tray-3d"
 }

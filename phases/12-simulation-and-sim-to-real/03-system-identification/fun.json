@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Tuning a simulator by eye is guessing a recipe from one bite. Feed it a rich recording and the ingredients finally show up.",
-    "mission": "Run `python3 code/main.py`. Before reading the output, guess which run (`a=0.0` or `a=1.0`) recovers `b`, then compare the two `cond` numbers."
+    "mission": "Run `python3 code/main.py`. Before reading the output, guess which run (`a=0.0` or `a=1.0`) recovers `b`, then compare the two `cond` numbers.",
+    "clip": "A joint is released from 1.2 rad with no torque, and the ghost arm shows what a fitted model predicts for it. The model fitted from one slow run (left) comes out with negative damping, so it speeds itself up and spins. The model fitted from a rich run (right) follows the real joint. The fits come from this lesson's `fit()`, the motion from `run()`, played at about one sixth of real speed."
   },
   "ko": {
-    "hook": "눈대중으로 시뮬레이터를 맞추는 건 한 입 먹고 레시피를 맞히는 일입니다. 풍부한 기록을 주면 재료가 드러납니다.",
-    "mission": "`python3 code/main.py`를 실행하세요. 출력을 읽기 전에 `a=0.0`과 `a=1.0` 중 어느 쪽이 `b`를 맞힐지 짐작한 뒤 두 `cond` 값을 비교하세요."
+    "hook": "눈대중으로 시뮬레이터를 맞추는 건 한 입 먹고 레시피를 맞히는 일입니다. 다양한 기록을 주면 재료가 드러납니다.",
+    "mission": "`python3 code/main.py`를 실행하세요. 출력을 읽기 전에 `a=0.0`과 `a=1.0` 중 어느 쪽이 `b`를 맞힐지 짐작한 뒤 두 `cond` 값을 비교하세요.",
+    "clip": "관절을 1.2 rad에서 토크 없이 놓았을 때 유령 팔이 맞춘 모델의 예측을 보여 줍니다. 느린 기록 하나로 맞춘 모델(왼쪽)은 damping이 음수로 나와서 스스로 빨라지며 돕니다. 다양한 기록으로 맞춘 모델(오른쪽)은 실제 관절을 따라갑니다. 맞춘 값은 이 레슨의 `fit()`, 움직임은 `run()`에서 나왔고 실제의 약 6분의 1 속도로 재생했습니다."
   },
   "toy": null,
-  "motion": "excitation-pins-down-b",
   "three": "excitation-wheel-3d"
 }

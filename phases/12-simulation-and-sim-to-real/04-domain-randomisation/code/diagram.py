@@ -9,27 +9,28 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def loop():
-    d = Diagram(cell=(300, 170))
-    d.title("Evaluate a fixed controller on many plants")
-    rng = d.box("Pick a width w:\nscale each parameter\nby 1 +- w", 0, 0.5, "blue", w=240, h=110)
-    plants = d.box("N random plants", 1, 0.5, "yellow", w=210)
-    ctrl = d.box("Same fixed PD\ncontroller on each", 2, 0.5, "purple", w=230)
-    rate = d.box("Success rate\nand mean cost", 3, 0.5, "green", w=220)
+    d = Diagram(numbered=True)
+    d.title("Test one fixed controller on many arms")
+    rng = d.box("Pick a\nwidth w", 0, 0, "blue")
+    plants = d.box("N different\narms", 1, 0, "yellow")
+    ctrl = d.box("Same fixed\nPD gains", 2, 0, "purple")
+    rate = d.box("Success rate,\nmean cost", 2, 1, "green")
     for s, t in ((rng, plants), (plants, ctrl), (ctrl, rate)):
         d.arrow(s, t)
-    d.arrow(rate, rng, route="below", label="change w or the gains, repeat")
+    d.arrow(rate, rng, label="change w or gains, repeat")
+    d.note("every parameter\ntimes (1 +- w)", near=rng, side="t")
     d.save(OUT / "diagram-dr-loop.excalidraw")
 
 
 def widths():
-    d = Diagram(cell=(330, 170))
+    d = Diagram()
     d.title("How wide should the range be?")
-    nar = d.box("Range narrower than\nthe real plant", 0, 0, "red", w=290)
-    rn = d.box("Fast on paper,\nfails on the real one", 1, 0, "red", w=280)
-    mat = d.box("Range matches\nthe real plant", 0, 1.1, "green", w=290)
-    rm = d.box("Reliable and fast", 1, 1.1, "green", w=280)
-    wid = d.box("Range far wider than\nthe real plant", 0, 2.2, "yellow", w=290)
-    rw = d.box("Reliable but slower:\nit guards against plants\nthat never occur", 1, 2.2, "yellow", w=290, h=110)
+    nar = d.box("Range narrower\nthan the real arm", 0, 0, "red")
+    rn = d.box("Fast on paper,\nfails on the real arm", 1, 0, "red")
+    mat = d.box("Range matches\nthe real arm", 0, 1, "green")
+    rm = d.box("Reliable and fast", 1, 1, "green")
+    wid = d.box("Range far wider\nthan the real arm", 0, 2, "yellow")
+    rw = d.box("Reliable but slower:\nguards against arms\nthat never occur", 1, 2, "yellow")
     for s, t in ((nar, rn), (mat, rm), (wid, rw)):
         d.arrow(s, t)
     d.save(OUT / "diagram-dr-widths.excalidraw")

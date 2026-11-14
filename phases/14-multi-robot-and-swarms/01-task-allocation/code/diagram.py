@@ -9,29 +9,28 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 
 def trap():
-    d = Diagram()
-    d.title("Why greedy assignment strands a robot")
-    r0 = d.box("Robot A\nnearest = task 1", 0, 0, "blue")
-    r1 = d.box("Robot B\nonly task 1 is near", 0, 1, "blue")
-    t = d.box("A takes task 1\nfirst", 1, 0.5, "yellow")
-    s = d.box("B must drive\nfar for task 2", 2, 0.5, "red")
-    g = d.box("Total cost\ngoes up", 3, 0.5, "red")
-    for a, b in ((r0, t), (r1, t), (t, s), (s, g)):
-        d.arrow(a, b)
-    d.note("Greedy looks at one robot at a time.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=22)
+    d = Diagram(numbered=True)
+    d.title("Why greedy strands the last car")
+    a = d.box("Each car takes the\nnearest free pad", 0, 0, "blue")
+    b = d.box("Car 4 takes pad 5\n(1.1 m away)", 1, 0, "yellow")
+    c = d.box("Car 5 is left with\na far pad: 2.2 m", 2, 0, "red")
+    g = d.box("Greedy total\n5.3 m", 3, 0, "red")
+    for s, t in ((a, b), (b, c), (c, g)):
+        d.arrow(s, t)
+    d.note("Pad 5 was the only close pad for car 5", d.margin, 0)
     d.save(OUT / "diagram-greedy-trap.excalidraw")
 
 
 def optimal():
-    d = Diagram(cell=(330, 170))
-    d.title("Optimal assignment: pay for the swap, win overall")
-    c = d.box("Cost matrix\ndistance robot to task", 0, 0.5, "blue", w=250)
-    p = d.box("Potentials u, v\n(a price per row, column)", 1, 0.5, "purple", w=250)
-    z = d.box("Edges with\nzero reduced cost", 2, 0, "gray", w=230)
-    a = d.box("Augmenting path\nflips matches", 2, 1, "purple", w=230)
-    r = d.box("Total cost is\nthe minimum", 3, 0.5, "green", w=230)
-    for s, t in ((c, p), (p, z), (p, a), (z, r), (a, r)):
+    d = Diagram(numbered=True)
+    d.title("Optimal assignment: swap early picks to win overall")
+    c = d.box("Distance table\ncars x pads", 0, 0, "blue", step=1)
+    p = d.box("Row and column\nprices", 1, 0, "purple", step=2)
+    a = d.box("Flip matches on\naugmenting path", 1, 1, "purple", step=3)
+    r = d.box("Total is the\nminimum: 3.3 m", 0, 1, "green", step=4)
+    for s, t in ((c, p), (p, a), (a, r)):
         d.arrow(s, t)
+    d.note("In the clip, cars 3, 4 and 5 trade pads", d.margin, 0)
     d.save(OUT / "diagram-optimal-idea.excalidraw")
 
 

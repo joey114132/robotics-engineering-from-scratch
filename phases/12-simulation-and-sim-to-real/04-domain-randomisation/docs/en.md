@@ -6,12 +6,9 @@
 
 ## In Plain Words
 
-Try parking a remote-controlled toy car at a chalk line using the same rule each time. A heavier load or slower response can make a
-rule tested on an empty car miss the line.
+Twelve arms leave the same assembly line, yet no two are alike. One has a heavier link, another a stickier hinge, another a slower motor. Controller gains (how hard it pushes) tuned on the average arm leave no margin for these differences, so some copies swing past the target.
 
-Domain randomisation tries controller settings across simulated variations, then keeps a fixed setting that performs well across them.
-A narrow range misses likely differences. An unnecessarily wide range can favour slower settings to handle conditions that never occur.
-Here the controller is tuned, without training a learned policy.
+Domain randomisation tunes the gains across many different simulated arms. A narrow range misses real differences. A range that is too wide gives slow, cautious gains for arms that never occur. No learning is involved.
 
 ## The Problem
 
@@ -19,19 +16,25 @@ Gains tuned on the nominal simulator work there and fail on the real joint, whos
 
 ## The Concept
 
-![Evaluate a fixed controller on many plants](../assets/diagram-dr-loop.png)
+![Many-plant test loop](../assets/diagram-dr-loop.png)
 
 *Scale every parameter by `1 +- w`, run the same controller on each plant and count successes.*
 
-Nothing is learned here. A PD controller with a torque limit and sensor delay steps a joint by 1 rad. A run succeeds if it stays within 0.05 rad after 0.8 s and peaks below 1.05 rad. A failure costs 2 s.
+Each plant is one simulated arm, and the nominal plant is the unscaled one. A PD controller (push `kp` per unit of error, brake `kd` per unit of speed) with a torque limit and sensor delay steps a joint by 1 rad. A run succeeds if it settles (stays within 0.05 rad) by 0.8 s and peaks below 1.05 rad. A failure costs 2 s. `tune()` tries every `kp`, `kd` pair on arms drawn at one width and keeps the lowest mean cost.
 
-![Too narrow, matched and too wide](../assets/diagram-dr-widths.png)
+![Three range widths](../assets/diagram-dr-widths.png)
 
 *A narrow range gives brittle gains, a matched range gives reliable fast ones, and a much wider range buys safety against plants that never occur.*
 
-![Success against test width and cost against tuning width](../assets/fig-dr-width.png)
+![Success and cost versus width](../assets/fig-dr-width.png)
 
 *Left: gains tuned on the nominal plant drop to 57% success at width 0.3, while gains tuned across width 0.3 reach 99%. Right: tuned across 0.6, the mean cost on width-0.3 plants is 0.586 s against 0.532 s, about 10% slower for 1 point more success.*
+
+Width 0.3 turns inertia 0.05 into anything from 0.035 to 0.065, and sensor delay 0.02 s into 0.014 to 0.026 s. Over 12 such arms, gains tuned on the nominal arm (`kp` 4.5, `kd` 0.70) leave 6 failing. Gains tuned across 0.3 (`kp` 7.7, `kd` 1.35) settle all 12 in 0.52 s on average. Gains tuned across 0.6 (`kp` 4.5, `kd` 0.88) settle all 12, but need 0.59 s.
+
+![Same 12 arms, two gain sets](../assets/clip-example.mp4)
+
+*The same 12 arms. Watch which group settles first: green (tuned across 0.3) or blue (tuned across 0.6).*
 
 ## Build It
 

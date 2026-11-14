@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Every joint origin is written in its parent's frame. Read it from the world and I point, very confidently, at the wrong corner.",
-    "mission": "Run `cd code && python3 -c \"from main import *; c=chain(parse_urdf(URDF)[1],'base','hand'); print(naive_position(c), link_positions(c,{'shoulder':0,'elbow':0})['hand'])\"`. Which hand position is right, and why?"
+    "mission": "Run `cd code && python3 -c \"from main import *; c=chain(parse_urdf(URDF)[1],'base','hand'); print(naive_position(c), link_positions(c,{'shoulder':0,'elbow':0})['hand'])\"`. Which hand position is right, and why?",
+    "clip": "The green arm starts along x and ends along y: the shoulder joint turns from -90 degrees to 0 (the lesson's pose, every joint angle 0) on top of the 90 degree turn about z already written in the shoulder `<origin>`. The green hand is placed by `link_positions()`, which reads each origin in its parent's frame, and the blue ghost hand is `naive_position()`, which adds the origins as if they were world directions, so it stays put along x. The red line is the gap between the hands, 0.71 m in URDF units at the end, and everything is drawn at twice the URDF size."
   },
   "ko": {
     "hook": "joint origin은 부모 link의 frame으로 적혀 있습니다. 월드 기준으로 읽으면 저는 자신 있게 엉뚱한 곳을 가리킵니다.",
-    "mission": "`cd code && python3 -c \"from main import *; c=chain(parse_urdf(URDF)[1],'base','hand'); print(naive_position(c), link_positions(c,{'shoulder':0,'elbow':0})['hand'])\"`를 실행해 보세요. 어느 hand 위치가 맞는지 이유와 함께 말해 보세요."
+    "mission": "`cd code && python3 -c \"from main import *; c=chain(parse_urdf(URDF)[1],'base','hand'); print(naive_position(c), link_positions(c,{'shoulder':0,'elbow':0})['hand'])\"`를 실행해 보세요. 어느 hand 위치가 맞는지 이유와 함께 말해 보세요.",
+    "clip": "초록 팔은 x축 방향에서 출발해 y축 방향에서 끝납니다. 어깨 관절이 -90도에서 0도까지 돌고(레슨에서 모든 관절각이 0인 자세) 여기에 어깨 `<origin>`에 이미 적힌 z축 90도 회전이 더해지기 때문입니다. 초록 손은 각 origin을 부모 frame에서 읽는 `link_positions()`로 놓았고 파란 ghost 손은 origin을 world 방향인 것처럼 그냥 더한 `naive_position()` 결과라서 x축 위에 가만히 있습니다. 빨간 선은 두 손 사이의 거리로 끝에서 URDF 단위로 0.71 m이고 전체를 URDF 크기의 두 배로 그렸습니다."
   },
   "toy": null,
- "motion": "origin-frames",
   "three": "urdf-tree-3d"
 }

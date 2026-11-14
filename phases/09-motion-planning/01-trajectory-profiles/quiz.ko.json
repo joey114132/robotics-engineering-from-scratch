@@ -2,7 +2,7 @@
   {"id": 1, "stage": "pre", "question": "관절이 속도 0으로 목표에 도착하는데 출발할 때 덜컥거립니다. 어떤 양이 불연속일 가능성이 높습니까?", "options": ["위치", "가속도", "시간"], "answer": 1, "explanation": "cubic은 위치와 속도만 맞추므로 가속도가 정지 상태에서 0이 아닌 값으로 뜁니다."},
   {"id": 2, "stage": "check", "question": "양 끝의 위치, 속도, 가속도를 고정하는 quintic은 경계 조건을 몇 개 씁니까?", "options": ["4개", "6개", "8개"], "answer": 1, "explanation": "양 끝에서 세 가지씩이므로 계수 하나당 하나, 모두 여섯 조건입니다."},
   {"id": 3, "stage": "check", "question": "샘플 주기를 절반으로 줄이면 cubic 프로파일의 유한 차분 최대 jerk는 어떻게 됩니까?", "options": ["절반이 된다", "그대로다", "두 배가 된다"], "answer": 2, "explanation": "같은 가속도 계단을 더 작은 dt로 나누면 jerk 값이 더 커집니다."},
-  {"id": 4, "stage": "check", "question": "정지에서 정지까지 가는 대칭 trapezoid의 가속도는, 정지 상태에서 출발하는 것과 정지로 돌아오는 것까지 세면 몇 번 계단을 이룹니까?", "options": ["2번", "4번", "6번"], "answer": 1, "explanation": "0에서 a, a에서 0, 0에서 -a, -a에서 0입니다."},
+  {"id": 4, "stage": "check", "question": "정지에서 정지까지 가는 대칭 trapezoid의 가속도는 출발과 정지 복귀까지 세면 몇 번 계단처럼 바뀝니까?", "options": ["2번", "4번", "6번"], "answer": 1, "explanation": "0에서 a, a에서 0, 0에서 -a, -a에서 0입니다."},
   {"id": 5, "stage": "post", "question": "quintic의 이동 시간을 두 배로 늘리면 최대 가속도는 어떻게 됩니까?", "options": ["절반", "4분의 1", "그대로"], "answer": 1, "explanation": "가속도는 d / T^2에 비례합니다."},
   {"id": 6, "stage": "post", "question": "cubic 프로파일의 출발 덜컥거림을 고치는 가장 좋은 방법은 무엇입니까?", "options": ["프로파일을 더 빠르게 샘플링한다", "양 끝의 가속도가 0인 프로파일을 쓴다", "이동 시간을 줄인다"], "answer": 1, "explanation": "빠른 샘플링은 jerk를 더 크게 만들고, 시간을 줄이면 계단이 더 커집니다."}
 ]

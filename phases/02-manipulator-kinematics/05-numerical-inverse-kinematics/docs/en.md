@@ -1,29 +1,32 @@
 # Numerical Inverse Kinematics
 
-> With no formula for the joints, nudge them toward the target with the Jacobian, clamp to the limits, and try several starting points.
+> With no formula, nudge the joints toward the target with the Jacobian, clamp to limits, and restart from several poses.
 
 **Type:** Build   **Prerequisites:** 02/03 Jacobian and Velocity, 02/04 Singularities   **Time:** ~15 minutes
 
 ## In Plain Words
 
-You want a poseable toy's hand to touch a sticker. Bend a joint slightly, check where the hand went, then
-adjust again. A large bend can overshoot; a joint at its stop cannot bend farther.
+A three-link bench arm must touch a ball, and no formula gives the joint angles. So bend the joints a little, see where the hand went, and correct. A big bend can overshoot, and a joint at its stop cannot bend further. Out of reach, the arm ends stretched toward it.
 
-Numerical inverse kinematics repeats this process with a Jacobian that predicts small changes. It caps each
-adjustment and respects joint limits. Different starting poses can lead to different answers or get stuck, so
-restarts help. The solver reports whether the hand actually reached the sticker.
+Numerical inverse kinematics repeats these small corrections, using the Jacobian to predict each one. The starting pose decides which answer it finds, so it restarts from several. It reports whether the hand reached the ball.
 
 ## The Problem
 
-Lesson 02/02 solved a two-link arm with the law of cosines. Now you have a three-link arm that can reach a point in many ways, or a six-joint arm with no neat formula. You need joint angles for a target, they must respect the joint limits, and the answer should not depend on where you started.
+Lesson 02/02 solved a two-link arm with the law of cosines. Now you have a three-link arm that can reach a point in many ways, or a six-joint arm with no neat formula. You need joint angles for a target, they must respect the joint limits (how far each joint may turn), and the answer should not depend on where you started.
 
 ## The Concept
 
+The first picture is one correction step, and the loop repeats it. `e` is the tip error: the target minus where the tip is now.
+
 ![One step of the iteration](../assets/diagram-ik-loop.png)
 
-*Measure the tip error, solve for a small joint step, clamp it to the limits, run forward kinematics again, and repeat until the error is tiny.*
+*Measure the error, solve for a small joint step, clamp it, run forward kinematics, and repeat until the error is tiny.*
 
-The step is the damped solve from 02/04: `dq = J^T (J J^T + lam^2 I)^-1 e`. The damping keeps the step finite at a straight arm, where the plain inverse does not exist. A cap on the biggest joint step keeps the linear model honest.
+The step is the damped solve from 02/04: `dq = J^T (J J^T + lam^2 I)^-1 e`. The damping keeps the step finite at a straight arm, where the plain inverse does not exist.
+
+The Jacobian predicts only small moves, so a big step lands where the prediction is wrong. A cap on the biggest joint step prevents that. The solver has converged when the error falls below 1e-6 m.
+
+A seed is a starting pose. Next: many seeds.
 
 ![Restarts](../assets/diagram-ik-restarts.png)
 
@@ -31,7 +34,13 @@ The step is the damped solve from 02/04: `dq = J^T (J J^T + lam^2 I)^-1 e`. The 
 
 ![Ghost arms and convergence](../assets/fig-numerical-ik.png)
 
-*Left: eight seeds reach the same target with different arm shapes. Right: reachable targets drop below 1e-6 m within about 16 steps. An unreachable target stays flat at its best effort.*
+*Left: eight seeds, one target, different arm shapes. Right: reachable targets drop below 1e-6 m within about 16 steps; an unreachable one stays flat.*
+
+Take the target (0.5, 0.3) m for the arm with links of 0.4, 0.3 and 0.2 m. In `ik_restarts()`, 17 of 20 random seeds converge (tip within 1e-6 m). Seed 0 gets there in 6 steps with the elbow up. Seed 2 needs 7 steps and ends elbow down. Watch both hands settle on the same ball with different arm shapes.
+
+![Two start poses reach the same ball](../assets/clip-example.mp4)
+
+*Each arm runs `solve_ik()` one step at a time from its own seed.*
 
 ## Build It
 

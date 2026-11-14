@@ -33,12 +33,12 @@ def pd_step(u, kp, kd):
     t = Text("  ")
     t.append(u.t("overshoot ", "오버슈트 "), style="muted"), t.append(f"{over:.1f}%", style="bold warn" if over > 10 else "bold ok")
     t.append(u.t("     settle time ", "     정착 시간 "), style="muted")
-    t.append(f"{r['settle_time']:.2f} s" if r["settled"] else u.t("not within 3 s", "3 s 안에 못 들어옴"), style="bold ok" if r["settled"] else "bold bad")
+    t.append(f"{r['settle_time']:.2f} s" if r["settled"] else u.t("not within 3 s", "3 s 안에 정착하지 못함"), style="bold ok" if r["settled"] else "bold bad")
     t.append(u.t("  (2% band, green dots)", "  (2% 띠, 초록 점선)"), style="muted")
     u.para(t)
-    msg = (u.t("rings: too little damping, raise kd", "떨립니다: 감쇠가 부족하니 kd 를 올리세요") if over > 10
+    msg = (u.t("rings: too little damping, raise kd", "떨립니다: 감쇠가 부족하니 kd를 올리세요") if over > 10
            else u.t("clean: little overshoot and it settles", "깔끔합니다: 오버슈트가 적고 금방 정착합니다") if r["settled"]
-           else u.t("slow: raise kp to settle within 3 s", "느립니다: kp 를 올려야 3 s 안에 정착합니다"))
+           else u.t("slow: raise kp to settle within 3 s", "느립니다: 3 s 안에 정착하려면 kp를 올리세요"))
     u.print(Text("  " + msg, style="muted"))
 
 
@@ -70,12 +70,12 @@ def sampling_limit(u, r):
     eq = abs(r - 1) < 1e-9
     mag = d["magnitude"]
     if d["regime"] == "ok":
-        msg = u.t("smooth: deadbeat, velocity hits 0 in one step", "부드러움: 한 스텝 만에 속도 0 (deadbeat)") if eq else u.t("smooth: velocity shrinks every step", "부드러움: 속도가 매 스텝 줄어듦")
+        msg = u.t("smooth: deadbeat, velocity hits 0 in one step", "부드러움: 한 스텝 만에 속도가 0이 됩니다 (deadbeat)") if eq else u.t("smooth: velocity shrinks every step", "부드러움: 속도가 매 스텝 줄어듭니다")
     elif d["regime"] == "warn":
-        msg = u.t("chatter: sign flips every step but it still shrinks", "떨림(chatter): 매 스텝 부호가 뒤집히지만 줄어들긴 함")
+        msg = u.t("chatter: sign flips every step but it still shrinks", "떨림(chatter): 매 스텝 부호가 뒤집히지만 속도는 줄어듭니다")
     else:
         m = f"{mag:.1e}" if mag > 1e3 else f"{mag:.2f}"
-        msg = u.t(f"diverges: never decays (|v| after {PL.SL_N} steps = {m})", f"발산: 줄지 않음 ({PL.SL_N} 스텝 뒤 |v| = {m})")
+        msg = u.t(f"diverges: never decays (|v| after {PL.SL_N} steps = {m})", f"발산: 속도가 줄지 않습니다 ({PL.SL_N} 스텝 뒤 |v| = {m})")
     t = Text("  ")
     t.append(f"r = {r:.2f}, 1-r = {1 - r:+.2f}   ", style="muted"), t.append(msg, style=f"bold {style}")
     u.para(t)
@@ -99,7 +99,7 @@ def kalman(u, q, r, seed):
     series = [PL.Series(ks, up, "teal", kind="dots"), PL.Series(ks, dn, "teal", kind="dots"), PL.Series(ks, meas, "", kind="dots"),
               PL.Series(ks, est, "bold accent", kind="line")]
     lines = PL.render_plot(series, u.read_width - 4, 15, (0, n - 1), (-lim, lim), xlabel=u.t("time (s)", "시간 (s)"),
-                           ylabel=u.t("error vs truth (m), 0 = exact", "실제와의 차이 (m), 0 이 정답"), hlines=[(0.0, "muted")])
+                           ylabel=u.t("error vs truth (m), 0 = exact", "실제와의 차이 (m), 0이면 정확"), hlines=[(0.0, "muted")])
     _print_plot(u, lines)
     leg = Text("  ")
     for label, st in ((u.t("sensor", "센서"), ""), (u.t("estimate", "추정값"), "bold accent"), (u.t("±2σ band", "±2σ 띠"), "teal")):
@@ -111,9 +111,9 @@ def kalman(u, q, r, seed):
            else u.t("it mostly trusts its own model: smooth but slow to react.", "자기 모델을 주로 믿는 상태라 추정값이 부드럽지만 반응이 느립니다.") if k <= 0.25
            else u.t("it blends the model and the sensor.", "모델과 센서를 섞어 쓰는 상태입니다."))
     t = Text("  ")
-    t.append(u.t("Kalman gain K = ", "칼만 이득 K = "), style="muted"), t.append(f"{k:.2f}", style="bold"), t.append("  " + msg)
+    t.append(u.t("Kalman gain K = ", "칼만 gain K = "), style="muted"), t.append(f"{k:.2f}", style="bold"), t.append("  " + msg)
     u.para(t)
-    u.print(Text("  " + u.t("try --r 0.2 (trust the sensor) or --r 20 (trust the model)", "--r 0.2 (센서를 믿음) 나 --r 20 (모델을 믿음)을 넣어 보세요"), style="muted"))
+    u.print(Text("  " + u.t("try --r 0.2 (trust the sensor) or --r 20 (trust the model)", "--r 0.2(센서를 믿음)나 --r 20(모델을 믿음)을 넣어 보세요"), style="muted"))
 
 
 TOYS = {"pd-step": ("kp", "kd"), "sampling-limit": ("r",), "kalman": ("q", "r")}

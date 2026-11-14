@@ -10,33 +10,34 @@ OUT = pathlib.Path(__file__).resolve().parents[1] / "assets"
 
 def pipeline():
     d = Diagram()
-    d.title("From a 3D point to a pixel and back")
-    p = d.box("Point in camera frame\n(x, y, z)", 0, 0, "blue")
-    u = d.box("Pixel (u, v)\nu = fx*x/z + cx", 1.2, 0, "purple", w=250)
-    z = d.box("Depth z\nfrom the sensor", 0, 1, "yellow")
-    b = d.box("Unproject\nx = (u - cx)*z/fx", 1.2, 1, "purple", w=250)
-    r = d.box("Point again\n(only if z is right)", 2.4, 0.5, "green", w=250)
+    d.title("From the cup rim to a pixel and back")
+    p = d.box("Cup rim\n(x, y, z)", col=0, row=0, color="blue")
+    u = d.box("Pixel (u, v)\nu = fx*x/z + cx", col=1, row=0, color="purple")
+    z = d.box("Depth z\nfrom the sensor", col=0, row=1, color="yellow")
+    b = d.box("Unproject\nx = (u - cx)*z/fx", col=1, row=1, color="purple")
+    r = d.box("Point again\nonly if z is right", col=2, row=1, color="green")
     d.arrow(p, u, label="project")
     d.arrow(u, b)
     d.arrow(z, b)
     d.arrow(b, r)
-    d.note("Projection loses z. Unprojection needs it back.", d.margin, d.margin + 60 + 2 * d.ch - 20, size=22)
+    d.note("depth is lost here", near=u, side="r")
     d.save(OUT / "diagram-pinhole-pipeline.excalidraw")
+    return d.warnings
 
 
 def failure():
-    d = Diagram(cell=(330, 170))
-    d.title("Why a grasp target ends up centimetres off")
-    a = d.box("Pixel on the\ncup rim", 0, 0.5, "blue", w=230)
-    b = d.box("Depth read from\nthe table behind", 1, 0, "red", w=250)
-    c = d.box("Depth read from\nthe rim itself", 1, 1, "green", w=250)
-    e = d.box("Point slides along\nthe ray: off-axis\ntarget is wrong", 2, 0, "red", w=250, h=110)
-    f = d.box("Target is right", 2, 1, "green", w=250)
+    d = Diagram()
+    d.title("Why the arm misses the cup")
+    a = d.box("Pixel on\nthe cup rim", col=0, row=0.5, color="blue")
+    b = d.box("Wall's depth\n1.15 m", col=1, row=0, color="red")
+    c = d.box("Rim's depth\n1.00 m", col=1, row=1, color="green")
+    e = d.box("5 cm beside\nthe cup: miss", col=2, row=0, color="red")
+    f = d.box("On the cup:\ngrasp", col=2, row=1, color="green")
     for s, t in ((a, b), (a, c), (b, e), (c, f)):
         d.arrow(s, t)
     d.save(OUT / "diagram-pinhole-failure.excalidraw")
+    return d.warnings
 
 
 if __name__ == "__main__":
-    pipeline()
-    failure()
+    print(pipeline(), failure())

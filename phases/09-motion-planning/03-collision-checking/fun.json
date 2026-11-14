@@ -1,13 +1,14 @@
 {
   "en": {
     "hook": "Every pose on my path was free, and I still hit the post. I only looked where I stepped.",
-    "mission": "In `code/main.py` change the middle step `0.4` in `(1.0, 0.4, 0.1)` to `0.15` and run `python3 code/main.py`. With r = 0.1, predict whether `swept` now catches the post, using the `2r` rule."
+    "mission": "In `code/main.py` change the middle step `0.4` in `(1.0, 0.4, 0.1)` to `0.15` and run `python3 code/main.py`. With r = 0.1, predict whether `swept` now catches the post, using the `2r` rule.",
+    "clip": "Two toy cars are about to drive the same segment past a thin post, and the pegs mark the points the checker tests: every 1.0 m for the blue car, every 0.25 m for the green car. Blue's pegs all land beside the post, so `swept_hits()` calls the path free and the car drives into the post. Green has a peg inside the post (red), so it is rejected and the car stays put. The exact test is `seg_hits()`; the clip shows only the stretch from 2 m to 5 m of the 6 m segment."
   },
   "ko": {
     "hook": "경로의 모든 자세가 비어 있었는데도 기둥에 부딪혔습니다. 알고 보니 발 디딘 곳만 봤더군요.",
-    "mission": "`code/main.py`의 `(1.0, 0.4, 0.1)`에서 `0.4`를 `0.15`로 바꾸고 `python3 code/main.py`를 실행하세요. r이 0.1이니 step이 `2r` 이하면 swept가 기둥을 잡을지 먼저 예측하세요."
+    "mission": "`code/main.py`의 `(1.0, 0.4, 0.1)`에서 가운데 step `0.4`를 `0.15`로 바꾸고 `python3 code/main.py`를 실행하세요. r이 0.1이니 `2r` 규칙으로 보면 `swept`가 이제 기둥을 잡을지 예측하세요.",
+    "clip": "장난감 자동차 두 대가 얇은 기둥 옆을 지나는 같은 구간을 가려 합니다. 말뚝은 검사기가 확인하는 지점으로 파란 차는 1.0 m마다 초록 차는 0.25 m마다 박혀 있습니다. 파란 차의 말뚝은 모두 기둥 옆에 놓여서 `swept_hits()`가 경로를 비었다고 판단하고 차는 기둥을 들이받습니다. 초록 차는 기둥 안에 말뚝(빨강)이 하나 있어서 경로가 거부되고 차는 출발하지 않습니다. 정확한 검사는 `seg_hits()`이고 영상은 6 m 구간 중 2 m에서 5 m까지만 보여 줍니다."
   },
   "toy": null,
-  "motion": "tunnel-check",
   "three": "swept-check-corridor-3d"
 }
