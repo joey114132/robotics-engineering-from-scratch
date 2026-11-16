@@ -1,42 +1,53 @@
 # Inverted Pendulum and ZMP
 
-> A standing body falls like a balanced pencil, and the capture point tells you where the next foot must land.
+> Learn how a walking robot knows early that it will fall, and where to step.
 
 **Type:** Build   **Prerequisites:** 03/04 PID and Tuning   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Someone shoves you from behind. Your body starts moving forward, and you can lean on your toes to hold yourself up. That works only for a small shove, because the spot where the floor pushes up (ZMP) can move only as far as your foot is long.
+Someone shoves you from behind. You can lean on your toes, but only for a small shove, because the spot where the floor pushes up (ZMP) can move only as far as your foot is long.
 
-A bigger shove carries your body farther before it would stop. That stopping spot, the capture point, lies beyond your toes. Leaning cannot reach it, but a foot placed there stops you.
+A bigger shove carries your body farther before it would stop. That stopping spot, the capture point, lies beyond your toes. A foot placed there stops you.
+
+## Key Terms
+
+- **Inverted pendulum**: a mass balanced on top of a leg, like a pencil on its tip; it falls if not held.
+- **Acceleration (`x''`)**: how fast the speed changes; here, how hard gravity pulls the body on.
+- **Time constant (`Tc`)**: the time in which tipping grows by a factor of 2.7.
+- **ZMP**: zero-moment point, the spot under the foot where the ground's push acts.
+- **Capture point**: where the body would stop if the foot were placed there.
+- **`exp`**: the exponential function, which grows by the same factor in equal time steps.
 
 ## The Problem
 
-A walking robot is shoved from behind and its ankles push back hard, yet it keeps tipping forward. They only shift where the ground pushes inside the foot, so a big shove beats them. You need a model that says early whether a step is needed, and where.
+Picture a walking robot shoved from behind. Its ankles push back hard, yet it keeps tipping: they only shift the ground's push inside the foot. Is a step needed, and where?
 
 ## The Concept
 
-![From a leg to one time constant](../assets/diagram-lipm-flow.png)
+A real walker has little time to react, so it needs one number that says where to step.
 
-*Treat the body as one mass at height `h` on a massless leg, like a pencil on its tip. Its tipping speed becomes one number, `Tc`.*
+![Leg to time constant](../assets/diagram-lipm-flow.png)
 
-`x` is the body's distance ahead of the ankle and `g` gravity. With the foot at `p`, the mass obeys `x'' = (g/h)(x - p)`: the farther the body is ahead of the foot, the harder gravity pulls it on (`x''` is its acceleration). Try `exp(t/Tc)`: its second derivative is `exp(t/Tc)/Tc^2`, so `1/Tc^2 = g/h`. For `h = 0.9 m`, `Tc = sqrt(h/g)` is about 0.30 s, and the tipping grows 2.7 times (e) every `Tc`.
+*One mass on a massless leg; tipping speed becomes `Tc`.*
 
-Solved for `p`, it gives the zero-moment point (ZMP), where the ground's push acts under the foot: `p = x - (h/g) x''`. It cannot leave the foot, because the ground can only push. The capture point is the body's position plus its speed times `Tc`: `xi = x + v Tc`. It moves at `xi' = (xi - p)/Tc` (`xi'` is its speed), so a foot placed on `xi` freezes it and the body stops over that foot.
+`x` is the body's distance ahead of the ankle, `g` gravity and `h` the mass height. With the foot at `p`, `x'' = (g/h)(x - p)`. The solution grows like `exp(t/Tc)` with `Tc = sqrt(h/g)`, about 0.30 s for `h = 0.9 m`.
 
-Example: a 10 cm foot lets the ground's push sit at most 0.05 m from the ankle. A shove gives the body `v = 0.4 m/s`, so `xi = 0.4 * 0.30 = 0.12 m`, beyond 0.05 m: the ankle alone fails. A shove of 0.1 m/s gives `xi = 0.03 m`, inside the foot, so the ankle holds.
+Solved for `p`, the ZMP is `p = x - (h/g) x''`, and it cannot leave the foot. The capture point is `xi = x + v Tc` and moves at `xi' = (xi - p)/Tc`, so a foot placed on `xi` freezes it.
 
-![Two shoves, ankle only](../assets/clip-example.mp4)
+A 10 cm foot lets the push sit at most 0.05 m from the ankle. With `v = 0.4 m/s`, `xi = 0.4 * 0.30 = 0.12 m`: the ankle alone fails. With 0.1 m/s, `xi = 0.03 m`, inside the foot: the ankle holds.
 
-*Purple post: the capture point. Grey posts: the ends of the foot (both drawn 3 times farther from the ankle). Green, 0.1 m/s: the purple post stays between them. Blue, 0.4 m/s: it leaves and the body topples.*
+![Two shoves](../assets/clip-example.mp4)
 
-![Ankle torque or a step](../assets/diagram-capture-decision.png)
+*Purple: capture point. Dark: foot ends. Green (0.1 m/s) stays inside, blue (0.4 m/s) leaves.*
 
-*Inside the foot the ankle can hold; outside, only a step helps.*
+![Ankle or step](../assets/diagram-capture-decision.png)
 
-![A fall and a recovery from the same push](../assets/fig-fall-and-recovery.png)
+*Inside the foot the ankle holds; outside, only a step helps.*
 
-*Ankle only: the body diverges. Waiting 0.1 s moves `xi` on to 0.15 m, so a step there stops the body at 0.15 m.*
+![Fall and recovery](../assets/fig-fall-and-recovery.png)
+
+*Ankle only: the body diverges. After 0.1 s `xi` is 0.15 m; a step there stops the body.*
 
 ## Build It
 
@@ -50,7 +61,7 @@ def capture_point(x, v, h, g=G):
     return x + v * time_constant(h, g)
 ```
 
-`simulate()` steps the equation forward in time (RK4). `fall_or_recover()` clamps the ZMP to the foot and optionally steps.
+`simulate()` steps the equation forward (RK4); `fall_or_recover()` clamps the ZMP to the foot and optionally steps.
 
 ```bash
 cd robotics-engineering-from-scratch

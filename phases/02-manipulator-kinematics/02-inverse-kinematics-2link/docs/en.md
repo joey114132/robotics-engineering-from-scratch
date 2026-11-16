@@ -1,48 +1,57 @@
 # Inverse Kinematics of a Two-Link Arm
 
-> Reaching a point is a triangle with two answers and a hard edge. Test every answer with FK.
+> Learn how to find the joint angles that put an arm's hand on a point, or learn that it cannot reach.
 
 **Type:** Build   **Prerequisites:** 01/02 Forward Kinematics, 02/01 DH vs URDF Origins   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A bench arm has two links, and its hand must touch a ball. Base, elbow and ball form a triangle. Two sides are the links, whose lengths are fixed. The third side is the straight line from base to ball. The elbow can sit on either side of it, so there are two ways to reach the ball.
+A bench arm has two links, and its hand must touch a ball. Base, elbow and ball form a triangle, and the elbow can sit on either side of the base-to-ball line, giving two ways to reach it.
 
-Slide the ball outward and that side grows until the arm is straight. Past that, nothing reaches. Inverse kinematics (IK) finds joint angles for a target. Forward kinematics (FK) checks them.
+Past full stretch nothing reaches. Inverse kinematics (IK) finds joint angles for a target; forward kinematics (FK) checks them.
+
+## Key Terms
+
+- **Inverse kinematics (IK)**: finding joint angles that put the hand on a target.
+- **Elbow down / elbow up**: the two arm shapes that reach the same target.
+- **Law of cosines**: a rule that gives a triangle's angle from its three side lengths.
+- **Reach band**: the ring of targets the arm can touch, between `|L1 - L2|` and `L1 + L2` from the base.
+- **`nan`**: "not a number", the result of an impossible calculation such as `acos` of a value above 1.
+- **Tolerance**: a tiny allowed error, so rounding noise is not treated as a failure.
 
 ## The Problem
 
-You ask the arm to touch a point and `acos` (inverse cosine) returns `nan` (not a number), or the arm folds the wrong way and hits the table. A target slightly past full stretch is easy to produce, and a solver that hides it sends the arm to the wrong place.
+You ask a robot arm to touch a point and `acos` returns `nan`, or the arm folds the wrong way. A solver that hides an out-of-reach target sends the arm to the wrong place.
 
 ## The Concept
 
-The first picture lists the steps. `q1` is the shoulder angle from the x axis. `q2` is the elbow angle, 0 when the arm is straight.
+A robot is told where to reach and must work out the joint angles.
+
+`q1` is the shoulder angle from the x axis. `q2` is the elbow angle, 0 when the arm is straight.
 
 ![IK as a triangle](../assets/diagram-triangle.png)
 
-*A triangle with sides L1, L2 and r. The law of cosines (an angle from three sides) gives the size of q2.*
+*Sides L1, L2, r.*
 
-The law of cosines gives `cos q2 = (r² - L1² - L2²) / (2 L1 L2)`. The sign of `q2` is a free choice: positive is elbow down, negative is elbow up. One target has two arms that reach it, merging at full stretch (Craig, Ch. 4).
+The law of cosines gives `cos q2 = (r² - L1² - L2²) / (2 L1 L2)`. Positive `q2` is elbow down, negative elbow up. Two arms reach one target, merging at full stretch (Craig, Ch. 4).
 
 ![Reach check and FK check](../assets/diagram-decision.png)
 
-*Targets outside the band from `|L1 - L2|` to `L1 + L2` are refused. Every answer is confirmed by FK.*
+*Targets outside the band are refused. FK confirms every answer.*
 
-The outer edge is full stretch. At the inner edge the arm is fully folded, so a target 0.05 m away is refused too.
+At the inner edge the arm is fully folded, so a target 0.05 m away is refused.
 
 ![Two elbows and the reach limit](../assets/fig-two-elbows.png)
 
-*Left: both arms touch the target. Right: the two branches meet at the outer edge, then no answer exists.*
+*Left: both arms touch the target. Right: the branches meet at full stretch.*
 
-Take the target (0.6, 0.3) m for the 0.5 m and 0.4 m arm. Then `r = 0.67` m and `cos q2 = (0.45 - 0.25 - 0.16) / 0.4 = 0.1`, so `q2 = 1.47` rad (84°) for elbow down or `-1.47` rad for elbow up. Swing the target around the base at the same `r`. The triangle keeps its shape, so only `q1` follows. Watch the dark line, whose length never changes.
+A target (0.6, 0.3) m for the 0.5 m and 0.4 m arm has `r = 0.67` m and `cos q2 = (0.45 - 0.25 - 0.16) / 0.4 = 0.1`, so `q2 = ±1.47` rad (84°).
 
 ![Elbows follow a circling target](../assets/clip-example.mp4)
 
 *Blue: elbow down. Green: elbow up. The target circles at 0.67 m and `q2` stays ±1.47 rad.*
 
 ## Build It
-
-Law of cosines first, then the target angle minus the triangle's inner angle.
 
 ```python
 c2 = (x*x + y*y - l1*l1 - l2*l2) / (2*l1*l2)
@@ -52,7 +61,7 @@ q2 = np.arctan2(s2, c2)
 q1 = np.arctan2(y, x) - np.arctan2(l2*s2, l1 + l2*c2)
 ```
 
-A small tolerance keeps rounding noise at the boundary from becoming a false refusal. The tests run `fk(ik(p))` on 200 targets per branch.
+A small tolerance stops rounding noise at the edge causing a false refusal. Tests run `fk(ik(p))` on 200 targets per branch.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -62,14 +71,14 @@ python3 phases/02-manipulator-kinematics/02-inverse-kinematics-2link/code/main.p
 
 ## Use It
 
-Arms with more joints use a numerical solver. Compare it with this closed form on a two-link model, and check that it reports unreachable targets.
+Arms with more joints use numerical solvers; compare one with this closed form.
 
 ## Ship It
 
-`outputs/skill-ik-answer-check.md` is the check every IK answer must pass before a controller sees it.
+`outputs/skill-ik-answer-check.md` is the check an IK answer must pass before a controller sees it.
 
 ## Exercises
 
-1. Add a joint limit `|q2| < 2.8` and make `ik` pick the other elbow when one is out of range.
-2. Plot the whole reachable band as a heat map of the number of valid answers.
-3. Show what happens to `q1` when `L1 = L2` and the target is the base.
+1. Add a limit `|q2| < 2.8`; pick the other elbow when needed.
+2. Plot the reachable band as a heat map of valid answers.
+3. Show what `q1` does when `L1 = L2` and the target is the base.

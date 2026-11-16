@@ -1,44 +1,55 @@
 # Lyapunov Stability by Checking
 
-> A stable system has an energy-like number that never rises, and you can test that on a computer.
+> Learn how to check that a controller is stable from every starting state with one energy-like number.
 
 **Type:** Build   **Prerequisites:** 03/04 PID and Tuning, 03/06 LQR   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Picture an arm hanging from its joint, pushed a little to one side. It swings back and forth, and each swing is smaller as the brake takes energy out. Add up its motion, height and spring energy, and you get a number that should only go down.
+Push an arm hanging from its joint a little to one side. It swings, each swing smaller as the brake takes energy out. The sum of its motion, height and spring energy only goes down.
 
-A Lyapunov function is such an energy-like number. If the brake sees the arm's speed late, it pushes along with the swing and adds energy instead.
+A Lyapunov function is such an energy-like number. A late-reading brake pushes with the swing and adds energy instead.
+
+## Key Terms
+
+- **Lyapunov function (`V`)**: an energy-like number that never rises along the motion of a stable system.
+- **`vdot` (`dV/dt`)**: how fast `V` changes as the system moves.
+- **Equilibrium**: a state where nothing moves, such as the arm at rest.
+- **Level set**: all states with the same value of `V`, drawn as a curve.
+- **Counterexample**: one state where `vdot` is positive, which breaks the stability claim.
+- **PD control**: a spring on the angle plus a brake on the rate.
 
 ## The Problem
 
-The only stability test you know is "I simulated it and it settled." A run from rest sits still even when the system is unstable, and a run from one start misses the corner of state space where it blows up. You need a test that covers every state.
+You tuned a robot's controller and your only test is "I simulated it and it settled." A run from rest sits still even if the system is unstable, and one start misses the corner where it blows up.
 
 ## The Concept
 
+A robot near people must be stable from any starting state.
+
 ![The Lyapunov test](../assets/diagram-lyapunov-logic.png)
 
-*Choose V, then check the sign of its slope. You never solve the motion.*
+*Choose V, then check the sign of its slope.*
 
-For a pendulum under PD control (a spring on the angle `q`, a brake on the rate `w`), take `V = 1/2 w^2 + (g/l)(1 - cos q) + 1/2 kp q^2`: kinetic, gravity and spring energy. Differentiating along the motion gives `dV/dt = -(c + kd) w^2`, where `c` is the joint's own friction. Spring and gravity only trade energy with the motion, so they cancel. So `dV/dt <= 0` everywhere exactly when `c + kd >= 0`.
+For a PD-controlled pendulum take `V = 1/2 w^2 + (g/l)(1 - cos q) + 1/2 kp q^2`, its kinetic, gravity and spring energy. Then `dV/dt = -(c + kd) w^2` (joint friction `c`), so `dV/dt <= 0` everywhere exactly when `c + kd >= 0`.
 
-Example: `kd = -1`, a brake that pushes with the motion, and `c = 0.1` give `dV/dt = 0.9 w^2`: at `w = 2` rad/s V grows by 3.6 per second. Rest is an equilibrium, so a run from rest never moves.
+Example: `kd = -1` and `c = 0.1` give `dV/dt = 0.9 w^2`: at `w = 2` rad/s V grows by 3.6 per second, yet a run from rest never moves.
 
 ![Rest, nudged and damped](../assets/clip-example.mp4)
 
-*The blue arms share `kd = -1`. The left one never moves from rest. The middle one, nudged 0.1 rad, swings wider each time. The green arm (`kd = 2`) is nudged too and settles. 1.5x speed.*
+*Blue: `kd = -1`. Left stays at rest; middle, nudged 0.1 rad, swings wider. Green (`kd = 2`) settles.*
 
 ![One run versus a sweep](../assets/diagram-lyapunov-sweep.png)
 
-*A run from rest looks stable. A sweep of states finds a positive slope at once.*
+*Rest looks stable; a sweep finds a positive slope at once.*
 
 ![Arrows and level sets](../assets/fig-lyapunov-level-sets.png)
 
-*Each arrow is where the state moves next, angle `q` across and rate `w` up. Grey curves are level sets of V. Blue arrows do not point outward. Orange arrows do, and V grows there. With `kd = -1` almost every arrow is orange.*
+*Arrows show where the state moves; grey curves are level sets of V. Orange arrows: V grows.*
 
 ![A late rate signal](../assets/fig-lyapunov-delay.png)
 
-*Same gains, `kd = 5`, but the controller sees the rate late. At 300 ms V climbs instead of falling.*
+*`kd = 5`, but the controller sees the rate late: at 300 ms V climbs.*
 
 ## Build It
 
@@ -47,7 +58,7 @@ grad = np.array([(V(x + h*e, p) - V(x - h*e, p)) / (2*h) for e in np.eye(2)])
 vdot = grad @ f(x, p)          # dV/dt along the motion
 ```
 
-`check()` samples states and returns the largest `vdot` and its location. Tests check that `V` is positive, that `vdot` equals `-(c + kd) w^2`, that stable gains pass and negative damping is caught, and that a delayed rate raises V. A sampled check finds counterexamples but proves nothing.
+`check()` samples states and returns the largest `vdot` and where. Tests check `V` is positive, `vdot` equals `-(c + kd) w^2`, stable gains pass, negative damping is caught, and a delayed rate raises V. Sampling proves nothing.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -57,14 +68,14 @@ python3 phases/03-dynamics-and-control/09-lyapunov-stability/code/figure.py
 
 ## Use It
 
-To search for a counterexample, minimize `-vdot` over the operating bounds with a solver such as SciPy's `minimize`. Report the corresponding maximum `vdot` and compare it with the sampled one. For a proof, an SOS or SMT tool must confirm the sign.
+Minimize `-vdot` over the operating bounds with SciPy's `minimize` to hunt for a counterexample. A proof needs an SOS or SMT tool.
 
 ## Ship It
 
-`outputs/skill-lyapunov-check.md` turns a stability claim into a candidate V and a sweep.
+`outputs/skill-lyapunov-check.md` turns a stability claim into a candidate V and sweep.
 
 ## Exercises
 
-1. Set `kp = 0` and explain what happens to the sign of V away from the origin.
-2. Find the delay at which `kd = 5` first fails to settle.
-3. Add a friction term `c |w| w` and recompute `vdot` by hand.
+1. Set `kp = 0`; what happens to V's sign away from the origin?
+2. Find the delay where `kd = 5` first fails to settle.
+3. Add friction `c |w| w` and recompute `vdot`.

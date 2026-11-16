@@ -1,36 +1,43 @@
 # MuJoCo Hello World
 
-> A simulator is a loop that turns forces into a new state every `dt`, so write one before you trust one.
+> Learn how a simulator moves things in tiny time steps, why a wrong step adds energy out of nowhere, and the one-line fix.
 
 **Type:** Build   **Prerequisites:** 00/01 Python Env and numpy   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Hang a ball on a rod like a playground swing and let go from the side. Without friction it never swings higher than where you let go.
+Hang a ball on a rod like a swing and let go. Without friction it never rises above where you let go.
 
-A simulation moves the ball in small time steps of `dt` seconds. Each step changes the speed, then moves the ball. If the move uses the speed from before the change, the ball lags a step behind the force and each step adds a little energy. Using the new speed removes the lag.
+A computer moves the ball in tiny time steps. Each step first changes the speed, then moves the ball. If it moves the ball with the old speed, every step adds a little energy and the swing grows. Using the new speed fixes it.
+
+## Key Terms
+
+- **Simulation**: a program that predicts how something moves by repeating one small time step many times.
+- **Time step (`dt`)**: how far the simulation jumps forward in time on each step, here a few hundredths of a second.
+- **Pendulum**: a weight on a rod that swings under gravity; the simplest test for a simulator.
+- **Period**: the time for one full swing out and back.
+- **Explicit / semi-implicit Euler**: two ways to take a step. Explicit moves with the old speed; semi-implicit moves with the new one.
+- **MuJoCo**: a free physics engine, a ready-made simulator we compare our loop against.
 
 ## The Problem
 
-You copy a physics loop from a forum and run a pendulum, a weight swinging on a rod. It swings a little higher every cycle until it spins. Nothing crashed and the equations look right. Only the order of two lines in the time step is wrong.
+You copy a physics loop and run a pendulum. It swings higher each time until it spins over the top. Only two lines are in the wrong order.
 
 ## The Concept
 
-Read the boxes in order. An engine repeats them every time step `dt`.
+Robots are tested in simulation first, so a simulator that invents energy misleads you. An engine repeats these boxes every time step.
 
 ![One physics step](../assets/diagram-physics-step.png)
 
-*Acceleration changes velocity, and the new velocity moves the position. Using the old velocity instead is explicit Euler.*
+*Acceleration changes the speed, and the new speed moves the position. Moving with the old speed is explicit Euler.*
 
-Semi-implicit Euler is the loop in the diagram: new speed first, then move with it. Explicit Euler moves with the old speed. The pendulum is the smallest test. `theta` is its angle in radians from hanging down, `omega` its angular speed, `L` the rod length, `g` gravity (9.81). Gravity gives `omega' = -(g/L) sin(theta)`: the rate of change of `omega` follows the sideways pull `sin(theta)`. A small swing's period, one full swing and back, is `2 pi sqrt(L/g)`.
+`theta` is the swing angle in radians, `omega` the angular speed, `L` the rod length and `g` gravity (9.81). Gravity changes the speed by `-(g/L) sin(theta)` per second.
 
-An explicit step multiplies a small swing's energy by about `1 + (g/L) dt^2`, slightly above one (1.016 at `dt` = 0.04 s with `L` = 1 m). Repeated, that lifts each swing higher. Release the ball at 0.5 rad for 10 s. Semi-implicit Euler stays at 0.50 rad. Explicit Euler climbs to 2.46 rad, almost five times higher. At `dt` = 0.01 s it still reaches 0.78 rad.
+Each explicit step multiplies the swing's energy by about `1 + (g/L) dt^2`, just above one. Release at 0.5 rad and run 10 s: semi-implicit stays at 0.50 rad, explicit climbs to 2.46 rad.
 
 ![Three pendulums](../assets/clip-example.mp4)
 
-*Three pendulums at 1.8 times real speed. Watch the amber line, the release height. Blue (explicit Euler, `dt` 0.04 s) climbs far above it, pale blue (explicit Euler, `dt` 0.01 s) climbs slowly, green (semi-implicit Euler) stays on it.*
-
-We also solve one pendulum with two solvers, our loop and MuJoCo, a physics engine.
+*1.8 times real speed. Amber line: release height. Blue (explicit, `dt` 0.04 s) climbs far above it, small dark blue (explicit, `dt` 0.01 s) climbs slowly, green (semi-implicit) stays on it.*
 
 ![Same pendulum, two solvers](../assets/diagram-two-solvers.png)
 
@@ -38,11 +45,11 @@ We also solve one pendulum with two solvers, our loop and MuJoCo, a physics engi
 
 ![Step-size error](../assets/fig-step-size.png)
 
-*Left: watch explicit Euler's energy climb. Right: halving `dt` cuts the period error, against the exact period, to about a quarter.*
+*Left: explicit Euler's energy climbs. Right: halving `dt` cuts the period error to about a quarter.*
 
 ## Build It
 
-One step, then a loop. The only difference between the two schemes is which `omega` moves the angle.
+The only difference between the two schemes is which `omega` moves the angle.
 
 ```python
 def step(theta, omega, dt, L=1.0, scheme="semi"):
@@ -57,8 +64,6 @@ def simulate(theta0, dt, seconds, L=1.0, scheme="semi"):
     return np.array(out)
 ```
 
-`measure_period` finds upward zero crossings of the angle and interpolates inside the step. The time between two is one period.
-
 ```bash
 cd robotics-engineering-from-scratch
 python3 -m pytest phases/00-setup-and-tooling/02-mujoco-hello-world -q
@@ -67,7 +72,7 @@ python3 phases/00-setup-and-tooling/02-mujoco-hello-world/code/main.py
 
 ## Use It
 
-`mujoco_period()` builds the same pendulum from an inline MJCF string (MuJoCo's XML model format) and calls `mujoco.mj_step`. Its period agrees with ours to within 0.5% (tested, skipped if MuJoCo is missing). The MuJoCo XML reference lists `integrator` with default `Euler`, described as semi-implicit Euler; the docs also recommend `implicitfast`.
+`mujoco_period()` builds the same pendulum in MJCF (MuJoCo's XML model format) and steps it with `mujoco.mj_step`. The two periods agree within 0.5% (tested). MuJoCo's default `Euler` integrator is semi-implicit.
 
 Sources: https://mujoco.readthedocs.io/en/stable/XMLreference.html
 
@@ -77,6 +82,6 @@ Sources: https://mujoco.readthedocs.io/en/stable/XMLreference.html
 
 ## Exercises
 
-1. Add damping to `step` and check that the energy now falls.
-2. Find the largest `dt` at which the period error stays under 1%.
+1. Add damping (a slowing force) to `step` and check that the energy now falls.
+2. Find the largest `dt` that keeps the period error under 1%.
 3. Change `L` in the MJCF string and confirm the period scales with `sqrt(L)`.

@@ -1,44 +1,55 @@
 # Multimodal Demonstrations and Action Chunks
 
-> When demonstrations disagree, a regression averages them into an action nobody demonstrated, and a short chunk of future actions commits to one.
+> Learn why a robot trained on two different good answers can pick a bad middle one, and how to make it pick one.
 
 **Type:** Build   **Prerequisites:** 13/01 Imitation, 13/02 Cloning Pitfalls   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Half of the demonstrations take a rover above a pillar in the picture and half below it. Both work, but a rule that averages the two steers straight at the pillar, and the rover hits it.
+Half the demonstrations take a rover above a pillar and half below it. Both work, but a rule that averages the two steers straight at the pillar.
 
-A chunk is the next few steps copied from a single demonstration, so the rover commits to one side. When a new chunk overlaps the old one, it must agree with the steps not yet done, or the blend would cancel the detour.
+A chunk is the next few steps copied from one demonstration, so the rover commits to one side. A new chunk must agree with the old one, or the blend cancels the detour.
+
+## Key Terms
+
+- **Multimodal**: having several different correct answers, called modes.
+- **Mean policy**: a policy that predicts the average action of nearby demonstrations.
+- **Action chunk**: a short run of the next `H` actions, chosen together.
+- **Sampler**: picks one demonstration at random instead of averaging.
+- **Jitter**: the step-to-step change in action. High jitter looks like wobble.
+- **Gaussian kernel**: a weight that is larger for demonstration states nearer the current one.
 
 ## The Problem
 
-Half your demonstrations steer a rover above the pillar in the picture, half below. Each is good, yet the trained policy drives at the pillar, because its first action averages two valid answers. In 13/02 a push first had to knock the policy off the demos; here the first action is already wrong.
+To get a rover past a pillar, half your demonstrations go above it and half below. Both are fine, but a policy that averages them drives straight into the pillar.
 
 ## The Concept
 
+People solve one task in different ways, and a robot copying them must still pick one.
+
 ![Average or commit](../assets/diagram-average-or-commit.png)
 
-*At the start both answers are right, but their mean is wrong. A sampler picks one demonstration and follows it.*
+*Both answers are right at the start, but their mean is wrong.*
 
-A regression (least squares, or a weighted average of nearby demos) predicts the mean action. For "up" and "down" demos that is "straight": at the start they steer +0.054 and -0.054 sideways per step, so the mean is 0. Sampling instead copies one demonstration's action, picked at random and likelier when it passes near the current spot, so the two modes survive. Each sampled step picks afresh and can land on the other side, so the sampler returns a whole chunk of the next `H` actions.
+For "up" and "down" demos a regression predicts "straight": at the start they steer +0.054 and -0.054 sideways, so the mean is 0. A sampler copies one demonstration instead, so both modes survive. Picking afresh each step can switch sides, so it returns a whole chunk of the next `H` actions.
 
 ![Chunk overlap](../assets/diagram-chunk-overlap.png)
 
-*A new chunk starts before the old one ends. Overlapping steps blend by a weighted average that shifts from old to new, and the new chunk is chosen to agree with the old.*
+*A new chunk starts before the old one ends. Overlapping steps blend from old to new.*
 
-![Fan of rollouts and the chunk length](../assets/fig-chunk-fan.png)
+![Chunk fan](../assets/fig-chunk-fan.png)
 
-*Left: the mean policy goes straight through. Middle: 40 sampled rollouts split both ways round. Right: from H = 2 on, jitter, the step-to-step change in action, falls to under half of the single-step value and all 60 rollouts clear the disc.*
+*Left: the mean policy goes straight through. Middle: 40 sampled rollouts split both ways. Right: from H = 2 on, jitter falls under half.*
 
-In 50 runs of `python3 code/main.py`, sampling one step at a time clears the pillar in 98% of runs but jitters 0.034 per step. Chunks of 8 steps, a new one every 4 (overlap 4), clear it in 100% with jitter 0.011, a third as much.
+In 50 runs, one-step sampling clears the pillar 98% of the time with jitter 0.034 per step. Chunks of 8 steps, a new one every 4, clear it 100% with jitter 0.011.
 
-![Steps against chunks](../assets/clip-example.mp4)
+![Steps vs chunks](../assets/clip-example.mp4)
 
-*Blue picks a demonstration every step and wobbles. Green follows chunks of eight steps and glides.*
+*Blue picks a demonstration every step and wobbles. Green follows chunks and glides.*
 
 ## Build It
 
-`mean_policy` weights nearby demonstration actions with a Gaussian kernel. `sample_chunk` picks one demonstration with that kernel and returns its next `H` actions.
+`mean_policy` weights nearby demonstration actions with a Gaussian kernel. `sample_chunk` picks one demonstration the same way and returns its next `H` actions.
 
 ```python
 j = ((P[:, :-1] - x) ** 2).sum(2).argmin(1)            # nearest state in each demo
@@ -46,7 +57,7 @@ logw -= ((chunks[:, :len(prefix)] - prefix) ** 2).sum((1, 2)) / (2 * SIGMA_A**2)
 a = w * new[k] + (1 - w) * old[k + stride]             # blend while chunks overlap
 ```
 
-Without `prefix`, a new chunk can pick the other side and the blend heads at the disc.
+Without `prefix`, the blend can head at the disc.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -56,16 +67,16 @@ python3 phases/13-learning-for-robots/06-multimodal-demos-and-action-chunks/code
 
 ## Use It
 
-Real policies use a network that outputs a chunk and blend overlapping predictions at run time. A longer chunk reacts more slowly in between, so measure that cost.
+Real policies use a network that outputs a chunk. A longer chunk reacts more slowly.
 
-Sources (abstracts opened 2026-11-10): Zhao et al., "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware", arXiv:2304.13705, learns a generative model over action sequences. Chi et al., "Diffusion Policy", arXiv:2303.04137, handles multimodal action distributions.
+Sources (abstracts, 2026-11-10): Zhao et al., arXiv:2304.13705; Chi et al., arXiv:2303.04137.
 
 ## Ship It
 
-`outputs/skill-multimodal-demo-check.md` checks a demonstration set for modes a mean policy would average.
+`outputs/skill-multimodal-demo-check.md` finds modes a mean policy would average.
 
 ## Exercises
 
-1. Make the split 5 to 1 and find what the mean policy does.
+1. Make the split 5 to 1. What does the mean policy do?
 2. Set `SIGMA_A` large and count rollouts hitting the disc.
-3. Add per-step action noise and find the chunk length where jitter stops falling.
+3. Add action noise. At what chunk length does jitter stop falling?

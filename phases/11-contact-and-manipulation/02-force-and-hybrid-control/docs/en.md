@@ -1,58 +1,66 @@
 # Force and Hybrid Control
 
-> Position control turns every error in your stiffness guess into a force error. A force loop measures the force, so the guess drops out.
+> Learn how a robot presses with the right force on a surface of unknown softness.
 
 **Type:** Build   **Prerequisites:** 11/01 Contact Models   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Wiping a desk means moving a sponge across it while pressing down. Pushing to a fixed depth gives a different force
-on a softer sponge.
+Wiping a desk means moving a sponge across it while pressing down. Pushing to a fixed depth gives a different force on a softer sponge.
 
-Force control measures the push, moving deeper when it is weak and backing off when it is strong. Hybrid control gives the
-sliding direction a position target and the pressing direction a force target. That lets the tool follow bumps while
-keeping its push.
+Force control measures the push, going deeper when it is weak and backing off when it is strong. Hybrid control gives the sliding direction a position target and the pressing direction a force target.
+
+## Key Terms
+
+- **Force control**: moving the tool according to the measured force, not a planned position.
+- **Hybrid control**: position control on some axes and force control on the others.
+- **Stiffness (`ke`)**: the newtons a surface pushes back per metre squeezed.
+- **Gain (`ki`)**: the factor that turns a force error into a tool speed.
+- **Time constant**: the time in which an error shrinks by about two thirds.
+- **Selection matrix (`S`)**: a switch per axis choosing force law or position law.
 
 ## The Problem
 
-A tool must press a sponge with 10 N. Stiffness is the newtons pushed back per metre squeezed. You assume 5000 N/m and command a 2 mm squeeze (10 / 5000). But the sponge top sits 0.4 mm lower than you assumed, so only 1.6 mm gets squeezed. Stiffness sets the force: 1000 N/m gives 1.6 N, the assumed 5000 N/m gives 8 N, 25000 N/m gives 40 N.
+Picture a robot told to press a sponge with 10 N. It assumes 5000 N/m and commands a 2 mm squeeze, but the sponge top sits 0.4 mm lower, so only 1.6 mm gets squeezed. Then 1000 N/m gives 1.6 N, 5000 N/m 8 N, 25000 N/m 40 N.
 
 ![Three arms](../assets/clip-example.mp4)
 
-*Red bars (1.6 cm per newton) show each sponge's push back.*
+*Red bars: force, 1.6 cm per N.*
 
 ## The Concept
 
-![Why position control misses the force](../assets/diagram-position-miss.png)
+A real robot wiping or sanding needs a steady force, not a steady position.
 
-*The command is right only for the assumed stiffness and height; the real ones set the force you get.*
+![Position miss](../assets/diagram-position-miss.png)
 
-![Force against time and against stiffness for both controllers](../assets/fig-force-vs-stiffness.png)
+*The command is right only for the assumed stiffness.*
 
-*Left: the force loop reaches 10 N on every surface, slower on soft ones. Right: position control's force grows with stiffness.*
+![Force vs stiffness](../assets/fig-force-vs-stiffness.png)
 
-The force loop moves the tool tip at speed `v = ki * (fd - f)`: `fd` is the wanted force, `f` the measured one, `ki` a gain. On a spring surface `f = ke * x` the force changes at `f_dot = ke * v`, so `f_dot = ke * ki * (fd - f)`. The gap to `fd` shrinks without overshoot, by about two thirds every `1 / (ke * ki)` seconds (the time constant). In steps of `dt` the gap is multiplied by `1 - ke * ki * dt`. Beyond 2 that flips sign and grows, so the loop is stable only while `ke * ki * dt < 2`.
+*Left: the force loop reaches 10 N everywhere. Right: position force grows with stiffness.*
 
-A real task needs both laws, so the selection matrix `S` (on or off per axis) gives each axis exactly one: force law where `S = 1`, position law where `S = 0`.
+The force loop moves the tool tip at `v = ki * (fd - f)`, with `fd` the wanted force and `f` the measured one. On a spring surface `f = ke * x`, so the force gap shrinks without overshoot, by about two thirds every `1 / (ke * ki)` seconds. Each step of `dt` multiplies the gap by `1 - ke * ki * dt`, so it is stable only while `ke * ki * dt < 2`.
 
-![Hybrid position-force control](../assets/diagram-hybrid-selection.png)
+The selection matrix `S` gives each axis one law: force where `S = 1`, position where `S = 0`.
 
-*Position control along x, force control along y.*
+![Selection](../assets/diagram-hybrid-selection.png)
 
-![Hybrid control on a bumpy surface](../assets/fig-hybrid-bumpy.png)
+*Position along x, force along y.*
 
-*Left: the hybrid path follows the bumps. Right: force stays near 10 N instead of swinging between 0 and 20 N.*
+![Bumpy surface](../assets/fig-hybrid-bumpy.png)
+
+*Left: the path follows the bumps. Right: force stays near 10 N, not 0 to 20 N.*
 
 ## Build It
 
-The hybrid law is one line over `v_pos` and `v_frc`, the two laws on every axis.
+The hybrid law mixes `v_pos` and `v_frc`, the two laws' velocities.
 
 ```python
 v = (1 - S) * v_pos + S * v_frc
 p = p + np.clip(v, -lim, lim) * dt
 ```
 
-Assumptions: the tool tip tracks the commanded velocity exactly, the surface is a frictionless linear spring along x, and force is measured without noise or delay.
+Assumptions: exact velocity tracking, a frictionless linear spring, noise-free force.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -62,16 +70,16 @@ python3 phases/11-contact-and-manipulation/02-force-and-hybrid-control/code/main
 
 ## Use It
 
-Repeat the press in MuJoCo with a soft-contact plane and compare the settled force with `ke * depth`.
+Repeat the press in MuJoCo; compare the force with `ke * depth`.
 
-Sources: Craig (chapter 11) and the original hybrid-control paper could not be opened (publisher page returned 403), so both are unchecked.
+Sources: Craig (chapter 11) and the original hybrid-control paper could not be opened (403); both unchecked.
 
 ## Ship It
 
-`outputs/skill-force-control-check.md` reviews a contact task for stiffness-sensitive commands and high loop gain.
+`outputs/skill-force-control-check.md` reviews a contact task for stiffness-sensitive commands and high gain.
 
 ## Exercises
 
-1. Change `K_EST` to the true stiffness and show position control then hits 10 N, but only on that surface.
-2. Find the largest `KI` that stays stable at `ke = 2.5e4` for `dt = 1 ms`.
-3. Add 10 ms of delay to the force measurement and re-measure the stability limit.
+1. Set `K_EST` to the true stiffness; position control hits 10 N, but only on that surface.
+2. Find the largest `KI` stable at `ke = 2.5e4` for `dt = 1 ms`.
+3. Add 10 ms of force-measurement delay; re-measure the limit.

@@ -1,40 +1,49 @@
 # Behaviour Trees and State Machines
 
-> A robot task is a tree that is ticked every cycle, and every node answers success, failure or running.
+> Learn how a robot task can remember where it is, so a failed step is retried instead of restarted.
 
 **Type:** Build   **Prerequisites:** 05/02 Executors and Callbacks   **Time:** ~15 minutes
 
 ## In Plain Words
 
-An arm fetches a crate: reach it, grasp it, carry it to the bin, let go. If the grasp misses, the arm should try again where it is, not drive back to the start. A behaviour tree gives it that memory. Every step answers success, failure or running. A Sequence remembers which step is still running, and a Retry gives a failed step another attempt. A state machine writes the same decisions as named states with arrows between them.
+An arm fetches a crate. If the grasp misses, it should retry where it is, not drive back to the start. A behaviour tree gives it that memory: every step answers success, failure or running, and a Sequence remembers which step is still running.
+
+## Key Terms
+
+- **Behaviour tree**: a task written as a tree of steps and ticked every cycle.
+- **Tick**: one small step, where the tree is asked to do a little work and report.
+- **Status**: the answer a node gives, `success`, `failure` or `running`.
+- **Sequence**: a parent that runs its children in order and stops at the first failure.
+- **Fallback**: a parent that tries its children in order and stops at the first success.
+- **State machine**: a table of named states with an arrow for each event.
 
 ## The Problem
 
-You write a fetch task as nested ifs inside one callback. The grasp fails, the callback runs again next cycle, and it no longer knows whether the arm already reached the crate. So the arm drives there again, or the retry is skipped. Task logic needs a place to keep "where was I" that is not a pile of flags.
+An arm must reach a crate, grasp it, carry it and let go. As nested ifs, a missed grasp makes the code forget whether the arm reached the crate, so it drives there again or skips the retry.
 
 ## The Concept
 
+Real tasks fail halfway all the time, so the task needs a place to remember where it was.
+
 ![A fetch task as a tree](../assets/diagram-fetch-tree.png)
 
-*The task is a Sequence of steps. The grasp sits under a Retry, so a failed grasp does not end the task.*
-
-Every cycle the root is ticked, which means the tree is asked to take one small step, and the tick walks down. A leaf does a little work and returns `success`, `failure` or `running`. A parent reads those answers and decides what to do next.
+*The grasp sits under a Retry, so a failed grasp does not end the task.*
 
 ![What a parent does with each answer](../assets/diagram-status-rules.png)
 
-*Sequence stops at the first failure and Fallback stops at the first success. Both remember the child that said running and resume there.*
+*Sequence stops at the first failure, Fallback at the first success. Both resume at the child that said running.*
 
-Example: the arm holds a crate and a Fallback tries bin A, then bin B. Bin A is full, so tick 1 fails the check `A has room` and moves on to `go B`, which answers running. Tick 2 resumes at `go B` without asking about A again, and tick 3 succeeds. The check ran once and `go A` never ran.
+A Fallback tries bin A, then bin B. Bin A is full, so tick 1 fails the check `A has room` and moves on to `go B`, which answers running. Tick 2 resumes at `go B` without asking about A again, and tick 3 succeeds.
 
-![An arm skips a full bin and carries its crate to the second bin](../assets/clip-example.mp4)
+![An arm skips a full bin](../assets/clip-example.mp4)
 
-*A red frame flashes on the full bin at tick 1. The arm then swings toward bin B over three ticks and drops the crate, never asking about bin A again.*
+*A red frame flashes on the full bin at tick 1. The arm then carries the crate to bin B.*
 
 ![Which nodes tick on which cycle](../assets/fig-fetch-ticks.png)
 
-*The grasp fails twice and the Retry reports running. Once the reach step succeeds, it is never ticked again.*
+*The grasp fails twice and the Retry reports running. Once reach succeeds, it is never ticked again.*
 
-A state machine is another common tool. It is a table of `state -> event -> next state`. Every state lists its own exits, so adding a retry means editing every state that can fail. In a tree the retry is one node around one child.
+In a state machine every state lists its own exits, so adding a retry means editing every state that can fail. In a tree the retry is one node around one child.
 
 ## Build It
 
@@ -47,7 +56,7 @@ def tick(self, log):
             return self.done(log, s)
 ```
 
-`Sequence` and `Fallback` share this walk. They differ only in which answer stops it. `Retry` turns a failure into `running` until it has tried `n` times. `fetch_task()` builds the tree above and `run()` ticks it to the end.
+`Sequence` and `Fallback` share this walk and differ only in which answer stops it. `Retry` turns a failure into `running` until it has tried `n` times.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -57,7 +66,7 @@ python3 phases/05-robot-software/05-behaviour-trees-and-state-machines/code/main
 
 ## Use It
 
-BehaviorTree.CPP and `py_trees` use the same core answers and add parallel nodes and a blackboard for shared data. Check that your tree gives the same tick log on the same scripted leaves.
+BehaviorTree.CPP and `py_trees` use the same answers and add a blackboard (shared data). Check that your tree gives the same tick log on the same scripted leaves.
 
 ## Ship It
 
@@ -66,5 +75,5 @@ BehaviorTree.CPP and `py_trees` use the same core answers and add parallel nodes
 ## Exercises
 
 1. Add a Fallback that sends the robot to a safe pose when the Retry gives up.
-2. Make a Sequence without memory that rechecks a condition leaf every tick.
-3. Write the fetch task as a state machine table and count transitions.
+2. Make a Sequence that rechecks a condition every tick.
+3. Write the fetch task as a state machine table.

@@ -1,40 +1,51 @@
 # System Identification
 
-> Fit the plant from a recording, and know that the recording decides which parameters you can learn.
+> Learn how to measure a robot joint's hidden numbers from a recording, and why a boring recording fails.
 
 **Type:** Build   **Prerequisites:** 12/01 What a Simulator Approximates   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Turn a hanging arm at one slow, steady speed and feel how hard you must push. Part of the push fights a constant rub and part fights a drag that grows with speed. At one speed the two parts add up to one number, so many different splits feel the same.
+Turn a hanging arm at one steady speed. Part of your push fights a constant rub and part fights a drag that grows with speed. At one speed the two blur together.
 
-Now speed the arm up, slow it down and reverse it. The drag follows the speed and the rub does not, so the two can be told apart. System identification fits a model to such a recording.
+Now vary the speed. Drag follows the speed and the rub does not, so they separate. System identification fits a model to such a recording.
+
+## Key Terms
+
+- **System identification**: fitting a model's unknown numbers to a recording of the real system.
+- **Inertia (`J`)**: how hard the arm is to speed up.
+- **Viscous damping (`b`)**: a drag that grows with speed.
+- **Coulomb friction (`c`)**: a constant rub against the motion.
+- **Least squares**: the fit that makes the sum of squared mismatches smallest.
+- **Excitation**: how varied the motion in a recording is.
 
 ## The Problem
 
-You copy inertia `J` (how hard it is to speed up) from CAD, guess friction and drag, and tune by eye until one trajectory matches. The next trajectory misses because that single run could not tell the rub from the drag. The fit looked good; the parameters were wrong.
+You build a simulated arm from design-file numbers and a guess for friction. It matches one motion, but the real arm's next motion misses.
 
 ## The Concept
 
-![Recording to parameters](../assets/diagram-id-pipeline.png)
+To trust a simulator you need real numbers, and a recording of the real arm can supply them.
 
-*Short windows turn noisy speed samples into a linear problem for `J`, `b` and `c`. Motor lag `Tm` changes that problem, so a grid search over `Tm` repeats the solve.*
+![Pipeline](../assets/diagram-id-pipeline.png)
 
-In one short window, the motor torque minus gravity, drag (`b` times speed) and rub (`c`, always against the motion), summed over the window, equals `J` times the speed change. Each sum comes from the recording, so `1/J`, `b/J` and `c/J` are the only unknowns, and least squares (smallest squared mismatch) finds them.
+*Short windows turn noisy speed samples into a linear problem for `J`, `b` and `c`. A grid search covers `Tm`.*
 
-![Why a slow run cannot split b from c](../assets/diagram-collinear.png)
+In one short window, motor torque minus gravity, drag and rub, summed over the window, equals `J` times the speed change. Only `1/J`, `b/J` and `c/J` are unknown, so least squares finds them.
 
-*At constant speed the drag term and the rub term are both constant, so least squares can only see their sum.*
+![Collinear](../assets/diagram-collinear.png)
 
-![Fit, slow-run failure, excitation](../assets/fig-id-fit.png)
+*At constant speed drag and rub are both constant, so least squares sees only their sum.*
 
-*Left: the model matches the data of a rich run (speed varies a lot). Middle: one slow constant-speed run returns `b` at -17 times its true value. Right: error against excitation size (how varied the motion is) with noise fixed. `J` falls below 0.1% and `c` to about 2%, while `b` stays near 8%.*
+![Fit](../assets/fig-id-fit.png)
 
-The slow run holds 0.28 rad/s, where drag `b = 0.02` pushes `0.02 * 0.28 = 0.0056` and rub `c = 0.05` pushes 0.05, in all 0.0556. The fit returned `b = -0.345` and `c = 0.153`, which total `-0.345 * 0.28 + 0.153 = 0.056`, so the data cannot choose between the two splits. In the rich run the speed reaches 3.35 rad/s, where `b = 0.02` pushes 0.067 but `b = 0` pushes nothing, so the fit returns `b = 0.0206`.
+*Left: the model matches a rich run. Middle: one slow run returns `b` at -17 times its true value. Right: more excitation drives `J` below 0.1% error and `c` near 2%, but `b` stays near 8%.*
+
+The slow run holds 0.28 rad/s (radians per second). Drag `b = 0.02` and rub `c = 0.05` push 0.0556 in all. The fit returned `b = -0.345` and `c = 0.153`, which also total 0.056, so the data cannot choose. In the rich run the speed reaches 3.35 rad/s and the fit returns `b = 0.0206`.
 
 ![Two recordings](../assets/clip-example.mp4)
 
-*Watch both arms: one joint recorded at a steady speed (blue) and a varied speed (green).*
+*Steady speed (blue, fit `b = -0.345`) against varied speed (green).*
 
 ## Build It
 
@@ -47,7 +58,7 @@ for Tm in grid:
     fits.append((float(np.sum((y - X @ th) ** 2)), Tm, th, np.linalg.cond(X / np.linalg.norm(X, axis=0))))
 ```
 
-Without noise the column-normalised condition number (how blurred the parameters are) is about 4 for the rich run, about 2400 for the slow one. `b` keeps a bias of about 8% from the window integrals.
+Without noise the condition number (how blurred the parameters are) is about 4 for the rich run and about 2400 for the slow one.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -57,9 +68,7 @@ python3 phases/12-simulation-and-sim-to-real/03-system-identification/code/main.
 
 ## Use It
 
-`scipy.optimize.least_squares(fun, x0, bounds=...)` fits all four parameters at once and accepts bounds. Compare its answer with the grid fit.
-
-Sources: signature and docstring checked in the local SciPy 1.11.4 (opened 2026-11-09).
+`scipy.optimize.least_squares(fun, x0, bounds=...)` fits all four parameters at once (SciPy 1.11.4, checked 2026-11-09).
 
 ## Ship It
 
@@ -67,6 +76,6 @@ Sources: signature and docstring checked in the local SciPy 1.11.4 (opened 2026-
 
 ## Exercises
 
-1. Raise the noise until `J` is off by 20% and note which window length helps.
-2. Add the known gravity `k` as a fourth unknown and check its condition number.
+1. Raise the noise until `J` is off by 20%.
+2. Add gravity `k` as a fourth unknown.
 3. Design the smallest trajectory that still separates `b` from `c`.

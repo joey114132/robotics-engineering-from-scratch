@@ -19,15 +19,16 @@ phases/NN-slug/NN-lesson-slug/
   fun.json                      extras: en and ko text (hook, mission, clip caption), plus the names of the lesson's toy and three (3D scene); the separate website repo reads the last two
 ```
 
-## Doc shape: at most 600 English words outside code blocks, at least 3 images
+## Doc shape: at most 440 English words outside code blocks and Key Terms, at least 3 images
 
 ```text
 # Title
-> one-line idea
+> one-line promise of what the reader will learn, in everyday words
 **Type:** Build | Learn   **Prerequisites:** ...   **Time:** ~15 minutes
-## In Plain Words  at most 90 words; connected explanation with a causal everyday scene
-## The Problem    3 sentences, a concrete failure the reader has felt
-## The Concept    diagrams first. 2+ Excalidraw diagrams and 1+ data figure, each with a one-sentence italic caption
+## In Plain Words  at most 70 words; connected explanation with a causal everyday scene
+## Key Terms      3 to 6 lines '- **Term**: definition', each definition at most 25 words, for a reader with no robotics background
+## The Problem    3 sentences, a situation a beginner can picture
+## The Concept    one plain sentence on why it matters for a real robot, then diagrams. 2+ Excalidraw diagrams and 1+ data figure, each with a one-sentence italic caption
 ## Build It       at most 40 lines of code in steps, then the run command
 ## Use It         at most 6 lines: the production library and what to compare
 ## Ship It        what outputs/skill-<slug>.md does
@@ -36,7 +37,7 @@ phases/NN-slug/NN-lesson-slug/
 
 A reader who only looks at the pictures must get the idea. Put a picture where you would otherwise write a paragraph.
 
-The Korean section sequence is `쉽게 말하면`, `문제`, `개념`, `만들기`, `실제 도구로 보기`, `결과물`, `연습 문제`.
+The Korean section sequence is `쉽게 말하면`, `핵심 용어`, `문제`, `개념`, `만들기`, `실제 도구로 보기`, `결과물`, `연습 문제`.
 Both languages put the opening section directly after the title, idea and Type metadata, before the Problem.
 
 ### In Plain Words style
@@ -57,7 +58,7 @@ Apply these five rules in both languages.
 | "A notebook records every corner as a right angle, so the drawn square closes even though your smaller turns leave you away from the start." | "A wrong stride length distorts distances." (This does not explain why the notebook can hide the error.) |
 | "The showerhead pushes water away, so your hand feels a push in the opposite direction." | "A propeller's thrust points in the direction it blows air." |
 
-The total English budget is 450 + 90 + 60 = 600 words outside fenced code, including headings and metadata. The last 60 are for one worked example with the lesson's own numbers, which may carry a clip (see Visuals).
+The English budget is 440 words outside fenced code and outside Key Terms, including headings and metadata (cut from 600 on 2026-11-16 for beginners). The last 60 are for one worked example with the lesson's own numbers, which may carry a clip (see Visuals).
 The opening cap counts visible prose, including link labels. Korean has a mechanical ceiling of 90 whitespace-separated words and 600 characters, including spaces and paragraph breaks; match the English meaning rather than filling the ceiling.
 Prefer words to equations in the opening. If a familiar number is needed for the causal scene, link it to a source or a lesson test. The 08-01 example keeps 90° / 90도 and links those labels to a verified definition of a right angle. Put detailed numeric examples and equations in the later sections.
 Korean opening paragraphs may exceed the general 160-character paragraph guideline when needed to preserve a connected explanation; the block still has the 600-character ceiling. Source lines must stay within the checker's 160-character limit. A soft line break does not create a new paragraph.

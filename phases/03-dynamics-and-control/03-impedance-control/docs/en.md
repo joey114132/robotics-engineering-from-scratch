@@ -1,42 +1,53 @@
 # Impedance Control
 
-> Impedance control does not track a position. It decides how the joint pushes back.
+> Learn how to make a robot joint push back like a spring and damper, so a touch is gentle.
 
 **Type:** Build   **Prerequisites:** 03/01 The Sampling Limit, 03/02 Gravity Compensation   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Push the hand of a bench arm with one finger. The motor makes the joint act like a spring with a damper, a shock absorber that resists motion. That behaviour is called impedance. The farther you push the hand from its rest pose, the harder the spring pushes back.
+Push the hand of a bench arm with one finger. The motor makes the joint act like a spring with a damper, which resists motion. That behaviour is impedance.
 
-A stiffer spring needs less movement to balance the same push. The damper does not change where the arm stops under a steady push. It changes how the arm settles: whether it rings back and forth or glides in.
+A stiffer spring balances the same push with less movement. The damper does not change where the arm stops; it changes whether the arm rings or glides in.
+
+## Key Terms
+
+- **Impedance**: how a joint pushes back when pushed, like a spring plus a damper.
+- **Stiffness (`K`)**: push back per unit of deflection.
+- **Damping (`D`)**: resistance to speed.
+- **Deflection**: how far a push moves the joint from its rest pose.
+- **Damping ratio (`zeta`)**: how strongly the damper settles the joint; 1 glides in, below 1 rings.
+- **Overshoot**: passing the final position before coming back.
 
 ## The Problem
 
-A stiff position loop fights every touch with maximum force. A robot that hands over a cup needs the opposite: a chosen stiffness (push back per unit of deflection) and damping (resistance to speed). A push then causes a bounded deflection, the distance it moves the joint, instead of a fight.
+A stiff robot arm fights every touch with full force. A robot handing over a cup needs a chosen stiffness and damping, so a push causes a bounded deflection instead of a fight.
 
 ## The Concept
 
+A robot near people must give way when touched, so we choose how hard each joint pushes back.
+
 ![Spring, damper, gravity](../assets/diagram-impedance-structure.png)
 
-*Blue boxes are what the controller adds. The yellow box is the outside push `F`.*
+*Blue: the controller. Yellow: the outside push `F`.*
 
-The law is `tau = K (q_des - q) - D qd + tau_g`, where `K` is the stiffness, `D` the damping, `q_des - q` how far the joint is from its rest pose, `qd` its speed and `tau_g` cancels gravity. With a constant push `F` the joint settles at `F / K`.
+The law is `tau = K (q_des - q) - D qd + tau_g` (`qd` speed, `tau_g` cancels gravity). A constant push `F` settles the joint at `F / K`.
 
-The damping ratio `zeta = D / (2 sqrt(K J))`, with `J` the joint's inertia, sets how it settles. Overshoot means passing the final position before coming back. At `zeta = 1` there is none, a glide. For `zeta < 1` the joint rings, and the overshoot fraction is `exp(-pi zeta / sqrt(1 - zeta^2))`, about 0.53 at `zeta = 0.2`.
+The damping ratio `zeta = D / (2 sqrt(K J))` (`J` is inertia) sets how it settles: no overshoot at `zeta = 1`; below 1 it rings, with overshoot fraction `exp(-pi zeta / sqrt(1 - zeta^2))`, about 0.53 at `zeta = 0.2`.
 
 ![Step response](../assets/fig-impedance-response.png)
 
-*Left: three `zeta` values end at the same `F / K`, and only the overshoot differs. Right: doubling `K` halves the deflection.*
+*Left: all three `zeta` end at `F / K`; only overshoot differs. Right: doubling `K` halves the deflection.*
 
-Example: `F = 2` Nm and `J = 1`. `K = 100` settles at `2 / 100 = 0.02` rad, and `K = 200` at 0.01 rad. Each uses `D = 2 sqrt(K J)` (20, 28.3) so that `zeta = 1`, and neither overshoots.
+Example: `F = 2` Nm and `J = 1`. `K = 100` settles at `2 / 100 = 0.02` rad, and `K = 200` at 0.01 rad. Both use `zeta = 1` (`D` = 20, 28.3).
 
 ![Same push, two stiffnesses](../assets/clip-example.mp4)
 
-*Watch the amber balls, the resting deflections: the blue arm (`K = 100`) is pushed twice as far as the green arm (`K = 200`). Drawn 15 times larger, one-third speed.*
+*Amber balls: resting points. Blue (`K = 100`) is pushed twice as far as green (`K = 200`). Drawn 15 times larger.*
 
 ![Choosing K and D](../assets/diagram-impedance-recipe.png)
 
-*`K` from the deflection budget (the most movement you accept), `D` from the damping ratio, then the sampling limit of lesson 03/01.*
+*Choose `K`, then `D`, then check lesson 03/01's limit.*
 
 ## Build It
 
@@ -48,7 +59,7 @@ def damping_for_zeta(K, J, zeta):
     return 2*zeta*np.sqrt(K*J)
 ```
 
-`simulate()` pushes a 1-DOF joint with a constant external torque using semi-implicit Euler. Tests check the deflection against `F / K`, that doubling `K` halves it, that `zeta = 1` never overshoots, and that `zeta = 0.2` matches the formula.
+`simulate()` pushes one joint. Tests check deflection against `F / K`, halving under doubled `K`, no overshoot at `zeta = 1`, and the formula at `zeta = 0.2`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -58,14 +69,14 @@ python3 phases/03-dynamics-and-control/03-impedance-control/code/figure.py
 
 ## Use It
 
-Torque-controlled arms expose joint impedance as `K` and `D` per joint, sometimes with Cartesian impedance on top through the Jacobian transpose. To choose `K`, take the largest push you expect and the largest deflection you accept: `K = F_max / x_max`.
+Choose `K` from the largest push you expect and the largest deflection you accept: `K = F_max / x_max`.
 
 ## Ship It
 
-`outputs/skill-impedance-check.md` checks a `K`, `D` choice against a deflection budget and the sampling limit.
+`outputs/skill-impedance-check.md` checks a `K`, `D` choice against the deflection budget.
 
 ## Exercises
 
-1. Add friction and find the new steady state under a small force.
-2. Replace the constant force with a step that reverses. Compare the settling time for `zeta` of 0.7 and 1.
-3. Use the sampling-limit check to find the largest `D` a 1 kHz loop allows for `J = 0.05`.
+1. Add friction and find the new steady state.
+2. Use a reversing step; compare settling time for `zeta` of 0.7 and 1.
+3. Find the largest `D` a 1 kHz loop allows for `J = 0.05`.

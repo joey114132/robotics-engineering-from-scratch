@@ -6,7 +6,7 @@ Robotics counterpart of rohitg00/ai-engineering-from-scratch (MIT). Same spine: 
 
 ```text
 phases/NN-slug/NN-lesson-slug/
-  docs/en.md        lesson (Problem, Concept, Build It, Use It, Ship It, Exercises)
+  docs/en.md        lesson (Plain Words, Key Terms, Problem, Concept, Build It, Use It, Ship It, Exercises)
   code/main.py      from-scratch implementation, one-line header comment
   code/tests/       pytest, 5+ tests, red first
   quiz.json         6 questions: 1 pre, 3 check, 2 post

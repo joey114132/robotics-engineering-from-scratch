@@ -12,6 +12,8 @@ BASE = {
     "ko": ["문제", "개념", "만들기", "실제 도구로 보기", "결과물", "연습 문제"],
 }
 PLAIN = {"en": "In Plain Words", "ko": "쉽게 말하면"}
+TERMS = {"en": "## Key Terms\n\n- **Frame**: a set of axes.\n- **Joint**: a hinge.\n- **Link**: a rigid bar.\n\n",
+         "ko": "## 핵심 용어\n\n- **Frame**: 축의 묶음입니다.\n- **Joint**: 경첩입니다.\n- **Link**: 단단한 막대입니다.\n\n"}
 
 
 @pytest.fixture
@@ -21,7 +23,7 @@ def lesson(tmp_path):
     for i in range(3):
         (tmp_path / "assets" / f"fig{i}.png").touch()
     for lang in BASE:
-        text = f"# Title\n\n> Idea\n\n**Type:** Build\n\n## {PLAIN[lang]}\n\nA tray tips.\n\n"
+        text = f"# Title\n\n> Idea\n\n**Type:** Build\n\n## {PLAIN[lang]}\n\nA tray tips.\n\n" + TERMS[lang]
         text += "\n\n".join(f"## {heading}\n\nA short paragraph." for heading in BASE[lang])
         text += "\n\n" + "\n".join(f"![Figure](../assets/fig{i}.png)" for i in range(3)) + "\n"
         (tmp_path / "docs" / f"{lang}.md").write_text(text)
@@ -49,11 +51,11 @@ def test_rollout_allows_missing_but_not_invalid_blocks(lesson):
         edit(lesson, lang, f"## {PLAIN[lang]}\n\nA tray tips.\n\n", "")
     assert checks.check_doc(lesson, "en", allow_missing_plain_words=True) == []
     assert checks.check_doc(lesson, "ko", allow_missing_plain_words=True) == []
-    edit(lesson, "en", "## The Problem", "## In Plain Words\n\n" + "word " * 91 + "\n\n## The Problem")
-    assert any("90" in e for e in checks.check_doc(lesson, "en", allow_missing_plain_words=True))
+    edit(lesson, "en", "## The Problem", "## In Plain Words\n\n" + "word " * 71 + "\n\n## The Problem")
+    assert any("70" in e for e in checks.check_doc(lesson, "en", allow_missing_plain_words=True))
 
 
-@pytest.mark.parametrize("lang,body", [("en", "word " * 91), ("ko", "설명 " * 91), ("ko", "가" * 601)])
+@pytest.mark.parametrize("lang,body", [("en", "word " * 71), ("ko", "설명 " * 91), ("ko", "가" * 601)])
 def test_plain_words_over_cap_fails(lesson, lang, body):
     edit(lesson, lang, "A tray tips.", body)
     assert any("plain words" in e and "limit" in e for e in checks.check_doc(lesson, lang))
@@ -95,9 +97,27 @@ def test_heading_in_code_is_not_a_section(lesson):
     assert any("missing" in e for e in checks.check_doc(lesson, "en"))
 
 
-def test_entire_english_lesson_cap_is_600(lesson):
-    edit(lesson, "en", "## The Concept", "extra " * 601 + "\n\n## The Concept")
-    assert any("prose words, limit 600" in e for e in checks.check_doc(lesson, "en"))
+def test_english_body_cap_is_440_and_excludes_key_terms(lesson):
+    edit(lesson, "en", "- **Link**: a rigid bar.", "- **Link**: " + "bar " * 24)
+    edit(lesson, "en", "## The Concept", "extra " * 380 + "\n\n## The Concept")
+    assert not any("prose words" in e for e in checks.check_doc(lesson, "en"))
+    edit(lesson, "en", "## The Concept", "extra " * 60 + "\n\n## The Concept")
+    assert any("prose words, limit 440" in e for e in checks.check_doc(lesson, "en"))
+
+
+@pytest.mark.parametrize("lang", BASE)
+def test_key_terms_count_is_checked(lesson, lang):
+    f = lesson / "docs" / f"{lang}.md"
+    t = f.read_text()
+    f.write_text("\n".join(l for l in t.splitlines() if "**Link**" not in l and "**Joint**" not in l))
+    assert any("key terms 1" in e for e in checks.check_doc(lesson, lang))
+
+
+def test_key_term_definition_cap_and_ko_term_order(lesson):
+    edit(lesson, "en", "a hinge.", "word " * 26)
+    assert any("definition 26 words" in e for e in checks.check_doc(lesson, "en"))
+    edit(lesson, "ko", "- **Frame**", "- **Frames**")
+    assert any("same English terms" in e for e in checks.check_doc(lesson, "ko"))
 
 
 def test_no_extra_content_between_metadata_and_explainer(lesson):

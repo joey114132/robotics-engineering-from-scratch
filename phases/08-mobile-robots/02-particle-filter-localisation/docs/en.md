@@ -1,44 +1,55 @@
 # Particle Filter Localisation
 
-> Keep many guesses of where you are, let the measurements kill the bad ones, and keep a few wild guesses for the day you are moved.
+> Learn how a lost robot, even one picked up and moved, finds where it is by keeping many guesses.
 
 **Type:** Build   **Prerequisites:** 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A rover stands in a room with four posts (landmarks) and measures its distance to each one. It keeps many guesses of where it is, copies the guesses whose distances match, and drops the rest. It moves every guess as far as it drove. This crowd of guesses is a particle filter.
+A rover stands in a room with four posts and measures its distance to each. It keeps many guesses of where it is, copies the guesses that match, drops the rest and moves them all as far as it drove.
 
-Now someone carries the rover to another corner. Every old guess is far from the new spot, so copying them cannot help. A few random guesses across the room give new measurements something to find.
+Now someone carries the rover to another corner. Every old guess is far from the new spot. A few random guesses across the room give new measurements something to find.
+
+## Key Terms
+
+- **Particle**: one guess of the robot's pose, `(x, y, heading)`.
+- **Particle filter**: a crowd of particles that is moved, scored by measurements and resampled.
+- **Landmark**: an object at a known place, like a post, whose distance the robot can measure.
+- **Weight**: a score for how well a particle's predicted distances match the measured ones.
+- **Resampling**: copying high-weight particles and dropping low-weight ones, keeping the count fixed.
+- **Kidnap**: the robot is picked up and put somewhere else without being told.
 
 ## The Problem
 
-Odometry drifts, so a robot on a known map needs outside measurements to say where it is. One Gaussian (a single bump of belief) cannot hold "I could be in either corridor", but a cloud of guesses can. The cloud's own failure: it can grow too sure of itself to be corrected.
+Picture a robot in a building with two look-alike hallways. Odometry drifts, and one best guess cannot say "either hallway", but a cloud of guesses can. A cloud can also grow too sure of itself.
 
 ## The Concept
 
-![One cycle of a particle filter](../assets/diagram-pf-cycle.png)
+A real robot needs this to know where it is on a map and to recover after a slip or a lift.
 
-*Each guess is moved with noise, scored by how well its landmark distances match the measured ones, then copied or dropped in proportion to its score.*
+![Particle filter cycle](../assets/diagram-pf-cycle.png)
 
-A guess is a particle: a pose `(x, y, heading)`. Its weight says how well it fits: the closer its predicted distances are to the measured ones, the bigger (a Gaussian likelihood). Far from the truth every weight is so tiny it rounds to zero (underflow), so we keep weights as logs and subtract the largest before `exp`. Systematic resampling copies guesses in proportion to weight, drawing `N` evenly spaced pointers from one random offset, which keeps the cloud size fixed.
+*Move with noise, score, then copy or drop by score.*
 
-![Particles collapsing onto the true pose](../assets/fig-pf-collapse.png)
+A particle's weight grows as its predicted distances approach the measured ones (a Gaussian likelihood). Far from the truth every weight underflows to zero, so keep weights as logs and subtract the largest before `exp`. Systematic resampling draws `N` evenly spaced pointers from one random offset, so the cloud size stays fixed.
 
-*Blue dots are guesses, the orange star the true pose. With 1000 particles and 4 landmarks the cloud shrinks onto the star in a few steps, and the error after 40 steps is below 0.3 m.*
+![Particles collapse](../assets/fig-pf-collapse.png)
 
-![A collapsed cloud cannot find a moved robot](../assets/diagram-pf-kidnap.png)
+*1000 particles, 4 landmarks: error below 0.3 m after 40 steps.*
 
-*After a kidnap (the robot is carried away) every guess fits badly, and none sits near the new pose.*
+![Kidnap diagram](../assets/diagram-pf-kidnap.png)
 
-In the lesson's kidnap run the rover is carried 7.2 m, from `(2, 3)` to `(8, 7)`, at step 40. "Off" means estimate to rover. One step later the plain filter is 3.79 m off and ends 3.88 m off. With 5% random particles it is 0.43 m off and ends 0.24 m off.
+*After a kidnap no guess sits near the new pose.*
 
-![Plain and random-particle clouds after a kidnap](../assets/clip-example.mp4)
+At step 40 the rover is carried 7.2 m, from `(2, 3)` to `(8, 7)`. One step later the plain filter's estimate is 3.79 m from the rover and ends 3.88 m away. With 5% random particles it is 0.43 m away and ends 0.24 m away.
 
-*Watch the amber rover lifted away. Each thin marker is one guess: tall blue (plain filter) never finds it, short green (5% random) jumps to it. Dark posts are landmarks.*
+![Plain and random clouds](../assets/clip-example.mp4)
 
-![Error after a kidnap with and without random particles](../assets/fig-pf-kidnap.png)
+*Tall blue (plain) never finds the lifted rover. Short green (5% random) jumps to it.*
 
-*Orange (plain filter) never gets back below 1.4 m. Blue (5% random particles each step) recovers, at the price of a slightly noisier estimate.*
+![Error after kidnap](../assets/fig-pf-kidnap.png)
+
+*Orange (plain) stays above 1.4 m. Blue (5% random) recovers, with a slightly noisier estimate.*
 
 ## Build It
 
@@ -62,7 +73,7 @@ python3 phases/08-mobile-robots/02-particle-filter-localisation/code/figure.py
 
 ## Use It
 
-Nav2's AMCL localises a robot on a known map with a 2D laser scanner and has a `random_seed` for repeatable runs. Compare its cloud spread with this lesson's.
+Nav2's AMCL localises a robot on a known map from a 2D laser scan. Compare its cloud spread with this lesson's.
 
 Sources: Nav2 `nav2_amcl` README, github.com/ros-navigation/navigation2, opened 2026-11-09.
 
@@ -72,6 +83,6 @@ Sources: Nav2 `nav2_amcl` README, github.com/ros-navigation/navigation2, opened 
 
 ## Exercises
 
-1. Plot `n_eff` over time and resample only when it drops below N/2.
-2. Remove the max-subtraction and find the step where the weights underflow.
-3. Make the landmarks collinear and see which direction stays ambiguous.
+1. Plot `n_eff` (how many particles still matter) and resample only below N/2.
+2. Remove the max-subtraction; find where weights underflow.
+3. Put the landmarks on one line and see which direction stays ambiguous.

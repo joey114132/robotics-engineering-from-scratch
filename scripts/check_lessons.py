@@ -5,14 +5,15 @@ import re
 import sys
 from pathlib import Path
 
-from lesson_sections import PLAIN_HEADINGS, SECTIONS, headings, split_plain_words
+from lesson_sections import PLAIN_HEADINGS, SECTIONS, TERMS_HEADINGS, headings, key_terms, split_plain_words
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = ["docs/en.md", "docs/ko.md", "code/main.py", "quiz.json", "quiz.ko.json"]
 EN_SECTIONS = SECTIONS["en"]
 KO_SECTIONS = SECTIONS["ko"]
-MAX_WORDS = 600
-PLAIN_WORDS = 90
+MAX_WORDS = 440   # outside code and outside Key Terms (that list has its own caps)
+PLAIN_WORDS = 70
+TERMS_MIN, TERMS_MAX, TERM_DEF_WORDS = 3, 6, 25
 PLAIN_KO_CHARS = 600
 MIN_IMAGES = 3
 IMG = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
@@ -98,6 +99,16 @@ def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[st
                     or not re.match(r"^\*\*(?:Type|유형):\*\*", lines[2])):
                 errs.append(f"{lang}: plain words must directly follow title, idea and Type metadata")
             errs += check_plain_words(d, lang, plain)
+    if lang in TERMS_HEADINGS and TERMS_HEADINGS[lang] in hs:
+        terms = key_terms(t, lang)
+        if not TERMS_MIN <= len(terms) <= TERMS_MAX:
+            errs.append(f"{lang}: key terms {len(terms)}, need {TERMS_MIN}-{TERMS_MAX} lines '- **Term**: definition'")
+        if lang == "en":
+            errs += [f"en: key term '{k}' definition {len(v.split())} words, limit {TERM_DEF_WORDS}" for k, v in terms if len(v.split()) > TERM_DEF_WORDS]
+        else:
+            en = (d / "docs" / "en.md").read_text() if (d / "docs" / "en.md").exists() else ""
+            if [k for k, _ in key_terms(en, "en")] != [k for k, _ in terms]:
+                errs.append(f"{lang}: key terms must list the same English terms in the same order as en")
     blocks = fences(t)
     errs += [f"{lang}: fenced block without language tag" for g, _ in blocks if not g]
     errs += [f"{lang}: mermaid is not allowed, use an Excalidraw diagram" for g, _ in blocks if g == "mermaid"]
@@ -112,7 +123,7 @@ def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[st
         elif not target.exists():
             errs.append(f"{lang}: image not found: {p}")
     if lang == "en":
-        w = prose_words(t)
+        w = prose_words(t) - sum(len(f"- **{k}**: {v}".split()) for k, v in key_terms(t, "en"))
         if w > MAX_WORDS:
             errs.append(f"en: {w} prose words, limit {MAX_WORDS}")
     else:

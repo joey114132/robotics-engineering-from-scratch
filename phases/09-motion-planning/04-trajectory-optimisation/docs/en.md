@@ -1,42 +1,51 @@
 # Trajectory Optimisation
 
-> A planner's path is feasible but jagged. Gradient descent on a smoothness cost and an obstacle penalty turns it into a path a robot can follow.
+> Learn how to smooth a zigzag path without pushing it back into an obstacle.
 
 **Type:** Build   **Prerequisites:** 09/03 Collision Checking   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A rover's route is a chain of waypoints pinned at the start and the flag, like a rubber band with cups in the way. The band's tension pulls each waypoint toward the straight line between its two neighbours, which smooths the route. A cup pushes any waypoint near it outward.
+A rover's route is a chain of waypoints pinned at the start and the flag, like a rubber band with cups in the way. The band pulls each waypoint toward the line between its neighbours; a cup pushes nearby waypoints outward.
 
-The route settles where pull and push balance. Moving the waypoints a little at a time lowers the total cost, a score of how bad the route is. Moving them too far overshoots the balance and raises it.
+The route settles where pull and push balance. Small moves lower the cost, a score of how bad the route is. Moves that are too big raise it.
+
+## Key Terms
+
+- **Waypoint**: one point on the route; the route is a chain of them.
+- **Cost**: a single number scoring how bad a route is; lower is better.
+- **Gradient**: the direction in which the cost rises fastest. Stepping against it lowers the cost.
+- **Gradient descent**: repeating small steps against the gradient.
+- **Penalty**: extra cost added when a waypoint gets too close to an obstacle.
+- **Clearance**: the spare distance kept between the path and an obstacle.
 
 ## The Problem
 
-A sampling planner hands you a path that avoids every obstacle but zigzags. Following it wastes time and shakes the arm. Straightening the zigzag by hand puts the path back inside an obstacle, so the two goals fight each other.
+Picture an arm following a path that avoids every obstacle but zigzags, wasting time. Straightening it by hand pushes it into an obstacle.
 
 ## The Concept
 
-![Smoothness plus obstacle penalty](../assets/diagram-cost-loop.png)
+A real robot saves time and wear on a smooth path, so we score smoothness.
 
-*Follow the numbers. Waypoints have fixed ends; two cost terms, smoothness and obstacle penalty, give one gradient that moves them.*
+![Cost loop](../assets/diagram-cost-loop.png)
 
-Smoothness is half the sum of squared steps between neighbours. Its gradient, the direction in which cost rises fastest, is `2 x_i - x_{i-1} - x_{i+1}` at a waypoint, so stepping against it pulls the point toward the line through its neighbours. The obstacle penalty is `w (r + margin - d)^2` when a waypoint is closer than `r + margin` to a centre (`w` = 8 is the penalty weight and `margin` is spare clearance), and zero otherwise. Stepping against its gradient pushes the point out. Repeating such steps (size `lr` = 0.04) is gradient descent.
+*Fixed ends; smoothness and obstacle penalty give one gradient.*
 
-![Two forces on every waypoint](../assets/diagram-two-forces.png)
+Smoothness cost is half the sum of squared steps between neighbours. Its gradient is `2 x_i - x_{i-1} - x_{i+1}`, so stepping against it pulls a point toward the line through its neighbours. The obstacle penalty is `w (r + margin - d)^2` when a waypoint is closer than `r + margin` to a centre, else zero (`w` = 8 is the weight). Stepping against its gradient pushes the point out. Steps of size `lr` = 0.04 are repeated.
 
-*The path settles where the pull and the push balance. A step that is too large overshoots it and the cost goes up.*
+![Two forces](../assets/diagram-two-forces.png)
 
-Worked example: one waypoint between pins at (0, 0) and (10, 0), a cup of radius 1 at (5, 0), `margin = 0.4`. It starts at (5, 0.2), inside the cup. Smoothness pulls it down with 0.4 and the cup pushes it up with 19.2. After 8 steps it rests at (5, 1.24), where both forces are 2.49, 0.24 outside the cup.
+*Pull and push balance at rest; too large a step overshoots. Only waypoints are checked; a segment between two can still clip the obstacle.*
 
-![Pull and push on one waypoint](../assets/clip-example.mp4)
+One waypoint between pins at (0, 0) and (10, 0), a cup of radius 1 at (5, 0), `margin = 0.4`. It starts at (5, 0.2), inside the cup: smoothness pulls down with 0.4, the cup pushes up with 19.2. After 8 steps it rests at (5, 1.24), both forces 2.49, 0.24 outside the cup.
 
-*Close-up of the route's middle, 0.8 m per unit. Watch the red arrows, pull down and push up (length grows with the square root of the force). The push starts huge and shrinks until they match. Then the rover drives.*
+![Pull and push](../assets/clip-example.mp4)
 
-![Path before and after, and cost per iteration](../assets/fig-before-after.png)
+*Red arrows: pull, push.*
 
-*Left: the jagged start runs through both obstacles, the result bends around them. Right: cost falls every iteration.*
+![Before and after](../assets/fig-before-after.png)
 
-This is a small version of the CHOMP planner. It penalises waypoints only, not the segments between them.
+*Left: start runs through both obstacles, result bends around. Right: cost falls.*
 
 ## Build It
 
@@ -46,7 +55,7 @@ g[1:-1] -= 2 * wo * np.maximum(0, r + margin - d) * v / d
 X -= lr * g
 ```
 
-The endpoints get zero gradient, so they never move. A test compares the analytic gradient with finite differences.
+Endpoints get zero gradient, so they never move; a test checks the gradient against finite differences.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -56,7 +65,7 @@ python3 phases/09-motion-planning/04-trajectory-optimisation/code/main.py
 
 ## Use It
 
-SciPy's `minimize` with `method="L-BFGS-B"` takes the same cost and gradient. The last test checks that it reaches a cost no worse than 4000 plain steps.
+SciPy's `minimize` with `method="L-BFGS-B"` takes the same cost and gradient. A test checks it reaches a cost no worse than 4000 plain steps.
 
 Sources: [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf) (opened 2026-11-09).
 
@@ -66,6 +75,6 @@ Sources: [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/ic
 
 ## Exercises
 
-1. Raise `margin` to 0.8 and report how the closest approach changes.
-2. Check the segments between waypoints with the exact test from lesson 03 and report the smallest clearance.
-3. Use `scipy.optimize.minimize` and compare iterations with plain descent.
+1. Raise `margin` to 0.8; report how the closest approach changes.
+2. Check segments with lesson 03's exact test; report the smallest clearance.
+3. Use `scipy.optimize.minimize`; compare iterations with plain descent.

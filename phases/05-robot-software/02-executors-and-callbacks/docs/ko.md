@@ -1,46 +1,51 @@
 # Executor와 Callback
 
-> 스레드 하나는 callback 하나씩만 실행하므로 느린 callback 하나가 주기와 상관없이 다른 모든 callback을 기다리게 합니다.
+> 느린 작업 하나가 프로세서가 놀고 있는데도 로봇의 다른 작업을 멈춰 세우는 이유를 배웁니다.
 
 **유형:** 만들기   **선수 지식:** 05/01 Publish-Subscribe와 QoS 불일치   **시간:** 약 15분
 
 ## 쉽게 말하면
 
-장난감 자동차는 heartbeat timer가 계속 울리는 동안에만 달려요. 울림이 늦으면 heartbeat를 지켜보는 감시자인 watchdog이 차를 세워요. 차의 프로그램에는 일꾼이 하나뿐이고 이 일꾼을 스레드(thread)라고 불러요.
-일꾼은 한 번에 한 가지 일만 해요.
-일꾼이 긴 이미지 작업에 매달려 있으면 heartbeat는 줄을 서서 기다리고 차는 멈춰요.
+장난감 자동차는 heartbeat timer가 계속 울리는 동안에만 달려요. 울림이 늦으면 watchdog이 차를 세워요.
 
-일꾼이 한 명 더 있으면 그동안 heartbeat를 맡을 수 있어요. 다만 두 작업이 같은 데이터를 고치듯 겹치면 안 된다는 규칙이 있으면 그럴 수 없어요. callback group이 이 규칙을 담고 있어요.
+차의 프로그램에는 한 번에 한 가지 일만 하는 일꾼이 하나뿐이라서 긴 이미지 작업이 heartbeat를 기다리게 해요.
+
+## 핵심 용어
+
+- **Callback**: 메시지가 도착하거나 timer가 울릴 때 ROS 2가 실행하는 함수입니다.
+- **Thread**: 프로그램 안의 일꾼 하나입니다. 한 번에 한 가지 일만 합니다.
+- **Executor**: 준비된 callback 중 무엇을 어느 thread에서 실행할지 정하는 ROS 2의 부분입니다.
+- **Callback group**: 겹침 규칙 하나를 공유하는 callback 묶음입니다. 예를 들면 동시에 실행하지 않는 규칙입니다.
+- **Starvation**: 다른 callback이 thread를 쥐고 있어서 어떤 callback이 너무 오래 기다리는 일입니다.
+- **Watchdog**: heartbeat가 늦으면 로봇을 세우는 감시 장치입니다.
 
 ## 문제
 
-한 node에 heartbeat를 보내려고 1초에 100번 울리는 timer가 있습니다. 메시지마다 ROS 2가 실행하는 함수인 callback이 이미지 처리에 60 ms를 쓰는 subscription도 있습니다.
-heartbeat가 끊기고 다른 곳의 watchdog이 이 node가 죽었다고 판단합니다. callback은 하나하나 모두 맞게 짜여 있고 CPU도 대부분 놀고 있습니다.
+장난감 자동차가 갑자기 멈춥니다. timer가 초당 100번 heartbeat를 보내는데 callback이 60 ms 동안 이미지 작업을 해서 heartbeat가 끊기고 watchdog이 차를 세웁니다. CPU는 대부분 놀고 있는데도 그렇습니다.
 
 ## 개념
 
+로봇은 많은 작업을 동시에 돌리고 느린 작업 하나가 안전과 관련된 작업을 굶길 수 있습니다.
+
 ![스레드 하나와 느린 callback 하나](../assets/diagram-executor-starve.png)
 
-*두 callback이 하나뿐인 스레드를 필요로 하므로 timer는 느린 callback이 끝날 때까지 기다립니다.*
+*timer는 느린 callback이 끝날 때까지 기다립니다.*
 
-executor는 준비된 callback 중 무엇을 어느 스레드에서 실행할지 정합니다. callback은 group으로 묶입니다.
-mutually exclusive group은 자기 callback 둘을 동시에 실행하지 않아서 둘이 함께 쓰는 데이터를 지킵니다. 서로 다른 group의 callback은 병렬로 실행될 수 있습니다.
+mutually exclusive group은 그 안의 callback 두 개를 동시에 실행하지 않아서 공유 데이터를 지킵니다. 다른 group의 callback은 병렬로 실행될 수 있습니다.
 
 ![스레드와 group](../assets/diagram-callback-groups.png)
 
-*각 줄을 왼쪽에서 오른쪽으로 읽어 보세요. 두 callback이 서로 다른 group에 있을 때만 두 번째 스레드가 도움이 됩니다.*
+*두 callback이 서로 다른 group에 있을 때만 두 번째 thread가 도움이 됩니다.*
 
-예를 들어 느린 callback이 0 ms에 시작해서 스레드를 60 ms 동안 쥔다고 해 보겠습니다.
-timer는 1 ms에 준비되므로 스레드가 하나이거나 스레드 둘에 group이 하나뿐이면 59 ms를 기다리고 이것이 `simulate()`가 보고하는 최악 대기입니다.
-group이 따로면 두 번째 스레드가 timer를 바로 시작하므로 대기는 0입니다.
+느린 callback이 0 ms에 시작해서 60 ms 동안 thread를 쥡니다. timer는 1 ms에 준비되므로 thread가 하나이거나 thread 둘에 group 하나이면 59 ms를 기다립니다. group이 나뉘어 있으면 바로 시작합니다.
 
-![스레드가 두 개씩인 자동차 두 대](../assets/clip-example.mp4)
+![자동차 두 대와 각 thread 두 개](../assets/clip-example.mp4)
 
-*지붕의 램프 하나가 스레드 하나이고 일하는 동안 켜집니다. 파란 차는 group 하나를 공유해서 두 번째 램프가 꺼져 있고 차는 계속 멈춥니다. 초록 차는 group이 따로라서 두 램프가 모두 일하고 멈추지 않습니다.*
+*지붕의 등 하나가 thread 하나입니다. 파랑은 group을 공유해서 두 번째 등이 꺼진 채 차가 멈춥니다. 초록은 멈추지 않습니다.*
 
-![두 구성의 시간선](../assets/fig-executor-timeline.png)
+![두 구성의 타임라인](../assets/fig-executor-timeline.png)
 
-*스레드 하나에서는 timer가 최대 59 ms 늦게 시작합니다. 스레드 둘에 group을 나누면 기다리지 않습니다.*
+*thread 하나이면 timer가 최대 59 ms 늦게 시작합니다. thread 둘에 group이 나뉘면 늦지 않습니다.*
 
 ## 만들기
 
@@ -49,12 +54,8 @@ busy = {g for _, g in running if g is not None}
 job = next((j for j in pending if j[3] is None or j[3] not in busy), None)
 ```
 
-`simulate()`는 시간을 1 ms씩 진행합니다. 매 단계마다 주기적 callback을 준비 상태로 만들고 끝난 job을 비웁니다. 그다음 놀고 있는 스레드마다 group이 쉬고 있는 가장 오래된 job을 줍니다.
-
-`latencies()`는 준비된 시점과 시작 시점의 차이를 돌려줍니다.
-
-이 모델은 먼저 온 것부터 처리하는 FIFO이고 놓친 tick을 전부 쌓아 둡니다. 문서에는 과부하 상태의 executor가 준비된 일을 돌아가며 처리하는 round-robin 방식이라고 되어 있습니다.
-숫자를 비교하기 전에 문서의 "Scheduling semantics" 절을 읽으세요.
+`simulate()`는 시간을 1 ms씩 진행합니다. 매 스텝마다 timer callback을 풀어 주고 끝난 작업을 정리하며 쉬는 thread마다 group이 비어 있는 가장 오래된 대기 작업을 줍니다.
+이 모델은 먼저 온 것을 먼저 처리합니다. ROS 2는 준비된 작업을 돌아가며 처리하므로 숫자를 비교하기 전에 "Scheduling semantics"를 읽어 보세요.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -64,21 +65,16 @@ python3 phases/05-robot-software/02-executors-and-callbacks/code/main.py
 
 ## 실제 도구로 보기
 
-ROS 2에도 같은 부품이 있습니다. 단일 스레드 executor, 멀티 스레드 executor, mutually exclusive와 reentrant(자기 group 동료와 겹쳐 실행될 수 있음) callback group입니다.
+ROS 2의 group은 mutually exclusive이거나 reentrant(서로 겹칠 수 있음)입니다. group 없이 만든 callback은 기본 group 하나를 함께 쓰므로 thread를 늘리기 전에 느린 callback에 자기 group을 주세요.
 
-group 없이 만든 callback은 node의 default group에 들어갑니다. 그래서 데이터를 공유하지 않는다면 스레드를 늘리기 전에 느린 callback에 자기 group부터 주세요.
-
-출처: ROS 2 Jazzy, "Executors".
-https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Executors.html
-
-2026년 11월 9일에 ros2/ros2_documentation의 `jazzy` branch 소스 파일에서 읽었습니다.
+출처: ROS 2 Jazzy, "Executors" (https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Executors.html), 2026년 11월 9일 확인.
 
 ## 결과물
 
-`outputs/skill-executor-starvation-check.md`는 다른 callback을 굶기는 callback을 찾아 어떤 수정이 맞는지 알려 줍니다.
+`outputs/skill-executor-starvation-check.md`는 다른 callback을 굶기는 callback을 찾고 고칠 방법을 알려 줍니다.
 
 ## 연습 문제
 
-1. reentrant group(`None`)에 느린 job 둘을 넣고 스레드 둘에서 겹쳐 실행되는 것을 보이세요.
-2. timer가 놓친 tick을 쌓지 않고 버리게 한 뒤 최악 대기 시간을 비교하세요.
-3. 느린 callback을 10 ms 조각 여섯 개로 나누고 스레드 하나에서 timer의 최악 대기 시간을 보고하세요.
+1. 느린 작업 두 개가 있는 reentrant group(`None`)을 더하고 둘이 겹치는 것을 보이세요.
+2. 놓친 timer tick을 쌓지 말고 버리게 하세요.
+3. 느린 callback을 10 ms 조각 여섯 개로 나누고 timer의 최악 대기 시간을 보고하세요.

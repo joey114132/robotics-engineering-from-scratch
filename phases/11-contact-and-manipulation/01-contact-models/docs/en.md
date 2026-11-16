@@ -1,44 +1,55 @@
 # Contact Models
 
-> A block sticks on a tilted plane exactly when tan(theta) is at most mu, because friction can only push inside its cone.
+> Learn why a gripped part slides out when the wrist tilts, and how to predict the angle.
 
 **Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Place an eraser on a textbook and slowly tilt the book. Gravity pulls the eraser downhill, and friction from the book pulls it back uphill. Tilting more raises the downhill pull and lowers the force pressing the eraser into the book.
+Place an eraser on a textbook and slowly tilt the book. Gravity pulls the eraser downhill and friction pulls it back uphill.
 
-Friction has a cap: at most `mu` times the pressing force, where `mu` says how grippy the surfaces are. All the friction forces up to that cap form the friction cone. Once the friction needed to hold the eraser passes the cap, the eraser slides.
+Friction has a cap: at most `mu` times the force pressing the eraser into the book. All friction forces up to that cap form the friction cone. When the friction needed passes the cap, the eraser slides.
+
+## Key Terms
+
+- **Contact model**: the rule a simulator uses to compute the forces where two bodies touch.
+- **Normal force**: the push of a surface straight out of itself, perpendicular to the surface.
+- **`mu`**: the friction coefficient; how grippy the surfaces are.
+- **Friction cone**: all friction forces that do not exceed `mu` times the normal force.
+- **Stick and slip**: two states of a contact; holding still, or sliding.
+- **Penetration**: how far a simulated body sinks into a surface.
 
 ## The Problem
 
-Your gripper holds a part, you tilt the wrist a few degrees, and the part slides out. Held a little flatter, it would have stayed. A rigid-body simulator gets it right only if its contact model has the same switch between sticking and sliding.
+Picture a gripper holding a part. Tilt the wrist a few degrees and the part slides out, though flatter it would have stayed. A simulator needs the same stick-or-slip switch.
 
 ## The Concept
 
-Call the tilt `theta`, the mass `m` and gravity `g`. Gravity splits into `fn = m g cos(theta)`, which presses the block into the plane (the normal force), and `m g sin(theta)`, which pulls it down the slope. To stay put the block needs friction `ft = m g sin(theta)` along the slope, so `ft / fn = tan(theta)`. The friction cone allows `ft / fn` up to `mu`.
+A real gripper drops a part when friction runs out, so you need the angle where that happens.
 
-![Two layers of a simulated contact](../assets/diagram-penalty-layers.png)
+With tilt `theta`, mass `m` and gravity `g`, gravity presses the block into the plane with `fn = m g cos(theta)` and pulls it down the slope with `m g sin(theta)`. Staying put needs friction `ft = m g sin(theta)`, so `ft / fn = tan(theta)`; the cone allows up to `mu`.
 
-*In a simulator the block sinks a hair into the plane. That penetration gives the normal force, which sets the cap on friction. A sideways spring holds the contact still until it hits the cap.*
+![Layers](../assets/diagram-penalty-layers.png)
 
-Take `mu = 0.5`. A 25 degree ramp needs 0.47 and holds. A 35 degree ramp needs 0.70, so the block slides: friction stays at its cap `mu * fn`, leaving a net pull of `m g (sin(theta) - mu cos(theta))`, about 1.6 m/s² here.
+*Penetration gives the normal force, which caps friction. A sideways spring holds the contact until the cap.*
 
-![A tilting plank](../assets/clip-example.mp4)
+Take `mu = 0.5`. A 25 degree ramp needs 0.47 and holds. A 35 degree ramp needs 0.70 and slides, with net pull `m g (sin(theta) - mu cos(theta))`, about 1.6 m/s².
 
-*Watch the orange block as the plank tilts. It holds until the plank passes the see-through marker at 26.6 degrees, then slides.*
+![Tilting plank](../assets/clip-example.mp4)
 
-![Stick or slip decision on a tilted plane](../assets/diagram-stick-slip.png)
+*The block holds until the plank passes the marker at 26.6 degrees, then slides.*
 
-*The only question is whether the needed friction fits inside the cone.*
+![Stick or slip](../assets/diagram-stick-slip.png)
 
-![Force trajectories in the friction cone and slip acceleration against tan(theta)](../assets/fig-stick-slip.png)
+*Does the needed friction fit inside the cone?*
 
-*Left: the sticking blocks end inside the cone, the sliding block rides its edge. Right: simulated acceleration is zero until tan(theta) passes mu, then rises as derived above.*
+![Cone](../assets/fig-stick-slip.png)
+
+*Left: sticking blocks end inside the cone; the sliding block rides its edge. Right: acceleration is zero until tan(theta) passes mu.*
 
 ## Build It
 
-Normal force is a spring-damper on penetration that never pulls. Friction is a tangential spring to an anchor, clipped at `mu * fn`. When it clips, the anchor is dragged along.
+Normal force is a spring-damper on penetration that never pulls. Friction is a sideways spring to an anchor, clipped at `mu * fn`; clipping drags the anchor.
 
 ```python
 fn = max(K * pen - C * nv, 0.0)
@@ -48,7 +59,7 @@ if abs(ft) > mu * fn:
     anchor = s + ft / KT
 ```
 
-Assumptions: a point block, one contact, a planar slope, fixed spring constants, semi-implicit Euler at 0.1 ms. The block starts touching the plane at rest.
+Assumptions: point block, one contact, planar slope, fixed spring constants, semi-implicit Euler at 0.1 ms.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -58,7 +69,7 @@ python3 phases/11-contact-and-manipulation/01-contact-models/code/main.py
 
 ## Use It
 
-MuJoCo uses the same two ideas: a soft normal force and a friction cone that its docs say can be elliptic or pyramidal. Build the same tilted block there and compare its sliding angle with `arctan(mu)`.
+MuJoCo uses the same two ideas: a soft normal force and a friction cone. Build the same block there; compare its sliding angle with `arctan(mu)`.
 
 Sources: MuJoCo documentation, Computation chapter (opened 2026-11-09).
 
@@ -68,6 +79,6 @@ Sources: MuJoCo documentation, Computation chapter (opened 2026-11-09).
 
 ## Exercises
 
-1. Raise `K` by 10 times and check that the sticking angle does not move but the settling time does.
-2. Make `mu` differ for static and sliding contact and find the angle where the block starts and keeps moving.
-3. Add a horizontal push on the block and find the push at which it begins to slide up the slope.
+1. Raise `K` 10 times; the sticking angle should stay, the settling time change.
+2. Use different static and sliding `mu`; find where the block starts and keeps moving.
+3. Add a horizontal push; find where the block slides up.

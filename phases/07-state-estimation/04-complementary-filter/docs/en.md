@@ -1,48 +1,57 @@
 # Complementary Filter
 
-> The gyro is right about fast changes and wrong about the long run, the accelerometer is the opposite, and one time constant decides who is believed when.
+> Learn how to combine a smooth-but-drifting sensor with a jittery-but-honest one to track tilt.
 
 **Type:** Build   **Prerequisites:** 07/03 IMU Integration and Drift   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A flat board sits on a post with a sensor on top. The gyro measures turning speed, so adding its readings up follows quick tilts smoothly, but a small steady error makes the angle drift. The accelerometer feels gravity and gives the tilt directly, but jitters.
+Adding up a gyro's readings follows quick tilts smoothly but drifts. The accelerometer gives the tilt from gravity but jitters. A complementary filter takes quick changes from the gyro and the slow average from the accelerometer.
 
-A complementary filter takes quick changes from the gyro and the slow average from the accelerometer. The time constant sets how long the gyro is trusted: longer means less jitter but more drift, shorter the opposite.
+## Key Terms
+
+- **Gyro**: measures turning speed. Adding its readings up gives a smooth angle that drifts.
+- **Accelerometer**: feels gravity, so it gives tilt directly, but jitters.
+- **Time constant (`tau`)**: how long the gyro is trusted before the accelerometer takes over.
+- **High-pass / low-pass**: a filter that keeps fast changes, or one that keeps the slow average.
+- **Crossover**: the frequency (cycles per second, Hz) where both paths carry equal weight.
+- **Bias**: a small steady sensor error.
 
 ## The Problem
 
-Tilt from the accelerometer alone jitters so much that a balancing controller shakes. The integrated gyro is smooth but creeps off, until the robot thinks it leans while standing straight.
+A robot must balance upright. Tilt from its accelerometer alone jitters, so the controller shakes. The integrated gyro is smooth but creeps off until the robot thinks it leans while standing straight.
 
 ## The Concept
 
+A balancing robot needs a tilt that is both smooth and honest over minutes.
+
 ![Two sensors](../assets/diagram-comp-split.png)
 
-*The gyro goes through a high-pass (keeps fast changes), the accelerometer through a low-pass (keeps the slow average); then they add.*
+*Gyro through a high-pass, accelerometer through a low-pass, then add.*
 
-Each step, `theta = a (theta + gyro dt) + (1 - a) acc`, where `acc` is the tilt from the accelerometer. The weight is `a = tau / (tau + dt)`, with `tau` the time constant and `dt` the step.
+Each step, `theta = a (theta + gyro dt) + (1 - a) acc`, where `acc` is the accelerometer's tilt and `a = tau / (tau + dt)`.
 
-As filters, the accelerometer path is `1 / (1 + j w tau)` and the gyro path `j w tau / (1 + j w tau)`, where `w` is the motion's frequency and `j` tracks timing. They add to exactly 1, so a true tilt passes unchanged. They cross at `1 / (2 pi tau)` Hz, where each has gain `1 / sqrt(2)` but a different timing.
+The accelerometer path is a low-pass and the gyro path a high-pass. Their weights add to 1. They cross at `1 / (2 pi tau)` Hz.
 
 ![Estimates and crossover](../assets/fig-tilt-estimates.png)
 
-*Left: at `tau = 0.40 s` the fused tilt sits on the truth. Right: the crossover is 0.40 Hz, a frequency, not `tau`. Below it the accelerometer is trusted, above it the gyro.*
+*Left: at `tau = 0.40 s` the fused tilt sits on the truth. Right: the crossover is 0.40 Hz.*
 
-The gyro is trusted for about `tau` seconds, so a constant bias `b` piles up to a steady error of exactly `tau b`. Accelerometer noise of spread `s` leaves variance `s^2 (1 - a) / (1 + a)`, about `s^2 dt / (2 tau)`. Minimising the two errors squared, `(tau b)^2 + s^2 dt / (2 tau)`, gives `tau^3 = s^2 dt / (4 b^2)`.
+The gyro is trusted for about `tau` seconds, so a constant bias `b` piles up to an error of `tau b`. Accelerometer noise `s` leaves variance about `s^2 dt / (2 tau)`. Minimising `(tau b)^2 + s^2 dt / (2 tau)` gives `tau^3 = s^2 dt / (4 b^2)`.
 
 ![Tuning tau](../assets/diagram-comp-tau.png)
 
-*A small `tau` lets accelerometer noise through. A large `tau` lets gyro bias through.*
+*Small `tau` lets noise through, large `tau` lets bias through.*
 
 ![Error against tau](../assets/fig-tau-tradeoff.png)
 
-*Example values `b = 0.01 rad/s`, `s = 0.05 rad`, `dt = 0.01 s`. Simulation matches the derived curve; its minimum is at 0.40 s.*
+*Simulation matches; the minimum is at 0.40 s.*
 
-With those values, `tau = 2 s` leaves a bias error of `2 * 0.01 = 0.02 rad` and `tau = 0.05 s` a noise error of 0.015 rad. `tau = 0.40 s` leaves 0.004 and 0.0056, combining to `sqrt(0.004^2 + 0.0056^2) = 0.0068 rad`.
+Take `b = 0.01 rad/s`, `s = 0.05 rad`, `dt = 0.01 s`. Then `tau = 2 s` leaves a bias error of `2 * 0.01 = 0.02 rad`, `tau = 0.05 s` a noise error of 0.015 rad, and `tau = 0.40 s` only 0.004 and 0.0056, together `0.0068 rad`.
 
 ![Three filters](../assets/clip-example.mp4)
 
-*Watch the level boards. Small `tau` (left): noise shakes the board. Large `tau` (right): a steady lean. The middle one stays closest to level. Errors drawn 10 times larger.*
+*Small `tau`: noise shakes the board. Large `tau`: a steady lean. The middle is closest to level. Errors drawn 10 times larger.*
 
 ## Build It
 
@@ -65,9 +74,9 @@ python3 -m pytest phases/07-state-estimation/04-complementary-filter -q
 
 ## Use It
 
-`imu_complementary_filter` in `imu_tools` fuses gyro, accelerometer and optional magnetic readings into an orientation. Compare it with this `tau` trade-off.
+`imu_complementary_filter` in `imu_tools` fuses gyro, accelerometer and optional magnetic readings.
 
-Sources: imu_tools README, https://raw.githubusercontent.com/CCNYRoboticsLab/imu_tools/humble/README.md (opened 2026-11-09).
+Sources: imu_tools README, https://raw.githubusercontent.com/CCNYRoboticsLab/imu_tools/humble/README.md (2026-11-09).
 
 ## Ship It
 
@@ -75,6 +84,6 @@ Sources: imu_tools README, https://raw.githubusercontent.com/CCNYRoboticsLab/imu
 
 ## Exercises
 
-1. Compute the gyro-bias error for `tau = 5 s`, `b = 0.01 rad/s`.
+1. Compute the bias error for `tau = 5 s`, `b = 0.01 rad/s`.
 2. Halve `s` and predict the new best `tau`.
 3. If the accelerometer is noisy only during shaking, what should `tau` do?

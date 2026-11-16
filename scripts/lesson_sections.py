@@ -2,9 +2,10 @@
 import re
 
 PLAIN_HEADINGS = {"en": "## In Plain Words", "ko": "## 쉽게 말하면"}
+TERMS_HEADINGS = {"en": "## Key Terms", "ko": "## 핵심 용어"}
 SECTIONS = {
-    "en": [PLAIN_HEADINGS["en"], "## The Problem", "## The Concept", "## Build It", "## Use It", "## Ship It", "## Exercises"],
-    "ko": [PLAIN_HEADINGS["ko"], "## 문제", "## 개념", "## 만들기", "## 실제 도구로 보기", "## 결과물", "## 연습 문제"],
+    "en": [PLAIN_HEADINGS["en"], TERMS_HEADINGS["en"], "## The Problem", "## The Concept", "## Build It", "## Use It", "## Ship It", "## Exercises"],
+    "ko": [PLAIN_HEADINGS["ko"], TERMS_HEADINGS["ko"], "## 문제", "## 개념", "## 만들기", "## 실제 도구로 보기", "## 결과물", "## 연습 문제"],
 }
 
 
@@ -33,3 +34,17 @@ def split_plain_words(text):
             end = hs[i + 1].start() if i + 1 < len(hs) else len(text)
             return text[:h.start()], text[h.start():end], text[end:]
     return text, "", ""
+
+
+TERM_LINE = re.compile(r"^- \*\*([^*]+)\*\*: (.+)$")
+
+
+def key_terms(text, lang):
+    """Return [(term, definition)] from the Key Terms section; [] when absent."""
+    hs = headings(text, 2)
+    for i, h in enumerate(hs):
+        if h[0].strip() == TERMS_HEADINGS[lang]:
+            end = hs[i + 1].start() if i + 1 < len(hs) else len(text)
+            body = text[h.end():end]
+            return [(m[1].strip(), m[2].strip()) for m in map(TERM_LINE.match, body.splitlines()) if m]
+    return []

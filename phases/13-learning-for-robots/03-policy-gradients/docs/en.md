@@ -1,44 +1,55 @@
 # Policy Gradients
 
-> Nudge the policy toward actions that scored above average. The price is an estimate that jumps around, which a baseline calms.
+> Learn how a robot can improve from points alone, with no teacher, and why the learning wobbles.
 
 **Type:** Build   **Prerequisites:** 13/01 Imitation from Demonstrations   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A toy car has to stop on a line, and nobody tells it how. You only give each try points, more when it ends nearer the line. You then change its steering rule so moves from higher-point tries become more likely.
+A toy car must stop on a line, and nobody tells it how. Each try earns points, more when it ends nearer the line. You change its steering rule so moves from high-scoring tries become more likely.
 
-Suppose every try earns a big flat bonus. Pushing each move up by its whole point total lifts every move, and small differences hide in the bonus. Subtract the average points of the other tries and better moves rise while worse ones fall.
+A flat bonus on every try lifts every move and hides small differences. Subtract the other tries' average and better moves rise while worse ones fall.
+
+## Key Terms
+
+- **Reward-to-go**: the rewards from the current step to the end of the episode.
+- **Return**: the total reward of one episode.
+- **Episode**: one try from start to finish.
+- **Policy gradient**: nudging the policy's numbers toward actions that earned above-average return.
+- **Baseline**: an average subtracted from the return to calm the estimate.
+- **Variance**: how much an estimate jumps around between runs.
 
 ## The Problem
 
-Sometimes there is no expert, only a reward. You try random actions and move toward what worked. The return (total reward) of one episode, one try from start to finish, jumps around, so two training runs with the same settings can look very different.
+A toy car must stop on a line and nobody can show it how. You can only score each try. Random tries score wildly, so two training runs with the same settings can look very different.
 
 ## The Concept
 
+When no expert exists, trial and error with a score is the only teacher a robot has.
+
 ![REINFORCE loop](../assets/diagram-reinforce-loop.png)
 
-*Follow the numbers. Sample actions, add up the rewards, weight each action's nudge direction by that return, then change `w` and `b`.*
+*Sample actions, add up rewards, weight each nudge by its return, then change `w` and `b`.*
 
-The policy is a Gaussian (a bell-shaped random choice): at position `x` the car steers near `w*x + b`, plus small random exploration noise. `w` and `b` are the two numbers learning changes. Each action has a nudge direction (`score()` in the code), the gradient of its log probability: it says which way to turn `w` and `b` to make that action likelier. Multiply it by the return and average over episodes to estimate the gradient of expected return.
+The policy is a Gaussian (a bell-shaped random choice): the car steers near `w*x + b` plus exploration noise. Multiplying each action's nudge direction (`score()`) by the return and averaging estimates the gradient of expected return.
 
-![What a baseline changes](../assets/diagram-baseline-effect.png)
+![Baseline](../assets/diagram-baseline-effect.png)
 
-*When every return is large and positive, every action is pushed up and the signal hides in the differences. The baseline cuts this spread, not the exploration noise.*
+*When every return is large, every action is pushed up and the signal hides. The baseline cuts this spread.*
 
-![Learning curves and gradient spread](../assets/fig-reinforce-baseline.png)
+![Curves](../assets/fig-reinforce-baseline.png)
 
-*Left: ten seeds (repeats with other random draws) each; the baseline climbs steadily, raw (no baseline) wobbles. Right: both estimators start with the same mean, and the baseline cuts the spread, how far the estimate jumps, to a third.*
+*Left: the baseline climbs steadily, raw wobbles (ten seeds, ten repeats with other random draws). Right: the baseline cuts the spread to a third.*
 
-Four tries from one start (`episode()`, seed 2) return 35.93, 34.91, 27.63 and 27.26. As is, all four are pushed up, the best only 32% harder than the worst. With the baseline, the average of the other three, the pushes become +6.0, +4.6, -5.1 and -5.6: good tries up, bad tries down.
+Four tries from one start return 35.93, 34.91, 27.63 and 27.26. As is, all four are pushed up, the best only 32% harder than the worst. With the baseline the pushes become +6.0, +4.6, -5.1 and -5.6.
 
-![Cars with push arrows](../assets/clip-example.mp4)
+![Cars with arrows](../assets/clip-example.mp4)
 
-*Watch the arrows. First (blue) they are almost equal, since every return is large. Then each shows its difference from the others' average: green up, red down.*
+*Blue arrows are almost equal. Then each shows its difference from the others' average, drawn 4 times longer.*
 
 ## Build It
 
-The task is a 1-D reach: steering `a` moves the car from `x` to `x' = x + 0.2*a`, and each step pays `3 - x'^2 - 0.01*a^2`. The baseline for episode `i` at time `t` is the mean reward-to-go (rewards from step `t` to the end) of the other episodes, so it never sees its own action.
+The task is a 1-D reach: steering `a` moves the car from `x` to `x' = x + 0.2*a`, and each step pays `3 - x'^2 - 0.01*a^2`. Episode `i`'s baseline is the mean reward-to-go of the other episodes, so it never sees its own action.
 
 ```python
 G = np.array([reward_to_go(r) for _, _, r in eps])
@@ -56,16 +67,16 @@ python3 phases/13-learning-for-robots/03-policy-gradients/code/figure.py
 
 ## Use It
 
-Compare gradient variance across seeds before comparing final returns.
+Compare gradient variance across seeds first.
 
-Sources: OpenAI Spinning Up, "Intro to Policy Optimization", opened 2026-11-09. It states that a state-only baseline leaves the expected gradient unchanged and cuts its variance, and that reward-to-go removes zero-mean noise terms.
+Sources: OpenAI Spinning Up, "Intro to Policy Optimization", opened 2026-11-09.
 
 ## Ship It
 
-`outputs/skill-policy-gradient-debug.md` lists what to measure when a policy-gradient run is unstable.
+`outputs/skill-policy-gradient-debug.md` lists what to measure when a run is unstable.
 
 ## Exercises
 
-1. Try `BONUS` 0 and 10 and plot the raw-versus-baseline gap.
-2. Make `SIGMA` a learned parameter and derive its score term.
-3. Replace the leave-one-out mean by the all-episode mean and test for bias at `batch=2`.
+1. Try `BONUS` 0 and 10.
+2. Make `SIGMA` learnable and derive its score term.
+3. Use the all-episode mean as baseline. Is it biased at `batch=2`?

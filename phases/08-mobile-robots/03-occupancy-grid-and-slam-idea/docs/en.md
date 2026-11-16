@@ -1,46 +1,55 @@
 # Occupancy Grid and the SLAM Idea
 
-> A map is only as good as the poses you drew it from, which is why mapping and localising have to be solved together.
+> Learn how a robot draws a room map from laser beams, and why a small heading error ruins it.
 
 **Type:** Build   **Prerequisites:** 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A rover in a room with a box measures distances with laser beams. Each beam ends at the first thing it hits: the floor crossed is empty, its end is an obstacle, and behind is unknown. An occupancy grid keeps this evidence in map squares.
+A rover measures a room with laser beams. A beam ends at the first thing it hits: the floor it crossed is empty, its end is an obstacle, and behind is unknown. An occupancy grid keeps this evidence in map squares.
 
-Suppose the rover's heading estimate is slightly off and worsens every step. The distances are right but the box lands in the wrong squares, so repeated scans smear the map. SLAM (mapping and locating at once) corrects the pose using the map so far.
+If the rover's heading estimate worsens every step, obstacles land in the wrong squares and scans smear the map. SLAM corrects the pose from the map so far.
+
+## Key Terms
+
+- **Occupancy grid**: a map split into small squares, each holding a score for "something is here".
+- **Cell**: one square of the occupancy grid.
+- **Log-odds (`L`)**: a cell's evidence score. Positive means probably occupied, negative probably free, and 0 unknown.
+- **SLAM**: mapping and locating at once, because each needs the other.
+- **Heading**: the direction the robot faces.
+- **Drift**: a small error that adds up step after step.
 
 ## The Problem
 
-You drive a laser robot around a room once and the saved map shows every wall twice, slanted, with a ghost room beside it. The scanner was fine. The robot drew each scan from a place it wrongly believed it was in.
+Picture a laser robot's map after one lap of a room: every wall twice, slanted, with a ghost room beside it. The scanner was fine; the robot drew each scan from a place it wrongly believed it was in.
 
 ## The Concept
 
-![What one laser beam tells the grid](../assets/diagram-beam-update.png)
+A real robot plans routes and avoids walls with its map, so a smeared map breaks what follows.
 
-*One beam lowers the score of the cells it crossed, raises the cell where it ended, and says nothing about what lies behind.*
+![Beam update](../assets/diagram-beam-update.png)
 
-An occupancy grid stores one evidence score `L` per cell, the log-odds of "occupied". Positive means probably occupied, negative probably free, and 0 unknown. A beam end is strong evidence, so it adds `0.85`. A crossed cell is weaker evidence of free, so it subtracts `0.4`. `L` is capped at `+-5`, and `p = 1 - 1 / (1 + exp(L))` turns it into a probability. Each cell is touched once per scan, so many beams do not count a wall twice.
+*One beam lowers crossed cells and raises its end cell.*
 
-After three scans, a wall cell hit every time has `L = 3 x 0.85 = 2.55`, so `p = 0.93`. A floor cell crossed every time has `L = 3 x -0.4 = -1.2`, so `p = 0.23`.
+A beam end is strong evidence and adds `0.85` to `L`. A crossed cell is weaker evidence of free and subtracts `0.4`. `L` is capped at `+-5`, and `p = 1 - 1 / (1 + exp(L))` turns it into a probability. Each cell updates once per scan.
 
-![Pillars grow as a rover scans a wall](../assets/clip-example.mp4)
+After three scans a wall cell hit every time has `L = 3 x 0.85 = 2.55`, so `p = 0.93`. A floor cell crossed every time has `L = 3 x -0.4 = -1.2`, so `p = 0.23`.
 
-*Pillar height is the size of `L`: each scan lifts amber wall pillars (more occupied) by 0.85 and green floor pillars (more free) by 0.4.*
+![Pillars grow](../assets/clip-example.mp4)
 
-![True room, known-pose map and drifted map](../assets/fig-grid-maps.png)
+*Pillar height is `L`: wall pillars rise 0.85 per scan, floor pillars 0.4.*
 
-*Left: the room. Middle: 200 scans from known poses. Right: the same scans with a heading that gains 0.003 rad per step (34° over the loop); only 41% of the occupied cells are real.*
+![Three maps](../assets/fig-grid-maps.png)
 
-![Mapping needs the pose and the pose needs the map](../assets/diagram-slam-loop.png)
+*Left: room. Middle: 200 scans, known poses. Right: heading error of 0.003 rad per step (34° over the loop); only 41% of occupied cells are real.*
 
-*SLAM closes the circle: draw the scan at the pose, match the next scan to the map so far, correct the pose, draw again.*
+![Mapping and pose loop](../assets/diagram-slam-loop.png)
 
-![Wall quality against heading error](../assets/fig-smear-curve.png)
+*SLAM: draw, match the next scan, correct the pose.*
 
-*Heading error is the total turn error over the loop. Under 6 degrees already cuts the real share of occupied cells from 0.89 to 0.62.*
+![Wall quality curve](../assets/fig-smear-curve.png)
 
-The drift model keeps step lengths exact and adds a small heading error every step.
+*Under 6 degrees of heading error, the real share of occupied cells falls from 0.89 to 0.62.*
 
 ## Build It
 
@@ -53,7 +62,7 @@ def drift(poses, yaw_err):
     way = np.arctan2(d[:, 1], d[:, 0]) + yaw_err * k[1:]
 ```
 
-`scan()` sends beams through a hidden true world. `build_map()` places scans at the poses you give it, true or drifted.
+`scan()` sends beams through a hidden world; `build_map()` places scans at the poses you give it.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -63,7 +72,7 @@ python3 phases/08-mobile-robots/03-occupancy-grid-and-slam-idea/code/main.py
 
 ## Use It
 
-Nav2's map server loads and saves `nav_msgs/msg/OccupancyGrid` maps, the format its navigation stack reads. A real mapping package estimates poses and grid together.
+Nav2's map server loads and saves `nav_msgs/msg/OccupancyGrid` maps.
 
 Sources: Nav2 `nav2_map_server` README, github.com/ros-navigation/navigation2, opened 2026-11-09.
 
@@ -73,6 +82,6 @@ Sources: Nav2 `nav2_map_server` README, github.com/ros-navigation/navigation2, o
 
 ## Exercises
 
-1. Raise the beam noise and find when walls become two cells thick.
+1. Raise the beam noise; find when walls get two cells thick.
 2. Add a `p < 0.35` free threshold and count unknown cells.
-3. Give only the last scan a bad pose and see how local the damage is.
+3. Give only the last scan a bad pose; see the damage.

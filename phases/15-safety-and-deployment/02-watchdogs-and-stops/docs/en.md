@@ -1,46 +1,57 @@
 # Watchdogs and Stops
 
-> A watchdog is only safe if the joint can stop in the room left after the timeout runs out.
+> Learn how to make a robot stop safely when its control program crashes.
 
 **Type:** Build   **Prerequisites:** 15/01 Failure Modes   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A bench arm swings toward its hard stop, the block that ends its travel, when the program steering it crashes. The joint keeps carrying out the last command. A watchdog expects a regular "still here" message, the heartbeat, and orders a stop when the silence outlasts its timeout.
+A watchdog expects a regular "still here" message from the program steering a bench arm, and orders a stop when silence outlasts its timeout.
 
-The arm keeps moving during that timeout, and braking needs more distance, growing with the square of the speed. Cutting power is not braking. Like a bike you stop pedalling, the arm only coasts.
+The arm keeps moving during that timeout, and braking needs distance too. Cutting power is not braking: like a bike you stop pedalling, the arm only coasts.
+
+## Key Terms
+
+- **Watchdog**: a monitor that orders a stop when expected messages stop arriving.
+- **Heartbeat**: the regular "still here" message from the program that commands the joint.
+- **Timeout `T`**: how long silence is tolerated before the watchdog trips.
+- **Deceleration `a`**: how fast the speed drops while braking, in rad/s^2.
+- **Hard stop**: a block that ends the joint's travel.
+- **Jitter**: how much message arrival times wobble.
 
 ## The Problem
 
-The program that sends commands crashes, and the joint keeps running its last velocity. The watchdog notices the silence, but its stop takes time and distance. Some stops are not stops at all.
+Your control program crashes while the arm is moving, and the arm keeps its last speed. The watchdog notices, but stopping takes time and distance, so the arm may reach its hard stop first.
 
 ## The Concept
 
-![A heartbeat keeps the joint allowed to move](../assets/diagram-watchdog-flow.png)
+Software crashes, so a real robot must stop on its own when its software goes quiet.
 
-*Follow the dashed heartbeat. If it goes quiet longer than the timeout, the watchdog hands the joint to a stop action.*
+![Watchdog flow](../assets/diagram-watchdog-flow.png)
 
-Braking at constant deceleration `a` (how fast the speed drops, in rad/s^2) from speed `v` takes `t = v / a` and covers `v * t - a * t^2 / 2 = v^2 / (2a)`. Before braking starts, the joint moves for the whole timeout `T`.
+*A quiet heartbeat past the timeout triggers a stop.*
 
-![The distance budget after the program dies](../assets/diagram-stop-budget.png)
+Braking at constant `a` from speed `v` covers `v^2 / (2a)`. Before that, the joint moves for the whole timeout `T`.
 
-*Travel during the timeout plus braking travel must fit in the room to the limit, which bounds T.*
+![Stop budget](../assets/diagram-stop-budget.png)
 
-Worked example. The joint is at 1.0 rad moving at 2 rad/s and the stop is at 1.5 rad, so the room is 0.5 rad. Braking at 8 rad/s^2 needs 2^2 / (2 * 8) = 0.25 rad, leaving 0.25 rad for the timeout: T <= 0.25 / 2 = 0.125 s. A 0.05 s timeout stops at 1.30 rad in simulation, under the formula's 1.35 (1.0 + 0.1 + 0.25) because friction helps. A 0.2 s timeout travels 0.4 rad first and hits the stop.
+*Timeout travel plus braking travel must fit in the room left.*
 
-![Two bench arms brake after different watchdog timeouts](../assets/clip-example.mp4)
+Example: the joint is at 1.0 rad moving at 2 rad/s and the stop is at 1.5 rad, so the room is 0.5 rad. Braking at 8 rad/s^2 needs 2^2 / (2 * 8) = 0.25 rad, leaving 0.25 rad for the timeout: T <= 0.25 / 2 = 0.125 s. A 0.05 s timeout stops at 1.30 rad in simulation. A 0.2 s timeout travels 0.4 rad first and hits the stop.
 
-*Same braking, two timeouts; the lamp marks the trip. Green trips after 0.05 s and halts short. Blue waits 0.2 s and hits the stop.*
+![Two timeouts](../assets/clip-example.mp4)
 
-![Torque cut against a ramped stop](../assets/fig-cut-vs-ramp.png)
+*Green trips after 0.05 s and halts short. Blue waits 0.2 s and hits the stop.*
 
-*Both stops start together. Switching the motor off leaves only friction, so the joint coasts through the limit. A ramped stop, steady braking, ends short.*
+![Cut vs ramp](../assets/fig-cut-vs-ramp.png)
 
-![Overrun against watchdog timeout](../assets/fig-timeout-budget.png)
+*Motor off: the joint coasts through the limit. A ramped stop ends short.*
 
-*Each 10 ms of timeout adds 2 rad/s * 10 ms = 0.02 rad. The simulation sits just under the formula, a conservative bound.*
+![Timeout budget](../assets/fig-timeout-budget.png)
 
-A timeout also has a lower bound: it must exceed the heartbeat period plus jitter (how much arrivals wobble), or one late message stops the joint for no reason.
+*Each 10 ms of timeout adds 0.02 rad.*
+
+A timeout also has a lower bound: it must exceed the heartbeat period plus jitter, or one late message stops the joint for no reason.
 
 ## Build It
 
@@ -62,14 +73,14 @@ python3 phases/15-safety-and-deployment/02-watchdogs-and-stops/code/main.py
 
 ## Use It
 
-A real drive has its own brake, safe deceleration and timeout: put the documented values into `max_timeout`. This joint has no brake, so cut means "no help from the drive".
+Put a real drive's documented brake values into `max_timeout`.
 
 ## Ship It
 
-`outputs/skill-watchdog-budget.md` checks a watchdog timeout against the stopping budget and heartbeat period.
+`outputs/skill-watchdog-budget.md` checks a timeout against the stopping budget and heartbeat period.
 
 ## Exercises
 
-1. Double the speed to 4 rad/s and show with `max_timeout` that 0.5 rad of room no longer works.
-2. Lower the deceleration until `max_timeout` raises, and say what that means for the design.
-3. Add 5 ms of heartbeat jitter and find the smallest timeout with no false trips.
+1. Double the speed to 4 rad/s. Does 0.5 rad of room still work?
+2. Lower the deceleration until `max_timeout` raises. What does that mean?
+3. Add 5 ms of heartbeat jitter. What timeout avoids false trips?

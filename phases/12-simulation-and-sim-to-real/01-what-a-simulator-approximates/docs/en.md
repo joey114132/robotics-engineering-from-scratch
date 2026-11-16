@@ -1,44 +1,55 @@
 # What a Simulator Approximates
 
-> A simulator is the real joint with some effects deleted, and you can measure what each deletion costs.
+> Find out which things a simulator leaves out of a real joint, and which one costs you most.
 
 **Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Picture a metal arm hanging from a motor on a wall. You send the same pushes to the real arm and to a simulator that leaves out some real effects. The real hinge rubs, so every swing loses energy and shrinks. Without friction, the simulated arm swings farther.
+A metal arm hangs from a motor on a wall. The real hinge rubs, so each swing shrinks. A simulator with no friction swings farther.
 
-Two quieter effects matter. The motor needs a moment to build its push, and the angle sensor reports where the arm just was. This lesson removes one effect at a time and measures which omission matters most.
+The motor is also slow to push and the sensor is late. This lesson removes one effect at a time and measures which hurts most.
+
+## Key Terms
+
+- **Plant**: the thing being controlled. Here it is one pendulum joint.
+- **Torque**: the twisting push a motor applies to a joint.
+- **Friction**: a rubbing force that drains motion energy.
+- **Motor lag**: the delay before the motor's push catches up with the command.
+- **Open-loop**: sending commands without sensor feedback to correct them.
+- **RMS error**: a typical size of the gap between two signals.
 
 ## The Problem
 
-A trajectory looks perfect in simulation, yet the real joint undershoots it, lags behind and stops short. Nobody changed the command. The simulator quietly left out things the hardware does, and you do not know which matters most.
+You test an arm in simulation and it looks perfect. On the real robot the same commands lag and stop short. The simulator left out something the hardware does.
 
 ## The Concept
 
-![Real path and sim path](../assets/diagram-real-vs-sim.png)
+A simulator is where you test robot code safely, so you need to know how far to trust it.
 
-*The real command (a torque, the motor's twisting push) passes through motor lag, a joint with friction and a delayed sensor. The simple sim skips three of those steps.*
+![Real vs sim](../assets/diagram-real-vs-sim.png)
 
-One small plant (the thing controlled) serves the phase: a pendulum joint. Its parts are inertia `J` (hard to speed up), viscous damping `b` (drag that grows with speed), Coulomb friction `c` (a constant rub), gravity `k = m*g*l` (mass, g, arm length), a first-order motor lag `Tm` (torque follows the command slowly) and a sensor delay.
+*The real command passes through motor lag, a joint with friction and a delayed sensor. The simple sim skips all three.*
 
-![Replay the same commands](../assets/diagram-replay-rank.png)
+Inertia `J` is how hard the arm is to speed up, damping `b` is drag that grows with speed, Coulomb friction `c` is a constant rub, `k = m*g*l` is gravity's pull, `Tm` is motor lag.
 
-*Open-loop commands (no feedback) cannot correct themselves, so every difference between the plants shows up as divergence.*
+![Replay](../assets/diagram-replay-rank.png)
 
-![Trajectories, error, cost](../assets/fig-divergence.png)
+*Open-loop commands cannot correct themselves, so every difference shows up as divergence.*
 
-*Top: the two trajectories separate. Bottom left: the error without friction swings up to 1 rad while lag and delay stay under 0.1 rad. Bottom right: RMS error (a typical gap, in radians) is 0.545 rad without friction, 0.042 rad without lag and 0.029 rad without delay.*
+![Divergence](../assets/fig-divergence.png)
 
-On the clip's 0.4 m arm, 0.545 rad (1 rad is about 57 degrees) is 31 degrees, a fingertip 22 cm off. Lag's 0.042 rad and delay's 0.029 rad are 2.4 and 1.7 degrees, 1 to 2 cm. Friction costs 13 times more than lag, so model it first.
+*RMS error is 0.545 rad without friction, 0.042 without lag, 0.029 without delay.*
 
-![Three arms, one effect each](../assets/clip-example.mp4)
+One radian (rad) is about 57 degrees. On the clip's 0.4 m arm, 0.545 rad is a fingertip 22 cm off. Lag and delay cost 1 to 2 cm. Friction costs 13 times more than lag, so model it first.
 
-*Watch the ghosts. Blue is the real arm; each ghost misses one effect: friction, motor lag, sensor delay, left to right. Only the left ghost visibly separates.*
+![Three arms](../assets/clip-example.mp4)
+
+*Blue is the real arm. Ghosts miss friction, motor lag, sensor delay, left to right.*
 
 ## Build It
 
-Integrate `J*w' = tm - b*w - c*tanh(w/eps) - k*sin(q)` and `Tm*tm' = u - tm` with RK4. The measured angle is the true angle shifted by `delay`.
+`q` is the angle, `w` its speed, `u` the command, `tm` the motor torque. Integrate `J*w' = tm - b*w - c*tanh(w/eps) - k*sin(q)` and `Tm*tm' = u - tm` with RK4 (a standard step method). The measured angle is the true angle shifted by `delay`.
 
 ```python
 def measured(p, u_fn, T):
@@ -46,7 +57,7 @@ def measured(p, u_fn, T):
     return np.concatenate([np.full(n, q[0]), q[: len(q) - n]]) if n else q
 ```
 
-`effect_costs()` removes one effect at a time from the sim, replays the same commands and returns the RMS angle error. A frictionless, lag-free joint conserves energy to 1e-6, so the integrator is not the cause.
+`effect_costs()` removes one effect at a time and returns the RMS error. A frictionless, lag-free joint conserves energy to 1e-6, so the integrator is not the cause.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -56,7 +67,7 @@ python3 phases/12-simulation-and-sim-to-real/01-what-a-simulator-approximates/co
 
 ## Use It
 
-MuJoCo can switch these effects on one at a time: joint `frictionloss` for dry friction, actuator `dyntype="filter"` for first-order dynamics on the actuator activation (`act_dot = (ctrl - act) / dynprm[0]`), and actuator `delay` with `nsample` for a delayed control input. Add them and rerun the ranking.
+MuJoCo switches these on one at a time: `frictionloss`, actuator `dyntype="filter"` and actuator `delay` with `nsample`.
 
 Sources: MuJoCo XML reference, `joint/frictionloss`, `actuator/dyntype`, `actuator/delay` (https://mujoco.readthedocs.io/en/stable/XMLreference.html, opened 2026-11-09).
 
@@ -66,6 +77,6 @@ Sources: MuJoCo XML reference, `joint/frictionloss`, `actuator/dyntype`, `actuat
 
 ## Exercises
 
-1. Halve `c` in the real plant and see whether friction is still the biggest cost.
-2. Make the command ten times faster and check whether delay overtakes friction.
-3. Explain why "all three" is not the sum of the three single costs.
+1. Halve `c`. Is friction still the biggest cost?
+2. Make the command ten times faster. Does delay overtake friction?
+3. Why is "all three" not the sum of the single costs?

@@ -1,44 +1,55 @@
 # Quadrotor Model
 
-> A quadrotor cannot push sideways. It tilts first, and the tilt turns thrust into sideways force.
+> Learn why a drone must tilt to move sideways, and why tilting makes it sink.
 
 **Type:** Build   **Prerequisites:** 10/01 Inverted Pendulum and ZMP   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A quadrotor model predicts a drone's motion from its tilt and its thrust, the upward push its propellers get by throwing air down. Hold a showerhead and the water pushes your hand the other way. Tilt the showerhead and the push tilts with it.
+A quadrotor model predicts a drone's motion from its tilt and its thrust, the upward push its propellers get by throwing air down.
 
-A hovering drone works the same way. Its propellers push air straight down, so the air pushes the drone straight up. Tilt the drone and part of that push shoves it sideways, so less holds it up. At the same thrust, a tilted drone sinks.
+Tilt a hovering drone and part of the push shoves it sideways, so less holds it up. At the same thrust, a tilted drone sinks.
+
+## Key Terms
+
+- **Quadrotor**: a drone with four propellers.
+- **Thrust (`T`)**: the total upward push of the propellers.
+- **Pitch (`theta`)**: the tilt angle of the drone body.
+- **Torque (`tau`)**: a twist that tilts the drone; the only way to change `theta`.
+- **Hover**: staying at one height with zero acceleration.
+- **Integration**: adding up a rate over time to get a total, like speed to distance.
 
 ## The Problem
 
-You command a drone to move 1 m to the right and at first it seems to ignore you. Then it tips, drifts and loses height. That comes from the vehicle having only two inputs, total thrust and one torque, and three things to move.
+Picture a drone told to move 1 m right. It seems to ignore you, then tips, drifts and loses height. It has only two inputs, thrust and one torque, for three things to move.
 
 ## The Concept
 
-![One thrust, split by the tilt](../assets/diagram-thrust-split.png)
+A real drone controller must know that moving sideways costs height, or it sinks on every turn.
 
-*The thrust always points along the body axis. Pitch `theta`, the tilt angle, decides how much goes up and how much sideways.*
+![Thrust](../assets/diagram-thrust-split.png)
 
-Take the planar model with state `x, z, theta` (sideways position, height, tilt) and inputs `T` (total thrust) and `tau` (pitch torque, the twist that tilts the drone). `m` is mass, `g` gravity and `I` how hard the drone is to twist:
+*Tilt `theta` splits thrust into up and sideways.*
+
+State: `x, z, theta` (sideways position, height, tilt). Inputs: `T`, `tau`. `m` is mass, `g` gravity, `I` how hard the drone is to twist:
 
 `m x'' = T sin(theta)`, `m z'' = T cos(theta) - m g`, `I theta'' = tau`.
 
-At `theta = 0` and `T = m g` every acceleration is zero, so the hover thrust is `m g`. Tilt by `theta` and keep that thrust, and the height acceleration is `g (cos(theta) - 1)`, which is negative. Holding height needs `T = m g / cos(theta)`, which gives a sideways acceleration `g tan(theta)`.
+At `theta = 0` and `T = m g` every acceleration is zero: that is hover thrust. Tilted at that thrust, the height acceleration `g (cos(theta) - 1)` is negative. Holding height needs `T = m g / cos(theta)`, with sideways acceleration `g tan(theta)`.
 
-Example: tilt a 0.5 kg drone by 20 degrees. At `T = m g = 4.9 N` the height acceleration is -0.59 m/s^2, so it sinks 0.30 m in 1 s. Holding height needs 5.2 N (6% more), and the sideways acceleration is 3.6 m/s^2.
+A 0.5 kg drone tilted 20 degrees at `T = m g = 4.9 N` has height acceleration -0.59 m/s^2 and sinks 0.30 m in 1 s. Holding height needs 5.2 N (6% more), and the sideways acceleration is 3.6 m/s^2.
 
-![Two tilted drones, two thrusts](../assets/clip-example.mp4)
+![Two drones](../assets/clip-example.mp4)
 
-*Both drones are held at 20 degrees for 1 s. Watch the amber ball and line (start height): blue (`T = m g`) sinks below them, green (`T = m g / cos(theta)`) keeps its height. Drones drawn 1.6 times larger.*
+*Both at 20 degrees for 1 s. Blue (`T = m g`) sinks; green (`T = m g / cos(theta)`) holds.*
 
-![Torque to position](../assets/diagram-torque-to-position.png)
+![Torque](../assets/diagram-torque-to-position.png)
 
-*Torque reaches position through four integrations (rate, angle, speed, position), so a steady torque gives `x = g tau t^4 / (24 I)` for small angles.*
+*Four integrations: a steady torque gives `x = g tau t^4 / (24 I)` for small angles.*
 
-![Thrust step versus torque step](../assets/fig-tilt-then-move.png)
+![Tilt](../assets/fig-tilt-then-move.png)
 
-*Left: 10% extra thrust only climbs. Right: a torque of 0.002 Nm tilts the body 1 degree at 0.27 s but moves it 1 cm only at 0.47 s.*
+*Left: 10% extra thrust only climbs. Right: 0.002 Nm tilts 1 degree at 0.27 s but moves 1 cm at 0.47 s.*
 
 ## Build It
 
@@ -48,7 +59,7 @@ def deriv(s, T, tau, m, I, g=G):
     return np.array([s[3], s[4], s[5], T*np.sin(th)/m, T*np.cos(th)/m - g, tau/I])
 ```
 
-State is `[x, z, theta, vx, vz, omega]`. `simulate()` steps the equations forward in time (RK4) with a control function. The example uses made-up values `m = 0.5 kg` and `I = 0.004 kg m^2`.
+State is `[x, z, theta, vx, vz, omega]`; `simulate()` steps it forward (RK4). The example uses made-up `m = 0.5 kg`, `I = 0.004 kg m^2`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -58,14 +69,14 @@ python3 phases/10-legged-and-aerial/03-quadrotor-model/code/main.py
 
 ## Use It
 
-The last test compares the end state with SciPy's `solve_ivp`. A real vehicle maps `T` and `tau` to four motor speeds with a mixer, outside this lesson.
+The last test compares the end state with SciPy's `solve_ivp`.
 
 ## Ship It
 
-`outputs/skill-quadrotor-model-check.md` reviews a quadrotor model or controller for hover thrust, tilt coupling and units.
+`outputs/skill-quadrotor-model-check.md` reviews a quadrotor model for hover thrust, tilt coupling and units.
 
 ## Exercises
 
-1. Tilt 30 degrees at `T = m g / cos(theta)` and find the sideways acceleration.
+1. Tilt 30 degrees at `T = m g / cos(theta)`; find the sideways acceleration.
 2. Find how long a 0.004 Nm torque takes to reach 10 degrees.
-3. Add a drag force `-c vx` and find the new steady speed.
+3. Add a drag force `-c vx`; find the new steady speed.

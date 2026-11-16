@@ -1,44 +1,53 @@
 # Where M(q) Comes From: Deriving Arm Dynamics
 
-> Write the arm's kinetic energy once, and differentiation hands you the inertia matrix and every Coriolis term.
+> Learn where an arm's inertia numbers come from, so you can rebuild them when the robot changes.
 
 **Type:** Build   **Prerequisites:** 02/03 Jacobians, 03/05 Computed Torque   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Picture a two-link bench arm swinging freely over a table with no motor pushing. The forearm's speed depends on both joints at once, so the energy of its motion, its kinetic energy, cannot be split joint by joint.
+A two-link bench arm swings freely with no motor pushing. The forearm's speed depends on both joints at once, so its kinetic energy cannot be split joint by joint.
 
-Adding up every link's kinetic energy and differentiating gives the inertia matrix and the coupling torques. A separate calculation adds up forces and moments instead. Both must give the same motor torques, and with no motor and no friction the arm's kinetic energy must stay constant.
+Differentiating the summed kinetic energy gives the inertia matrix and the coupling torques. A separate force-and-moment calculation must agree, and with no motor or friction the kinetic energy stays constant.
+
+## Key Terms
+
+- **Kinetic energy (`T`)**: the energy of motion; for an arm `T = 1/2 qd' M qd`, where `qd'` is the speed list written sideways.
+- **Inertia matrix (`M`)**: how heavy the arm feels to each joint, and how the joints couple.
+- **Coriolis and centripetal torques (`h`)**: speed-dependent torques that exist because `M` changes with the pose.
+- **Lagrange equation**: a rule that turns kinetic energy into joint torques by differentiating.
+- **Newton-Euler**: a second method that adds up each link's forces and moments instead of using energy.
+- **Positive definite**: every motion has positive kinetic energy.
 
 ## The Problem
 
-Lesson 03/05 gave you `M(q)` (the inertia matrix) and `h(q, qd)` (the speed-dependent torques) and asked you to trust them. Change a link, add a joint, or mistype one sign, and the controller cancels the wrong arm. You cannot adapt a formula you cannot rebuild.
+You bolt a heavier tool on the arm, and the formulas `M(q)` and `h(q, qd)` of lesson 03/05 no longer match. Mistype one sign and the controller cancels the wrong arm.
 
 ## The Concept
 
+A controller is only as good as its arm model, so you must be able to rebuild it.
+
 ![Two roads, one torque](../assets/diagram-two-roads.png)
 
-*Two independent derivations. If they disagree at any state, one of them has a bug.*
+*Two independent derivations; a disagreement means a bug.*
 
-The kinetic energy of a horizontal arm is `T = 1/2 qd' M(q) qd`, (`qd'` is `qd` written sideways). Written out, `T = 1/2 (M11 qd1^2 + 2 M12 qd1 qd2 + M22 qd2^2)`, so one joint at unit speed shows `M11` or `M22`, and the cross term `M12` needs both moving. The Lagrange equation `tau = d/dt(dT/dqd) - dT/dq` then gives `tau = M qdd + h`.
+The kinetic energy of a horizontal arm is `T = 1/2 qd' M(q) qd`. Expanded, `T = 1/2 (M11 qd1^2 + 2 M12 qd1 qd2 + M22 qd2^2)`: `M12` needs both joints moving. The Lagrange equation `tau = d/dt(dT/dqd) - dT/dq` gives `tau = M qdd + h`.
 
-Example: the lesson's arm (masses 1 and 1.5 kg) at `q = (0.3, 1.0)`. Joint 1 alone at 1 rad/s gives `T = 0.437`, so `M11 = 2T = 0.873`. Joint 2 alone gives `T = 0.0925`, so `M22 = 0.185`. Both together give `T = 0.836`. The extra `0.836 - 0.437 - 0.0925 = 0.307` is `M12`, the coupling.
+Take the lesson's arm (1 and 1.5 kg) at `q = (0.3, 1.0)` and 1 rad/s. Joint 1 alone gives `T = 0.437`, so `M11 = 2T = 0.873`; joint 2 alone gives `T = 0.0925`, so `M22 = 0.185`; both give `T = 0.836`, and the extra `0.307` is `M12`.
 
 ![Energy bars](../assets/clip-example.mp4)
 
-*Both joints turn at 1 rad/s. The stack is each joint's energy alone, the amber bar both together. The gap is `M12`, and it changes with the elbow angle.*
+*The stack is each joint's energy alone, the amber bar both together; the gap is `M12`.*
 
 ![Torque term sources](../assets/diagram-energy-parts.png)
 
-*Coriolis and centripetal torques appear only because `M` changes with the elbow angle.*
+*`M` changes with the elbow angle.*
 
-The power `qd' h` need not vanish. It equals `1/2 qd' Mdot qd`, how fast the changing inertia alters kinetic energy, so in free motion `h` cancels it.
-
-The other road is Newton-Euler. Walk outward computing each link's acceleration, then inward adding up forces and moments. It never touches energy.
+In free motion `h` cancels the energy change `1/2 qd' Mdot qd` from changing inertia. The other road, Newton-Euler, adds up forces link by link.
 
 ![M and wrong-sign energy](../assets/fig-inertia-and-energy.png)
 
-*Left: inertia against elbow angle for two link-2 masses. Right: with the correct `h`, free motion keeps kinetic energy constant; a flipped sign makes it wander by tenths of a joule.*
+*Left: inertia against elbow angle. Right: a flipped sign makes energy wander by tenths of a joule.*
 
 ## Build It
 
@@ -48,7 +57,7 @@ M = [[2*T(e0), off], [off, 2*T(e1)]]
 tau = M @ qdd + dMdt @ qd - dTdq          # dMdt, dTdq by central differences
 ```
 
-`kinetic()` builds `T` from the link geometry. `lagrange_tau()` and `newton_euler()` are the two roads. Tests check that `M` is symmetric positive definite and matches lesson 03/05, that both roads agree at 20 random states, and that `energy_drift()` fails on a flipped sign.
+`kinetic()` builds `T`; `lagrange_tau()` and `newton_euler()` are the two roads. Tests check `M` is symmetric positive definite, the roads agree at 20 random states, and `energy_drift()` fails on a flipped sign.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -58,16 +67,16 @@ python3 phases/03-dynamics-and-control/07-deriving-arm-dynamics/code/figure.py
 
 ## Use It
 
-MuJoCo computes the same `M` with `mj_fullM` and stores the bias force in `data.qfrc_bias`. Build the arm there and compare entries with `mass()`. Craig, Ch. 6, derives these equations for manipulators.
+MuJoCo computes the same `M` with `mj_fullM`; compare with `mass()`. Craig, Ch. 6.
 
 Sources: [MuJoCo API reference](https://mujoco.readthedocs.io/en/stable/APIreference/APIfunctions.html), checked 2026-11-10.
 
 ## Ship It
 
-`outputs/skill-arm-dynamics-derivation-check.md` checks a hand-derived or generated dynamics model with the two-road and energy tests.
+`outputs/skill-arm-dynamics-derivation-check.md` checks a dynamics model.
 
 ## Exercises
 
-1. Add the potential energy `V` of lesson 03/02 and extend `lagrange_tau`.
-2. Make link 2 twice as heavy and predict which entry of `M` moves most.
-3. Give link 2 a point mass at its tip and rebuild `kinetic()`.
+1. Add the potential energy `V` of 03/02 to `lagrange_tau`.
+2. Double link 2's mass; which entry of `M` moves most?
+3. Add a tip point mass to link 2.

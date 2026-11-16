@@ -1,50 +1,53 @@
 # Torque vs Position Modes
 
-> A position mode is a torque mode with someone else's PD gains, and those gains set how stiff your joint feels.
+> Learn why a robot joint can stay stiff when you ask it to be soft, and what fixes that.
 
 **Type:** Build   **Prerequisites:** 04/01 Motor and Gearbox, 03/03 Impedance Control   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Press up on the hand of a bench arm. Inside the joint, the drive pulls the hand back toward its target angle like a spring, and the strength of that spring is fixed in the drive. Your program can ask for a softer spring, but in position mode the request never reaches it, so the arm barely gives way.
+Press up on the hand of a bench arm. Inside the joint, the drive pulls the hand back toward its target angle like a spring of fixed strength. Your program can ask for a softer spring, but in position mode the request never reaches it. In torque mode your program writes the pull itself.
 
-In torque mode your program writes the pull itself, so it decides how much pull each unit of error gets.
+## Key Terms
+
+- **Torque mode**: your program tells the drive how hard to twist, and the drive obeys.
+- **Position mode**: your program gives a target angle, and the drive's own controller picks the torque.
+- **PD controller**: pulls back in proportion to the angle error (`kp`) and brakes in proportion to speed (`kd`).
+- **Gain**: a multiplier such as `kp` that sets how strongly a controller reacts.
+- **Stiffness (`K`)**: torque per radian (a unit of angle) of error. High means the joint resists a push.
+- **Admittance layer**: code that measures a push and moves the target so the joint acts soft.
 
 ## The Problem
 
-You write an impedance controller, one that lets a joint give way like a spring, with stiffness `K = 20` Nm per radian. On the drive you have, the joint stays stiff and barely moves when you push it. Your program asked for softness, but the drive's own position controller never heard it.
+You push on a robot arm that should give way like a soft spring, but it stays stiff. Your program asked for `K = 20` Nm per radian, yet the drive never heard the request.
 
 ## The Concept
 
-A PD controller pulls back with `kp` Nm per radian of error and brakes with `kd` in proportion to speed. In each row of the picture, look at who runs one: your program in torque mode, the drive in position mode.
+A robot that works beside people must give way when it is pushed.
 
-![Who writes the torque](../assets/diagram-mode-loops.png)
+![Who writes torque](../assets/diagram-mode-loops.png)
 
-*In torque mode your program writes the torque. In position mode the drive's inner PD, a spring with fixed gains, does.*
+*Torque mode: your program writes the torque. Position mode: the drive's inner PD does.*
 
-The drive's inner one has fixed `kp_in` and `kd_in`. A constant push `tau_ext` moves the joint until the spring balances it: `tau_ext / K` in torque mode, so `K` is yours to choose, but `tau_ext / kp_in` in position mode, whatever `K` you send.
+The inner PD has fixed `kp_in` and `kd_in`. A constant push `tau_ext` moves the joint until the spring balances it: `tau_ext / K` in torque mode, but `tau_ext / kp_in` in position mode, whatever `K` you send.
 
-With a 2 Nm push and `kp_in = 400`, torque mode with `K = 20` gives way `2 / 20 = 0.1` rad and position mode only `2 / 400 = 0.005` rad. An admittance layer wants the joint to act like a spring of stiffness `K`, so it measures the push and lifts the target by `tau_ext / K = 0.1` rad. With the inner spring's `0.005` the total is `tau_ext * (1/K + 1/kp_in) = 0.105` rad, never stiffer than `kp_in`.
+With a 2 Nm push and `kp_in = 400`, torque mode with `K = 20` gives way 0.1 rad and position mode only 0.005 rad. An admittance layer lifts the target by `tau_ext / K = 0.1` rad. With the inner spring the total is `tau_ext * (1/K + 1/kp_in) = 0.105` rad, never stiffer than `kp_in`.
 
-Watch the green target rise.
+![Admittance clip](../assets/clip-example.mp4)
 
-![Position mode without and with an admittance layer](../assets/clip-example.mp4)
+*Both in position mode, pushed up (red). Blue: the hand barely moves. Green: the layer lifts the amber target.*
 
-*Both in position mode. Blue: no layer, the hand barely moves. Green: the layer lifts the amber target and the hand follows.*
+![Mode options](../assets/diagram-mode-options.png)
 
-Follow the boxes from the wish for a soft joint.
+*Impedance needs torque commands. Position-only drives need an outside layer.*
 
-![What the outer controller can ask for](../assets/diagram-mode-options.png)
+![Push response and stiffness](../assets/fig-mode-stiffness.png)
 
-*Impedance needs torque commands. A position-only drive needs an outside torque-measuring layer.*
-
-![Response to a push and felt stiffness](../assets/fig-mode-stiffness.png)
-
-*Left: the same 2 Nm push moves three joints by different amounts. Right: stiffness requested against stiffness felt, and only torque mode follows the dotted line.*
+*Left: one push, three responses. Right: only torque mode follows the requested stiffness.*
 
 ## Build It
 
-One joint `J*qdd = tau - b*qd + tau_ext`, three ways to produce `tau`.
+One joint `J*qdd = tau - b*qd + tau_ext` (`qdd` is acceleration), three ways to make `tau`.
 
 ```python
 if mode == "torque":
@@ -65,7 +68,7 @@ python3 phases/04-actuators-and-sensors/02-torque-vs-position-modes/code/figure.
 
 ## Use It
 
-ros2_control joints declare command interfaces (the commands a drive accepts), such as position or effort, and a controller fails if it asks for one the hardware lacks. Check your drive's first.
+ros2_control joints declare command interfaces such as position or effort. A controller fails if it asks for one the hardware lacks.
 
 Sources: [ros2_control full tutorial](https://control.ros.org/master/doc/ros2_control_demos/example_7/doc/userdoc.html), accessed 2026-11-09.
 
@@ -75,6 +78,6 @@ Sources: [ros2_control full tutorial](https://control.ros.org/master/doc/ros2_co
 
 ## Exercises
 
-1. Raise `kp_in` to 4000 and measure how the admittance deflection changes.
-2. Add a 3 ms delay to the measured push and watch the admittance loop.
-3. Find the `K` at which the admittance layer feels half as stiff as requested.
+1. Raise `kp_in` to 4000 and see how the deflection changes.
+2. Add a 3 ms delay to the measured push.
+3. Find the `K` at which the layer feels half as stiff as requested.

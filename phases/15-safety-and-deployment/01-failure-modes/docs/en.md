@@ -1,44 +1,53 @@
 # Failure Modes
 
-> Before you can guard a joint you have to know how it breaks, and the worst faults are the quiet ones.
+> Learn the ways a robot joint can fail quietly, and how to spot each one early.
 
 **Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A bench arm is moving toward its target angle when its sensor freezes. The frozen reading still says the arm is fast, so the controller keeps braking against a speed that is gone. That steady brake drives the arm back past its start and into the hard stop, the block that ends its travel.
+A bench arm moves toward its target when its sensor freezes. The frozen reading says the arm is still fast, so the controller keeps braking and drives the arm back into the hard stop. The controller never broke. It obeyed a bad reading.
 
-The controller never broke. It obeyed a bad reading. This lesson injects five faults and measures two things: the damage the real arm takes, and how early a cheap check could warn.
+This lesson injects five faults and measures the damage and how early a cheap check could warn.
+
+## Key Terms
+
+- **Fault injection**: deliberately breaking a sensor, command or timing to see what happens.
+- **PD controller**: pulls the joint toward its target like a spring and brakes it by its speed.
+- **Hard stop**: a block that ends the joint's travel.
+- **Torque**: the twisting push a motor applies to a joint.
+- **Saturation**: a command capped at the motor's maximum, so the push stays small.
+- **Monitor**: a cheap check on signals the controller can see that raises an alarm.
 
 ## The Problem
 
-A joint that tracked well all week suddenly slams into its stop, and the log shows no error. We break a small PD loop five ways. A PD controller pulls the joint toward its target like a spring and brakes it by its speed.
+A robot arm that worked well all week suddenly slams into its hard stop, and the log shows no error. We break a small controller five ways to see how that can happen.
 
 ## The Concept
 
-![Where each fault enters the loop](../assets/diagram-fault-points.png)
+A robot arm can hurt people and itself, so learn how it fails before you decide what to guard.
 
-*Follow the loop from target to controller, motor, joint and sensor. Going out, wrong sign flips the push and saturation caps it small. Coming back, stuck freezes the reading, dropout zeroes it briefly and delay makes it arrive old.*
+![Fault points](../assets/diagram-fault-points.png)
 
-A stuck sensor makes the controller act on one frozen picture of the joint, so its push never changes. A wrong sign turns the spring into a repeller.
+*Outgoing: wrong sign flips the push, saturation caps it. Returning: stuck freezes the reading, dropout zeroes it, delay makes it old.*
 
-Example, wrong sign. The torque, the motor's twisting push, is flipped, so the joint runs away from the target and hits the stop at 0.460 s. A check on the controller's own signals, "error grew in the last 100 ms", trips at 0.205 s: 0.255 s of warning.
+A wrong sign turns the spring into a repeller. The joint runs away from the target and hits the stop at 0.460 s. A check on the controller's own signals, "error grew in the last 100 ms", trips at 0.205 s, 0.255 s of warning.
 
-![A bench arm runs away from its target when the torque sign is wrong](../assets/clip-example.mp4)
+![Wrong sign](../assets/clip-example.mp4)
 
-*Amber ghost: the target. Green settles on it. Blue runs the other way, and the lamp lights at 0.205 s, before the stop.*
+*Amber ghost: the target. Green settles. Blue runs away, and the lamp lights at 0.205 s.*
 
-![Joint response under each fault](../assets/fig-fault-responses.png)
+![Fault responses](../assets/fig-fault-responses.png)
 
-*Watch where each curve ends. Dashed gray is the healthy run, the blue line the first alarm. Wrong sign and stuck end at the stop, dropout hits it and recovers, delay wobbles, saturation crawls.*
+*Dashed gray is the healthy run, the blue line the first alarm. Wrong sign and stuck end at the stop; dropout recovers, delay wobbles.*
 
-![Damage and warning time](../assets/fig-fault-ranking.png)
+![Damage and warning](../assets/fig-fault-ranking.png)
 
-*Left: error left at the end. Right: the alarm beats the limit for every fault that reaches it, but saturation trips only the 2 s deadline check.*
+*Left: error left at the end. Right: the alarm beats the limit for every fault that reaches it, except saturation.*
 
-![Which cheap check sees which fault](../assets/diagram-fault-checks.png)
+![Checks](../assets/diagram-fault-checks.png)
 
-*Four checks flag all five faults: reading flat while the motor pushes, reading jumps, error grows in 100 ms, not at target after 2 s. Saturation trips only the last, a clock check.*
+*Four checks flag all five faults: flat reading while the motor pushes, jumping reading, error growing for 100 ms, not at target after 2 s.*
 
 ## Build It
 
@@ -73,14 +82,14 @@ rank fault        peak|q| final err limit at alarm at  warned first
 
 ## Use It
 
-The same injection works in a MuJoCo joint or a ROS 2 node. Wrap the sensor and command topics and compare your monitors with this table. Re-measure the thresholds on your own plant.
+The same injection works in a MuJoCo joint or a ROS 2 node.
 
 ## Ship It
 
-`outputs/skill-fault-injection-review.md` lists the five faults to inject and the questions to ask about each monitor.
+`outputs/skill-fault-injection-review.md` lists the five faults and questions for each monitor.
 
 ## Exercises
 
-1. Inject the stuck sensor after the joint has settled and explain why nothing bad happens.
-2. Find the delay in milliseconds at which this loop first oscillates.
-3. Add a sixth fault, an encoder that reads twice the true angle, and rank it.
+1. Inject the stuck sensor after the joint settles. What happens?
+2. Find the delay where the loop first oscillates.
+3. Add an encoder that reads twice the true angle and rank it.

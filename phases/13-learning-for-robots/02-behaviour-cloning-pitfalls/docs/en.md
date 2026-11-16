@@ -1,40 +1,51 @@
 # Behaviour Cloning Pitfalls
 
-> A cloned policy is accurate where the expert drove and wrong one step later, because its own mistakes put it somewhere the expert never was.
+> Learn why a robot that copies an expert works at first and then drifts off, and how to fix it.
 
 **Type:** Build   **Prerequisites:** 13/01 Imitation from Demonstrations   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A rover learns to drive round a pillar from clean runs with no bumps. One bump on a wheel pushes it to a spot none of those runs visited, where its steering is a poor guess. The next guess is worse again, so the error grows.
+A rover learns to drive round a pillar from clean runs with no bumps. One bump pushes it to a spot none of those runs visited, where its steering is a poor guess. The next guess is worse, so the error grows.
 
-DAgger (dataset aggregation) lets the rover drive first. The expert then says what to do at the spots the rover actually reached, and those recovery examples go into the data before the rover learns again.
+DAgger lets the rover drive first. The expert then labels the spots the rover actually reached, and the rover learns again from them.
+
+## Key Terms
+
+- **Behaviour cloning**: training a policy by copying an expert's actions at recorded states.
+- **Compounding error**: a small mistake leads to an unfamiliar state, which causes a bigger mistake.
+- **Rollout**: one test drive of a policy from a start state.
+- **DAgger**: dataset aggregation. The learner drives, the expert labels the visited states, and the labels join the data.
+- **Held-out data**: examples kept aside from training to test a model.
+- **Learner**: the policy being trained.
 
 ## The Problem
 
-Your cloned policy scores well on held-out demonstrations (kept aside for testing), yet on the robot it drifts off the path and fails. Its training loss, the gap between its actions and the expert's, is measured only at demonstration spots, never at the states it creates itself.
+A rover that copied your driving scores well on saved demonstrations, yet on the floor it drifts off the path. Training only checked spots you drove through, never the odd spots a small slip leaves it in.
 
 ## The Concept
 
-![Errors feed on themselves](../assets/diagram-drift-loop.png)
+A real robot always slips a little, so it must handle places its teacher never showed.
 
-*One wrong action puts the next observation outside the demonstrations, where the policy is worse, so the next error is larger.*
+![Drift loop](../assets/diagram-drift-loop.png)
 
-Noise added to the commanded velocity mimics wheel slip and delay. With four clean demonstrations the cloned policy, the learner, leaves the demonstrated states within a few steps, and its action error, the gap between its action and the expert's at that spot, climbs and stays high.
+*One wrong action puts the next observation outside the demonstrations, where the policy is worse.*
+
+Noise in the commanded velocity mimics wheel slip. With four clean demonstrations the learner leaves the demonstrated states within a few steps.
 
 ![DAgger loop](../assets/diagram-dagger-loop.png)
 
-*Follow the numbers. One DAgger round: the learner drives, the expert labels the states it actually visited, those pairs join the data, and the learner refits.*
+*One DAgger round: the learner drives, the expert labels the visited states, the learner refits.*
 
-![Error over steps and success over rounds](../assets/fig-cloning-drift.png)
+![Drift and success](../assets/fig-cloning-drift.png)
 
-*Left: plain cloning error rises about sevenfold over the first 60 steps, and the policy after four DAgger rounds stays near zero. Right: success under noise climbs to the expert's level in about two rounds.*
+*Left: plain cloning error rises about sevenfold over 60 steps; after four DAgger rounds it stays near zero. Right: success reaches the expert's level in about two rounds.*
 
-Both rovers below learned from four demonstrations. The blue one, cloned plainly, starts 0.09 m from the nearest recorded state and is 0.31 m away when it hits the pillar; the green one, after four DAgger rounds, never exceeds 0.09 m. Over many starts, `python3 code/main.py` gives goal success of 52.5% for plain cloning, 90% after two rounds and 93% after four.
+Both rovers learned from four demonstrations. Plain cloning (blue) ends 0.31 m from the nearest recorded state when it hits the pillar. After four DAgger rounds (green) it never exceeds 0.09 m. Goal success is 52.5% for plain cloning, 90% after two rounds and 93% after four.
 
-![Two rovers with lines to the nearest recorded state](../assets/clip-example.mp4)
+![Two rovers](../assets/clip-example.mp4)
 
-*Watch the amber line from each rover to its nearest recorded state. Blue's keeps growing until the pillar. Green dots are states the learner visited and the expert labelled, so green's stays short.*
+*The amber line joins each rover to its nearest recorded state. Blue's grows until the pillar; green's stays short.*
 
 ## Build It
 
@@ -47,7 +58,7 @@ for _ in range(rounds):
     pol = fit_knn(X, A)
 ```
 
-The labels come from `expert(x)`, never from the learner. `drift_curves()` returns action error and distance to the nearest data state at every step.
+Labels come from `expert(x)`, never from the learner.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -57,9 +68,9 @@ python3 phases/13-learning-for-robots/02-behaviour-cloning-pitfalls/code/figure.
 
 ## Use It
 
-The expert is often unavailable while the robot drives, so a person or planner must label states afterwards. Cheaper: record recovery moves on purpose. Either way, measure error on the learner's rollouts, not on held-out demonstrations.
+The expert is often unavailable while the robot drives, so a person or planner labels states afterwards. Always measure error on the learner's rollouts.
 
-Sources: Ross, Gordon and Bagnell, arXiv:1011.0686, opened 2026-11-09. It says a supervised learner can make as many as T² mistakes over T steps under its own state distribution, and defines DAgger as aggregating datasets over iterations.
+Sources: Ross, Gordon and Bagnell, arXiv:1011.0686, opened 2026-11-09. A learner can make up to T² mistakes over T steps.
 
 ## Ship It
 
@@ -67,6 +78,6 @@ Sources: Ross, Gordon and Bagnell, arXiv:1011.0686, opened 2026-11-09. It says a
 
 ## Exercises
 
-1. Plot `dist` from `drift_curves` for plain cloning and say when the learner leaves the data.
-2. Halve `NOISE` and find the smallest number of rounds that matches the expert.
-3. Roll out a mix of expert and learner with the expert share decaying each round, like the paper's `beta`.
+1. Plot `dist` from `drift_curves` for plain cloning. When does the learner leave the data?
+2. Halve `NOISE`. How few rounds suffice?
+3. Decay the expert share each round, like the paper's `beta`.

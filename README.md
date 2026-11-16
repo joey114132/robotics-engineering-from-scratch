@@ -1,14 +1,28 @@
 # Robotics Engineering from Scratch
 
-Learn how robots work by building the math and control yourself, in plain numpy, with tests. Then see what the production library does.
+A free, beginner-first course on how robots work. No robotics background needed: you build each idea yourself in small Python programs, watch it move, then see how real tools do it.
 
-**[Read it online](https://robotics-from-scratch.robotics-site.workers.dev)**: every lesson, clip and quiz in the browser, in English or Korean, with progress saved on your device. No install. Or run it locally with the `robo` CLI below.
+**[Start reading online](https://robotics-from-scratch.robotics-site.workers.dev)**, no install. Progress is saved in your browser.
 
 ![Six lesson clips playing at once: a three-ring gimbal whose reported angles flip at 90 degrees, two arms tracing tip loops of different width, two cars braking to a stop line (MPC overshoots less than clipped LQR), two drones riding out a gust, two grippers under the same twist (one box turns), and robots at a crossing (one group deadlocks, the other finishes)](docs/img/hero-clips.gif)
 
-*Six of the 81 lesson clips. Every motion is computed by that lesson's own code.*
+*Every motion here is computed by a lesson's own code.*
 
-81 lessons, 17 phases, English and Korean. Arms, wheeled and legged robots, drones, perception, planning, learning, fleets and safety. About 15 minutes each. The full list is in [ROADMAP.md](ROADMAP.md).
+81 short lessons (about 15 minutes each) in 17 phases: robot arms, wheeled and walking robots, drones, cameras and sensors, path planning, robot learning, robot teams and safety. Full list: [ROADMAP.md](ROADMAP.md).
+
+## Who this is for
+
+You have never studied robotics. You can write a little Python (variables, loops, functions). You remember high-school math. That is enough. Every new word is explained the first time it appears, and each lesson starts with a short story in everyday words before any math.
+
+## How a robot works, in one picture
+
+Every robot repeats three steps, many times a second:
+
+1. **Sense**: read cameras, encoders and other sensors to learn what is happening.
+2. **Think**: work out where it is and what to do next.
+3. **Act**: send commands to motors so something moves.
+
+The phases follow that loop. You first learn the math for describing where things are (phases 00 to 02), then how to make motors move a body (03 to 05), how to sense and estimate (06 and 07), how to drive, plan, walk and fly (08 to 11), and finally how to test, learn, work in teams and stay safe (12 to 16).
 
 ![Learning path: six stages from setup and math to fleets, safety and capstones](docs/img/roadmap.png)
 
@@ -19,19 +33,35 @@ Learn how robots work by building the math and control yourself, in plain numpy,
 
 </details>
 
+## Start in three steps
+
+1. Open the [website](https://robotics-from-scratch.robotics-site.workers.dev) and read [lesson 00-01](phases/00-setup-and-tooling/01-python-env-and-numpy/docs/en.md). Nothing to install.
+2. When you want to run the code, install Python 3.10 or newer, then:
+   ```bash
+   git clone https://github.com/joey114132/robotics-engineering-from-scratch
+   cd robotics-engineering-from-scratch
+   pip install -r requirements.txt
+   python3 phases/00-setup-and-tooling/01-python-env-and-numpy/code/main.py
+   ```
+3. Go in order. Each lesson takes about 15 minutes and names the lessons it builds on. Stuck on a word? Check the [glossary](GLOSSARY.md).
+
 ## What a lesson gives you
 
-- A short "In Plain Words" opening in everyday terms, before any math
-- A short rendered clip of a real object (a toy car, a bench arm, a rover, a drone) that acts out the lesson, computed by the lesson's own code
-- Diagrams and data figures
-- Code that runs, with tests
-- A six-question quiz and a one-page checklist you can reuse
+| Part | What it is |
+|---|---|
+| In Plain Words | the idea as an everyday story, no math |
+| Key Terms | the new words of the lesson, one plain line each |
+| Clip | a short 3D animation computed by the lesson's code |
+| The Problem, The Concept | what goes wrong, and pictures that show why |
+| Build It | the code, small enough to read, with tests |
+| Use It | the same thing done with a real library |
+| Quiz | six questions to check yourself |
 
-Every lesson is simulation only. Nothing sends a command to real hardware.
+Every lesson runs in simulation only. Nothing here moves real hardware.
 
 ## Clips
 
-Each lesson opens with a short clip rendered in Blender. The motion comes from the lesson's `code/main.py`, so what you see is the lesson's result, not an illustration of it. Blue is the plain or failing case, green the fixed one. Many lessons have a second clip next to their worked example.
+The clips are computed, not drawn: the motion comes from each lesson's own code. Blue is the failing case, green the fix.
 
 <table>
 <tr>
@@ -44,27 +74,11 @@ Each lesson opens with a short clip rendered in Blender. The motion comes from t
 </tr>
 </table>
 
-![One frame from each of the 81 lesson clips in a 9 by 9 grid: arms, toy cars, drones, legged robots, grippers, rovers and swarms](docs/img/all-clips.jpg)
-
-*All 81 lesson clips, one frame each, labelled by lesson number.*
-
-## In the terminal
+## Read in the terminal
 
 ![The robo terminal home screen listing the 17 phases and the next lesson](docs/img/cli-home.png)
 
-*`robo` in the terminal: lessons, quizzes, clip posters and your progress.*
-
-## Start
-
-The quickest start is the [website](https://robotics-from-scratch.robotics-site.workers.dev). To work with the code:
-
-```bash
-cd robotics-engineering-from-scratch
-pip install -r requirements.txt
-python3 scripts/robo.py            # read in the terminal (needs rich)
-```
-
-In the terminal, `robo read 03-02` opens a lesson, `robo quiz 03-02` runs a quiz and `robo daily` is a five-question review. Add `--lang ko` for Korean.
+`python3 scripts/robo.py` opens the course in your terminal. `robo read 03-02` opens a lesson, `robo quiz 03-02` runs its quiz, `robo daily` gives five review questions. Add `--lang ko` for Korean.
 
 ## Check the code
 
@@ -72,8 +86,6 @@ In the terminal, `robo read 03-02` opens a lesson, `robo quiz 03-02` runs a quiz
 python3 -m pytest phases scripts/tests_robo -q
 python3 scripts/check_lessons.py
 ```
-
-The lesson format is in [LESSON_SPEC.md](LESSON_SPEC.md).
 
 ## Limits
 

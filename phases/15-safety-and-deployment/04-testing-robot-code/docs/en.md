@@ -1,46 +1,55 @@
 # Testing Robot Code
 
-> A robot test must control time, refuse bad commands, and replay what really happened.
+> Learn how to test robot code without waiting for real time and without risking a real robot.
 
 **Type:** Build   **Prerequisites:** 15/01 Failure Modes   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Testing a timer app does not mean waiting for the alarm: you jump its pretend clock past the deadline. A robot test does the same: it moves a fake clock by hand, so a second of arm motion takes no time, then asks one question: when the target jumps ahead (a step), does the joint move closer?
+Testing a timer app does not mean waiting for the alarm: you jump its pretend clock ahead. A robot test does the same, then asks: after the target jumps, does the joint move closer? A controller with its sign flipped pushes away, so that test fails at once.
 
-A controller with its sign flipped pushes the arm away, so that test fails at once. A mock joint, a pretend arm, refuses bad torque. Replaying a recorded run shows which command changed.
+## Key Terms
+
+- **Fake clock**: a clock the test advances by hand.
+- **Mock joint**: a pretend arm that refuses bad torque.
+- **Unit test**: steps the fake clock and checks one rule.
+- **Replay test**: feeds recorded readings back and compares the torque.
+- **Property test**: throws many random inputs at one rule.
+- **Golden trace**: a trusted recording from a healthy run.
 
 ## The Problem
 
-Robot code depends on a clock, a joint and inputs you cannot predict, so tests either sleep for seconds, need hardware, or check nothing. The wrong-sign fault from lesson 01 shows it. The joint ran away, and a test that only checks "it returns a number" passes.
+You change a robot controller and want to know if it still works. Trying it on a real arm takes time and risks damage, and a test that only checks "it returns a number" passes even when the arm runs away.
 
 ## The Concept
 
-![Three tests, three kinds of bug](../assets/diagram-test-kinds.png)
+A bug in robot code can break hardware, so it must be caught on a computer before the robot moves.
 
-*Unit: step the fake clock, check one rule ("closer after 0.3 s?"). Replay: feed recorded readings back, compare torque. Property: throw thousands of random inputs at one rule.*
+![Test kinds](../assets/diagram-test-kinds.png)
 
-![The test owns the clock](../assets/diagram-fake-clock.png)
+*Unit: step the fake clock, check one rule. Replay: compare torque on recorded readings. Property: random inputs, one rule.*
 
-*The controller asks an object for the time. In production that is the real clock; in a test, a fake the test advances, so ten seconds pass instantly and the result never varies.*
+![Fake clock](../assets/diagram-fake-clock.png)
 
-![A sign bug seen by two tests](../assets/fig-sign-bug.png)
+*The controller asks an object for the time: the real clock in production, a fake in tests.*
 
-*Left: the step test fails because the joint ends far from the target after 0.3 s. Right: replaying recorded inputs through the buggy controller gives the mirror image of the recorded torque.*
+![Sign bug](../assets/fig-sign-bug.png)
 
-Replay example. A step of 1.0 rad gives `kp * error = 40 * 1.0 = 40`, clipped to `tau_max` 10, so the recorded first torque is +10.0. The flipped controller, fed the same recorded readings, answers -10.0 first and then the mirror of every recorded torque, all 80 samples, 10 ms apart. The replay test fails at the first.
+*Left: the step test fails because the joint ends far from the target. Right: the buggy controller mirrors the recorded torque.*
 
-![Two bench arms replay one recording, and the flipped controller pushes the opposite way](../assets/clip-example.mp4)
+Replay example. A step of 1.0 rad gives `kp * error = 40 * 1.0 = 40`, clipped to `tau_max` 10, so the recorded first torque is +10.0. The flipped controller answers -10.0 first, then the mirror of all 80 recorded samples, 10 ms apart. The replay test fails at the first.
 
-*Both arms replay one recording. The red arrow is each controller's torque: green pushes toward the target, blue (sign flipped) the opposite way.*
+![Replay](../assets/clip-example.mp4)
 
-![Torque over random inputs](../assets/fig-property-torque.png)
+*The red arrow is torque: green pushes toward the target, blue (sign flipped) away.*
 
-*The property test draws thousands of random inputs and checks one rule: torque is finite and never over the limit.*
+![Property torque](../assets/fig-property-torque.png)
+
+*Property rule: torque is finite and never over the limit.*
 
 ## Build It
 
-`FakeClock` has `now()` and `advance(dt)`. `MockJoint` integrates a simple plant and raises if it is handed a torque over its limit, NaN (not a number) included. `Controller` is a PD loop that gives zero torque when the gap between updates exceeds a timeout. `run()` returns the trace as `(q_meas, q_ref, tau)` rows.
+`FakeClock` has `now()` and `advance(dt)`. `MockJoint` raises on a torque over its limit, NaN (not a number) included. `Controller` is a PD loop that gives zero torque when updates stop for too long. `run()` returns `(q_meas, q_ref, tau)` rows.
 
 ```python
 def test_step_direction_test_catches_the_sign_bug():
@@ -48,7 +57,7 @@ def test_step_direction_test_catches_the_sign_bug():
         check_step_direction(polarity=-1)
 ```
 
-`code/tests/golden_trace.json`, the trusted recording, came from the healthy controller. Without its non-finite guard the property test fails on NaN input, so the controller returns zero torque for NaN and infinity.
+`code/tests/golden_trace.json` came from the healthy controller. The controller returns zero torque for NaN and infinity, or the property test fails.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -58,14 +67,14 @@ python3 phases/15-safety-and-deployment/04-testing-robot-code/code/main.py
 
 ## Use It
 
-In a ROS 2 node, inject the clock the same way, or use simulated time. Record real bags of a good run and replay them through new code before each release. A property-testing library such as hypothesis can run that kind of search.
+In a ROS 2 node, inject the clock the same way. Replay real bags of a good run through new code before each release.
 
 ## Ship It
 
-`outputs/skill-robot-test-plan.md` turns a controller into a list of unit, replay and property tests.
+`outputs/skill-robot-test-plan.md` turns a controller into unit, replay and property tests.
 
 ## Exercises
 
-1. Change `kp` and watch the replay test fail, then decide whether to re-record.
-2. Write a property test that a stale controller always returns exactly zero.
-3. Add a test for a swapped `q_meas` and `q_ref` argument order.
+1. Change `kp`. Does the replay test fail?
+2. Write a property test that a stale controller returns exactly zero.
+3. Test a swapped `q_meas` and `q_ref` argument order.
