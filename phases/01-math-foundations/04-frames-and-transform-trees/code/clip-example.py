@@ -3,12 +3,16 @@ import math
 import pathlib
 import sys
 
+import bmesh
+import bpy
 import numpy as np
+from mathutils import Matrix
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts" / "blender"))
 import kit
 
 m = kit.lesson_main(__file__)
+THIN = {"sky": 0.7, "navy": 0.7, "green": 0.7}                      # the camera and base arrows are slim; the hand's short amber one stays full thickness so the gripper does not hide it
 SECONDS, FPS, S, H, L, REACH = 5.0, 24, 0.8, 0.4, 0.4, 0.09     # 1 lesson unit is drawn as 0.8 m; the table top is z = 0.4
 sc = kit.setup(SECONDS)
 kit.camera((0.2, -1.95, 1.4), (0.22, 0.0, 0.8), lens=40)
@@ -60,18 +64,47 @@ def arrow(name, colour, a, b, shaft=0.014):
     ar = kit.arrow(name, colour, shaft=shaft)
     d = np.array(b) - np.array(a)
     ar.rotation_euler = (0, -math.atan2(d[2], d[0]), 0)
-    return ar, float(np.hypot(d[0], d[2])), (a[0], -0.12, a[2])
+    return ar, float(np.hypot(d[0], d[2])), (a[0], -0.12, a[2]), THIN[colour]
 
 
-arrows = [arrow("camera-sees-cup", "sky", (cam_pos[0], 0, H + cam_pos[2]), (cup_pos[0], 0, H + cup_pos[2])) + ((0.4, 1.1),),
-          arrow("base-sees-cup", "grey", (0, 0, H), (cup_pos[0], 0, H + cup_pos[2])) + ((1.3, 2.0),),
-          arrow("tool-sees-cup", "amber", (tool_pos[0], 0, H + tool_pos[2]), (cup_pos[0], 0, H + cup_pos[2]), shaft=0.022) + ((2.2, 2.9),)]
+def pointer(name, colour, a, b, shaft=0.013, head_len=0.07, head_r=0.04):
+    """A long, thin arrow with a fixed-size head, for the short hand-to-cup vector (0.16 m), drawn in front of the other two arrows' heads, which meet at the cup: the kit arrow's head grows with its length
+    and turns a short arrow into a flat disc. Returns the root, the shaft, the head, the length and the base point."""
+    root = kit.empty(name)
+    root.rotation_euler = (0, -math.atan2(b[2] - a[2], b[0] - a[0]), 0)
+    mt = kit.mat(colour, kind="marker")
+    sh = kit.cyl(name + "-shaft", shaft, 1.0, (0.5, 0, 0), "x", mt, parent=root, segments=16)
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, cap_tris=False, segments=20, radius1=head_r, radius2=0, depth=head_len)
+    bmesh.ops.rotate(bm, matrix=Matrix.Rotation(math.pi / 2, 3, "Y"), verts=bm.verts)
+    me = bpy.data.meshes.new(name + "-head")
+    bm.to_mesh(me)
+    bm.free()
+    hd = bpy.data.objects.new(name + "-head", me)
+    me.materials.append(mt)
+    bpy.context.scene.collection.objects.link(hd)
+    hd.parent = root
+    return root, sh, hd, (a[0], -0.3, a[2]), float(np.hypot(b[0] - a[0], b[2] - a[2])), head_len
+
+
+arrows = [arrow("camera-sees-cup", "navy", (cam_pos[0], 0, H + cam_pos[2]), (cup_pos[0], 0, H + cup_pos[2])) + ((0.4, 1.1),),
+          arrow("base-sees-cup", "green", (0, 0, H), (cup_pos[0], 0, H + cup_pos[2])) + ((1.3, 2.0),)]
+hand_arrow = pointer("tool-sees-cup", "amber", (tool_pos[0], 0, H + tool_pos[2]), (cup_pos[0], 0, H + cup_pos[2]))
 q_tool, q_cup = reach((tool_pos[0], tool_pos[2])), reach((cup_pos[0], cup_pos[2]))
 for f in range(sc.frame_start, sc.frame_end + 1):
     t = f / FPS
     kit.pose(joints, f, q_tool + (q_cup - q_tool) * ease((t - 3.2) / 1.1))      # the hand follows the amber arrow, straight up
-    for ar, length, loc, (t0, t1) in arrows:
-        ar.scale = (max(length * ease((t - t0) / (t1 - t0)), 1e-4), 1, 1)
+    root, sh, hd, loc, length, hl = hand_arrow
+    g = ease((t - 2.2) / 0.7)                                                  # the hand-to-cup arrow grows with a fixed head
+    shaft_len = max(g * length - hl, 1e-4)
+    root.location = loc
+    sh.scale, sh.location = (shaft_len, 1, 1), (shaft_len / 2, 0, 0)
+    hd.location, hd.scale = (max(g * length - hl / 2, 0.0), 0, 0), (max(g, 1e-4),) * 3
+    for ob, props in ((root, ("location",)), (sh, ("scale", "location")), (hd, ("scale", "location"))):
+        for prop in props:
+            ob.keyframe_insert(prop, frame=f)
+    for ar, length, loc, thin, (t0, t1) in arrows:
+        ar.scale = (max(length * ease((t - t0) / (t1 - t0)), 1e-4), thin, thin)   # slimmer than the kit's arrow so it does not bury the arm
         ar.location = loc
         ar.keyframe_insert("scale", frame=f)
         ar.keyframe_insert("location", frame=f)

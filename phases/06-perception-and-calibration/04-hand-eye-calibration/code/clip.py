@@ -46,5 +46,5 @@ for aw, colour, y in ((False, "blue", -0.55), (True, "green", 0.55)):
     q = ik(math.hypot(d[0], d[1]), d[2])
     for f, pose, yaw in ((1, Q0, 0.0), (22, Q0, 0.0), (86, q, math.atan2(d[1], d[0])), (120, q, math.atan2(d[1], d[0]))):
         kit.pose(joints, f, pose); kit.key(root, f, rot=(0, 0, yaw))
-kit.camera((2.5, -0.9, 1.75), (0.45, 0.0, 0.68), lens=44)
+kit.camera((0.9, -3.5, 2.3), (0.45, 0.0, 0.62), lens=47)   # from the side, so each arm shows its coloured links
 kit.render(__file__)

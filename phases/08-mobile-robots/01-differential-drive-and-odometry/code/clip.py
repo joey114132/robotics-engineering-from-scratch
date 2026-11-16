@@ -39,8 +39,17 @@ for j in range(60, N, 60):                                         # a breadcrum
     d.scale = (1, 1, 1)
     d.keyframe_insert("scale", frame=f)
 gap = real[-1, :2]
-bar = kit.box("gap", (float(np.linalg.norm(gap)), 0.05, 0.03), (*(gap / 2), 0.02), "amber", bevel=0.005)
-bar.rotation_euler = (0, 0, float(np.arctan2(gap[1], gap[0])))
-bar.scale = (0, 0, 0); bar.keyframe_insert("scale", frame=int(PLAY * FPS)); bar.scale = (1, 1, 1); bar.keyframe_insert("scale", frame=int(PLAY * FPS) + 8)
+u = gap / np.linalg.norm(gap)
+nrm = np.array([-u[1], u[0]])                                      # which side of the gap is free of the rover and the disc
+nrm = nrm if nrm @ np.array([0.95, 1.05]) < 0 else -nrm            # away from the square
+off = nrm * 0.55
+pieces = [kit.box("gap", (float(np.linalg.norm(gap)) + 0.08, 0.08, 0.06), (*(gap / 2 + off), 0.03), "amber", bevel=0.01)]   # a measuring bar beside the gap, with two ticks to the two ends
+pieces[0].rotation_euler = (0, 0, float(np.arctan2(gap[1], gap[0])))
+for q in (np.zeros(2), gap):
+    tick = kit.box("gap-tick", (0.05, 0.3, 0.04), (*(q + nrm * 0.4), 0.02), "amber", bevel=0.005)
+    tick.rotation_euler = (0, 0, float(np.arctan2(nrm[1], nrm[0])) + np.pi / 2)
+    pieces.append(tick)
+for bar in pieces:
+    bar.scale = (0, 0, 0); bar.keyframe_insert("scale", frame=int(PLAY * FPS)); bar.scale = (1, 1, 1); bar.keyframe_insert("scale", frame=int(PLAY * FPS) + 8)
 kit.camera((0.95, -1.4, 4.4), (0.95, 1.05, 0.0), lens=33)
 kit.render(__file__)

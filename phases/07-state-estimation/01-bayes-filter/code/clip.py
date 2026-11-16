@@ -9,9 +9,9 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts" /
 import kit
 
 m = kit.lesson_main(__file__)
-STEPS, SECONDS, H, RS, RL = 25, 5.5, 0.9, 1.5, 1.55                      # lesson's 25 moves; a bar of height H m means probability 1
+STEPS, SECONDS, H, RS, RL = 25, 5.5, 1.2, 1.5, 1.55                      # lesson's 25 moves; a bar of height H m means probability 1
 moves = [1] * STEPS
-truth, zs = m.simulate(m.DOORS, 7, moves, np.random.default_rng(2))
+truth, zs = m.simulate(m.DOORS, 7, moves, np.random.default_rng(105))   # a run where the filter keeps the robot: the green column at its cell never drops below 0.71
 start = np.zeros(m.N)
 start[7] = 1.0                                        # both filters start sure of the cell, as in the lesson's dead-reckoning figure
 b_filter = m.run(m.DOORS, zs, moves, bel0=start)      # motion + sensor
@@ -34,10 +34,10 @@ for i in range(m.N):
         p.use_smooth = False
     wall = kit.box("wall", (0.44, 0.08, 0.28 if m.DOORS[i] else 0.1), at(RL - 0.42, i, 0.14 if m.DOORS[i] else 0.05), "amber" if m.DOORS[i] else "grey", bevel=0.01)
     wall.rotation_euler = (0, 0, yaw)
-    for tag, r, colour in (("f", RL + 0.6, "green"), ("m", RL - 0.95, "blue")):
+    for tag, r, colour in (("f", RL - 0.95, "green"), ("m", RL + 0.6, "blue")):   # motion-only ring outside, where its columns can be wide
         root = kit.empty(f"bar-{tag}{i}", at(r, i), None)
         root.rotation_euler = (0, 0, yaw)
-        b = kit.box("bar", (0.3 if tag == "f" else 0.15, 0.24 if tag == "f" else 0.15, 1.0), (0, 0, 0.5), colour, bevel=0, parent=root)
+        b = kit.box("bar", (0.15, 0.15, 1.0) if tag == "f" else (0.42, 0.34, 1.0), (0, 0, 0.5), colour, bevel=0, parent=root)
         for p in b.data.polygons:
             p.use_smooth = False
         bars[tag, i] = root
@@ -55,5 +55,5 @@ for f in range(sc.frame_start, sc.frame_end + 1):
         bel = b_filter if tag == "f" else b_motion
         root.scale = (1, 1, max(H * (bel[k][i] * (1 - w) + bel[k + 1][i] * w), 0.004))
         root.keyframe_insert("scale", frame=f)
-kit.camera((0, -5.4, 5.2), (0, -0.55, 0.3), lens=34)
+kit.camera((0, -5.6, 5.6), (0, -0.05, 0.5), lens=34)
 kit.render(__file__)

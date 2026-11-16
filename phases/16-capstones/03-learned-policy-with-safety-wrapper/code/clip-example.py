@@ -9,7 +9,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts" /
 import kit
 
 m = kit.lesson_main(__file__)
-SLOW, TARGET, QLIM, BH, SPIKE, FLASH = 1.8, 1.0, 1.3, 0.35, 30, 5      # 0.56x speed; reach 1 rad; limit 1.3 rad; shoulder height; the lesson's spike step; the arrow stays 5 frames
+SLOW, TARGET, QLIM, BH, SPIKE, FLASH, OVER = 1.8, 1.0, 1.3, 0.35, 30, 8, 4.0   # 0.56x speed; reach 1 rad; limit 1.3 rad; shoulder height; the lesson's spike step; the arrow stays 8 frames; the part past the limit is drawn 4 times larger
 pi = m.fit(*m.demos())
 runs = {w: m.rollout(pi, TARGET, safety=m.Safety() if w else None, glitch={SPIKE: 40.0}) for w in (False, True)}   # the lesson's spike run
 
@@ -19,14 +19,15 @@ for bx, w, col in ((-1.0, False, "blue"), (0.8, True, "green")):
     root.location = (bx, 0, 0)
     limit = kit.empty("limit", (bx, 0.12, BH))
     limit.rotation_euler = (0, -QLIM, 0)
-    kit.box("limit-bar", (1.0, 0.025, 0.025), (0.6, 0, 0), "red", bevel=0.004, parent=limit)   # the 1.3 rad joint limit, behind the arm
+    kit.box("limit-bar", (0.95, 0.05, 0.05), (0.575, 0, 0), "#d9541e", bevel=0.008, parent=limit)   # the 1.3 rad joint limit, a fat bar behind the arm
     kit.ball("target", 0.05, (bx + 0.88 * math.cos(TARGET), 0, BH + 0.88 * math.sin(TARGET)), kit.ghost("amber", 0.4))
-    push = kit.arrow("push", "red", shaft=0.03)                          # the torque the joint really receives at the spike step, 0.015 m per Nm
+    push = kit.arrow("push", "red", shaft=0.06)                          # the torque the joint really receives at the spike step, 0.015 m per Nm
     u = float(runs[w]["u"][SPIKE])
     f0 = 1 + int(SPIKE * m.DT * SLOW * sc.render.fps)
     for f in range(sc.frame_start, sc.frame_end + 1):
         k = min(int((f - 1) / sc.render.fps / SLOW / m.DT), 149)
         q = float(runs[w]["q"][k])
+        q = QLIM + OVER * (q - QLIM) if q > QLIM else q                  # what is past the limit is drawn OVER times larger, or a 3 degree overshoot cannot be seen
         kit.pose(joints, f, [q])
         tip = (bx + 0.8 * math.cos(q), 0, BH + 0.8 * math.sin(q))
         on = f0 <= f < f0 + FLASH

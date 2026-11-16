@@ -8,13 +8,15 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts" /
 import kit
 
 m = kit.lesson_main(__file__)
-SECONDS, SLOW, DT, LIM, L, V = 5.0, 2.0, 0.001, 4.0, (0.5, 0.4), np.array([0.1, 0.0])   # half speed; drives top out at 4 rad/s; tip told to go outward at 0.1 m/s
-T_END, Q0, ARROW, CAP = 1.4849, (-0.0906, 1.1318), 0.15, 0.5  # the lesson's arm bent so the tip sits at (0.7, 0.3); a red arrow shows the demanded joint speed, 0.15 m per rad/s, capped at 0.5 m; the push stops at x = 0.8485 m, the edge of reach
+DT, LIM, L, V = 0.001, 4.0, (0.5, 0.4), np.array([0.1, 0.0])   # drives top out at 4 rad/s; tip told to go outward at 0.1 m/s
+T_END, Q0, ARROW = 1.4849, (-0.0906, 1.1318), 0.07  # the lesson's arm bent so the tip sits at (0.7, 0.3); an arrow shows the demanded joint speed, 0.07 m per rad/s, never cut short; the push stops at x = 0.8485 m, the edge of reach
+S0, MOVE, HOLD = 0.5, 3.4, 0.7   # the clip starts 0.5 s into the push, plays the rest in slow motion that eases down toward the end (so the surge in the last 0.085 s is on screen for about a second), then holds the final pose
+SECONDS = MOVE + HOLD
 
 
 def run(lam):
     q, out = np.array(Q0), []
-    for _ in range(int(SECONDS / SLOW / DT) + 1):
+    for _ in range(int((T_END + 0.05) / DT) + 1):
         v = V if len(out) * DT < T_END else 0 * V
         try:
             qd = m.solve(m.jacobian(q, L), v, lam)               # the lesson's solve(): what the controller asks for
@@ -26,26 +28,27 @@ def run(lam):
 
 
 sc = kit.setup(SECONDS)
-kit.table((3.0, 0.7), 0.4, (-0.15, 0))
+kit.table((2.9, 0.7), 0.4, (-0.1, 0))
 runs, arms = {}, {}
-for name, colour, x, lam in (("plain", "blue", -1.3, 0.0), ("damped", "green", 0.0, 0.05)):
+for name, colour, x, lam in (("plain", "blue", -1.1, 0.0), ("damped", "green", 0.0, 0.05)):
     root, js = kit.arm(name, L, colour)
     root.location = (x, 0, 0.4)
     kit.tube(name + "-path", [(x + p, -0.14, 0.7 + 0.3) for p in (0.7, 0.8485)], 0.012, "amber")   # the line the tip is told to follow
-    arms[name] = (js, x, kit.arrow(name + "-demand", "red" if lam == 0 else "amber", 0.02))
+    arms[name] = (js, x, kit.arrow(name + "-demand", "red" if lam == 0 else "amber", 0.03))
     runs[name] = run(lam)
 for f in range(sc.frame_start, sc.frame_end + 1):
-    i = min(int((f - 1) / sc.render.fps / SLOW / DT), len(runs["plain"]) - 1)
+    u = min((f - 1) / sc.render.fps / MOVE, 1.0)                  # clip time as a fraction of the slow-motion part
+    i = int((S0 + (T_END - S0) * (1 - (1 - u) ** 3)) / DT) if u < 1 else int(T_END / DT) + 3   # sim time: quick at first, easing down to a stop at T_END, then the finished pose
     for name, (js, x, arrow) in arms.items():
         q, qd = runs[name][i]
         kit.pose(js, f, q)
         a = q[0] + q[1]
         tip = np.array([L[0] * np.cos(q[0]) + L[1] * np.cos(a), L[0] * np.sin(q[0]) + L[1] * np.sin(a)])
         side = np.array([np.sin(a), -np.cos(a)])                 # the way the elbow turns the hand when it is told to straighten
-        arrow.location = (x + tip[0], 0.14, 0.7 + tip[1])
-        arrow.scale = (max(min(ARROW * np.linalg.norm(qd), CAP), 1e-3), 1, 1)
+        arrow.location = (x + tip[0], -0.12, 0.7 + tip[1])
+        arrow.scale = (max(ARROW * np.linalg.norm(qd), 1e-3), 1, 1)
         arrow.rotation_euler = (0, -np.arctan2(side[1], side[0]), 0)
         for prop in ("location", "scale", "rotation_euler"):
             arrow.keyframe_insert(prop, frame=f)
-kit.camera((-0.15, -3.75, 2.1), (-0.15, 0, 0.95), lens=50)
+kit.camera((-0.1, -3.3, 1.9), (-0.1, 0, 0.9), lens=50)
 kit.render(__file__)

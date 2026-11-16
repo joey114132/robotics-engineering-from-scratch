@@ -3,7 +3,7 @@ import pathlib
 import sys
 
 import numpy as np
-from mathutils import Matrix
+from mathutils import Matrix, Vector
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts" / "blender"))
 import kit
@@ -43,15 +43,22 @@ for k, (R, t) in enumerate(poses):
     if prev is not None:
         q.make_compatible(prev)
     prev = q
-    for f in (8 + 18 * k, 14 + 18 * k):                        # arrive, then hold still while the camera takes the picture
+    for f in (6 + 14 * k, 11 + 14 * k):                        # arrive, then hold still while the camera takes the picture
         board.location, board.rotation_quaternion = tuple(LENS + MCW @ t), q
         board.keyframe_insert("location", frame=f)
         board.keyframe_insert("rotation_quaternion", frame=f)
 px = (600.0, 441.6)                                            # one pixel near the image edge, depth 1.6 m, on the floor
-for name, K, colour, f0 in (("true", TRUE, "amber", 112), ("nominal", NOMINAL, "blue", 118), ("calibrated", est, "green", 124)):
+# amber (truth) is a see-through shell, green sits inside it, 0.5 cm off, and blue stands 6 cm away; the camera moves in on them at the end
+for name, K, colour, f0, rad in (("true", TRUE, "amber", 90, 0.05), ("nominal", NOMINAL, "blue", 96, 0.03), ("calibrated", est, "green", 102, 0.022)):
     p = LENS + MCW @ np.array([(px[0] - K["cx"]) * 1.6 / K["fx"], (px[1] - K["cy"]) * 1.6 / K["fy"], 1.6])
-    b = kit.ball(name, 0.04, tuple(p), colour)
+    b = kit.ball(name, rad, tuple(p), kit.ghost("amber", 0.4) if name == "true" else colour)
     kit.key(b, f0 - 1, loc=tuple(p)); b.scale = (0.001,) * 3; b.keyframe_insert("scale", frame=f0 - 1)
     b.scale = (1, 1, 1); b.keyframe_insert("scale", frame=f0 + 6)
-kit.camera((-1.15, -0.65, 1.35), (0.9, -0.12, 0.5), lens=34)
+cam = kit.camera((-1.15, -0.65, 1.35), (0.9, -0.12, 0.5), lens=34)
+for f, pos, tgt, lens in ((1, (-1.15, -0.65, 1.35), (0.9, -0.12, 0.5), 34), (84, (-1.15, -0.65, 1.35), (0.9, -0.12, 0.5), 34), (112, (0.75, -0.72, 0.16), (1.6, -0.72, 0.045), 75)):
+    cam.location, cam.data.lens = pos, lens
+    cam.rotation_euler = (Vector(tgt) - Vector(pos)).to_track_quat("-Z", "Y").to_euler()
+    cam.data.dof.focus_distance = (Vector(tgt) - Vector(pos)).length    # keep the thing we look at sharp
+    cam.keyframe_insert("location", frame=f); cam.keyframe_insert("rotation_euler", frame=f); cam.data.keyframe_insert("lens", frame=f)
+    cam.data.dof.keyframe_insert("focus_distance", frame=f)
 kit.render(__file__)

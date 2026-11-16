@@ -4,6 +4,7 @@ import pathlib
 import sys
 
 import numpy as np
+from mathutils import Vector
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts" / "blender"))
 import kit
@@ -28,10 +29,9 @@ final, T_END = snap[frames[-1]], HOLD + MORPH
 
 sc = kit.setup(SECONDS)
 kit.stripe(-2.3, 2.3, -1.2, 1.2, "pearl")
-ring = kit.ghost("grey", 0.35)
 for c, r in OBS:
     kit.cyl("cup", r * S, 0.3, (*w(c)[:2], 0.15), "z", "dark", bevel=0.01, segments=64)
-    kit.cyl("margin", (r + MARGIN) * S, 0.01, (*w(c)[:2], 0.006), "z", ring, segments=64)
+    kit.tube("margin", [(w(c)[0] + (r + MARGIN) * S * math.cos(a), w(c)[1] + (r + MARGIN) * S * math.sin(a), 0.012) for a in np.linspace(0, 2 * math.pi, 65)], 0.016, "#5b6a72")   # the margin: a clear ring
 kit.cyl("goal", 0.1, 0.01, (*w((10, 0))[:2], 0.01), "z", "amber")
 kit.cyl("goal-pole", 0.01, 0.3, (*w((10, 0))[:2], 0.15), "z", "amber")
 kit.ball("goal-flag", 0.06, (*w((10, 0))[:2], 0.3), "amber")
@@ -72,7 +72,11 @@ for ob in green[1] + green[2]:
     vis(ob, int(T_END * FPS) + 1)
 
 rover, wheels = kit.rover("rover", "green")
-rover.scale = (0.5, 0.5, 0.5)
+RV = 0.7                                                         # fits inside the margin ring (0.16 m clear of a cup)
+rover.scale = (RV,) * 3
+WIDE = ((0, -3.6, 4.6), (0, 0.05, 0), 44)                          # the wide shot, then the camera follows the rover while it drives
+cam = kit.camera(WIDE[0], WIDE[1], lens=WIDE[2])
+f_drive = int((T_END + 0.2) * FPS)
 P = np.array([w(p)[:2] for p in final])
 cum = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))])
 yaw = 0.0
@@ -83,7 +87,14 @@ for f in range(sc.frame_start, sc.frame_end + 1):
     pos = P[k] + (s - cum[k]) / np.linalg.norm(d) * d
     yaw += max(-0.2, min(0.2, (math.atan2(d[1], d[0]) - yaw + math.pi) % (2 * math.pi) - math.pi))   # turn toward the segment, at most 0.2 rad a frame
     kit.key(rover, f, loc=(pos[0], pos[1], 0), rot=(0, 0, yaw))
+    u = min(max((f - f_drive + 12) / 12, 0.0), 1.0)                 # ease in to the follow shot just before the drive
+    u = u * u * (3 - 2 * u)
+    tgt = Vector(WIDE[1]) * (1 - u) + Vector((pos[0], pos[1], 0.1)) * u
+    cpos = Vector(WIDE[0]) * (1 - u) + Vector((pos[0], pos[1] - 1.5, 3.3)) * u
+    cam.location, cam.data.lens = cpos, WIDE[2] * (1 - u) + 62 * u
+    cam.rotation_euler = (tgt - cpos).to_track_quat("-Z", "Y").to_euler()
+    cam.data.dof.focus_distance = (tgt - cpos).length
+    cam.keyframe_insert("location", frame=f); cam.keyframe_insert("rotation_euler", frame=f); cam.data.keyframe_insert("lens", frame=f); cam.data.dof.keyframe_insert("focus_distance", frame=f)
     for wh in wheels:
-        kit.key(wh, f, rot=(0, s / 0.0375, 0))
-kit.camera((0, -4.3, 3.6), (0, 0.05, 0), lens=38)
+        kit.key(wh, f, rot=(0, s / (0.075 * RV), 0))
 kit.render(__file__)

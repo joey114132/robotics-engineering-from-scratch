@@ -8,6 +8,7 @@ import kit
 
 m = kit.lesson_main(__file__)
 DT, SECONDS, SLOW, SCALE, L, K, PUSH, T_PUSH = 1e-4, 2.5, 2.0, 5.0, 0.5, 20.0, 2.0, 0.5   # 2.5 s of the push at half speed; angles drawn 5 times larger
+H, ARROW, THIN = 0.75, 0.3, 0.7                                          # joint height; the push arrow is 0.3 m long and slimmer than the kit's, so its head is not a squat cap
 runs = {"plain": m.run("position", K=K, push=PUSH, T=SECONDS, dt=DT)[1], "layer": m.run("admittance", K=K, push=PUSH, T=SECONDS, dt=DT)[1]}
 
 sc = kit.setup(SECONDS * SLOW)
@@ -28,8 +29,10 @@ for f in range(sc.frame_start, sc.frame_end + 1):
         kit.pose(joints, f, [q])
         qc = SCALE * (PUSH / K if (name == "layer" and t >= T_PUSH) else 0.0)
         kit.key(target, f, loc=(x + (L + 0.17) * math.cos(qc), 0, 0.75 + (L + 0.17) * math.sin(qc)))
-        kit.key(arrow, f, loc=(x + L * math.cos(q) + 0.07, 0, 0.45 + L * math.sin(q)))
-        arrow.scale = (0.2 * min(max((t - T_PUSH) / 0.1, 0.0), 1.0) + 0.001, 1, 1)
+        n = min(max((t - T_PUSH) / 0.1, 0.0), 1.0)
+        tip = (x + (L + 0.085) * math.cos(q) + 0.055 * math.sin(q), H + (L + 0.085) * math.sin(q) - 0.055 * math.cos(q) - 0.004)   # the underside of the lower finger, following the hand
+        kit.key(arrow, f, loc=(tip[0], 0, tip[1] - ARROW * n))             # the arrow's head touches the hand
+        arrow.scale = (ARROW * n + 1e-4, THIN * n + 1e-4, THIN * n + 1e-4)   # before the push it is a point, not a flat disc
         arrow.keyframe_insert("scale", frame=f)
 kit.camera((0.0, -2.5, 1.5), (0.0, 0, 0.7), lens=50)
 kit.render(__file__)

@@ -15,29 +15,31 @@ real = m.measured(m.REAL, m.command, T0 + SECONDS)[i0:]                # every a
 sims = {k: m.measured({**m.REAL, **o}, m.command, T0 + SECONDS)[i0:] for k, o in drop.items()}
 
 sc = kit.setup(SECONDS)
-kit.box("wall", (5.2, 0.05, 3.2), (0, 0.16, 1.6), kit.mat("floor", rough=0.9, emit=0.2), bevel=0.01)
+kit.box("wall", (5.2, 0.05, 3.2), (0, 0.22, 1.6), kit.mat("#c3cdd2", rough=0.9, emit=0.25), bevel=0.01)   # a light backdrop so the dark ghost and the blue arm both separate from it
 
 
 def joint(name, x, y, colour, ghosted):
     root, (j,) = kit.arm(name, (0.4,), colour)
-    for o in list(root.children):                                     # drop the pedestal: this pendulum hangs from its motor
-        if o.name.startswith((name + "-foot", name + "-post")):
+    for o in list(root.children):                                     # drop the pedestal, its flange and bolts: this pendulum hangs from its motor
+        if o is not j:
             bpy.data.objects.remove(o)
     root.location = (x, y, 0.65)
     if ghosted:
-        g = kit.ghost("dark", 0.5)
+        g = kit.ghost("dark", 0.55)
         for o in root.children_recursive:
             if o.type == "MESH":
                 o.data.materials.clear()
                 o.data.materials.append(g)
+        link = next(o for o in root.children_recursive if o.name.endswith("-link0"))
+        link.scale = (1.0, 1.9, 1.9)                                  # the ghost link is fatter than the real one, so a matching real arm sits inside a visible halo
     return j
 
 
-rigs = {k: (joint("real-" + k, x, 0.07, "blue", False), joint("sim-" + k, x, 0.0, "dark", True)) for k, x in zip(drop, (-1.1, 0.0, 1.1))}
+rigs = {k: (joint("real-" + k, x, 0.0, "#4f8df0", False), joint("sim-" + k, x, 0.07, "dark", True)) for k, x in zip(drop, (-1.15, 0.0, 1.15))}   # the ghost hangs just behind the real arm
 for f in range(sc.frame_start, sc.frame_end + 1):
     i = min(int((f - 1) / sc.render.fps / m.DT), len(real) - 1)
     for k, (jr, js) in rigs.items():
         kit.pose([jr], f, [real[i] - 1.5708])                         # q is measured from hanging straight down
         kit.pose([js], f, [sims[k][i] - 1.5708])
-kit.camera((0, -4.0, 1.45), (0, 0, 0.72), lens=38)
+kit.camera((0, -3.9, 1.0), (0, 0, 0.95), lens=40)                  # close enough that each arm is about a tenth of the frame width
 kit.render(__file__)

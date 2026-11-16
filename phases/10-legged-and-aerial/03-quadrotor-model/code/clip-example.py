@@ -9,17 +9,17 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts" /
 import kit
 
 m = kit.lesson_main(__file__)
-M, I, TILT, TEND, SLOW, PRE, Z0, S = 0.5, 0.004, math.radians(20), 1.0, 2.5, 12, 0.6, 1.6   # the lesson's drone held at 20 degrees for 1 s, played 2.5x slower
+M, I, TILT, TEND, SLOW, PRE, Z0, S = 0.5, 0.004, math.radians(20), 1.0, 2.5, 12, 0.6, 1.8   # the lesson's drone held at 20 degrees for 1 s, played 2.5x slower
 hover = m.hover_thrust(M)
 s0 = np.array([0, 0, TILT, 0, 0, 0.0])
 runs = {"sink": m.simulate(s0, lambda t, s: (hover, 0.0), M, I, 1e-3, TEND),
         "hold": m.simulate(s0, lambda t, s: (hover / math.cos(s[2]), 0.0), M, I, 1e-3, TEND)}   # same tilt, thrust raised to m g / cos(theta)
 sc = kit.setup(PRE / 24 + TEND * SLOW + 1.2)
 quads = {}
-kit.tube("level", [(-2.4, 0, Z0), (2.2, 0, Z0)], 0.012, "dark")      # one level line across both drones, to see who keeps height
-for name, (colour, x0) in {"sink": ("blue", -1.4), "hold": ("green", -0.5)}.items():
+kit.tube("level", [(-2.6, 0.45, Z0), (2.4, 0.45, Z0)], 0.014, "#f0a530")   # one amber level line across both drones, drawn behind them so it never pierces a body, to see who keeps height
+for name, (colour, x0) in {"sink": ("#4f8df0", -1.5), "hold": ("#2f9e62", -0.4)}.items():
     root, props = kit.drone(name, colour)
-    root.scale = (S, S, S)                                                      # drawn 1.6 times larger so it reads from the camera
+    root.scale = (S, S, S)                                                      # drawn 1.8 times larger so it reads from the camera
     kit.ball("start", 0.08, (x0, 0, Z0), "amber")                            # a solid ball at the height it started at
     quads[name] = (root, props, x0)
 
@@ -30,5 +30,5 @@ for f in range(1, sc.frame_end + 1):
         kit.key(root, f, loc=(x0 + s[0], 0, Z0 + s[1]), rot=(0, float(s[2]), 0))
         for j, p in enumerate(props):
             kit.key(p, f, rot=(0, 0, (1 if j % 2 else -1) * 0.55 * f))
-kit.camera((-0.05, -4.3, 1.9), (-0.05, 0, Z0), lens=38)   # nearly side-on, so sinking reads as vertical motion
+kit.camera((-0.05, -5.0, 1.0), (-0.05, 0, 0.55), lens=42)   # nearly side-on and low, so sinking reads as vertical motion and the level line behind the drones lines up with them
 kit.render(__file__)

@@ -16,21 +16,21 @@ END = max(i for i in turn if i * DT <= 6.0)            # stop the blue bob at th
 SPEED = END * DT / SECONDS                             # simulated seconds per clip second
 
 sc = kit.setup(SECONDS)
-L, PIVOT_Z, X = 0.8, 1.2, 1.05
-kit.box("beam", (2 * X + 2.8, 0.12, 0.1), (0, 0, PIVOT_Z + 0.06), "dark")
+L, PIVOT_Z, X = 0.8, 1.2, 0.95
+kit.box("beam", (2 * X + 3.8, 0.12, 0.1), (0, 0, PIVOT_Z + 0.06), "dark")
 for sx in (-1, 1):
-    kit.box("leg", (0.1, 0.5, PIVOT_Z + 0.1), (sx * (X + 1.3), 0, (PIVOT_Z + 0.1) / 2), "grey", bevel=0.01)
-level = kit.box("release-level", (2 * X + 1.4, 0.02, 0.03), (0, 0.1, PIVOT_Z - L * math.cos(TH0)), kit.ghost("amber", 0.8), bevel=0)   # height the bob started at
+    kit.box("leg", (0.1, 0.5, PIVOT_Z + 0.1), (sx * (X + 1.9), 0, (PIVOT_Z + 0.1) / 2), "grey", bevel=0.01)
+level = kit.box("release-level", (2 * X + 1.4, 0.02, 0.04), (0, 0.1, PIVOT_Z - L * math.cos(TH0)), kit.ghost("amber", 0.8), bevel=0)   # height the bob started at
 bobs = {}
 for s, x, colour in (("explicit", -X, "blue"), ("semi", X, "green")):
     pivot = kit.empty(s, (x, 0, PIVOT_Z))
-    kit.cyl("hub", 0.045, 0.16, (0, 0, 0), "y", "grey", parent=pivot)
-    kit.cyl("rod", 0.022, L, (0, 0, -L / 2), "z", "dark", parent=pivot)
-    kit.ball("bob", 0.11, (0, 0, -L), colour, parent=pivot)
+    kit.cyl("hub", 0.06, 0.16, (0, 0, 0), "y", "grey", parent=pivot)
+    kit.cyl("rod", 0.035, L, (0, 0, -L / 2), "z", "dark", parent=pivot)
+    kit.ball("bob", 0.15, (0, 0, -L), kit.mat(colour, kind="plastic"), parent=pivot)   # a shaded plastic bob, not a glowing marker
     bobs[s] = pivot
 for f in range(sc.frame_start, sc.frame_end + 1):
     i = min(int(round((f - 1) / sc.render.fps * SPEED / DT)), END)
     for s, pivot in bobs.items():
         kit.key(pivot, f, rot=(0, -float(runs[s][i]), 0))   # theta from the lesson's simulate(), positive toward +x
-kit.camera((0, -5.0, 2.9), (0, 0, 0.75), lens=35)
+kit.camera((-0.3, -4.0, 2.55), (-0.3, 0, 0.8), lens=35)   # close on the pendulums; the gantry legs fall outside the picture
 kit.render(__file__)

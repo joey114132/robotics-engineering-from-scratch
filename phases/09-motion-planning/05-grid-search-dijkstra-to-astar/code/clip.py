@@ -11,7 +11,7 @@ TRAP = ["...........#.....", ".....#.....#.....", ".....#.....#.....", ".....#..
         ".....#.....#.....", ".....#.....#.....", ".....#.....#.....", ".....#.....#.....", "................."]
 grid, start, goal = m.parse(TRAP)                                 # the lesson's trap map: two walls with gaps
 C, FPS, RATE, T0, SECONDS = 0.26, 24, 64.0, 0.3, 6.0              # cell size in m; 64 cells expanded per second in both searches
-RUNS = {"blue": (0.0, 1.55, "#9ec5f8"), "green": (1.0, -1.55, "#9fdcb8")}   # colour: (heuristic weight, lane y, tile colour)
+RUNS = {"blue": (0.0, 1.55, "#bcd6fb"), "green": (1.0, -1.55, "#bfe8d0")}   # colour: (heuristic weight, lane y, tile colour)
 at = lambda cell, y0: ((cell[1] - 8) * C, y0 + (5 - cell[0]) * C)
 
 
@@ -25,16 +25,23 @@ def appear(ob, frame):
 sc = kit.setup(SECONDS)
 for colour, (wgt, y0, tile) in RUNS.items():
     path, expanded = m.search(grid, start, goal, wgt)             # w = 0 is Dijkstra, w = 1 is A*
-    kit.stripe(-8.5 * C, 8.5 * C, y0 - 5.5 * C, y0 + 5.5 * C, "pearl")
-    for r, c in zip(*grid.nonzero()):
-        kit.box("wall", (C, C, 0.2), (*at((r, c), y0), 0.1), "dark", bevel=0.01)
+    kit.stripe(-8.5 * C, 8.5 * C, y0 - 6.3 * C, y0 + 5.5 * C, "pearl")      # the table runs a row past the bottom path row, so no wheel overhangs its edge
+    for r, c in zip(*grid.nonzero()):                              # a wall cell next to an opening is shortened, so the larger rover fits through the gap
+        free = [d for d in (-1, 1) if 0 <= r + d < grid.shape[0] and not grid[r + d, c]]
+        cut = 0.35 * C * len(free)
+        sy = sum(free) * 0.5 * (cut / len(free)) if free else 0.0   # shift the box away from the opening (+row is -y, so a free cell at row + 1 shifts the box up)
+        x, y = at((r, c), y0)
+        kit.box("wall", (0.45 * C, C - cut, 0.2), (x, y + sy, 0.1), "dark", bevel=0.01)
     for i, cell in enumerate(expanded):
         appear(kit.box("seen", (0.9 * C, 0.9 * C, 0.012), (*at(cell, y0), 0.008), tile, bevel=0), int(1 + (T0 + i / RATE) * FPS))
     gx, gy = at(goal, y0)
     kit.cyl("goal-pole", 0.01, 0.3, (gx, gy, 0.15), "z", "amber")
     kit.ball("goal-flag", 0.06, (gx, gy, 0.3), "amber")
     rover, wheels = kit.rover("rover-" + colour, colour)
-    rover.scale = (0.55, 0.55, 0.55)
+    RV = 0.95                                                       # the rover is drawn big, so its body reads at phone width; the walls are thin and open up at the gaps
+    rover.scale = (RV, RV, RV)
+    kit.cyl("flag-pole", 0.02, 0.5, (0, 0, 0.45), "z", "dark", parent=rover, segments=12)         # a beacon on each rover, so it is easy to follow among the tiles
+    kit.ball("flag", 0.12, (0, 0, 0.75), colour, parent=rover)
     t0 = T0 + len(expanded) / RATE + 0.1                          # it sets off when its own search has reached the goal
     pts = [at(c, y0) for c in path]
     yaw = 0.0
@@ -46,6 +53,6 @@ for colour, (wgt, y0, tile) in RUNS.items():
         yaw += max(-0.25, min(0.25, (math.atan2(b[1] - a[1], b[0] - a[0]) - yaw + math.pi) % (2 * math.pi) - math.pi))
         kit.key(rover, f, loc=(pos[0], pos[1], 0), rot=(0, 0, yaw))
         for wh in wheels:
-            kit.key(wh, f, rot=(0, s * C / 0.0412, 0))
-kit.camera((0, -8.4, 4.9), (0, -0.45, 0), lens=48)
+            kit.key(wh, f, rot=(0, s * C / (0.075 * RV), 0))
+kit.camera((0, -10.4, 4.2), (0, -0.45, 0.1), lens=60)   # lower and closer, so the two rovers are larger and read against the pale tiles
 kit.render(__file__)

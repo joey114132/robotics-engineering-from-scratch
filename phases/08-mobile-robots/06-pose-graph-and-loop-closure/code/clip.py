@@ -15,13 +15,14 @@ yaw0, yaw1 = np.unwrap(X0[:, 2]), np.unwrap(X[:, 2])
 T0, T1, T2 = 62, 78, 108                                         # drive ends, closure edge drawn, graph relaxed
 
 sc = kit.setup(T2 / 24 + 1.0)
+sc.render.use_motion_blur = False                                 # the rover drives about 8 m/s in the picture; blur would smear it into a spiky blob
 bpy.context.preferences.edit.keyframe_new_interpolation_type = "LINEAR"
 kit.stripe(-2.0, 7.0, -2.0, 7.0, "road")
 kit.tube("truth", [(x, y, 0.01) for x, y in truth[:, :2]], 0.03, "white")     # the path the rover really drove
 root, wheels = kit.rover("rover", "blue")
 root.scale = (1.5,) * 3
-old = [kit.ball("odo", 0.09, (0, 0, 0.1), "blue") for _ in X0]
-new = [kit.ball("fix", 0.09, (0, 0, 0.1), "green") for _ in X0]
+old = [kit.ball("odo", 0.15, (0, 0, 0.15), "blue") for _ in X0]
+new = [kit.ball("fix", 0.15, (0, 0, 0.15), "green") for _ in X0]
 bar = kit.box("closure", (1.0, 0.07, 0.05), (0, 0, 0.06), "amber", bevel=0.01)
 
 
@@ -34,9 +35,9 @@ for k in range(len(X0)):                                          # drive: one p
     f = 1 + 3 * k
     kit.key(root, f, loc=(*X0[k, :2], 0), rot=(0, 0, yaw0[k]))
     for ob in (old[k], new[k]):
-        kit.key(ob, 1, loc=(*X0[k, :2], 0.1))
-        kit.key(ob, T1, loc=(*X0[k, :2], 0.1))
-        kit.key(ob, T2, loc=(*X[k, :2], 0.1))                    # relax: every node slides to its corrected pose
+        kit.key(ob, 1, loc=(*X0[k, :2], 0.15))
+        kit.key(ob, T1, loc=(*X0[k, :2], 0.15))
+        kit.key(ob, T2, loc=(*X[k, :2], 0.15))                    # relax: every node slides to its corrected pose
     size(old[k], max(f - 1, 1), 0 if k else 1)
     for fr, v in ((f, 1), (T1, 1), (T2, 0)):
         size(old[k], fr, v)

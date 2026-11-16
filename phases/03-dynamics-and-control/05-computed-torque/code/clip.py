@@ -15,27 +15,29 @@ def scara(name, colour, ghost=False):
     root = kit.empty(name)
     j0 = kit.empty(name + "-j0", (0, 0, 0.42), root)
     j1 = kit.empty(name + "-j1", (0.5, 0, 0.07), j0)
-    mt = kit.ghost("grey", 0.35) if ghost else None
+    mt = kit.ghost("dark", 0.6) if ghost else None                # the reference: thin dark see-through bars, nothing like the solid coloured arm
     if not ghost:
         kit.cyl(name + "-post", 0.06, 0.42, (0, 0, 0.21), "z", "grey", parent=root)
         kit.cyl(name + "-m0", 0.075, 0.1, (0, 0, 0), "z", "dark", parent=j0)
         kit.cyl(name + "-m1", 0.06, 0.08, (0, 0, 0), "z", "dark", parent=j1)
-    kit.box(name + "-l0", (0.52, 0.07, 0.05), (0.25, 0, 0.035), mt or colour, bevel=0.01, parent=j0)
-    kit.box(name + "-l1", (0.52, 0.06, 0.04), (0.25, 0, 0.03), mt or "sky", bevel=0.01, parent=j1)
-    kit.ball(name + "-tip", 0.035, (0.52, 0, 0.03), mt or "amber", parent=j1)
+    w0, w1, h0, h1 = (0.03, 0.03, 0.02, 0.02) if ghost else (0.1, 0.085, 0.06, 0.05)   # link widths and heights; the reference is a thin bar
+    kit.box(name + "-l0", (0.52, w0, h0), (0.25, 0, 0.035), mt or colour, bevel=0.008, parent=j0)
+    kit.box(name + "-l1", (0.52, w1, h1), (0.25, 0, 0.03), mt or colour, bevel=0.008, parent=j1)   # both links in the arm's colour
+    kit.ball(name + "-tip", 0.03 if ghost else 0.05, (0.52, 0, 0.03), mt or "amber", parent=j1)
     return root, j0, j1
 
 
 sc = kit.setup(T * SLOW)
-kit.table((3.0, 2.0), 0.4, (-0.5, 0.35))
+kit.table((3.6, 2.0), 0.4, (-0.14, 0.35))
 for c, x in (("blue", -1.1), ("green", 0.1)):
     for ghost in (True, False):
         root, j0, j1 = scara(c + ("-ref" if ghost else ""), c, ghost)
-        root.location = (x, 0, 0.4 + (0.06 if ghost else 0))     # the reference arm hovers just above
+        root.location = (x, 0, 0.4 + (0.1 if ghost else 0))      # the reference arm hovers just above
         for f in range(sc.frame_start, sc.frame_end + 1):
             i = min(int((f - 1) / 24 / SLOW / m.DT), len(errs[c]) - 1)
             q = m.trajectory(i * m.DT)[0] - (0 if ghost else errs[c][i])
             kit.key(j0, f, rot=(0, 0, q[0]))
             kit.key(j1, f, rot=(0, 0, q[1]))
-kit.camera((-0.5, -3.0, 3.0), (-0.5, 0.35, 0.45), lens=34)
+sc.render.motion_blur_shutter = 0.1                          # a short shutter keeps the fast arms sharp
+kit.camera((-0.14, -1.55, 3.08), (-0.14, 0.45, 0.85), lens=34)   # aimed at the height the arms move at
 kit.render(__file__)

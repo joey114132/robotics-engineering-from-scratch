@@ -35,8 +35,8 @@ kit.box("cam", (0.16, 0.14, 0.1), (0, 0, 0), "dark", bevel=0.015, parent=rig); k
 kit.cyl("stand", 0.025, CAM[2], (-0.1, 0, CAM[2] / 2), "z", "grey"); kit.cyl("foot", 0.18, 0.02, (-0.1, 0, 0.01), "z", "dark", bevel=0.008)
 
 mesh = {}
-for name, col in (("grey", "grey"), ("red", "red")):
-    bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=1, radius=0.014)
+for name, col, rad in (("grey", "grey", 0.016), ("red", "red", 0.032)):     # the red points are the ones to see at phone width
+    bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=1, radius=rad)
     mesh[name] = bpy.data.meshes.new("pt-" + name); bm.to_mesh(mesh[name]); bm.free(); mesh[name].materials.append(kit.mat(col))
 W = world(V)
 for w, b, r in zip(W, bad, np.argsort(np.argsort(np.linalg.norm(V, axis=1)))):   # the scan sweeps from the near points to the far ones
@@ -54,14 +54,22 @@ def lay(ob, up, centre, f0, f1, lift=0.0):                      # tilt a body to
         ob.keyframe_insert("location", frame=f); ob.keyframe_insert("rotation_quaternion", frame=f)
 
 mid = tab[:, :2].mean(0)
-for name, (n, d), colour, dy in (("ls", (n_ls, d_ls), "blue", -0.5), ("ransac", (n_rs, d_rs), "green", 0.5)):
+for name, (n, d), colour, dx, dy in (("ls", (n_ls, d_ls), "blue", -0.4, -0.5), ("ransac", (n_rs, d_rs), "green", 0.4, 0.5)):
     up, zc = plane(n, d, mid)
     sheet = kit.box(name + "-plane", (1.1, 1.7, 0.004), (0, 0, 0), kit.ghost(colour, 0.35), bevel=0)
     lay(sheet, up, (*mid, zc + (0.003 if name == "ransac" else 0)), 38, 38)
     sheet.scale = (0.01,) * 3; sheet.keyframe_insert("scale", frame=38); sheet.scale = (1, 1, 1); sheet.keyframe_insert("scale", frame=46)
-    xy = mid + (0, dy); up, zc = plane(n, d, xy)               # the place pose is commanded from this plane: its height and its normal
-    block = kit.box(name + "-block", (0.1, 0.1, 0.5), (0, 0, 0), colour, bevel=0.015)    # a tall block shows the lean
-    lay(block, up, np.array([*xy, zc]) + up * 0.25, 56, 92, lift=0.5)
+    xy = mid + (dx, dy); up, zc = plane(n, d, xy)               # the place pose is commanded from this plane: its height and its normal
+    block = kit.box(name + "-block", (0.12, 0.12, 0.9), (0, 0, 0), colour, bevel=0.015)    # a tall block, 0.9 m, shows the lean
+    lay(block, up, np.array([*xy, zc]) + up * 0.45, 56, 92, lift=0.5)
     block.scale = (0.001,) * 3; block.keyframe_insert("scale", frame=54); block.scale = (1, 1, 1); block.keyframe_insert("scale", frame=56)
-kit.camera((3.1, -2.4, 2.1), (0.7, 0.0, 0.6), lens=34)
+    plumb = kit.cyl(name + "-plumb", 0.012, 0.9, (xy[0] + 0.17, xy[1], H + 0.45), "z", "dark")    # a plumb post, truly vertical, beside the block to read the lean against
+    plumb.scale = (0.001,) * 3; plumb.keyframe_insert("scale", frame=54); plumb.scale = (1, 1, 1); plumb.keyframe_insert("scale", frame=56)
+cam = kit.camera((2.4, -3.9, 1.9), (0.7, 0.0, 0.62), lens=38)
+for f, pos, tgt, lens in ((1, (2.4, -3.9, 1.9), (0.7, 0.0, 0.62), 38), (46, (2.4, -3.9, 1.9), (0.7, 0.0, 0.62), 38),   # wide for the scan, then in on the two blocks, side-on to the lean
+                          (70, (mid[0] + 1.2, mid[1] - 3.7, H + 0.55), (mid[0], mid[1], H + 0.36), 50)):
+    cam.location, cam.data.lens = pos, lens
+    cam.rotation_euler = (Vector(tgt) - Vector(pos)).to_track_quat("-Z", "Y").to_euler()
+    cam.data.dof.focus_distance = (Vector(tgt) - Vector(pos)).length
+    cam.keyframe_insert("location", frame=f); cam.keyframe_insert("rotation_euler", frame=f); cam.data.keyframe_insert("lens", frame=f); cam.data.dof.keyframe_insert("focus_distance", frame=f)
 kit.render(__file__)

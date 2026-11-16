@@ -10,7 +10,7 @@ import kit
 m = kit.lesson_main(__file__)
 P = dict(m1=1.0, m2=1.5, l1=0.5, lc1=0.2, lc2=0.3, I1=0.03, I2=0.05)   # the lesson's figure arm
 X0 = np.array([0.3, 1.0, 2.0, -1.0])                                      # start angles and speeds of the lesson's figure
-T, DT, SLOW, GAUGE = 3.0, 4e-3, 3.0 / 5.0, 0.5                           # 3 s of free motion played over 5 s; the energy bar is 0.5 m at the start energy
+T, DT, SLOW, GAUGE = 3.0, 4e-3, 3.0 / 5.0, 0.6                           # 3 s of free motion played over 5 s; the energy bar is 0.6 m at the start energy
 
 
 def free_run(h_sign):
@@ -38,26 +38,27 @@ def scara(name, colour):
     kit.cyl(name + "-post", 0.06, 0.42, (0, 0, 0.21), "z", "grey", parent=root)
     kit.cyl(name + "-m0", 0.075, 0.1, (0, 0, 0), "z", "dark", parent=j0)
     kit.cyl(name + "-m1", 0.06, 0.08, (0, 0, 0), "z", "dark", parent=j1)
-    kit.box(name + "-l0", (0.52, 0.07, 0.05), (0.25, 0, 0.035), colour, bevel=0.01, parent=j0)
-    kit.box(name + "-l1", (0.52, 0.06, 0.04), (0.25, 0, 0.03), "sky", bevel=0.01, parent=j1)
-    kit.ball(name + "-mass", 0.05, (0.3 * 0.52 / 0.5, 0, 0.03), "amber", parent=j1)     # the forearm mass m2 sits at lc2 = 0.3
+    kit.box(name + "-l0", (0.52, 0.1, 0.06), (0.25, 0, 0.035), colour, bevel=0.01, parent=j0)
+    kit.box(name + "-l1", (0.52, 0.085, 0.05), (0.25, 0, 0.03), colour, bevel=0.01, parent=j1)       # both links in the arm's colour
+    kit.ball(name + "-mass", 0.06, (0.3 * 0.52 / 0.5, 0, 0.065), kit.mat("amber", kind="plastic"), parent=j1)   # the forearm mass m2 sits at lc2 = 0.3: a plain shaded sphere, a physical mass and not a marker
     return root, j0, j1
 
 
 sc = kit.setup(5.0)
-kit.table((4.8, 2.8), 0.4, (0, 0.1))
+kit.table((4.4, 2.6), 0.4, (0.05, 0))
 e0 = m.kinetic(X0[:2], X0[2:], P)
-for c, x in (("blue", -1.3), ("green", 1.3)):
+for c, x, bx in (("blue", -1.2, -0.12), ("green", 1.25, 0.12)):
     root, j0, j1 = scara(c, c)
     root.location = (x, 0, 0.4)
-    bar = kit.box(c + "-energy", (0.1, 0.1, 1.0), (x, -1.15, 0.9), "amber", bevel=0.01)    # kinetic energy as a bar in front of the arm
+    bar = kit.box(c + "-energy", (0.14, 0.14, 1.0), (bx, 0, 0.9), "amber", bevel=0.01)    # kinetic energy as a bar between the two arms, each beside its own arm
     for f in range(sc.frame_start, sc.frame_end + 1):
         s = runs[c][min(int((f - 1) / 24 * SLOW / DT), len(runs[c]) - 1)]
         kit.key(j0, f, rot=(0, 0, s[0]))
         kit.key(j1, f, rot=(0, 0, s[1]))
         h = GAUGE * m.kinetic(s[:2], s[2:], P) / e0
-        bar.scale, bar.location = (1, 1, h), (x, -1.15, 0.4 + h / 2)
+        bar.scale, bar.location = (1, 1, h), (bx, 0, 0.4 + h / 2)
         for p in ("scale", "location"):
             bar.keyframe_insert(p, frame=f)
-kit.camera((0, -4.1, 3.6), (0, -0.1, 0.55), lens=32)
+kit.box("start-energy", (0.56, 0.03, 0.025), (0, 0, 0.4 + GAUGE), kit.ghost("dark", 0.7), bevel=0)   # a line at the start energy across both bars
+kit.camera((0.1, -1.91, 3.79), (0.1, 0.05, 0.65), lens=32)
 kit.render(__file__)

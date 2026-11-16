@@ -60,5 +60,5 @@ for fix, col in ((False, "blue"), (True, "green")):
             kit.key(w, f, rot=(0, a, 0))
         if not fix:
             kit.key(bel, f, loc=(belief[k, 0] * S, belief[k, 1] * S, 0), rot=(0, 0, belief[k, 2]))
-kit.camera((1.6, 0.87, 0.99), (1.6, 2.45, 0.0), lens=42)   # fixed on the first wall
+kit.camera((1.85, 1.1, 3.3), (1.85, 2.75, 0.0), lens=46)   # high and steep, fixed on the first wall: no wall block can hide a rover, and both stay in frame the whole clip
 kit.render(__file__)

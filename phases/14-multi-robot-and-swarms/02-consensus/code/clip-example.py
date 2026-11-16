@@ -25,16 +25,14 @@ def tick_at(t):
 
 
 sc = kit.setup(T_END + HOLD)
-kit.box("pad", (4.0, 2.2, 0.02), (0, 0, 0.01), "#e6ecee", bevel=0.01)
+kit.box("pad", (4.0, 2.2, 0.02), (0, 0, 0.01), kit.mat("#e6ecee", kind="matte"), bevel=0.01)   # a matte board: the glossy marker finish put a white sun hotspot on it
 spots = {2: (-1.2, 0.0), 3: (0.0, 0.0), 4: (1.2, 0.0)}
 for a, b in ((2, 3), (3, 4)):
     kit.tube("link", [(*spots[a], 0.05), (*spots[b], 0.05)], 0.012, "grey")                  # the radio links of car 3
-ghost = kit.arrow("start", "grey", 0.03)                                                    # car 3's heading at the start, left in place
-ghost.location, ghost.rotation_euler, ghost.scale = (*spots[3], 0.04), (0, 0, UNIT * X0[3]), (1.15, 1, 1)
-for ch in ghost.children:
-    ch.data.materials[0] = kit.ghost("grey", 0.55)
+ghost = kit.arrow("start", "#4a555c", 0.05)                                                # car 3's heading at the start, left in place: a dark grey arrow, longer than the car so it shows past the nose
+ghost.location, ghost.rotation_euler, ghost.scale = (*spots[3], 0.04), (0, 0, UNIT * X0[3]), (1.6, 1, 1)
 for i, (x, y) in spots.items():
-    root, wheels = kit.rover(f"car{i}", "blue" if i != 3 else "green")
+    root, wheels = kit.rover(f"car{i}", "#4f8df0" if i != 3 else "#2f9e62")   # flat marker colours: the glossy paint washed the right-hand car pale
     root.scale = (1.6,) * 3
     pointer = kit.arrow(f"heading{i}", "amber", 0.03)
     pointer.parent, pointer.location, pointer.scale = root, (0, 0, 0.26), (0.42, 1, 1)

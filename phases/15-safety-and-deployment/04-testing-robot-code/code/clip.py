@@ -19,13 +19,15 @@ for pol, x, colour in ((-1, -0.75, "blue"), (1, 0.75, "green")):
     root, (j,) = kit.arm(f"p{pol}", (L,), colour, base_height=H)
     root.location = (x, 0, 0)
     target, (tj,) = kit.arm(f"t{pol}", (L,), colour, base_height=H)              # the target pose, q_ref = 1.0 rad
-    target.location = (x, -0.1, 0)
-    for ob in list(target.children_recursive):
-        if "foot" in ob.name or "post" in ob.name:
+    target.location = (x, 0.1, 0)                                                # just behind the real arm, so the real arm is never covered
+    for ob in list(target.children):                                             # drop the pedestal, its flange and bolts, keep only the joint
+        if ob is not tj:
             bpy.data.objects.remove(ob)
-        elif ob.type == "MESH":
+    for ob in target.children_recursive:
+        if ob.type == "MESH":
             ob.data.materials.clear()
-            ob.data.materials.append(kit.ghost("amber", 0.4))
+            ob.data.materials.append(kit.ghost("amber", 0.45))
+    next(o for o in target.children_recursive if o.name.endswith("-link0")).scale = (1.0, 1.9, 1.9)   # a fatter link, so a matching real arm sits inside a visible amber halo
     kit.pose([tj], 1, [1.0])
     verdict = kit.ball(f"v{pol}", 0.07, (x, 0, H + 0.45), "green" if pol == 1 else "red")   # the test result: pass or fail
     n = len(rows[pol])

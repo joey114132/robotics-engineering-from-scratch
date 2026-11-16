@@ -26,7 +26,7 @@ for ke, bx, col in SPONGES:
         bpy.data.objects.remove(ob)
     kit.cyl("probe", 0.025, 0.22, (0.14, 0, 0), "x", "dark", parent=hand)
     kit.ball("tip", 0.03, (0.25, 0, 0), "pearl", parent=hand)
-    push = kit.cyl("push-%d" % ke, 0.02, 1.0, (0, 0, 0), "z", "red", segments=16)   # the force the sponge pushes back with, a bar 1.6 cm tall per newton
+    push = kit.cyl("push-%d" % ke, 0.045, 1.0, (0, 0, 0), "z", "#d9541e", segments=16)   # the force the sponge pushes back with, a fat bar 1.6 cm tall per newton so even 1.6 N is a visible red disc
     rigs.append((ke, sponge, js, hand, push, x0, bx))
 
 for f in range(sc.frame_start, sc.frame_end + 1):

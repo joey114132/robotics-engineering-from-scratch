@@ -21,15 +21,17 @@ for name, x, colour, run in (("ok", -0.8, "green", runs["none"]), ("flipped", 0.
         a = s * m.P["q_lim"]
         kit.box(name + "-stop", (0.1, 0.1, 0.1), (x + (L + 0.1) * math.cos(a), 0, H + (L + 0.1) * math.sin(a)), "dark", bevel=0.01)
     tgt, (tj,) = kit.arm(name + "-target", (L,), colour, base_height=H)   # the target pose, q_ref = 1 rad, as a see-through arm
-    tgt.location = (x, -0.1, 0)
-    for ob in list(tgt.children_recursive):
-        if "foot" in ob.name or "post" in ob.name:
+    tgt.location = (x, 0.1, 0)                                            # just behind the real arm, so the real arm is never covered
+    for ob in list(tgt.children):                                         # drop the pedestal, its flange and bolts, keep only the joint
+        if ob is not tj:
             bpy.data.objects.remove(ob)
-        elif ob.type == "MESH":
+    for ob in tgt.children_recursive:
+        if ob.type == "MESH":
             ob.data.materials.clear()
-            ob.data.materials.append(kit.ghost("amber", 0.4))
+            ob.data.materials.append(kit.ghost("amber", 0.45))
+    next(o for o in tgt.children_recursive if o.name.endswith("-link0")).scale = (1.0, 1.9, 1.9)   # a fatter link, so a settled real arm sits inside a visible amber halo
     kit.pose([tj], 1, [m.P["q_ref"]])
-    lamp = kit.ball(name + "-alarm", 0.06, (x, 0, H + 0.2), "amber")
+    lamp = kit.ball(name + "-alarm", 0.06, (x, 0, H + 0.2), "#d9541e")   # red, so it is not mistaken for the amber target ghost
     for f in range(sc.frame_start, sc.frame_end + 1):
         i = min(int((f - 1) / sc.render.fps / SLOW / 1e-3), len(run) - 1)
         kit.key(j, f, rot=(0, -run[i, 1], 0))

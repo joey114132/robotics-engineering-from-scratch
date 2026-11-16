@@ -47,7 +47,7 @@ def mark(ob, on, off=None):
 sc = kit.setup(SECONDS)
 kit.stripe(-4.0, 4.0, -2.5, 2.5, "pearl")
 kit.cyl("rock", RR * S, 0.22, (*w(ROCK)[:2], 0.11), "z", "dark", bevel=0.02, segments=64)
-kit.cyl("rock-top", RR * S * 0.94, 0.02, (*w(ROCK)[:2], 0.23), "z", "grey", segments=64)   # a lighter top, so the rock reads as a solid boulder
+kit.cyl("rock-top", RR * S * 0.94, 0.02, (*w(ROCK)[:2], 0.23), "z", "#4a5a63", segments=64)   # a slightly lighter slate top, so the rock reads as a solid boulder and still stands out from the pale table
 for i in range(1, 12):                                            # the tree as it stands at iteration 11
     kit.tube("edge", [w(nodes[parent[i]]), w(nodes[i])], 0.02, "grey")
 kit.ball("node-11", 0.05, w(NB), "grey")

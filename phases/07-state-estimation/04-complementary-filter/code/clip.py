@@ -16,7 +16,6 @@ gyro, acc = m.sensors(truth, omega, B, SG, SA, np.random.default_rng(4))
 est = {"blue": m.integrate(gyro, DT), "amber": acc, "green": m.complementary(gyro, acc, DT, m.best_tau(DT, B, SA))}
 
 sc = kit.setup(5.5)
-gm = kit.ghost("grey", 0.35)
 rigs = {}
 for x, colour in zip((-1.6, 0.0, 1.6), est):
     kit.cyl("foot", 0.22, 0.04, (x, 0, 0.02), "z", "dark", bevel=0.01)
@@ -24,7 +23,7 @@ for x, colour in zip((-1.6, 0.0, 1.6), est):
     piv, tpiv = kit.empty("piv", (x, 0, 0.62)), kit.empty("true", (x, 0, 0.62))
     kit.box("board", (1.1, 0.5, 0.04), (0, 0, 0.04), colour, bevel=0.012, parent=piv)
     kit.box("imu", (0.14, 0.14, 0.06), (0, 0, 0.1), "dark", bevel=0.01, parent=piv)
-    kit.box("truth", (1.2, 0.56, 0.08), (0, 0, 0.04), gm, bevel=0.02, parent=tpiv)
+    kit.box("truth", (1.3, 0.62, 0.014), (0, 0, -0.02), "dark", bevel=0.004, parent=tpiv)   # the true tilt: a thin dark plank just under the solid board, so it never covers it
     rigs[colour] = (piv, tpiv)
 for f in range(sc.frame_start, sc.frame_end + 1):
     i = min(int(T0 / DT) + int((f - 1) / sc.render.fps / DT), N - 1)

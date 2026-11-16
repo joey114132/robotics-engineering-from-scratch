@@ -22,7 +22,11 @@ for ld, (ox, oy) in shift.items():
     kit.stripe(ox + 4.4, ox + 5.6, oy - 0.5, oy + 3.4, "road")
     kit.tube(f"path{ld}", [(x * S + ox, y * S + oy, 0.006) for x, y in CORNERS], 0.02, "white")
 cars = {ld: kit.car(f"ld{ld}", colour[ld], CAR) for ld in runs}
-goals = {ld: kit.ball(f"goal{ld}", 0.05, (0, 0, 0.5), "amber") for ld in runs}
+goals = {ld: kit.ball(f"goal{ld}", 0.11, (0, 0, 0.5), "amber") for ld in runs}      # the lookahead point, big enough to see at phone width
+rays = {}
+for ld in runs:                                                   # a thin amber line from each car to the point it chases
+    rays[ld] = kit.empty(f"ray{ld}")
+    kit.box("ray-bar", (1.0, 0.04, 0.03), (0.5, 0, 0), "amber", bevel=0.005, parent=rays[ld])
 arc = {ld: np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(t[:, :2], axis=0), axis=1))]) * S for ld, t in runs.items()}
 N = max(len(t) for t in runs.values()) - 1
 for f in range(sc.frame_start, sc.frame_end + 1):
@@ -34,13 +38,17 @@ for f in range(sc.frame_start, sc.frame_end + 1):
             kit.key(w, f, rot=(0, arc[ld][i] / (0.09 * CAR), 0))
         g = m.lookahead_point(path, t[i, :2], ld) * S + shift[ld]
         kit.key(goals[ld], f, loc=(g[0], g[1], 0.5))
+        c0 = t[i, :2] * S + shift[ld]
+        kit.key(rays[ld], f, loc=(c0[0], c0[1], 0.5), rot=(0, 0, float(np.arctan2(g[1] - c0[1], g[0] - c0[0]))))
+        rays[ld].scale = (float(np.linalg.norm(g - c0)), 1, 1)
+        rays[ld].keyframe_insert("scale", frame=f)
 for ld, t in runs.items():                                        # a breadcrumb every 0.25 m of drawing, dropped as the car passes
     for j in range(25, len(t), 25):
-        d = kit.ball("crumb", 0.04, (*(t[j, :2] * S + shift[ld]), 0.03), colour[ld])
+        d = kit.ball("crumb", 0.035, (*(t[j, :2] * S + shift[ld]), 0.03), colour[ld])
         f = int(np.ceil(j / N * PLAY * FPS)) + 1
         d.scale = (0, 0, 0)
         d.keyframe_insert("scale", frame=f - 1)
         d.scale = (1, 1, 1)
         d.keyframe_insert("scale", frame=f)
-kit.camera((3.5, -1.0, 9.2), (3.5, 0.45, 0.0), lens=28)
+kit.camera((3.5, -1.3, 9.2), (3.5, 0.15, 0.0), lens=28)
 kit.render(__file__)

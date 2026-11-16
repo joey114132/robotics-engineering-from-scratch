@@ -23,7 +23,10 @@ for ox in rooms.values():                                       # the true walls
     kit.stripe(ox + cs, ox + 10 * S - cs, cs, 10 * S - cs, "floor")
     kit.stripe(ox + 4 * S, ox + 6 * S, 4 * S, 6 * S, "road")
 rovers = {"good": kit.rover("good", "green"), "drift": kit.rover("drift", "blue")}
-belief = kit.cyl("belief", 0.19, 0.1, (0, 0, 0.11), "z", kit.ghost("blue", 0.6))
+belief = kit.empty("belief")                                    # a flat dark-blue ring with a nose on the floor: where the blue rover believes it is, clearly not a second rover
+ring = kit.tube("belief-ring", [(0.24 * np.cos(t), 0.24 * np.sin(t), 0.02) for t in np.linspace(0, 2 * np.pi, 49)], 0.03, "navy")
+ring.parent = belief
+kit.box("belief-nose", (0.14, 0.07, 0.03), (0.24, 0, 0.02), "navy", bevel=0.004, parent=belief)
 for r, _ in rovers.values():
     r.scale = (0.8,) * 3
 belief.scale = (0.8,) * 3

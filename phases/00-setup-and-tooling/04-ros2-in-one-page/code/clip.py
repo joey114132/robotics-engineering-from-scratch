@@ -21,28 +21,28 @@ def cup_x(t):                                           # where the cup really i
     return 0.5 + 0.17 * math.sin(2 * math.pi * t / 1.6) * (1 - smooth((t - 2.4) / 1.2))
 
 def reach(x):                                           # two-link IK, elbow up, for a hand hovering over a cup at x
-    px, pz = x - 0.05, 0.4 + 0.09 + 0.12 - (H + 0.3)
+    px, pz = x - 0.05, 0.4 + 0.09 + 0.2 - (H + 0.3)
     c2 = (px * px + pz * pz - L1 * L1 - L2 * L2) / (2 * L1 * L2)
     q2 = -math.acos(min(1.0, max(-1.0, c2)))
     return [math.atan2(pz, px) - math.atan2(L2 * math.sin(q2), L1 + L2 * math.cos(q2)), q2]
 
 sc = kit.setup(SECONDS)
-kit.table((2.5, 0.7), H, (-0.1, 0))
+kit.table((2.3, 0.7), H, (-0.08, 0))
 sta = {}
-for depth, bx, colour in ((50, -1.05, "blue"), (1, 0.15, "green")):
+for depth, bx, colour in ((50, -0.9, "blue"), (1, 0.1, "green")):
     root, joints = kit.arm(f"arm{depth}", (L1, L2), colour)
     root.location = (bx, 0, H)
     kit.box("rail", (0.55, 0.03, 0.006), (bx + 0.5, 0, H + 0.003), "grey", bevel=0)
-    cup = kit.cyl("cup", 0.032, 0.09, (0, 0, H + 0.045), "z", "amber")
-    seen = kit.cyl("believed-cup", 0.032, 0.09, (0, 0, H + 0.045), "z", kit.ghost("amber", 0.4)) if depth == 50 else None
+    cup = kit.cyl("cup", 0.085, 0.15, (0, 0, H + 0.075), "z", "amber")
+    seen = kit.cyl("believed-cup", 0.085, 0.15, (0, 0, H + 0.075), "z", kit.ghost("blue", 0.45)) if depth == 50 else None   # a see-through cup in the blue arm's own colour, where it believes the cup is
     sta[depth] = (bx, joints, cup, seen)
 for f in range(sc.frame_start, sc.frame_end + 1):
     t = (f - 1) / sc.render.fps
     for depth, (bx, joints, cup, seen) in sta.items():
         belief = cup_x(t - float(np.interp(t, tick, ages[depth])))   # the arm aims at the cup as it was when the message was sent
-        kit.key(cup, f, loc=(bx + cup_x(t), 0, H + 0.045))
+        kit.key(cup, f, loc=(bx + cup_x(t), 0, H + 0.075))
         if seen:
-            kit.key(seen, f, loc=(bx + belief, 0, H + 0.045))
+            kit.key(seen, f, loc=(bx + belief, 0, H + 0.075))
         kit.pose(joints, f, reach(belief))
-kit.camera((-0.1, -3.2, 1.9), (-0.1, 0, 0.5), lens=40)
+kit.camera((-0.08, -2.55, 1.55), (-0.08, 0, 0.55), lens=40)
 kit.render(__file__)

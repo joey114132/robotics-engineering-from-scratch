@@ -33,14 +33,14 @@ END, STEPS, DF, START = 130, 42, 1.8, np.array([-1.0, 0.0])
 P, A = m.demos(6, np.random.default_rng(0))             # six demonstrations over the disc and six mirrored under it
 blue = m.rollout_mean(m.mean_policy(P, A), START)       # the averaged policy
 blue = blue[:np.argmax(np.linalg.norm(blue, axis=1) < m.R_OBST) + 1]                          # it stops where it touches the pillar
-greens = [m.rollout_chunks(P, A, START, 8, 4, np.random.default_rng(s))[:STEPS] for s in (0, 1)]   # two samples of the chunk sampler
+greens = [m.rollout_chunks(P, A, START, 8, 4, np.random.default_rng(s))[:36] for s in (0, 1)]   # two samples of the chunk sampler, each cut at step 35 where it is 0.4 from the goal, one on each side, so the two rovers do not end inside each other
 
 sc = kit.setup(END / 24)
 kit.cyl("keepout", m.R_OBST, 0.004, (0, 0, 0.003), "z", kit.ghost("grey", 0.45))
 kit.cyl("pillar", m.R_OBST - 0.16, 0.22, (0, 0, 0.11), "z", "dark")
 kit.cyl("goal", 0.1, 0.008, (*m.GOAL, 0.004), "z", "amber")
 for p in P:
-    kit.tube("demo", [(x, y, 0.012) for x, y in p], 0.007, "grey")
+    kit.tube("demo", [(x, y, 0.012) for x, y in p], 0.005, "grey")
 play(*kit.rover("mean", "blue"), blue, 6, DF, END)             # all three play at 1.8 frames per step
 for i, g in enumerate(greens):                           # the second sampler run starts 9 steps later, so the two never overlap
     root, wheels = kit.rover(f"chunk{i}", "green")

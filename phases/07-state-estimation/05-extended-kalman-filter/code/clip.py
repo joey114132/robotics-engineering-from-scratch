@@ -1,4 +1,4 @@
-# 레슨 07/05 클립: 원을 도는 실제 로봇(회색), 랜드마크로 보정하는 EKF 추정(초록 유령), 보정 없는 dead reckoning(파란 유령)
+# 레슨 07/05 클립: 원을 도는 실제 로봇(어두운 색), 랜드마크로 보정하는 EKF 추정(초록 유령), 보정 없는 dead reckoning(파란 유령)
 import math
 import pathlib
 import sys
@@ -10,7 +10,8 @@ import kit
 
 m = kit.lesson_main(__file__)
 LMS = m.LMS[:3]                                  # the first three landmarks
-STEPS, RATE, RS, OFFSET = 80, 1.5, 2.4, 0.6      # 80 steps of 0.1 s played at 1.5x; the filter starts 0.6 rad wrong about its heading
+LIFT = 0.7
+STEPS, RATE, RS, OFFSET = 80, 1.5, 3.0, 0.6      # 80 steps of 0.1 s played at 1.5x; the filter starts 0.6 rad wrong about its heading
 tr, ek, dr, _ = m.run(np.random.default_rng(3), STEPS, OFFSET, LMS)
 
 sc = kit.setup(5.5)
@@ -30,7 +31,7 @@ def robot(name, colour, ghost=None, grow=1.0):
     return root
 
 
-real, est, dead = robot("real", "grey"), robot("ekf", "green", kit.ghost("green", 0.55), 1.12), robot("dead", "blue", kit.ghost("blue", 0.5))
+real, est, dead = robot("real", "dark"), robot("ekf", "green", kit.ghost("green", 0.3), 1.12), robot("dead", "blue", kit.ghost("blue", 0.3))
 rays = []
 for i in range(len(LMS)):
     root = kit.empty(f"ray{i}")
@@ -40,9 +41,9 @@ for i in range(len(LMS)):
 for f in range(sc.frame_start, sc.frame_end + 1):
     s = min((f - 1) / sc.render.fps * RATE / m.DT, STEPS - 1e-6)
     k, w = int(s), s - int(s)
-    for ob, path in ((real, tr), (est, ek), (dead, dr)):
+    for ob, path, lift in ((real, tr, 0.0), (est, ek, LIFT), (dead, dr, LIFT)):     # the two estimates hover above the floor, so the real robot stays visible under the green one
         p = path[k] * (1 - w) + path[k + 1] * w
-        kit.key(ob, f, loc=(p[0], p[1], 0), rot=(0, 0, p[2]))
+        kit.key(ob, f, loc=(p[0], p[1], lift), rot=(0, 0, p[2]))
     p = tr[k] * (1 - w) + tr[k + 1] * w
     for ray, lm in zip(rays, LMS):
         d = lm - p[:2]

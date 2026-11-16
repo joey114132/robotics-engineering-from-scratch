@@ -39,5 +39,5 @@ for f in range(sc.frame_start, sc.frame_end + 1):
     i = min(int((f - 1) / sc.render.fps / DT), N - 1)
     kit.key(est_a, f, loc=(X0 + pos_acc[i], 0.78, 0))
     kit.key(est_g, f, loc=(X0 + pos_gyr[i], -0.78, 0))
-kit.camera((0.05, -3.4, 2.3), (0.05, 0.05, 0.15), lens=34)
+kit.camera((0.05, -1.3, 8.6), (0.05, 0.0, 0.0), lens=68)   # almost straight down with a long lens, so both lanes sit at the same depth and read against the same floor marks
 kit.render(__file__)

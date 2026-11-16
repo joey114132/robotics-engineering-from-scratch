@@ -43,15 +43,16 @@ kit.cyl("pillar", m.R_OBST - 0.16, 0.22, (0, 0, 0.11), "z", "dark")
 kit.cyl("goal", 0.15, 0.008, (*m.GOAL, 0.004), "z", "amber")
 for x0 in m.starts(np.random.default_rng(0), 4):                                           # the four clean demonstrations
     kit.tube("demo", [(x, y, 0.012) for x, y in m.rollout(m.expert, x0, np.random.default_rng(0), noise=0.0)], 0.007, "grey")
-for x, y in X_dagger[480::24]:                                                             # states the DAgger learner visited, one in 24 shown
+for x, y in X_dagger[480::48]:                                                             # states the DAgger learner visited, one in 48 shown, in white so they are not mistaken for the green rover
     if np.hypot(x - m.GOAL[0], y - m.GOAL[1]) > 0.25:
-        kit.ball("visited", 0.02, (x, y, 0.02), "#6fcf97")
+        kit.ball("visited", 0.025, (x, y, 0.025), "pearl")
 for name, (pol, X, y0, seed, col) in runs.items():
     xs = m.rollout(pol, [-1.3, y0], np.random.default_rng(seed))[:STEPS]
     hit = np.nonzero(np.linalg.norm(xs - m.OBST, axis=1) < m.R_OBST)[0]
     xs = xs[:hit[0] + 1] if len(hit) else xs
     frames, q = play(*kit.rover(name, col), xs, 6, 24 * m.DT * SLOW, END)
-    tether = kit.box("tether", (1.0, 0.045, 0.045), (0, 0, 0.14), "amber", bevel=0.01)
+    tether = kit.box("tether", (1.0, 0.1, 0.1), (0, 0, 0.14), "#f0a530", bevel=0.02)    # three times thicker than a pencil line, so it reads at 350 px
+    nearest = kit.ball("nearest", 0.07, (0, 0, 0.14), "amber")                            # a bead on the nearest recorded state, so a short line is still a visible gap
     for f in range(1, END + 1):                                                            # a line from the rover to the nearest recorded state
         p = np.array([np.interp(f, frames, q[:, 0]), np.interp(f, frames, q[:, 1])])
         n = X[np.argmin(((X - p) ** 2).sum(1))]
@@ -59,5 +60,6 @@ for name, (pol, X, y0, seed, col) in runs.items():
         kit.key(tether, f, loc=((p[0] + n[0]) / 2, (p[1] + n[1]) / 2, 0.14), rot=(0, 0, ang))
         tether.scale = (max(np.linalg.norm(n - p), 1e-3), 1, 1)
         tether.keyframe_insert("scale", frame=f)
+        kit.key(nearest, f, loc=(n[0], n[1], 0.14))
 kit.camera((0.0, -2.7, 2.5), (0.0, 0.0, 0.0), lens=40)
 kit.render(__file__)

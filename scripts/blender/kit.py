@@ -69,7 +69,7 @@ def mat(name, rough=0.42, emit=0.0, kind=None):
         _texture(m, bsdf, col, kind or name, rough)
         if kind in ("marker", "line") and not emit:   # teaching marks glow a little so they hold against the textured floor and room
             bsdf.inputs["Emission Color"].default_value = bsdf.inputs["Base Color"].default_value if kind == "marker" else col
-            bsdf.inputs["Emission Strength"].default_value = 0.6 if kind == "marker" else (0.1 if name in ("white", "pearl") else 0.3)
+            bsdf.inputs["Emission Strength"].default_value = 0.35 if kind == "marker" else (0.1 if name in ("white", "pearl") else 0.3)
     if emit:
         bsdf.inputs["Emission Color"].default_value = col
         bsdf.inputs["Emission Strength"].default_value = emit
@@ -566,10 +566,10 @@ def ghost(colour="grey", alpha=0.3):
     m.use_nodes = True
     bsdf = next(n for n in m.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
     bsdf.inputs["Base Color"].default_value = _rgb(PAL.get(colour, colour))
-    if REAL:   # more opaque and a little self-lit, so a target or a remembered pose does not melt into the room
-        alpha = alpha + (1 - alpha) * 0.25
+    if REAL:   # a little self-lit so a target does not melt into the room, but see-through enough not to hide the object behind it (rc6 review)
+        alpha = alpha + (1 - alpha) * 0.08
         bsdf.inputs["Emission Color"].default_value = bsdf.inputs["Base Color"].default_value
-        bsdf.inputs["Emission Strength"].default_value = 0.5
+        bsdf.inputs["Emission Strength"].default_value = 0.2
     bsdf.inputs["Alpha"].default_value = alpha
     m.surface_render_method = "BLENDED"
     return m

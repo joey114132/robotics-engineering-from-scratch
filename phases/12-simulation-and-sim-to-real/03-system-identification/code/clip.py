@@ -15,26 +15,28 @@ real = coast(m.TRUE)
 model = {a: coast(e) for a, e in est.items()}
 
 sc = kit.setup(SIM * SLOW)
-kit.box("wall", (4.8, 0.05, 1.7), (0, 0.16, 0.85), kit.mat("floor", rough=0.9, emit=0.2), bevel=0.01)
+kit.box("wall", (4.8, 0.05, 1.7), (0, 0.22, 0.85), kit.mat("#c3cdd2", rough=0.9, emit=0.25), bevel=0.01)   # a light backdrop so the dark ghost and the green arm both separate from it
 
 
 def joint(name, x, y, colour, ghosted):
     root, (j,) = kit.arm(name, (0.4,), colour)
-    for o in list(root.children):                                       # a pendulum that hangs from its motor, no pedestal
-        if o.name.startswith((name + "-foot", name + "-post")):
+    for o in list(root.children):                                       # a pendulum that hangs from its motor: drop the pedestal, its flange and bolts, keep only the joint
+        if o is not j:
             bpy.data.objects.remove(o)
     root.location = (x, y, 0.65)
     if ghosted:
-        g = kit.ghost("dark", 0.5)
+        g = kit.ghost("dark", 0.55)
         for o in root.children_recursive:
             if o.type == "MESH":
                 o.data.materials.clear()
                 o.data.materials.append(g)
+        link = next(o for o in root.children_recursive if o.name.endswith("-link0"))
+        link.scale = (1.0, 1.9, 1.9)                                    # the ghost link is fatter than the real one, so a matching real arm sits inside a visible halo
     return j
 
 
-pairs = {0.0: (-0.52, "blue"), 1.0: (0.52, "green")}
-rigs = {a: (joint(f"real{a}", x, 0.07, c, False), joint(f"model{a}", x, 0.0, "dark", True)) for a, (x, c) in pairs.items()}
+pairs = {0.0: (-0.52, "#4f8df0"), 1.0: (0.52, "#2f9e62")}                # the palette blue and green, as flat marker colours so both read at 350 px
+rigs = {a: (joint(f"real{a}", x, 0.0, c, False), joint(f"model{a}", x, 0.07, "dark", True)) for a, (x, c) in pairs.items()}   # the ghost hangs just behind the real arm and is thicker, so it shows as a halo around it
 for f in range(sc.frame_start, sc.frame_end + 1):
     i = min(int((f - 1) / sc.render.fps / SLOW / m.DT), len(real) - 1)
     for a, (jr, jm) in rigs.items():

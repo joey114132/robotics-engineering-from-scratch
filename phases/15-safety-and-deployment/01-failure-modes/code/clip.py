@@ -23,19 +23,25 @@ for name, x, colour, run in (("ok", -0.8, "green", runs["none"]), ("stuck", 0.8,
     gj = None
     if name == "stuck":                         # a see-through copy shows what the controller believes (the sensor reading)
         ghost_root, (gj,) = kit.arm(name + "-belief", (L,), colour, base_height=H)
-        ghost_root.location = (x, -0.1, 0)
-        for ob in list(ghost_root.children_recursive):
-            if "foot" in ob.name or "post" in ob.name:
+        ghost_root.location = (x, 0.1, 0)                                      # just behind the real arm: at the start, where the two coincide, the real arm stays in front
+        for ob in list(ghost_root.children):                                   # drop the pedestal, its flange and bolts, keep only the joint
+            if ob is not gj:
                 bpy.data.objects.remove(ob)
-            elif ob.type == "MESH":
+        for ob in ghost_root.children_recursive:
+            if ob.type == "MESH":
                 ob.data.materials.clear()
-                ob.data.materials.append(kit.ghost("dark", 0.4))
-    lamp = kit.ball(name + "-alarm", 0.06, (x, 0, H + 0.2), "amber")
+                ob.data.materials.append(kit.ghost("dark", 0.5))
+        next(o for o in ghost_root.children_recursive if o.name.endswith("-link0")).scale = (1.0, 1.9, 1.9)   # a fatter link, so a matching real arm sits inside a visible halo
+    kit.ball(name + "-target", 0.05, (x + (L + 0.1) * math.cos(m.P["q_ref"]), 0, H + (L + 0.1) * math.sin(m.P["q_ref"])), "amber")   # the target the joint should settle on (q_ref)
+    lamp = kit.ball(name + "-alarm", 0.06, (x, 0, H + 0.2), "#d9541e")        # the cheap check's alarm lamp, red so it is not mistaken for the amber target
     for f in range(sc.frame_start, sc.frame_end + 1):
         i = min(int((f - 1) / sc.render.fps / SLOW / 1e-3), len(run) - 1)
         kit.key(j, f, rot=(0, -run[i, 1], 0))
         if gj:
             kit.key(gj, f, rot=(0, -run[i, 4], 0))
+            show = abs(run[i, 1] - run[i, 4]) > 0.1                            # the belief ghost appears only once the frozen reading differs from the joint, so it never sits on the real arm
+            ghost_root.scale = ((1.0 if show else 1e-3),) * 3
+            ghost_root.keyframe_insert("scale", frame=f)
         s = 1.0 if (name == "stuck" and run[i, 0] >= alarm) else 0.01
         kit.key(lamp, f, loc=lamp.location)
         lamp.scale = (s,) * 3

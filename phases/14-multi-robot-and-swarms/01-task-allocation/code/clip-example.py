@@ -19,7 +19,7 @@ SECONDS = LEAD + max(sum(t) for t in trips.values()) / V + HOLD
 
 sc = kit.setup(SECONDS)
 for colour, cx in (("blue", -1.65), ("green", 1.65)):
-    kit.box("pad", (SIDE + 0.4, SIDE + 0.4, 0.02), (cx, SIDE / 2, 0.01), "#e6ecee", bevel=0.01)
+    kit.box("pad", (SIDE + 0.4, SIDE + 0.4, 0.02), (cx, SIDE / 2, 0.01), kit.mat("#e6ecee", kind="matte"), bevel=0.01)   # a matte board: the glossy marker finish put a white sun hotspot on it
     at = lambda p: (cx - SIDE / 2 + p[0] * SIDE, p[1] * SIDE)
     for j in range(N):
         kit.cyl("task", 0.25, 0.02, (*at(T[j]), 0.03), "z", "amber", segments=32)
@@ -27,7 +27,7 @@ for colour, cx in (("blue", -1.65), ("green", 1.65)):
     for i, j in enumerate(plans[colour]):
         a, b = at(R[i]), at(T[j])
         kit.tube("route", [(*a, 0.045), (*b, 0.045)], 0.02, "sky" if colour == "blue" else "#a6dcbd")
-        root, wheels = kit.rover(f"{colour}{i}", colour)
+        root, wheels = kit.rover(f"{colour}{i}", {"blue": "#4f8df0", "green": "#2f9e62"}[colour])   # flat marker colours: the glossy paint threw the sun back as a white patch on one car
         root.scale = (1.3,) * 3
         yaw, dist = math.atan2(b[1] - a[1], b[0] - a[0]), math.dist(a, b)
         for f in range(sc.frame_start, sc.frame_end + 1):
