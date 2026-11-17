@@ -6,15 +6,14 @@
 
 ## In Plain Words
 
-A robot wrist is told to turn a tiny bit left. Turning almost a full circle right reaches the same direction. A quaternion names an orientation, but q and its opposite, -q, name the same one, so a smooth turn between two orientations flips the sign when needed to keep the turn short.
+A robot wrist is told to turn a tiny bit left. Turning almost a full circle to the right would end up facing nearly the same way. A quaternion is four numbers naming an orientation. Flip the sign of all four and it names the same orientation. So the code may flip the sign of the goal orientation to keep the turn short.
 
 ## Key Terms
 
-- **Quaternion**: four numbers that name an orientation; a unit quaternion has length one.
-- **Axis-angle**: a rotation given as a line to turn about plus an angle.
+- **Orientation**: which way something faces.
+- **Quaternion**: four numbers that name an orientation.
 - **Slerp**: a smooth, even-speed turn between two orientations.
-- **Interpolator**: code that moves smoothly between a start value and a target value.
-- **Dot product**: multiply matching entries of two lists and add them up; it scores how alike two quaternions are.
+- **Dot product**: multiply matching numbers of two quaternions and add them up. Positive means they are close; negative means far.
 - **Radian (rad)**: an angle unit where one full turn is about 6.28.
 
 ## The Problem
@@ -23,19 +22,19 @@ A robot wrist, told to correct a tiny error, spins almost a full turn the long w
 
 ## The Concept
 
-Robots glide smoothly between orientations all the time, and one sign slip makes the wrist take the long way.
+One sign slip makes the wrist take the long way.
 
 ![Two wrists, one pose](../assets/clip-example.mp4)
 
 *Same final pose. Green turned one extra full turn.*
 
-A quaternion is four numbers that name an orientation, and every orientation has two of them, one the negative of the other.
+Every orientation has two quaternions: call one q, and the other, with all four signs flipped, is -q.
 
 ![q and -q](../assets/diagram-double-cover.png)
 
-*Two opposite points on the sphere mean the same turn.*
+*q and -q are different numbers that give the same turn.*
 
-The fix: check whether the target is on the far side, and if so flip its sign before gliding.
+The fix: take the dot product of the two quaternions: positive when the orientations are close, negative when far apart. If negative, the target is the long way round, so flip its sign before the smooth turn (slerp).
 
 ![Slerp sign check](../assets/diagram-slerp-sign-fix.png)
 
@@ -47,13 +46,13 @@ The fix: check whether the target is on the far side, and if so flip its sign be
 
 <details><summary>The math (optional)</summary>
 
-A turn of angle `t` about axis `k` is the quaternion `(cos(t/2), sin(t/2) k)`. A turn of 0.1 about z gives `q = (0.9988, 0, 0, 0.0500)`; adding a full turn (`t = 0.1 + 2pi`) gives `-q = (-0.9988, 0, 0, -0.0500)`. The dot product of `q0 = (1, 0, 0, 0)` and `-q` is -0.9988: negative means far, so flip. Without the fix the wrist sweeps 354.3 degrees; with it 5.7 (0.1 rad). The clip's needles show half angles 0.05 and pi + 0.05.
+A turn of angle `t` about axis `k` is the quaternion `(cos(t/2), sin(t/2) k)`. A turn of 0.1 about z gives `q = (0.9988, 0, 0, 0.0500)`; adding a full turn (`t = 0.1 + 2pi`) gives `-q = (-0.9988, 0, 0, -0.0500)`. The dot product of `q0 = (1, 0, 0, 0)` and `-q` is -0.9988: negative means far, so flip. Without the fix the wrist sweeps 354.3 degrees; with it 5.7 (0.1 rad). The clip's needles show half angles 0.05 and pi + 0.05. SciPy lists a quaternion's four numbers in a different order than this lesson, so check the order when you switch libraries.
 
 </details>
 
 ## Build It
 
-`rodrigues` turns an axis and an angle into a rotation matrix. `slerp` glides between two orientations, and its `fix` option flips the sign when the dot product is negative.
+`rodrigues` turns an axis and angle into a rotation matrix. `slerp` turns smoothly between orientations; its `fix` option flips the sign when the dot product is negative.
 
 ```python
 def rodrigues(axis, angle):
@@ -76,7 +75,7 @@ python3 -m pytest phases/01-math-foundations/03-axis-angle-and-quaternions -q
 
 ## Use It
 
-SciPy's `Rotation.from_quat` and `Slerp` do this. SciPy writes the plain number last and this lesson writes it first, so check the order when you cross a library boundary.
+SciPy, a Python add-on, has `Rotation.from_quat` and `Slerp`, which do this.
 
 Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2 (Euler parameters; section number not verified).
 
@@ -87,5 +86,5 @@ Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2 (Euler parameters; se
 ## Exercises
 
 1. Run `slerp` with `fix=False` and watch the long way.
-2. Negate a quaternion and check that it gives the same rotation matrix.
-3. Find the target angle where the sign check first flips.
+2. Negate a quaternion and check the rotation matrix is the same.
+3. Move the target a little at a time and find where the dot product first turns negative.

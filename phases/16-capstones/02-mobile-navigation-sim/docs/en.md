@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-A rover follows a route by checking where it believes it is, built by adding wheel turns (odometry). A slightly wrong wheel reading adds error each step, so the real rover drifts into a wall. Two posts at known spots let it reset its belief.
+A rover follows a route using where it believes it is. It builds that belief by adding up wheel turns (odometry). A slightly wrong wheel reading adds error each step, so the real rover drifts into a wall. Two posts at known spots let it reset its belief.
 
 ## Key Terms
 
@@ -19,15 +19,15 @@ A rover follows a route by checking where it believes it is, built by adding whe
 
 ## The Problem
 
-Your rover drives a long way along a clean route and ends pressed against a wall, yet its screen says it is on the path. Its idea of where it is had drifted.
+Your rover drives a clean route and ends pressed against a wall, yet its screen says it is on the path.
 
 ## The Concept
 
-A robot never knows exactly where it is, so a good plan needs a way to correct its position. A planner finds a clear route on a grid padded by the rover's size. The rover follows it by its belief about where it is. A slightly wrong wheel reading makes the belief drift.
+A robot never knows exactly where it is, so a good plan needs a way to correct its position. A planner finds a clear route on a grid whose walls are made thicker by the rover's size. The rover follows it by its belief about where it is.
 
 ![System](../assets/diagram-nav-system.png)
 
-*A\* plans a route, shortcuts trim it, and pure pursuit follows it.*
+*A\* plans a route, a trimming step shortens it, and pure pursuit follows it.*
 
 ![Broken](../assets/diagram-nav-broken.png)
 
@@ -47,13 +47,13 @@ A robot never knows exactly where it is, so a good plan needs a way to correct i
 
 <details><summary>The math (optional)</summary>
 
-Drive straight at 0.6 m/s with speed read 3% high and turn rate read 0.03 rad/s off. After 10 s the facing is wrong by `0.03 × 10 = 0.3` rad. The belief is off by 0.015 m after 1 s, 0.26 m after 5 s and 0.97 m after 10 s, because the facing error turns each later metre sideways. A fix each second keeps it at 0.012 m. A\* gives 77 waypoints (21.1 m), shortcuts keep 6 (19.8 m). Without a fix the belief ends 4.7 m off and the rover hits a wall. With a fix each second it stays within 0.11 m, and the goal error is 0.15 m.
+Drive straight at 0.6 m/s with speed read 3% high and turn rate read 0.03 rad/s off. After 10 s the facing is wrong by `0.03 × 10 = 0.3` rad. The belief is off by 0.015 m after 1 s, 0.26 m after 5 s and 0.97 m after 10 s, because the facing error turns each later metre sideways. A correction each second keeps it at 0.012 m. A\* gives 77 waypoints (21.1 m), shortcuts keep 6 (19.8 m). Without a correction the belief ends 4.7 m off and the rover hits a wall. With a correction each second it stays within 0.11 m, and the goal error is 0.15 m.
 
 </details>
 
 ## Build It
 
-The rover steers from `est`, its belief. Wheel readings carry a speed error, a turn bias and noise.
+The rover steers from `est`, its belief. Wheel readings carry a speed error, a steady error in turning and random noise.
 
 ```python
 vm = v * (1 + scale_err) + rng.normal(0, sigma)
@@ -71,7 +71,7 @@ python3 phases/16-capstones/02-mobile-navigation-sim/code/main.py
 
 ## Use It
 
-ROS 2 Nav2's NavFn planner has a `use_astar` switch.
+Nav2, the navigation package for ROS 2, has a planner called NavFn with a `use_astar` switch.
 
 Sources: [Nav2 NavFn](https://docs.nav2.org/rolling/configuration_and_development/configuration_guide/planners_plugins/configuring_navfn/), 2026-11-09.
 
@@ -81,6 +81,6 @@ Sources: [Nav2 NavFn](https://docs.nav2.org/rolling/configuration_and_developmen
 
 ## Exercises
 
-1. Hide the beacons for the first half of the run.
-2. Use a distance-only fix to one landmark. What stays unknown?
+1. Hide the landmark posts for the first half of the run.
+2. Correct the position using only the distance to one landmark. What stays unknown?
 3. Make the safety padding 0.6 m wide.

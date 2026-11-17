@@ -2,25 +2,25 @@
 
 > Learn how recognising a place you have been before can straighten a whole drifted trip at once.
 
-**Type:** Build   **Prerequisites:** 08/05 Scan Matching with ICP, 07/02 Kalman Filter   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** 08/05 Scan Matching with ICP   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A rover drives a square, but wheel errors leave its path ending away from the start. Moving only the last pose leaves every earlier turn misplaced.
+A rover drives a square, but wheel errors leave it away from the start. Moving only the last stop leaves the earlier stops wrong.
 
-A pose graph joins each stop to the next with a spring, the measured move. Recognising the start adds one more spring. All poses then shift together to stretch every spring as little as possible, and a false match bends the map.
+A pose graph joins each stop to the next with a spring, the measured move. Recognising the start adds one more spring. All poses then shift together so every spring stretches as little as possible. A false match adds a wrong spring and bends the map.
 
 ## Key Terms
 
-- **Pose graph**: poses as unknowns, joined by measurements that act like springs.
+- **Pose graph**: a chain of poses (a position plus the direction it faces) joined by measurements that act like springs.
 - **Loop closure**: recognising a place already visited, which adds one more spring.
 - **Residual**: how far a spring is stretched, the guess minus the measurement.
-- **Gauss-Newton**: a method that repeats the step that most reduces the cost, treating residuals as straight lines.
-- **rms error**: root mean square, the typical distance of a pose from the truth.
+
+- **rms error**: the typical distance between a pose and where the robot really was.
 
 ## The Problem
 
-Picture a robot driving around a square. Wheel counts say it ended 1.4 m from the start, but a scan match says the last scan matches the first. Fixing only the last position leaves the rest of the trip bent.
+Picture a robot driving around a square. Wheel counts say it ended 1.4 m from the start, but the last laser scan looks just like the first. Fixing only the last position leaves the rest of the trip bent.
 
 ## The Concept
 
@@ -40,7 +40,7 @@ All positions then shift together to stretch every spring as little as possible.
 
 ![Pipeline](../assets/diagram-posegraph-pipeline.png)
 
-*One new spring, then everything is re-solved.*
+*Add one spring, then shift all poses at once.*
 
 ![Before and after](../assets/fig-posegraph-loop.png)
 
@@ -67,7 +67,7 @@ J = jacobian(X, edges, free=range(1, len(X)))   # numeric, pose 0 held fixed
 dx = np.linalg.lstsq(J, -residuals(X, edges), rcond=None)[0]
 ```
 
-Tests check that cost never rises, pose 0 stays put and a wrong closure hurts.
+Tests check that the total stretch never rises, the first pose stays put (the fixed anchor) and a wrong closure hurts.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -77,7 +77,7 @@ python3 phases/08-mobile-robots/06-pose-graph-and-loop-closure/code/main.py
 
 ## Use It
 
-Build this graph in g2o and compare positions with `solve()`.
+Build this graph in g2o, a graph-optimisation library, and compare positions with `solve()`.
 
 Sources: Kümmerle et al., g2o: A General Framework for Graph Optimization (ICRA 2011), http://ais.informatik.uni-freiburg.de/publications/papers/kuemmerle11icra.pdf (abstract read, 2026-11-10).
 
@@ -88,5 +88,5 @@ Sources: Kümmerle et al., g2o: A General Framework for Graph Optimization (ICRA
 ## Exercises
 
 1. Remove the heading error and see whether the closure still helps.
-2. Make the closure measurement less certain and watch the error.
+2. Make the closure spring weaker and watch the error.
 3. Add a second closure halfway round the square.

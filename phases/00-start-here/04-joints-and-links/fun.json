@@ -1,13 +1,13 @@
 {
   "en": {
     "hook": "Two bars and two hinges are enough to put a hand anywhere in a ring. The only tools you need are cos and sin.",
-    "mission": "Run `cd code && python3 main.py`. Then change the second angle to 90 degrees (`math.radians(90)`) and guess the hand position before you run it again.",
-    "clip": "A bench arm with two links moves through four poses, and a see-through amber ball marks where the lesson's `two_link_position()` says the hand is. The hand reaches the ball in every pose. Each pose is held for half a second so the ball has time to be seen."
+    "mission": "Change one hinge angle and guess where the hand goes. Run `cd code && python3 main.py`. Then change the second angle to 90 degrees (`math.radians(90)`) and guess the hand position before you run it again.",
+    "clip": "A small arm with two bars moves through four poses. A see-through amber ball marks where the hand should be, and the hand reaches the ball in every pose. Each pose is held for half a second so you can see it."
   },
   "ko": {
-    "hook": "막대 두 개와 경첩 두 개만 있으면 손을 고리 모양 범위 어디든 보낼 수 있습니다. 필요한 도구는 cos와 sin뿐입니다.",
-    "mission": "`cd code && python3 main.py`를 실행하세요. 이어서 두 번째 각도를 90도(`math.radians(90)`)로 바꾸고 손 위치를 먼저 예측한 뒤 다시 실행하세요.",
-    "clip": "link 두 개짜리 bench arm이 자세 네 개를 차례로 잡고 투명한 주황색 공이 이 레슨의 `two_link_position()`이 계산한 손 위치를 표시합니다. 손은 모든 자세에서 공에 닿습니다. 공을 볼 시간이 있도록 각 자세를 0.5초씩 유지합니다."
+    "hook": "막대 두 개와 경첩 두 개만 있으면 손을 고리 모양 범위 어디든 보낼 수 있어요. 필요한 도구는 cos와 sin뿐이에요.",
+    "mission": "경첩 각도 하나를 바꾸고 손이 어디로 갈지 예측해 봅니다. `cd code && python3 main.py`를 실행하세요. 이어서 두 번째 각도를 90도(`math.radians(90)`)로 바꾸고 손 위치를 먼저 예측한 뒤 다시 실행하세요.",
+    "clip": "막대 두 개짜리 작은 로봇 팔이 자세 네 개를 차례로 잡습니다. 투명한 주황색 공은 손이 있어야 할 자리를 표시하고 손은 모든 자세에서 공에 닿습니다. 볼 시간이 있도록 각 자세를 0.5초씩 유지합니다."
   },
   "toy": null,
   "three": "two-link-hand-3d"

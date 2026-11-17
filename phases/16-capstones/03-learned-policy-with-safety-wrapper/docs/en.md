@@ -2,7 +2,7 @@
 
 > Put a plain safety layer around a learned model and see it keep a robot arm inside its limits.
 
-**Type:** Build   **Prerequisites:** 03/01 The Sampling Limit, 03/04 PID and Tuning   **Time:** ~30 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~30 minutes
 
 ## In Plain Words
 
@@ -17,15 +17,14 @@ A wrapper is plain code between the policy and the motor. It notices an old pict
 - **Clip**: cut a value so it stays inside a range.
 - **Rate limit**: a cap on how much a command may change per step.
 - **Stale observation**: a camera picture older than the wrapper allows.
-- **Nearest-neighbour policy**: averages the actions of the closest recorded demonstrations.
 
 ## The Problem
 
-A trained model picks how hard an arm pushes. It passes every test, then one wild output or lost camera frame sends the arm into its limit. A model cannot be proved safe, but plain code around it can.
+A trained model picks how hard an arm pushes. It passes every test, then one wild output or lost camera frame sends the arm into its limit. 
 
 ## The Concept
 
-Learned models are powerful but unpredictable, so real robots wrap them in code whose behaviour you can prove. The wrapper has three simple rules. If the picture is too old, push with nothing. Never push harder than a safe maximum. Never change the push too fast. Each rule counts how often it fires.
+Learned models are powerful but unpredictable, so real robots wrap them in code whose behaviour you can prove. The wrapper has three simple rules. If the picture is too old, push with nothing. Never push harder than a safe maximum. Never change the push too fast. Each rule counts how often it acts, so you can see what the wrapper had to fix.
 
 ![Policy system](../assets/diagram-policy-system.png)
 
@@ -33,7 +32,7 @@ Learned models are powerful but unpredictable, so real robots wrap them in code 
 
 ![Two faults](../assets/diagram-policy-broken.png)
 
-*A spike is clipped and slowed. An old picture becomes a hold with no push.*
+*A sudden huge output is clipped and rate-limited. An old picture becomes a hold (zero push).*
 
 ![Two arms](../assets/clip-example.mp4)
 
@@ -49,7 +48,7 @@ Learned models are powerful but unpredictable, so real robots wrap them in code 
 
 <details><summary>The math (optional)</summary>
 
-Rules: hold zero torque if the picture is over 3 steps old (a step is 0.02 s), clip torque to 3 Nm, and change it by at most 0.5 Nm per step. At step 30 a spike makes the policy ask for 39.9 Nm. Clipping gives 3 Nm, but the torque was 0.31 Nm, so the rate limit allows only 0.81 Nm. Unwrapped, the joint takes all 39.9 Nm. Spike: peak torque about 40 Nm without the wrapper, 3 Nm with it, joint peak 1.36 rad against 1.01. Lost observation: 1.47 against 1.01. The limit is 1.3 rad. The kick sends blue 0.056 rad past the limit (drawn 4 times larger). A clean run shows no clip and no hold, the spike run 1 clip, the lost-observation run 23 hold steps.
+A model cannot be proved safe, but plain code around it can. Rules: hold zero torque if the picture is over 3 steps old (a step is 0.02 s), clip torque to 3 Nm, and change it by at most 0.5 Nm per step. At step 30 a spike makes the policy ask for 39.9 Nm. Clipping gives 3 Nm, but the torque was 0.31 Nm, so the rate limit allows only 0.81 Nm. Unwrapped, the joint takes all 39.9 Nm. Spike: peak torque about 40 Nm without the wrapper, 3 Nm with it, joint peak 1.36 rad against 1.01. Lost observation: 1.47 against 1.01. The limit is 1.3 rad. The kick sends blue 0.056 rad past the limit (drawn 4 times larger). A clean run shows no clip and no hold, the spike run 1 clip, the lost-observation run 23 hold steps.
 
 </details>
 
@@ -73,7 +72,7 @@ python3 phases/16-capstones/03-learned-policy-with-safety-wrapper/code/main.py
 
 ## Use It
 
-ros2_control handles joint limits for hardware interfaces. Compare its startup log with the three rules here.
+ros2_control, a ROS 2 package for driving robot hardware, also limits joint commands. Read how it limits commands and match each limit to one of the three rules.
 
 Sources: [ros2_control joint limiting](https://control.ros.org/rolling/doc/ros2_control/hardware_interface/doc/joint_limiting.html), 2026-11-09.
 
@@ -85,4 +84,4 @@ Sources: [ros2_control joint limiting](https://control.ros.org/rolling/doc/ros2_
 
 1. Raise the allowed age until the lost-picture run crosses the limit.
 2. Add a speed limit as a fourth rule.
-3. Train on fewer episodes and see what changes.
+

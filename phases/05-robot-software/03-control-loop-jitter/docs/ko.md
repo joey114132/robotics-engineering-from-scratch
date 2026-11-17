@@ -2,20 +2,20 @@
 
 > 평균 타이밍이 완벽한 제어 loop도 로봇 팔을 떨게 만들 수 있는 이유를 배웁니다.
 
-**유형:** 만들기   **선수 지식:** 05/02 Executor와 Callback   **시간:** 약 15분
+**유형:** 만들기   **선수 지식:** 없음   **시간:** 약 15분
 
 ## 쉽게 말하면
 
-control loop는 박자마다 로봇 팔에 새 목표를 줘요. 메트로놈과 비슷해요. 이전 동작 뒤에 한 주기를 쉬고 다음 박자를 잡으면 박자가 갈수록 늦어져요.
+control loop는 한 번 돌 때마다(cycle) 로봇 팔에 새 목표를 줘요. 메트로놈의 박자와 비슷해요. 이전 동작 뒤에 한 주기를 쉬고 다음 cycle을 잡으면 cycle이 갈수록 늦어져요.
 
-시계의 정해진 시각에 박자를 고정하면 일정하게 유지돼요. 그래도 아주 가끔 다른 프로그램이 processor를 붙잡아 한 번 늦게 깨어나고 팔이 떨려요.
+시계의 정해진 시각에 cycle을 고정하면 일정하게 유지돼요. 그래도 아주 가끔 다른 프로그램이 processor를 계속 바쁘게 만들어 한 번 늦게 깨어나고 팔이 떨려요.
 
 ## 핵심 용어
 
 - **Control loop**: 센서를 읽고 계산해서 모터에 명령하는 일을 일정한 빠르기로 되풀이하는 코드입니다.
 - **Period (`T`)**: loop가 한 번 도는 데 계획한 시간입니다.
-- **Jitter**: 한 번의 실제 타이밍이 계획에서 벗어난 정도입니다.
-- **Deadline**: 한 번의 loop가 끝나야 하는 시각입니다.
+- **Jitter**: 한 cycle의 실제 타이밍이 계획에서 벗어난 정도입니다.
+- **Deadline**: 한 cycle이 끝나야 하는 시각입니다.
 - **p99**: 주기의 99%가 그 안에 들어오는 지연 값입니다.
 - **Preemption**: 운영체제가 내 프로그램을 멈추고 다른 프로그램을 실행하는 일입니다.
 
@@ -29,9 +29,9 @@ control loop는 박자마다 로봇 팔에 새 목표를 줘요. 메트로놈과
 
 ![loop 한 바퀴](../assets/diagram-loop-anatomy.png)
 
-*한 바퀴는 정해진 시각까지 자고 조금 늦게 깨어나 일하고 다음 deadline 전에 끝나야 합니다.*
+*한 cycle은 정해진 시각까지 자고 조금 늦게 깨어나 일하고 다음 deadline 전에 끝나야 합니다.*
 
-시계의 정해진 시각까지 자면 평균이 완벽하게 유지되어서 늦게 깨어나는 일이 퍼짐으로만 나타납니다. 아주 늦은 깨어남 하나가 다음 바퀴도 늦게 만들어서 목표가 움직이는 동안 팔의 명령이 늦게 나갑니다.
+loop가 시계의 정해진 시각까지 자면 평균이 완벽하게 유지됩니다. 늦게 깨어나는 일은 평균 둘레의 흩어짐으로만 나타납니다. 아주 늦은 깨어남 하나가 다음 cycle도 늦게 만들어서 목표가 움직이는 동안 팔의 명령이 늦게 나갑니다.
 
 ![평균과 최악](../assets/diagram-average-hides.png)
 
@@ -39,7 +39,7 @@ control loop는 박자마다 로봇 팔에 새 목표를 줘요. 메트로놈과
 
 ![목표에 뒤처진 팔](../assets/clip-example.mp4)
 
-*공은 일정대로 움직이고 팔은 명령이 나갈 때 움직여서 한 번 뒤처졌다가 튑니다.*
+*공은 일정대로 움직입니다. 팔은 명령이 나갈 때 움직여서 한 번 뒤처졌다가 튑니다.*
 
 ![지터 히스토그램과 타임라인](../assets/fig-jitter.png)
 
@@ -71,16 +71,16 @@ python3 phases/05-robot-software/03-control-loop-jitter/code/main.py
 
 ## 실제 도구로 보기
 
-Linux에서 `TIMER_ABSTIME`을 준 `clock_nanosleep`은 절대 시각까지 잡니다.
+Linux에서 `TIMER_ABSTIME`을 준 `clock_nanosleep`은 시계의 정해진 시각까지 잡니다.
 
 출처: clock_nanosleep(2) (https://man7.org/linux/man-pages/man2/clock_nanosleep.2.html)와 ROS 2 Jazzy "Understanding real-time programming" (https://docs.ros.org/en/jazzy/Tutorials/Demos/Real-Time-Programming.html), 둘 다 2026년 11월 9일 확인.
 
 ## 결과물
 
-`outputs/skill-loop-jitter-report.md`는 loop 타임스탬프를 평균, p99, 최악, deadline 놓침 보고서로 바꿉니다.
+`outputs/skill-loop-jitter-report.md`는 loop 타임스탬프를 타이밍 보고서로 바꿉니다.
 
 ## 연습 문제
 
 1. 드문 spike를 더 자주 나오게 해 보세요.
-2. 놓친 직후의 주기가 왜 더 짧은지 설명하세요.
+2. 늦은 cycle 다음 cycle이 왜 여전히 늦게 시작할 수 있는지 설명하세요.
 3. 두 번 연속 놓치면 작동하는 watchdog을 더하세요.

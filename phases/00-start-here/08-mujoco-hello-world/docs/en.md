@@ -6,22 +6,22 @@
 
 ## In Plain Words
 
-Hang a ball on a rod like a swing and let go. Without friction it never rises above where you let go.
+Hang a ball on a rod like a swing and let go. If nothing slows it down, it never rises above where you let go.
 
 A computer moves the ball in tiny time steps. Each step first changes the speed, then moves the ball. If it moves the ball with the old speed, every step adds a little energy and the swing grows. Using the new speed fixes it.
 
 ## Key Terms
 
+- **Time step (`dt`)**: how far the computer jumps forward in time on each step, here a few hundredths of a second.
 - **Simulation**: a program that predicts how something moves by repeating one small time step many times.
-- **Time step (`dt`)**: how far the simulation jumps forward in time on each step, here a few hundredths of a second.
-- **Pendulum**: a weight on a rod that swings under gravity; the simplest test for a simulator.
+- **Pendulum**: a weight on a rod that swings under gravity.
 - **Period**: the time for one full swing out and back.
-- **Explicit / semi-implicit Euler**: two ways to take a step. Explicit moves with the old speed; semi-implicit moves with the new one.
-- **MuJoCo**: a free physics engine, a ready-made simulator we compare our loop against.
+- **Explicit / semi-implicit Euler**: two ways to take a step. Explicit uses the old speed; semi-implicit uses the new speed. Euler is a name.
+- **MuJoCo**: a free ready-made simulator we compare our loop against.
 
 ## The Problem
 
-You copy a physics loop and run a pendulum. It swings higher each time until it spins over the top. Only two lines are in the wrong order.
+You copy a physics loop and run a pendulum. It swings higher each time until it spins over the top. Only two lines are in the wrong order (you will see them in Build It).
 
 ## The Concept
 
@@ -29,9 +29,9 @@ Robots are tested in simulation first, so a simulator that invents energy mislea
 
 ![One physics step](../assets/diagram-physics-step.png)
 
-*Acceleration changes the speed, and the new speed moves the position. Moving with the old speed is explicit Euler.*
+*Acceleration changes the speed, and the new speed moves the position. Moving with the old speed is the explicit way.*
 
-Let go of the swing and run it for ten seconds. With the right order it keeps swinging to the same height. With the wrong order it climbs about five times higher.
+Let go and run the swing for ten seconds. The right order keeps the same height. The wrong order climbs about five times higher.
 
 <details><summary>The math (optional)</summary>
 
@@ -41,11 +41,11 @@ Let go of the swing and run it for ten seconds. With the right order it keeps sw
 
 ![Three pendulums](../assets/clip-example.mp4)
 
-*Amber line: where it was let go. Blue (wrong order, big steps) climbs far above it, dark blue (wrong order, small steps) climbs slowly, green (right order) stays on it.*
+*Amber line: where it was let go. Wrong order: blue (big steps) and dark blue (small steps) climb above it. Right order: green stays on it.*
 
-![Same pendulum, two solvers](../assets/diagram-two-solvers.png)
+![Same pendulum, our loop and MuJoCo](../assets/diagram-two-solvers.png)
 
-*Our loop and MuJoCo give the same period.*
+*Both swing out and back in the same time.*
 
 ![Step-size error](../assets/fig-step-size.png)
 
@@ -53,7 +53,7 @@ Let go of the swing and run it for ten seconds. With the right order it keeps sw
 
 ## Build It
 
-The two ways differ only in which `omega` moves the angle.
+The two ways differ only in which speed (`omega`, how fast the angle changes) moves the angle.
 
 ```python
 def step(theta, omega, dt, L=1.0, scheme="semi"):
@@ -76,16 +76,16 @@ python3 phases/00-start-here/08-mujoco-hello-world/code/main.py
 
 ## Use It
 
-`mujoco_period()` swings the same pendulum in MuJoCo. Its timing matches ours within 0.5% (tested), because MuJoCo also uses the right order by default.
+`mujoco_period()` swings the same pendulum in MuJoCo. Its timing matches ours within 0.5% (tested): MuJoCo also moves with the new speed.
 
 Sources: https://mujoco.readthedocs.io/en/stable/XMLreference.html
 
 ## Ship It
 
-`outputs/skill-sim-sanity-check.md` is a short checklist before you trust a new simulation.
+`outputs/skill-sim-sanity-check.md` checks a new simulation.
 
 ## Exercises
 
 1. Add a slowing force to `step` and check that the swing shrinks.
-2. Find the biggest step that still keeps the timing within 1%.
+2. Find the biggest step keeping the timing within 1%.
 3. Make the rod longer and check that each swing takes longer.

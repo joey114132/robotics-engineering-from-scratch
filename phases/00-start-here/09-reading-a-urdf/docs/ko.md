@@ -6,22 +6,22 @@
 
 ## 쉽게 말하면
 
-작은 bench arm의 파일에는 팔꿈치가 어깨에서 일정한 거리만큼 앞에 있다고 적혀 있어요. 여기서 앞은 방이 아니라 link를 따라가는 방향이라서 어깨를 돌리면 앞이 옆을 가리켜요.
+작은 로봇 팔의 설명 파일(URDF)에는 팔꿈치가 어깨에서 일정한 거리만큼 앞에 있다고 적혀 있어요. 여기서 앞은 방이 아니라 link를 따라가는 방향이라서 어깨를 돌리면 앞이 옆을 가리켜요.
 
-URDF는 로봇의 설명 파일이고 joint로 이어진 link(단단한 부품)를 나열해요. 각 joint의 offset은 바로 앞 link의 축을 기준으로 적혀 있어요. offset마다 그 앞의 회전을 모두 반영한 다음 더해야 해요.
+파일은 joint로 이어진 link(단단한 부품)를 나열해요. 각 joint의 offset은 바로 앞 부품의 방향을 기준으로 재요. 그래서 offset마다 앞에서 일어난 회전을 모두 반영한 다음 더해야 해요.
 
 ## 핵심 용어
 
-- **URDF**: 로봇을 joint로 이어진 link로 설명하는 텍스트 파일입니다.
 - **Link**: 로봇의 단단한 부품 하나입니다. 예를 들어 윗팔입니다.
-- **Joint**: 자식 link가 부모 link에 대해 움직이게 해 주는 연결입니다.
+- **Joint**: 두 link 사이의 경첩으로 한쪽이 다른 쪽에 대해 돌게 해 줍니다.
+- **URDF**: 로봇을 joint로 이어진 link로 설명하는 텍스트 파일입니다.
 - **Frame**: 링크나 방 같은 어떤 대상에 붙은 x, y, z축의 묶음입니다.
-- **`<origin>`**: joint의 위치(`xyz`)와 회전(`rpy`)을 부모 link 기준으로 적은 값입니다.
+- **Joint offset (`<origin>`)**: joint가 앞 부품에서 얼마나 떨어져 있고 얼마나 돌아가 있는지를 그 부품 자신의 방향으로 적은 값입니다.
 - **Transform**: 회전 하나와 이동 하나를 담은 4x4 숫자 표입니다.
 
 ## 문제
 
-로봇의 설명 파일에는 부품마다 바로 앞 부품에서 얼마나 떨어져 있는지 적혀 있습니다. 그 거리를 모두 더해 손의 위치를 구했더니 viewer가 보여 주는 위치와 많이 다릅니다.
+로봇의 설명 파일에는 부품마다 바로 앞 부품에서 얼마나 떨어져 있는지 적혀 있습니다. 그 거리를 모두 더해 손의 위치를 구했더니 팔이 실제로 있는 위치와 많이 다릅니다.
 
 ## 개념
 
@@ -31,7 +31,7 @@ simulator와 로봇 프로그램은 모두 이 파일에서 출발하므로 잘�
 
 *상자는 부품이고 화살표는 joint입니다.*
 
-파일은 offset을 바로 앞 부품 자신의 방향으로 재므로 어깨가 돌아간 뒤에는 "앞"이 옆을 가리킵니다. 방에 고정된 방향으로 읽으면 엉뚱한 곳이 나옵니다.
+offset은 바로 앞 부품 자신의 방향으로 잽니다. 방에 고정된 방향으로 읽으면 엉뚱한 곳이 나옵니다.
 
 ![Which frame](../assets/diagram-origin-frame.png)
 
@@ -67,7 +67,7 @@ for e in root.findall("joint"):
 # T = T @ T_origin @ R_axis(q), for each joint on the chain
 ```
 
-`chain()`은 tip에서 root까지 걸어갑니다. `link_positions()`는 origin을 먼저 적용하고 joint 자신의 회전을 그다음에 적용하며 limit 밖의 값은 거부합니다.
+`chain()`은 tip에서 base까지 거꾸로 걸어갑니다. `link_positions()`는 origin을 먼저 적용하고 joint 자신의 회전을 그다음에 적용하며 limit 밖의 값은 거부합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -76,7 +76,7 @@ python3 -m pytest phases/00-start-here/09-reading-a-urdf -q
 
 ## 실제 도구로 보기
 
-ROS 2의 `robot_state_publisher`가 파일과 joint 값을 pose로 바꿔 줍니다. 그 결과를 `link_positions()`와 비교해 보세요.
+ROS 2는 작은 프로그램들로 이루어진 로봇 소프트웨어이고 그 안의 `robot_state_publisher`는 파일과 joint 값을 모든 부품의 자리로 바꿔 줍니다. 그 결과를 `link_positions()`와 비교해 보세요.
 
 출처: https://wiki.ros.org/urdf/XML/joint, https://github.com/ros/robot_state_publisher
 
@@ -86,6 +86,6 @@ ROS 2의 `robot_state_publisher`가 파일과 joint 값을 pose로 바꿔 줍니
 
 ## 연습 문제
 
-1. 예제에 미끄러지는 joint를 추가하고 link를 그 방향으로 움직여 보세요.
+1. 돌지 않고 직선으로 미끄러지는 joint를 더하고 link를 그 방향으로 움직여 보세요.
 2. 자식이 둘 이상인 부품을 모두 출력하세요.
-3. root가 둘인 파일을 파서가 거부하게 만드세요.
+3. base 부품이 둘인 파일을 파서가 거부하게 만드세요.

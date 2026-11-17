@@ -2,7 +2,7 @@
 
 > Learn how a robot task can remember where it is, so a failed step is retried instead of restarted.
 
-**Type:** Build   **Prerequisites:** 05/02 Executors and Callbacks   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
@@ -12,10 +12,10 @@ An arm fetches a crate. If the grasp misses, it should retry where it is, not dr
 
 - **Behaviour tree**: a task written as a tree of steps and ticked every cycle.
 - **Tick**: one small step, where the tree is asked to do a little work and report.
-- **Status**: the answer a node gives, `success`, `failure` or `running`.
-- **Sequence**: a parent that runs its children in order and stops at the first failure.
-- **Fallback**: a parent that tries its children in order and stops at the first success.
-- **State machine**: a table of named states with an arrow for each event.
+- **Status**: the answer each step gives: it worked, it failed, or it is still running.
+- **Sequence**: a step that runs the steps under it in order and stops at the first failure.
+- **Fallback**: a step that tries the steps under it in order and stops at the first success.
+- **State machine**: a table of named states, with an arrow for each thing that makes the robot switch.
 
 ## The Problem
 
@@ -23,33 +23,31 @@ An arm reaches a crate, grasps it and carries it. As nested ifs, a missed grasp 
 
 ## The Concept
 
-Real tasks fail halfway all the time, so the task needs a place to remember where it was.
+Real tasks often fail halfway, so a task needs a place to remember where it was.
 
 ![A fetch task as a tree](../assets/diagram-fetch-tree.png)
 
 *The grasp sits under a Retry, so a miss does not end the task.*
 
-Every cycle the tree is ticked and each step answers success, failure or running. A Sequence stops at the first failure, a Fallback at the first success, and both resume at the step that said running.
+Every cycle the tree is ticked and each step answers `success`, `failure` or `running`. A Sequence stops at the first failure, a Fallback at the first success, and both resume at the step that said running. A Retry wraps one step and tries it again after a failure.
 
 ![What a parent does with each answer](../assets/diagram-status-rules.png)
 
 *What a parent does with each answer.*
 
-A Fallback tries bin A, then bin B. Bin A is full, so it moves on to bin B, which answers running. The next tick resumes at bin B without asking about A again.
+A Fallback tries bin A, then bin B. Bin A is full, so it answers failure and the Fallback moves on to bin B, which answers running. The next tick resumes at bin B without asking about A again.
 
 ![An arm skips a full bin](../assets/clip-example.mp4)
 
 *A red frame flashes on the full bin. The arm then carries the crate to bin B.*
 
-![Which nodes tick on which cycle](../assets/fig-fetch-ticks.png)
+![Which steps tick on which cycle](../assets/fig-fetch-ticks.png)
 
 *The grasp fails twice and the Retry reports running. Reach, once done, is not ticked again.*
 
-A state machine needs a retry added to every state that can fail. A tree needs one node around one child.
-
 <details><summary>The math (optional)</summary>
 
-In the bin example, tick 1 fails the check `A has room` and moves on to `go B`, which answers running. Tick 2 resumes at `go B`, and tick 3 succeeds. `Retry` turns a failure into `running` until it has tried `n` times.
+In the bin example, tick 1 fails the check `A has room` and moves on to `go B`, which answers running. Tick 2 resumes at `go B`, and tick 3 succeeds. `Retry` turns a failure into `running` until it has tried `n` times. A state machine needs a retry added to each state that can fail. A tree needs one Retry step around the step that can fail.
 
 </details>
 
@@ -74,7 +72,7 @@ python3 phases/05-robot-software/05-behaviour-trees-and-state-machines/code/main
 
 ## Use It
 
-BehaviorTree.CPP and `py_trees` use the same answers and add shared data.
+BehaviorTree.CPP and `py_trees` (two behaviour tree libraries) use the same answers and let steps share information.
 
 ## Ship It
 

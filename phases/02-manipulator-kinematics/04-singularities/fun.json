@@ -1,13 +1,13 @@
 {
   "en": {
     "hook": "Straighten my arm and one direction of motion vanishes. Ask for it anyway and my elbow tries to spin like mad.",
-    "mission": "In `code/main.py` change the damped `0.05` to `0.5`. Predict whether damped |qd| at q2=0.005 rises or falls and what the tip gives up, then run it.",
-    "clip": "Both arms push the tip outward at 0.1 m/s to the edge of reach, and their drives top out at 4 rad/s. Each arrow is the joint speed that arm's `solve()` from this lesson asks for, drawn 0.07 m per rad/s and pointing the way the elbow turns the hand. The blue arm uses the plain inverse, so near full stretch its demand climbs to about 7 rad/s and it ends nearly straight, while the green arm uses damped least squares (lam = 0.05), asks for under 1 rad/s and stays bent. The clip starts 0.5 s into the push and plays in slow motion that eases down toward the end, so the surge stays on screen."
+    "mission": "Make the safety cap stronger and see what the hand gives up. In `code/main.py` change the damped `0.05` to `0.5`. Predict whether damped |qd| at q2=0.005 rises or falls and what the tip gives up, then run it.",
+    "clip": "Both arms push the hand outward at a gentle speed, and their motors have a speed limit. Each arrow is the joint speed that arm asks for. The blue arm uses the plain way, so near full stretch it asks for about 7 rad/s and ends nearly straight. The green arm uses damped least squares, asks for under 1 rad/s and stays bent. The clip plays in slow motion near the end so the surge stays on screen."
   },
   "ko": {
-    "hook": "팔이 쭉 펴지면 움직일 수 있는 방향이 하나 사라집니다. 그래도 그 방향을 요구하면 제 팔꿈치는 미친 듯이 돌려고 합니다.",
-    "mission": "`code/main.py`의 damped 쪽 `0.05`를 `0.5`로 바꾸세요. q2=0.005에서 damped |qd|가 오를지 내릴지와 손끝이 무엇을 포기하는지 예측한 다음 실행하세요.",
-    "clip": "두 팔은 손끝을 0.1 m/s로 도달 거리 끝까지 바깥으로 밀고, 구동기는 4 rad/s에서 한계에 걸립니다. 화살표는 이 레슨의 `solve()`가 그 팔에 요구하는 관절 속도입니다. 1 rad/s당 0.07 m로 그렸고 팔꿈치가 손을 돌리는 방향을 가리킵니다. 파란 팔은 일반 역행렬을 써서 거의 다 펴지는 순간 요구 속도가 약 7 rad/s까지 오르고 거의 쭉 펴진 채 끝나지만, 초록 팔은 damped least squares(lam = 0.05)를 써서 1 rad/s 아래만 요구하고 굽은 채 남습니다. 영상은 밀기 시작 0.5초 뒤부터 시작하고 끝으로 갈수록 느려지는 슬로모션이라 요구 속도가 치솟는 순간이 화면에 오래 남습니다."
+    "hook": "팔을 쭉 펴면 움직일 수 있는 방향이 하나 사라져요. 그래도 그 방향을 요구하면 제 팔꿈치는 미친 듯이 돌려고 해요.",
+    "mission": "안전 상한을 더 세게 걸면 손이 무엇을 포기하는지 봅니다. `code/main.py`의 damped 쪽 `0.05`를 `0.5`로 바꾸세요. q2=0.005에서 damped |qd|가 오를지 내릴지와 손끝이 무엇을 포기하는지 예측한 다음 실행하세요.",
+    "clip": "두 팔은 손을 느긋한 속도로 바깥으로 밀고 구동기에는 속도 한계가 있습니다. 화살표는 그 팔이 요구하는 관절 속도입니다. 파란 팔은 일반적인 방법을 써서 거의 다 펴지는 순간 약 7 rad/s를 요구하고 거의 쭉 펴진 채 끝납니다. 초록 팔은 damped least squares를 써서 1 rad/s 아래만 요구하고 굽은 채 남습니다. 요구 속도가 치솟는 순간이 화면에 오래 남도록 끝으로 갈수록 느려지는 슬로모션입니다."
   },
   "toy": null,
   "three": "singular-reach-3d"

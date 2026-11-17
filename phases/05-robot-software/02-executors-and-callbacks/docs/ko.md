@@ -2,50 +2,51 @@
 
 > 느린 작업 하나가 프로세서가 놀고 있는데도 로봇의 다른 작업을 멈춰 세우는 이유를 배웁니다.
 
-**유형:** 만들기   **선수 지식:** 05/01 Publish-Subscribe와 QoS 불일치   **시간:** 약 15분
+**유형:** 만들기   **선수 지식:** 없음   **시간:** 약 15분
 
 ## 쉽게 말하면
 
-장난감 자동차는 heartbeat timer가 계속 울리는 동안에만 달려요. 울림이 늦으면 watchdog이 차를 세워요.
+장난감 자동차는 timer가 계속 울리는 동안에만 달려요(그 울림이 heartbeat예요). 울림이 늦으면 watchdog이 차를 세워요.
 
-차의 프로그램에는 한 번에 한 가지 일만 하는 일꾼이 하나뿐이라서 긴 이미지 작업이 heartbeat를 기다리게 해요.
+차의 프로그램에는 한 번에 한 가지 일만 하는 일꾼인 thread가 하나뿐이라서 긴 이미지 작업이 heartbeat를 기다리게 해요.
 
 ## 핵심 용어
 
 - **Callback**: 메시지가 도착하거나 timer가 울릴 때 ROS 2가 실행하는 함수입니다.
 - **Thread**: 프로그램 안의 일꾼 하나입니다. 한 번에 한 가지 일만 합니다.
 - **Executor**: 준비된 callback 중 무엇을 어느 thread에서 실행할지 정하는 ROS 2의 부분입니다.
-- **Callback group**: 겹침 규칙 하나를 공유하는 callback 묶음입니다. 예를 들면 동시에 실행하지 않는 규칙입니다.
+- **Callback group**: 함께 실행되는 방식에 대한 규칙 하나를 공유하는 callback 묶음입니다. 예를 들면 동시에 실행하지 않는 규칙입니다.
 - **Starvation**: 다른 callback이 thread를 쥐고 있어서 어떤 callback이 너무 오래 기다리는 일입니다.
 - **Watchdog**: heartbeat가 늦으면 로봇을 세우는 감시 장치입니다.
 
 ## 문제
 
-장난감 자동차가 갑자기 멈춥니다. 다른 일이 이미지 작업을 오래 하는 동안 heartbeat timer가 끊기고 watchdog이 차를 세웁니다. 프로세서는 대부분 놀고 있는데도 그렇습니다.
+장난감 자동차가 갑자기 멈춥니다. 다른 callback이 이미지 작업을 오래 하는 동안 heartbeat가 끊기고 watchdog이 차를 세웁니다. 프로세서는 대부분 놀고 있는데도 그렇습니다.
 
 ## 개념
 
-로봇은 많은 작업을 동시에 돌리고 느린 작업 하나가 안전과 관련된 작업을 굶길 수 있습니다.
+로봇은 많은 callback을 동시에 돌리고 느린 callback 하나가 안전과 관련된 callback을 굶길 수 있습니다.
 
 ![스레드 하나와 느린 callback 하나](../assets/diagram-executor-starve.png)
 
 *timer는 느린 callback이 끝날 때까지 기다립니다.*
 
-executor는 준비된 작업 중 무엇을 어느 일꾼이 실행할지 정합니다. mutually exclusive group은 그 안의 작업 두 개를 동시에 실행하지 않아서 공유 데이터를 지킵니다. 다른 group의 작업은 일꾼이 하나 더 있으면 병렬로 실행될 수 있습니다.
+executor는 준비된 callback 중 무엇을 어느 thread에서 실행할지 정합니다. "동시에 안 함"(mutually exclusive)으로 정한 group은 그 안의 callback 두 개를 동시에 실행하지 않아서 공유 데이터를 지킵니다.
+다른 group의 callback은 병렬로 실행될 수 있습니다.
 
 ![스레드와 group](../assets/diagram-callback-groups.png)
 
-*두 작업이 서로 다른 group에 있을 때만 두 번째 일꾼이 도움이 됩니다.*
+*두 callback이 서로 다른 group에 있을 때만 두 번째 thread가 도움이 됩니다.*
 
-그래서 해결에는 일꾼 하나 더와 느린 작업만의 group이 함께 필요합니다.
+그래서 해결에는 thread 하나 더와 느린 callback만의 group이 함께 필요합니다.
 
 ![자동차 두 대와 각 thread 두 개](../assets/clip-example.mp4)
 
-*지붕의 등 하나가 일꾼 하나입니다. 파랑은 group을 공유해서 두 번째 등이 꺼진 채 차가 멈춥니다. 초록은 멈추지 않습니다.*
+*지붕의 등 하나가 thread 하나입니다. 파랑은 group을 공유해서 두 번째 등이 꺼진 채 차가 멈춥니다. 초록은 멈추지 않습니다.*
 
 ![두 구성의 타임라인](../assets/fig-executor-timeline.png)
 
-*일꾼이 하나이면 timer가 아주 늦게 시작합니다. 일꾼 둘에 group이 나뉘면 늦지 않습니다.*
+*thread가 하나이면 timer가 아주 늦게 시작합니다. thread 둘에 group이 나뉘면 늦게 시작하지 않습니다.*
 
 <details><summary>The math (optional)</summary>
 
@@ -62,7 +63,7 @@ busy = {g for _, g in running if g is not None}
 job = next((j for j in pending if j[3] is None or j[3] not in busy), None)
 ```
 
-`simulate()`는 시간을 1 ms씩 진행하며 쉬는 thread마다 group이 비어 있는 가장 오래된 대기 작업을 줍니다.
+`simulate()`는 시간을 1 ms씩 앞으로 보냅니다. 쉬는 thread는 group이 바쁘지 않은 가장 오래된 대기 callback을 가져갑니다.
 
 ```bash
 cd robotics-engineering-from-scratch

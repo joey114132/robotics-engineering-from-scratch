@@ -15,13 +15,12 @@ complementary filter는 빠른 변화는 gyro에서 가져오고 느린 평균�
 - **Gyro**: 회전 속도를 잽니다. 값을 더하면 매끄럽지만 틀어지는 각도가 나옵니다.
 - **Accelerometer**: 중력을 느껴서 기울기를 바로 알려 주지만 떨립니다.
 - **Time constant (`tau`)**: 가속도계가 넘겨받기 전까지 gyro를 믿는 시간입니다.
-- **High-pass / low-pass**: 빠른 변화만 통과시키는 필터와 느린 평균만 통과시키는 필터입니다.
-- **Crossover**: 두 경로의 비중이 같아지는 frequency(초당 진동 수, Hz)입니다.
+- **Crossover**: 변화의 빠르기를 초당 진동 수(Hz)로 나타냈을 때 gyro와 가속도계의 비중이 같아지는 지점입니다.
 - **Bias**: 작고 일정한 센서 오차입니다.
 
 ## 문제
 
-로봇이 똑바로 균형을 잡아야 합니다. 가속도계만 쓴 기울기는 떨려서 controller가 흔들립니다. 적분한 gyro는 매끄럽지만 서서히 어긋나서 똑바로 서 있는데도 기울었다고 생각하게 됩니다.
+로봇이 똑바로 균형을 잡아야 합니다. 가속도계만 쓴 기울기는 떨려서 균형 제어 코드가 흔들립니다. 적분한 gyro는 매끄럽지만 서서히 어긋나서 똑바로 서 있는데도 기울었다고 생각하게 됩니다.
 
 ## 개념
 
@@ -45,15 +44,16 @@ time constant가 길면 각도는 매끄럽지만 gyro의 어긋남이 새어 �
 
 ![tau에 따른 오차](../assets/fig-tau-tradeoff.png)
 
-*시뮬레이션이 예측한 곡선과 맞고 그 곡선에는 뚜렷한 최적값이 있습니다.*
+*시뮬레이션이 예측한 곡선과 맞습니다.*
 
 ![필터 세 개](../assets/clip-example.mp4)
 
-*왼쪽은 잡음이 판을 흔들고 오른쪽은 판이 일정하게 기웁니다. 가운데가 수평에 가장 가깝습니다. 오차는 과장해서 그렸습니다.*
+*왼쪽은 `tau`가 너무 작아서 잡음이 판을 흔들고 오른쪽은 `tau`가 너무 커서 판이 일정하게 기웁니다. 가운데가 수평에 가장 가깝습니다. 오차는 과장해서 그렸습니다.*
 
 <details><summary>The math (optional)</summary>
 
-매 스텝 `theta = a (theta + gyro dt) + (1 - a) acc`입니다. `acc`는 가속도계의 기울기이고 `a = tau / (tau + dt)`입니다. 가속도계 경로는 low-pass이고 gyro 경로는 high-pass입니다.
+매 스텝 `theta = a (theta + gyro dt) + (1 - a) acc`입니다. `acc`는 가속도계의 기울기이고 `a = tau / (tau + dt)`입니다.
+가속도계 경로는 low-pass(느린 평균만 통과)이고 gyro 경로는 high-pass(빠른 변화만 통과)입니다.
 두 비중은 합이 1이고 `1 / (2 pi tau)` Hz에서 교차합니다. 일정한 gyro bias `b`는 `tau b`의 오차로 쌓입니다. 가속도계 잡음 `s`는 분산 약 `s^2 dt / (2 tau)`를 남깁니다.
 `(tau b)^2 + s^2 dt / (2 tau)`를 최소로 하면 `tau^3 = s^2 dt / (4 b^2)`입니다.
 `b = 0.01 rad/s`, `s = 0.05 rad`, `dt = 0.01 s`일 때 `tau = 2 s`이면 bias 오차가 0.02 rad이고 `tau = 0.05 s`이면 잡음 오차가 0.015 rad입니다.
@@ -75,6 +75,8 @@ def complementary(gyro, acc, dt, tau, theta0=0.0):
     return np.array(out)
 ```
 
+`alpha()`는 섞는 비중을 주고 `complementary()`는 두 센서를 섞습니다.
+
 ```bash
 cd robotics-engineering-from-scratch
 python3 -m pytest phases/07-state-estimation/04-complementary-filter -q
@@ -82,7 +84,7 @@ python3 -m pytest phases/07-state-estimation/04-complementary-filter -q
 
 ## 실제 도구로 보기
 
-`imu_tools`의 `imu_complementary_filter`는 gyro와 가속도계와 선택적으로 자기 센서 값을 합칩니다.
+IMU 데이터용 로봇 소프트웨어 패키지 `imu_tools`의 `imu_complementary_filter`는 gyro와 가속도계와 선택적으로 자기 센서 값을 합칩니다.
 
 출처: imu_tools README, https://raw.githubusercontent.com/CCNYRoboticsLab/imu_tools/humble/README.md (2026년 11월 9일 확인).
 
@@ -94,4 +96,4 @@ python3 -m pytest phases/07-state-estimation/04-complementary-filter -q
 
 1. time constant 몇 가지를 써 보고 눈으로 가장 좋은 것을 고르세요.
 2. 가속도계 잡음을 절반으로 줄이고 최적값이 어디로 움직이는지 보세요.
-3. 가속도계가 흔들 때만 시끄럽다면 time constant는 어떻게 해야 하나요?
+3. 판이 흔들리는 동안 `tau`는 커야 할까요 작아야 할까요? 직접 해 보고 확인하세요.

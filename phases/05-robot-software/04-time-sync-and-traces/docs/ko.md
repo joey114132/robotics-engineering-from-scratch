@@ -2,11 +2,11 @@
 
 > 두 시계를 맞추는 법과 단계별 기록으로 실행이 처음 틀어진 곳을 찾는 법을 배웁니다.
 
-**유형:** 만들기   **선수 지식:** 05/03 제어 Loop Jitter   **시간:** 약 15분
+**유형:** 만들기   **선수 지식:** 없음   **시간:** 약 15분
 
 ## 쉽게 말하면
 
-자동차에 움직임을 느끼는 IMU와 도로를 보는 카메라가 서로 다른 컴퓨터에 달려 있어요. 두 값을 합치는 filter는 각 값의 time stamp를 믿어서 시계가 앞서가면 사건이 엉뚱한 순서로 들어와요.
+자동차에 움직임을 느끼는 IMU와 도로를 보는 카메라가 서로 다른 컴퓨터에 달려 있어요. 두 값을 합치는 소프트웨어는 각 값의 time stamp를 믿어서 시계가 앞서가면 사건이 엉뚱한 순서로 들어와요.
 
 ## 핵심 용어
 
@@ -29,19 +29,17 @@
 
 *한 컴퓨터가 상대에게 시각을 묻고 물은 때와 답이 돌아온 때를 적어 둡니다.*
 
-round trip의 절반이 한쪽 방향 이동 시간이므로 이 기록으로 두 시계가 얼마나 다른지 알 수 있습니다. round trip이 가장 짧은 시도를 믿으세요.
+요청의 기록은 시계 차이에 이동 시간을 더한 값이고 응답의 기록은 시계 차이에서 이동 시간을 뺀 값입니다. 둘을 평균하면 이동 시간이 사라집니다. round trip이 가장 짧은 시도를 믿으세요. 오차가 가장 작기 때문입니다.
 
 ![offset 추정과 순서 오류](../assets/fig-time-sync.png)
 
 *왼쪽은 여러 번 중 가장 좋은 것이 한 번보다 낫다는 모습입니다. 오른쪽은 시각이 가까운 센서가 offset이 충분히 크면 순서가 뒤집히는 모습입니다.*
 
-trace는 단계마다 전후 상태를 기록합니다. reader는 각 단계를 intent와 견주어 처음 틀린 것을 알려 줍니다.
+trace는 단계마다 전후 상태를 기록합니다. trace reader(작은 검사 프로그램)는 각 단계를 intent와 견주어 처음 틀린 것을 알려 줍니다.
 
 ![trace reader](../assets/diagram-trace-reader.png)
 
 *reader는 intent를 순서대로 확인하고 처음 어긋난 곳에서 멈춥니다.*
-
-2단계가 아무것도 바꾸지 않으면 reader는 2단계를 알려 주고 3단계는 보지 않습니다.
 
 ![목표 두 번째를 건너뛴 팔](../assets/clip-example.mp4)
 
@@ -63,7 +61,7 @@ def estimate(t0, t1, t2, t3):
     return ((t1 - t0) + (t2 - t3)) / 2, (t3 - t0) - (t2 - t1)
 ```
 
-`order_errors()`는 stamp로 정렬한 순서가 실제 순서와 다른 자리를 셉니다. `first_mismatch()`는 처음 실패한 intent를 돌려줍니다.
+`order_errors()`는 time stamp로 정렬했을 때 엉뚱한 자리에 놓이는 값을 셉니다. `first_mismatch()`는 처음 실패한 intent를 돌려줍니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -72,7 +70,7 @@ python3 -m pytest phases/05-robot-software/04-time-sync-and-traces -q
 
 ## 실제 도구로 보기
 
-`estimate()`는 NTP 공식을 따릅니다.
+`estimate()`는 표준 시계 동기화 공식(NTP)을 따릅니다.
 
 출처: RFC 5905 (https://datatracker.ietf.org/doc/html/rfc5905)와 ROS 2 설계 글 "Clock and Time" (https://design.ros2.org/articles/clock_and_time.html), 둘 다 2026년 11월 9일 확인.
 

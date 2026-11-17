@@ -1,19 +1,19 @@
 # Cascaded Attitude Control
 
-> Learn how a drone stays level against steady wind, with a controller that remembers.
+> Learn how a drone stays level against steady wind, with a control rule that remembers.
 
 **Type:** Build   **Prerequisites:** 10/03 Quadrotor Model   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A steady gust leans on a drone's nose; it must fight back. A simple controller pushes back in proportion to the tilt, so the drone must stay tilted to push as hard as the gust.
+A steady gust leans on a drone's nose. A simple rule pushes back in proportion to the tilt, so the drone must stay tilted to push as hard as the gust.
 
-Cascaded attitude control adds a memory. While the drone is not level, the memory adds a little more push until it matches the gust. Then the drone is level again and still resisting.
+Cascaded attitude control adds a memory, the integral: a running total of the error. While the drone is not level, the memory adds push until it matches the gust. Then the drone is level and still resisting.
 
 ## Key Terms
 
 - **Attitude**: how the drone is tilted in space.
-- **PD control**: pushing back in proportion to the error (`kp`) and to how fast it changes (`kd`).
+- **PD control**: pushing back in proportion to the error and to how fast the error changes.
 - **Cascade**: two loops, an angle loop outside that commands a turning speed to a rate loop inside.
 - **Integral**: a running total of the error; it keeps growing while any error remains.
 - **Gain**: the factor that turns an error into a push.
@@ -21,13 +21,13 @@ Cascaded attitude control adds a memory. While the drone is not level, the memor
 
 ## The Problem
 
-Picture a hovering drone pushed by a gust for a second. A simple controller leans and stays leaning for the whole gust, so the drone drifts. Pushing harder per degree shrinks the lean but costs more torque.
+Picture a hovering drone pushed by a gust for a second. A simple rule leans and stays leaning for the whole gust, so the drone drifts. Pushing harder per degree shrinks the lean but costs more torque.
 
 ## The Concept
 
 A real drone fights wind all day, so it must resist the push and still stay level.
 
-A simple controller pushes back in proportion to the tilt, so it must stay tilted to push as hard as the gust. Add a memory: while the drone is not level, the memory keeps adding push until it matches the gust. Then the drone is level and still resisting.
+The fix is the memory: while the drone is not level, it keeps adding push until the push matches the gust.
 
 ![PD](../assets/diagram-single-pd.png)
 
@@ -41,7 +41,7 @@ A simple controller pushes back in proportion to the tilt, so it must stay tilte
 
 *Both push back equally, but only green is level.*
 
-When the gust stops, the memory still holds the push, so the drone swings a little the other way. A real controller limits the memory so it cannot grow without bound (windup).
+When the gust stops, the memory still holds the push, so the drone swings a little the other way. A real drone limits the memory so it cannot grow without bound (windup).
 
 ![Gust response](../assets/fig-gust-response.png)
 
@@ -65,7 +65,7 @@ def cascade(k_theta, k_w, k_i):
     return ctrl
 ```
 
-With `k_i = 0` this is a P-P cascade and equals plain PD.
+With the memory switched off this is plain PD.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,7 +75,7 @@ python3 phases/10-legged-and-aerial/04-cascaded-attitude-control/code/main.py
 
 ## Use It
 
-The last test checks the controller's stability against SciPy's transfer-function tool.
+The last test checks stability against a ready-made SciPy tool.
 
 ## Ship It
 
@@ -85,4 +85,4 @@ The last test checks the controller's stability against SciPy's transfer-functio
 
 1. Make the memory stronger and watch the swing after the gust grow.
 2. Limit the torque and watch what the memory does.
-3. Weaken the inner loop, keep a strong memory, and see it go unstable.
+3. Weaken the turning-speed loop, keep a strong memory, and watch the drone start to swing.

@@ -1,6 +1,6 @@
 # Joints and Links
 
-> Learn how a joint angle and a link length tell you where an arm's hand is.
+> Learn how each hinge's turn and each bar's length tell you where an arm's hand is.
 
 **Type:** Learn   **Prerequisites:** 00/03 Angles and Radians   **Time:** ~15 minutes
 

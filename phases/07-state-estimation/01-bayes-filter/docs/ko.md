@@ -2,7 +2,7 @@
 
 > 바퀴가 미끄러지고 센서가 모호해도 로봇이 자기 위치를 추적하는 법을 배웁니다.
 
-**유형:** 만들기   **선수 지식:** 01/04 Frame과 Transform 트리   **시간:** 약 15분
+**유형:** 만들기   **선수 지식:** 없음   **시간:** 약 15분
 
 ## 쉽게 말하면
 
@@ -32,7 +32,7 @@
 *predict는 밀고 퍼뜨립니다. update는 센서 값으로 가중치를 다시 매깁니다.*
 
 belief는 복도 칸마다 막대 하나인 줄이고 로봇이 있을 가능성이 큰 곳이 더 높습니다. predict는 움직임만큼 막대를 밀고 퍼뜨립니다. 바퀴가 미끄러지기 때문입니다. update는 센서 값과 맞는 칸의 막대를 올리고 나머지를 낮춘 뒤 막대의 합이 1이 되게 다시 맞춥니다.
-이것이 Bayes 규칙입니다.
+이 단계가 Bayes 규칙입니다.
 
 ![자기 칸을 찾는 로버](../assets/clip-example.mp4)
 
@@ -40,7 +40,7 @@ belief는 복도 칸마다 막대 하나인 줄이고 로봇이 있을 가능성
 
 ![필터와 dead reckoning](../assets/diagram-bayes-split.png)
 
-*dead reckoning(센서 단계 없음)에서는 belief가 계속 퍼집니다.*
+*dead reckoning(바퀴 횟수만, 센서 단계 없음)에서는 belief가 계속 퍼집니다.*
 
 ![belief가 고정되는 모습](../assets/fig-belief-sharpening.png)
 
@@ -48,7 +48,7 @@ belief는 복도 칸마다 막대 하나인 줄이고 로봇이 있을 가능성
 
 ![센서 없는 불확실성](../assets/fig-dead-reckoning.png)
 
-*왼쪽은 움직임만 쓰면 불확실성이 계속 오르는 모습입니다. 오른쪽은 시뮬레이션이 예측한 증가와 맞는 모습입니다.*
+*왼쪽은 움직임만 쓰면 불확실성이 계속 오르는 모습입니다. 오른쪽은 시뮬레이션이 공식이 주는 증가와 맞는 모습입니다.*
 
 <details><summary>The math (optional)</summary>
 
@@ -70,7 +70,7 @@ def update(bel, z, doors=DOORS, p_hit=P_HIT):
     return post / post.sum()
 ```
 
-복도는 칸 20개의 고리라서 `np.roll`이 끝을 처리합니다.
+복도는 칸 20개의 고리라서 `np.roll`이 끝을 이어 붙입니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -79,16 +79,16 @@ python3 -m pytest phases/07-state-estimation/01-bayes-filter -q
 
 ## 실제 도구로 보기
 
-Nav2의 AMCL은 같은 belief를 샘플로 저장해서(particle filter) 알려진 map 안에서 로봇의 위치를 찾습니다.
+Nav2(ROS 2의 navigation 패키지)의 AMCL은 같은 belief를 여러 샘플 점으로 저장합니다(particle filter).
 
 출처: Nav2 AMCL README, https://github.com/ros-navigation/navigation2/blob/main/nav2_amcl/README.md (2026년 11월 9일 확인).
 
 ## 결과물
 
-`outputs/skill-bayes-filter-check.md`는 localizer에서 빠진 단계가 있는지 점검합니다.
+`outputs/skill-bayes-filter-check.md`는 localizer를 점검합니다.
 
 ## 연습 문제
 
 1. 미끄러질 확률을 바꾸고 퍼짐이 어떻게 변하는지 보세요.
-2. `p_hit`을 1에 가깝게 두고 잘못된 센서 값 하나가 무엇을 하는지 보세요.
-3. 고리 대신 벽이 있는 복도를 쓰세요.
+2. 문 신호가 맞을 확률(`p_hit`)을 1에 가깝게 두고 잘못된 센서 값 하나를 넣어 보세요.
+3. 벽이 있는 복도를 써 보세요.

@@ -6,17 +6,17 @@
 
 ## In Plain Words
 
-A sensor reports a sliding cup's position faster than the arm's controller can read. Unread reports wait in a queue, and the controller takes the oldest first.
+A sensor tracks a cup sliding along a table and reports faster than the arm's controller (the program that steers the arm) can read. Unread reports wait in a queue, and the controller takes the oldest first.
 
-When the queue is full, each new report pushes the oldest out. A long queue means the oldest report can be half a second old. A queue of one means the arm reads the newest.
+A full queue drops its oldest report for each new one. A long queue means the oldest report can be half a second old. A queue of one always gives the newest.
 
 ## Key Terms
 
+- **ROS 2**: robot software that splits a robot into small programs that pass messages to each other.
 - **Node**: one running program in a ROS 2 system.
-- **Topic**: a named stream that publishers send to and subscribers read from.
+- **Topic**: a named stream. A program that sends into it is a publisher; a program that reads from it is a subscriber.
 - **Service**: a request with one reply, unlike a topic's endless stream.
 - **Queue depth**: how many messages a subscriber keeps while it waits to read them.
-- **Hz**: times per second.
 - **QoS**: quality of service, the settings that decide how messages are kept and delivered.
 
 ## The Problem
@@ -25,7 +25,7 @@ A robot's controller reads joint angles only 40 times a second, but the motor pr
 
 ## The Concept
 
-A robot is many small programs, and how they pass data decides how fresh it is on arrival.
+A robot is many small programs, and how they pass data decides how fresh it arrives.
 
 ![Topics and services](../assets/diagram-ros-parts.png)
 
@@ -39,7 +39,7 @@ Each reader keeps a waiting line of messages. When the line is full, a new messa
 
 ![Three arms, three queue depths](../assets/clip-example.mp4)
 
-*Three arms with short, medium and long lines. The longer the line, the more the arm chases old positions.*
+*Short, medium and long lines. The longer the line, the more the arm chases old positions.*
 
 ![Queue depth](../assets/fig-queue-depth.png)
 
@@ -47,13 +47,13 @@ Each reader keeps a waiting line of messages. When the line is full, a new messa
 
 <details><summary>The math (optional)</summary>
 
-Run 10 s with a 100 Hz sender and a 40 Hz reader: 1000 messages are sent and 400 are read at every depth. The message read is 5 ms old at depth 1, and each extra queued message adds 10 ms: 95 ms at depth 10, 495 ms at depth 50. Messages arrive every 10 ms, so 50 queued ones reach back 0.5 s.
+Run 10 s with a 100 Hz (times per second) sender and a 40 Hz reader: 1000 messages are sent and 400 are read at every depth. The message read is 5 ms old at depth 1, and each extra queued message adds 10 ms: 95 ms at depth 10, 495 ms at depth 50. Messages arrive every 10 ms, so 50 queued ones reach back 0.5 s.
 
 </details>
 
 ## Build It
 
-The `Bus` keeps one waiting line per reader. `run()` measures drops and message age, and `burst_drops()` shows the one case where a longer line helps: a short burst of messages.
+The `Bus` keeps one waiting line per reader. `run()` counts messages thrown away (drops) and how old each message is when read (age). `burst_drops()` shows the one case where a longer line helps: many messages arriving at once.
 
 ```python
 def publish(self, topic, msg):
@@ -72,7 +72,7 @@ python3 phases/00-start-here/10-ros2-in-one-page/code/main.py
 
 ## Use It
 
-In ROS 2 this setting is the QoS history policy `keep last`. For control signals keep the line short.
+In ROS 2 this is the QoS setting `keep last` plus a depth. Keep it short for control signals.
 
 Sources: https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Quality-of-Service-Settings.html
 
@@ -82,6 +82,6 @@ Sources: https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Quality-of-Se
 
 ## Exercises
 
-1. Run `run()` with depth 1 and depth 50 and compare the message age.
-2. Make the reader faster than the sender and watch the age.
-3. Add a second reader with a different depth.
+1. Compare message age at depth 1 and depth 50.
+2. Make the reader faster than the sender and run `run()`.
+3. Add a second reader with another depth.

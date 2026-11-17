@@ -2,11 +2,11 @@
 
 > Learn how to hand out jobs to a team of robots so the total travel is smallest.
 
-**Type:** Build   **Prerequisites:** 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Five toy cars each need a different pad. If every car takes the nearest free pad in turn, the last car may be left with a pad across the floor.
+Five toy cars each need a different pad (a marked parking spot). If every car takes the nearest free pad in turn, the last car may be left with a pad across the floor.
 
 Task allocation compares every car-to-pad distance. The Hungarian method may revise earlier matches to find the smallest total.
 
@@ -16,8 +16,7 @@ Task allocation compares every car-to-pad distance. The Hungarian method may rev
 - **Greedy**: picking what looks best right now without looking ahead.
 - **Assignment**: a one-to-one pairing of robots and jobs.
 - **Cost matrix `C`**: a table of how far each robot is from each job.
-- **Hungarian method**: a step-by-step method that finds the cheapest overall assignment.
-- **Augmenting path**: a chain of swaps that rearranges the pairs to fit one more.
+- **Hungarian method**: a step-by-step way to find the assignment with the lowest total distance.
 
 ## The Problem
 
@@ -33,7 +32,7 @@ Handing out jobs one by one wastes battery and time, so robots must plan as a gr
 
 ![Optimal idea](../assets/diagram-optimal-idea.png)
 
-*The Hungarian method swaps pairings along chains until the total cannot get smaller.*
+*The Hungarian method keeps swapping pairings until the total cannot get smaller.*
 
 ![Assignment map](../assets/fig-assignment-map.png)
 
@@ -41,7 +40,7 @@ Handing out jobs one by one wastes battery and time, so robots must plan as a gr
 
 ![Cost gap](../assets/fig-cost-gap.png)
 
-*The more robots there are, the more greedy costs compared with the best.*
+*The more robots, the bigger greedy's extra cost over the best.*
 
 ![Five cars](../assets/clip-example.mp4)
 
@@ -49,7 +48,7 @@ Handing out jobs one by one wastes battery and time, so robots must plan as a gr
 
 <details><summary>The math (optional)</summary>
 
-`C[i, j]` is the distance from robot `i` to job `j`; we want the smallest total. In the clip, cars 1 and 2 take the same pads either way (1.29 m). Cars 3 to 5 decide the rest (metres):
+`C[i, j]` is the distance from robot `i` to job `j`; we want the smallest total. Cars 1 and 2 take the same pads either way (1.29 m). Cars 3 to 5 decide the rest (metres):
 
 | car \ pad | 1 | 3 | 5 |
 |---|---|---|---|
@@ -57,19 +56,19 @@ Handing out jobs one by one wastes battery and time, so robots must plan as a gr
 | 4 | 0.52 | 1.43 | 1.14 |
 | 5 | 2.36 | 2.22 | 0.77 |
 
-Greedy: 0.65 + 1.14 + 2.22 = 4.01 m. Best: 0.69 + 0.52 + 0.77 = 1.98 m. With cars 1 and 2: 5.3 m against 3.3 m. Greedy costs about 1.12 times the best at N = 4 robots and 1.28 times at N = 32 (300 layouts each). For 6 robots and 4 jobs, pad the table with zero-cost dummy jobs. Brute force would try 30! orders for 30 robots.
+Greedy: 0.65 + 1.14 + 2.22 = 4.01 m. Best: 0.69 + 0.52 + 0.77 = 1.98 m. With cars 1 and 2: 5.3 m against 3.3 m. Greedy costs about 1.12 times the best at N = 4 robots and 1.28 times at N = 32. `hungarian()` keeps prices on rows and columns and swaps pairs until all are matched. For 6 robots and 4 jobs, pad the table with zero-cost dummy jobs. Brute force would try 30! orders for 30 robots.
 
 </details>
 
 ## Build It
 
-`greedy()` takes the cheapest free job for each robot. `hungarian()` keeps prices on rows and columns until each robot is matched.
+`greedy()` takes the cheapest free job for each robot. `hungarian()` builds the best total step by step.
 
 ```python
 cur = C[i0 - 1, j - 1] - u[i0] - v[j]   # reduced cost of edge (robot i0, task j)
 ```
 
-Tests compare it with brute force and with SciPy.
+Tests compare it with brute force (trying every pairing) and with SciPy.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -79,7 +78,7 @@ python3 phases/14-multi-robot-and-swarms/01-task-allocation/code/figure.py
 
 ## Use It
 
-`scipy.optimize.linear_sum_assignment` solves the same problem, and a test checks the totals match.
+SciPy, a Python maths library, has `scipy.optimize.linear_sum_assignment` for the same problem, and a test checks the totals match.
 
 Sources: SciPy docs, `linear_sum_assignment` (opened 2026-11-09).
 
@@ -89,6 +88,6 @@ Sources: SciPy docs, `linear_sum_assignment` (opened 2026-11-09).
 
 ## Exercises
 
-1. Try more jobs than robots by adding dummy robots.
+1. For more jobs than robots, add pretend robots whose distance to every job is zero.
 2. Measure distance along grid paths instead of straight lines.
-3. Make greedy pick the cheapest pair first.
+3. Make greedy pick the single cheapest robot-and-pad pair first.

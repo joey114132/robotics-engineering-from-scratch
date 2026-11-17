@@ -1,14 +1,14 @@
 {
- "en": {
-  "hook": "Randomise too little and I'm fragile, too much and I'm a nervous wreck. The right width sits somewhere in between.",
-  "mission": "Change the width tuple in `code/main.py` to `(0.0, 0.15, 0.3)`. Predict whether tuning on 0.15 beats tuning on 0.0 in a width-0.3 world, then run `python3 code/main.py`.",
-  "clip": "Twelve joints with random parameters (width 0.3) get the same fixed PD gains and one step toward the amber targets. Each side shows the same twelve joints, one arm per joint. Gains tuned on the nominal plant (left) leave 6 of the 12 failing, drawn in red, mostly by overshooting. Gains tuned across width 0.3 (right) let all 12 settle. The runs come from this lesson's `simulate()` and the gains from `tune()`. Playback is at one third of real speed, and the overshoot past the target is drawn 6 times larger."
- },
- "ko": {
-  "hook": "너무 조금 흔들면 약해지고 너무 많이 흔들면 겁쟁이가 됩니다. 알맞은 width는 그 사이 어딘가에 있습니다.",
-  "mission": "`code/main.py`의 width 튜플을 `(0.0, 0.15, 0.3)`으로 바꾸세요. 0.15로 튜닝한 쪽이 0.0으로 튜닝한 쪽보다 width 0.3 세계에서 나을지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
-  "clip": "무작위 parameter를 가진 관절 12개(width 0.3)가 같은 고정 PD gain으로 주황색 목표를 향해 한 번 움직입니다. 양쪽 모두 같은 관절 12개를 팔 하나씩으로 보여 줍니다. nominal plant에서 맞춘 gain(왼쪽)은 12개 중 6개가 실패하고 실패한 관절은 빨간색이며 대부분 목표를 넘어갑니다. width 0.3 범위에서 맞춘 gain(오른쪽)은 12개 모두 안정됩니다. 움직임은 이 레슨의 `simulate()`, gain은 `tune()`에서 나왔습니다. 실제의 3분의 1 속도로 재생했고 목표를 넘어간 양은 6배 크게 그렸습니다."
- },
- "toy": null,
- "three": "gain-fan-3d"
+  "en": {
+    "hook": "If I only practise on one perfect copy, I break on the real one. If I prepare for every freak copy, I get timid. The right width is in between.",
+    "mission": "Test a wider spread of arms and see whether tuning for a little spread beats tuning for none. Change the width tuple in `code/main.py` to `(0.0, 0.15, 0.3)`, guess whether tuning on 0.15 beats tuning on 0.0 in a width-0.3 world, then run `python3 code/main.py`.",
+    "clip": "Twelve arms with randomly different weight, friction and delay (width 0.3) get the same fixed gains and one step toward the amber targets. Both sides show the same twelve arms. Gains tuned on the average arm (left) leave 6 of the 12 failing, drawn in red, mostly by swinging past the target. Gains tuned across width 0.3 (right) let all 12 settle. Played at one third of real speed, with the overshoot drawn 6 times larger."
+  },
+  "ko": {
+    "hook": "완벽한 복사본 하나로만 연습하면 진짜 앞에서 무너지고 별난 복사본까지 다 대비하면 겁쟁이가 돼요. 알맞은 폭은 그 사이 어딘가에 있어요.",
+    "mission": "더 넓게 흔든 팔들로 시험해서 조금 흔들며 튜닝한 쪽이 전혀 안 흔들고 튜닝한 쪽을 이기는지 보세요. `code/main.py`의 width 튜플을 `(0.0, 0.15, 0.3)`으로 바꾸고 0.15로 튜닝한 쪽이 0.0으로 튜닝한 쪽보다 width 0.3 세계에서 나을지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "무게와 마찰과 지연이 무작위로 다른 팔 12개(width 0.3)가 같은 고정 gain으로 주황색 목표를 향해 한 번 움직입니다. 양쪽 모두 같은 팔 12개를 보여 줍니다. 평균 팔에서 맞춘 gain(왼쪽)은 12개 중 6개가 실패하고 실패한 팔은 빨간색이며 대부분 목표를 넘어갑니다. width 0.3 범위에서 맞춘 gain(오른쪽)은 12개 모두 안정됩니다. 실제의 3분의 1 속도로 재생했고 목표를 넘어간 양은 6배 크게 그렸습니다."
+  },
+  "toy": null,
+  "three": "gain-fan-3d"
 }

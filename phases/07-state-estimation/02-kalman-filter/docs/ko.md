@@ -8,16 +8,16 @@
 
 자동차의 위치 센서는 보고할 때마다 몇 미터씩 틀려요. 자동차의 속도도 대충 알아요.
 
-센서가 아주 시끄러우면 추정을 센서 쪽으로 조금만 옮기고 예측이 더 불안하면 많이 옮겨요.
+센서가 아주 들쭉날쭉하면(시끄러우면) 추정을 센서 쪽으로 조금만 옮기고 예측이 더 불안하면 많이 옮겨요.
 
 ## 핵심 용어
 
 - **State (`x`)**: 필터가 추적하는 숫자들입니다. 여기서는 위치와 속도입니다.
-- **Covariance (`P`)**: 추정이 얼마나 불확실한지입니다. 숫자 하나라면 퍼짐을 제곱한 분산입니다.
+- **Covariance (`P`)**: 추정이 얼마나 불확실한지입니다. 숫자 하나라면 퍼짐을 제곱한 값입니다.
 - **Kalman gain (`K`)**: 새 센서 값 쪽으로 추정이 얼마나 움직일지입니다. 0이면 무시하고 1이면 전부 믿습니다.
-- **Process noise (`Q`)**: 실제 움직임이 모델과 다를 수 있어서 한 단계마다 더하는 불확실성입니다.
-- **Measurement noise (`R`)**: 센서 오차의 분산입니다.
-- **Innovation**: 놀라움 `z - H x`입니다. 센서 값에서 모델이 기대한 값을 뺀 것입니다.
+- **Process noise (`Q`)**: 실제 움직임이 필터가 예측에 쓰는 규칙과 다를 수 있어서 한 단계마다 더하는 불확실성입니다.
+- **Measurement noise (`R`)**: 센서가 얼마나 들쭉날쭉한지로, 센서 오차의 퍼짐을 제곱한 값입니다.
+- **Innovation**: 놀라움입니다. 센서 값에서 필터가 기대한 값을 뺀 것입니다.
 
 ## 문제
 
@@ -31,12 +31,13 @@
 
 *모델로 predict하고 센서 값으로 correct합니다.*
 
-Kalman filter는 가장 좋은 추측과 그것이 얼마나 불확실한지를 함께 지닙니다. 한 주기마다 로봇이 어디 있어야 하는지 예측하며 불확실성을 더합니다. 그다음 추측을 센서 값 쪽으로 gain만큼 옮깁니다. 아주 시끄러운 센서는 gain이 작아서 필터가 대부분 모델을 따릅니다.
+Kalman filter는 가장 좋은 추측과 그것이 얼마나 불확실한지를 함께 지닙니다. 한 주기마다 모델(로봇이 어떻게 움직이는지의 규칙)로 로봇이 어디 있어야 하는지 예측하며 불확실성을 더합니다. 그다음 추측을 센서 값 쪽으로 gain만큼 옮깁니다.
+아주 시끄러운 센서는 gain이 작아서 필터가 대부분 모델을 따릅니다.
 모델이 불안하면 gain이 커서 센서를 따릅니다. 보정할 때마다 필터는 덜 불확실해집니다.
 
 ![같은 센서 값, 두 도로](../assets/clip-example.mp4)
 
-*파란 도로는 시끄러운 센서여서 핀이 거의 움직이지 않습니다. 초록 도로는 핀이 절반쯤 움직입니다.*
+*파란 도로는 시끄러운 센서여서 추정(핀)이 거의 움직이지 않습니다. 초록 도로는 핀이 절반쯤 움직입니다.*
 
 ![gain은 신뢰 다이얼](../assets/diagram-kalman-trust.png)
 
@@ -67,7 +68,7 @@ x = x + K @ (z[None, :] - H @ x)     # update
 P = (np.eye(2) - K @ H) @ P
 ```
 
-테스트는 다른 gain이 불확실성을 더 적게 남기지 못하는지, 오차의 95%가 2 sigma 안에 드는지 확인합니다.
+테스트는 다른 gain이 불확실성을 더 적게 남기지 못하는지, 오차의 95%가 필터 자신이 주장한 불확실성 띠 안에 드는지 확인합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -76,7 +77,7 @@ python3 -m pytest phases/07-state-estimation/02-kalman-filter -q
 
 ## 실제 도구로 보기
 
-ROS의 `robot_localization`은 확장 Kalman filter인 `ekf_localization_node`를 제공합니다.
+로봇 소프트웨어 패키지 `robot_localization`은 확장 Kalman filter인 `ekf_localization_node`를 제공합니다.
 
 출처: robot_localization state estimation nodes, https://docs.ros.org/en/melodic/api/robot_localization/html/state_estimation_nodes.html (2026년 11월 9일 확인).
 

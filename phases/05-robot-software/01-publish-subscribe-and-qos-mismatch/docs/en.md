@@ -29,7 +29,7 @@ A robot is many programs passing messages, and this silent mismatch looks just l
 
 *The rover offers best effort, the arm asks for reliable: no match.*
 
-Each side declares a delivery promise. Best effort sends once and moves on, while reliable resends a lost message. A pair connects only if the listener asks for no more than the sender offers. A reliable sender with a best effort listener is fine. The reverse is not.
+Each side declares a delivery promise. Best effort sends once and moves on, while reliable resends a lost message. A pair connects only if the listener asks for no more than the sender offers. A reliable sender with a best effort listener is fine. A best effort sender with a reliable listener is not.
 
 ![Queue with depth](../assets/diagram-qos-queue.png)
 
@@ -39,7 +39,7 @@ A slow listener loses messages unless the queue is deep enough.
 
 ![Eight messages, two arms](../assets/clip-example.mp4)
 
-*Same burst. Blue has one slot: most messages fall. Green has enough slots: the arm steps through all.*
+*Same burst of eight messages. Blue's queue holds one: most are dropped. Green's holds enough: the arm steps through all.*
 
 ![Delivery and drops](../assets/fig-qos-delivery.png)
 
@@ -62,7 +62,7 @@ def compatible(pub, sub):
     return True, "ok"
 ```
 
-`Queue.push()` pops the oldest past `depth`, counting drops.
+`Queue.push()` throws away the oldest message when the queue is full and counts it as dropped.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -71,7 +71,7 @@ python3 -m pytest phases/05-robot-software/01-publish-subscribe-and-qos-mismatch
 
 ## Use It
 
-Compare `compatible()` with the ROS 2 QoS tables.
+Compare `compatible()` with the compatibility table on the page below.
 
 Sources: ROS 2 Jazzy, "Quality of Service settings" (https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Quality-of-Service-Settings.html), read 2026-11-09.
 
@@ -83,4 +83,4 @@ Sources: ROS 2 Jazzy, "Quality of Service settings" (https://docs.ros.org/en/jaz
 
 1. Change the sender or listener setting and see when they connect.
 2. Make the queue deeper and watch the drops change.
-3. Let a late listener receive the old messages.
+3. Let a late listener receive the old messages (the durability setting `transient_local`).

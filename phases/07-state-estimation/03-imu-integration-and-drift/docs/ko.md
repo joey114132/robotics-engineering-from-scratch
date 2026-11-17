@@ -2,22 +2,22 @@
 
 > 작은 센서 오차를 계속 더하는 로봇이 가만히 서 있는데도 굴러간다고 믿는 이유를 배웁니다.
 
-**유형:** 만들기   **선수 지식:** 07/02 Kalman Filter   **시간:** 약 15분
+**유형:** 만들기   **선수 지식:** 없음   **시간:** 약 15분
 
 ## 쉽게 말하면
 
 로봇이 가만히 있는데 gyro가 있지도 않은 작은 회전을 읽어요. 그 값을 더해 가면 로봇은 자기가 기울고 있다고 생각해요.
 
-잘못된 기울기로 중력을 빼면 가짜 옆으로 미는 힘이 남아요. 그것을 두 번 더하면 로봇은 자기가 굴러가고 있다고 생각해요.
+가속도계는 중력도 느껴서 로봇은 자기 기울기로 중력을 빼요. 기울기가 틀리면 가짜 옆으로 미는 힘이 남아요. 그것을 두 번 더하면 로봇은 자기가 굴러가고 있다고 생각해요.
 
 ## 핵심 용어
 
-- **IMU**: gyro와 가속도계로 이루어진 움직임 센서입니다.
+- **Gyro**: 얼마나 빨리 도는지를 재는 센서입니다.
 - **Accelerometer**: 미는 힘(가속도)을 재는 센서입니다. 중력도 느낍니다.
+- **IMU**: gyro와 가속도계로 이루어진 움직임 센서입니다.
 - **Bias**: 늘 붙어 있는 작고 일정한 오차입니다.
 - **Integrate**: 읽은 값을 시간에 걸쳐 더하는 일입니다. 회전 속도는 각도로, 가속도는 속도로 바뀝니다.
 - **Drift**: 편향된 값을 적분해서 서서히 커지는 오차입니다.
-- **Gyro**: 얼마나 빨리 도는지를 재는 센서입니다.
 
 ## 문제
 
@@ -41,11 +41,11 @@ IMU만으로 길을 찾는 로봇은 서서히 눈이 멀고 중력이 그것을
 
 *기울기 오차 때문에 로봇이 중력을 잘못 뺍니다. 남은 것이 가속도처럼 보입니다.*
 
-기울기가 틀리면 로봇이 중력을 엉뚱한 방향으로 빼서 중력이 조금 남고 진짜 미는 힘처럼 보입니다. 그것을 두 번 더하면 위치 오차가 가속도계 자체의 오차보다 훨씬 빨리 자랍니다.
+그 가짜 힘을 두 번 더하면 위치 오차가 가속도계 자체의 오차보다 훨씬 빨리 자랍니다.
 
-![3차가 2차를 앞지름](../assets/fig-gravity-leak.png)
+![빠른 곡선이 느린 곡선을 앞지름](../assets/fig-gravity-leak.png)
 
-*gyro의 빠른 곡선이 accelerometer의 느린 곡선을 앞지릅니다.*
+*기울기 실수에서 오는 오차가 가장 빨리 자라서 가속도계만의 오차를 앞지릅니다.*
 
 ![가만히 있는데 미끄러지는 로봇](../assets/clip-example.mp4)
 
@@ -70,7 +70,7 @@ fake_a = G * np.sin(bias_g * t)          # tilt error b*t leaks gravity
 pos = np.cumsum(np.cumsum(fake_a) * dt) * dt
 ```
 
-테스트는 합을 정확한 이산 공식과 위의 세 공식에 견줍니다.
+테스트는 합을 정확한 답에 견줍니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -79,7 +79,7 @@ python3 -m pytest phases/07-state-estimation/03-imu-integration-and-drift -q
 
 ## 실제 도구로 보기
 
-`imu_tools`의 `imu_filter_madgwick`은 gyro와 accelerometer 값을 합칩니다.
+IMU 데이터용 로봇 소프트웨어 패키지 `imu_tools`의 `imu_filter_madgwick`은 gyro와 accelerometer 값을 합칩니다.
 
 출처: imu_tools README, https://github.com/CCNYRoboticsLab/imu_tools (2026년 11월 9일 확인).
 

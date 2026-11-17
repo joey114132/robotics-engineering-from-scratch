@@ -6,17 +6,17 @@
 
 ## 쉽게 말하면
 
-DH 표는 작업대 위 로봇 팔에서 link마다 앞 link에 어떻게 이어지는지 적은 표예요. 이 표를 읽는 규칙을 convention이라고 하는데 두 가지가 순서에서 달라요. 이동한 다음 돌리거나 돌린 다음 이동해요.
+DH 표는 작은 로봇 팔에서 link마다 앞 link에 어떻게 이어지는지 적은 표예요. 이 표를 읽는 규칙을 convention이라고 하고 두 가지가 있어요. 이동한 다음 돌리거나 돌린 다음 이동해요.
 
 팔꿈치를 편 상태에서는 두 방식이 손을 같은 자리에 둬요. 팔꿈치를 굽히면 두 손이 갈라지는데 에러 메시지는 나오지 않아요.
 
 ## 핵심 용어
 
-- **DH table**: Denavit-Hartenberg 표로 joint마다 숫자 네 개짜리 행 하나씩 두어 팔을 설명합니다.
+- **DH table**: Denavit-Hartenberg 표로 joint마다 숫자 네 개(길이 둘과 각도 둘)짜리 행 하나씩 두어 팔을 설명합니다.
 - **Convention**: 표를 읽는 약속입니다. 같은 숫자도 convention에 따라 다르게 읽힙니다.
-- **Twist (`alpha`)**: 다음 joint 축이 이 축에 대해 얼마나 기울었는지입니다.
-- **Forward kinematics (FK)**: joint 각도로부터 손의 pose를 계산하는 것입니다.
-- **URDF origin**: ROS가 읽는 로봇 파일에서 부모에 대한 joint의 위치(`xyz`)와 회전(`rpy`: roll, pitch, yaw)입니다.
+- **Twist (`alpha`)**: 다음 joint가 도는 선이 이 joint가 도는 선에 비해 얼마나 기울었는지입니다.
+- **Forward kinematics (FK)**: joint 각도로부터 손이 어디에 있는지 계산하는 것입니다.
+- **Joint offset (URDF origin)**: 로봇 설명 파일에서 joint가 앞 부품에서 얼마나 떨어져 있고 얼마나 돌아가 있는지입니다.
 - **Zero pose**: 모든 joint 각도가 0인 팔의 자세입니다.
 
 ## 문제
@@ -29,11 +29,11 @@ DH 표는 작업대 위 로봇 팔에서 link마다 앞 link에 어떻게 이어
 
 ![한 팔의 세 가지 표기](../assets/diagram-three-ways.png)
 
-*한 팔의 세 가지 표기는 서로 맞아야 합니다.*
+*표를 한 방식으로 읽은 것, 다른 방식으로 읽은 것, 로봇 파일(URDF)입니다. 셋은 서로 맞아야 합니다.*
 
 ![조용히 틀리는 경로](../assets/diagram-silent-wrong.png)
 
-*한 행에 숫자 네 개만 있으면 받아들입니다.*
+*숫자 네 개를 검사하는 곳이 없어서 잘못 읽어도 정상으로 보입니다.*
 
 ![틀린 convention과 맞는 convention](../assets/fig-wrong-convention.png)
 
@@ -53,14 +53,14 @@ Craig의 convention(3장 3.4절)은 `i`행에 `a(i-1)`과 `alpha(i-1)`을 두고
 
 ## 만들기
 
-표를 읽는 방법마다 같은 움직임 네 개를 다른 순서로 곱합니다.
+두 convention은 Craig와 standard라고 부릅니다. 각각 같은 움직임 네 개를 다른 순서로 곱합니다.
 
 ```python
 def dh_craig(a, alpha, d, th):    return rx(alpha) @ tr(a,0,0) @ rz(th) @ tr(0,0,d)
 def dh_standard(a, alpha, d, th): return rz(th) @ tr(0,0,d) @ tr(a,0,0) @ rx(alpha)
 ```
 
-`craig_to_standard()`는 숫자를 한 행 위로 옮기고 `craig_to_urdf()`는 이동을 로봇 파일의 offset에 넣으며 회전 offset이 버려질 상황이면 예외를 냅니다.
+`craig_to_standard()`는 Craig 표를 standard 표로 바꾸고 `craig_to_urdf()`는 로봇 파일의 offset으로 바꿉니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -80,4 +80,4 @@ URDF loader나 MuJoCo 모델은 offset을 읽으므로 datasheet의 DH 표를 �
 
 1. 데모에서 팔꿈치를 굽혀서 두 방식이 갈라지는 것을 보세요.
 2. 틀린 방식이 우연히 맞는 pose를 찾으세요.
-3. 측정한 손 위치 두 개로 불일치를 찾아내는 검사를 쓰세요.
+3. 실제 팔에서 잰 손 위치 두 개가 주어졌을 때 어느 읽는 방식(이동 먼저 또는 회전 먼저)이 맞는지 찾으세요.

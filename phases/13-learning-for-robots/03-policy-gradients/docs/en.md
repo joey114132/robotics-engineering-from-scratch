@@ -11,11 +11,10 @@ A toy car must stop on a line, and nobody tells it how. Each try earns points, m
 ## Key Terms
 
 - **Reward-to-go**: the points collected from now until the end of the try.
-- **Return**: the total points of one try.
-- **Episode**: one try from start to finish.
+- **Return**: the total points of one try (an episode).
 - **Policy gradient**: nudging the policy toward moves that scored above average.
 - **Baseline**: an average subtracted from the score so good moves stand out.
-- **Variance**: how much an estimate jumps around between runs.
+- **Variance**: how much a result jumps around between runs.
 
 ## The Problem
 
@@ -43,13 +42,13 @@ When no expert exists, trial and error with a score is the only teacher a robot 
 
 <details><summary>The math (optional)</summary>
 
-The policy is a Gaussian (a bell-shaped random choice): the car steers near `w*x + b` plus exploration noise. Multiplying each action's nudge direction (`score()`) by the return and averaging estimates the gradient of expected return. Four tries from one start return 35.93, 34.91, 27.63 and 27.26, so all four are pushed up, the best only 32% harder than the worst. With the baseline (the average of the other three) the pushes become +6.0, +4.6, -5.1 and -5.6. Over ten seeds the baseline cuts the spread to about a third. The task is a 1-D reach: `x' = x + 0.2*a`, with reward `3 - x'^2 - 0.01*a^2` per step. The arrows in the clip are drawn 4 times longer.
+The policy is a Gaussian (a bell-shaped random choice): the car steers near `w*x + b` plus exploration noise. Multiplying each action's nudge direction (`score()`) by the return and averaging estimates the gradient of expected return. Four tries from one start return 35.93, 34.91, 27.63 and 27.26, so all four are pushed up, the best only 32% harder than the worst. With the baseline (the average of the other three) the pushes become +6.0, +4.6, -5.1 and -5.6. The baseline leaves out the try's own move, so it cannot lean toward it. Over ten seeds it cuts the spread to about a third. The task is a 1-D reach: `x' = x + 0.2*a`, with reward `3 - x'^2 - 0.01*a^2` per step. The arrows in the clip are drawn 4 times longer.
 
 </details>
 
 ## Build It
 
-The car steers along a line toward a goal. The baseline for each try is the average reward-to-go of the other tries, so it never sees its own move.
+The car steers along a line toward a goal. The baseline for each try is the average reward-to-go of the other tries.
 
 ```python
 G = np.array([reward_to_go(r) for _, _, r in eps])
@@ -77,6 +76,6 @@ Sources: OpenAI Spinning Up, "Intro to Policy Optimization", opened 2026-11-09.
 
 ## Exercises
 
-1. Try a much bigger flat bonus. How does the gap between the two methods change?
-2. Make the amount of randomness learnable too.
-3. Use the average of all tries as the baseline. Is it biased with only two tries?
+1. Add the same large bonus to every try's score. How does the gap between the two methods change?
+2. Run it again. Does the baseline still help?
+3. Use the average of all tries as the baseline. Is it biased (does it lean the wrong way) with only two tries?

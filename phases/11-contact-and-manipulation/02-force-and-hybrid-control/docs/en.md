@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-Wiping a desk means moving a sponge across it while pressing down. Pushing to a fixed depth gives a different force on a softer sponge.
+Wiping a desk means moving a sponge across it while pressing down. A softer sponge gives a different force at the same depth.
 
 Force control measures the push, going deeper when it is weak and backing off when it is strong. Hybrid control gives the sliding direction a position target and the pressing direction a force target.
 
@@ -14,10 +14,10 @@ Force control measures the push, going deeper when it is weak and backing off wh
 
 - **Force control**: moving the tool according to the measured force, not a planned position.
 - **Hybrid control**: position control on some axes and force control on the others.
-- **Stiffness (`ke`)**: the newtons a surface pushes back per metre squeezed.
+- **Stiffness (`ke`)**: how much force a surface pushes back for each metre you squeeze it.
 - **Gain (`ki`)**: the factor that turns a force error into a tool speed.
 - **Time constant**: the time in which an error shrinks by about two thirds.
-- **Selection matrix (`S`)**: a switch per axis choosing force law or position law.
+- **Selection matrix (`S`)**: a switch for each direction that chooses force control or position control.
 
 ## The Problem
 
@@ -59,14 +59,14 @@ Pressing with 10 N, the robot assumes 5000 N/m and commands a 2 mm squeeze, but 
 
 ## Build It
 
-The hybrid law mixes the velocities of the two laws.
+The hybrid rule takes the sliding speed from the position rule and the pressing speed from the force rule.
 
 ```python
 v = (1 - S) * v_pos + S * v_frc
 p = p + np.clip(v, -lim, lim) * dt
 ```
 
-Assumptions: exact velocity tracking, a frictionless linear spring, noise-free force.
+Assumptions: the tool moves exactly as told, the sponge acts like a spring, and the force reading has no noise.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -76,9 +76,9 @@ python3 phases/11-contact-and-manipulation/02-force-and-hybrid-control/code/main
 
 ## Use It
 
-Repeat the press in MuJoCo and compare the settled force with stiffness times depth.
+Repeat the press in MuJoCo, a physics simulator, and compare the settled force with stiffness times depth.
 
-Sources: Craig (chapter 11) and the original hybrid-control paper could not be opened (403); both unchecked.
+Sources: Craig (chapter 11) and the original hybrid-control paper; neither could be opened, so both are unchecked.
 
 ## Ship It
 
@@ -87,5 +87,5 @@ Sources: Craig (chapter 11) and the original hybrid-control paper could not be o
 ## Exercises
 
 1. Tell the robot the true stiffness; position control then works, but only on that surface.
-2. Raise the loop gain until the force starts to shake.
+2. Raise the gain until the force shakes.
 3. Add a small delay to the force reading and see the safe gain shrink.

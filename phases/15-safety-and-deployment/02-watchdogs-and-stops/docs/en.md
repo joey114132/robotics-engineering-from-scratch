@@ -6,9 +6,9 @@
 
 ## In Plain Words
 
-A watchdog expects a regular "still here" message from the program steering a bench arm, and orders a stop when silence outlasts its timeout.
+A watchdog listens for a regular "still here" message from the program steering a bench arm. If the messages stop for too long, it orders a stop. That wait is the timeout.
 
-The arm keeps moving during that timeout, and braking needs distance too. Cutting power is not braking: like a bike you stop pedalling, the arm only coasts.
+The arm keeps moving during that timeout, and braking needs distance too. Cutting power is not braking. Like a bike when you stop pedalling, the arm keeps coasting.
 
 ## Key Terms
 
@@ -17,7 +17,7 @@ The arm keeps moving during that timeout, and braking needs distance too. Cuttin
 - **Timeout `T`**: how long silence is tolerated before the watchdog acts.
 - **Deceleration `a`**: how fast the speed drops while braking.
 - **Hard stop**: a block that ends the joint's travel.
-- **Jitter**: how much message arrival times wobble.
+- **Timing jitter**: how much message arrival times wobble.
 
 ## The Problem
 
@@ -45,7 +45,7 @@ Software crashes, so a real robot must stop on its own when its software goes qu
 
 ![Timeout budget](../assets/fig-timeout-budget.png)
 
-*A longer timeout means more overshoot, in a straight line.*
+*A longer timeout means the arm ends further past the limit, growing evenly.*
 
 <details><summary>The math (optional)</summary>
 
@@ -55,7 +55,7 @@ Braking at constant deceleration `a` from speed `v` covers `v^2 / (2a)`. The tim
 
 ## Build It
 
-Two small functions give the numbers:
+`stop_distance` gives the braking distance and `max_timeout` the longest timeout that still fits the room left.
 
 ```python
 def stop_distance(v, a):
@@ -65,7 +65,7 @@ def max_timeout(room, v, a):
     return (room - stop_distance(v, a)) / v   # raises if this is <= 0
 ```
 
-`simulate()` kills the command program at 0.5 s, then either cuts the torque (`"cut"`) or brakes steadily (`"ramp"`).
+`simulate()` kills the command program at 0.5 s, then either switches the motor off (`"cut"`) or brakes steadily (`"ramp"`).
 
 ```bash
 cd robotics-engineering-from-scratch

@@ -6,26 +6,25 @@
 
 ## In Plain Words
 
-Turn a bench arm's shoulder steadily and the tip swings around it, faster the farther it is from the shoulder, so the tip's velocity depends on the pose.
+Turn a desk arm's shoulder steadily and the tip swings around it, faster the farther it is from the shoulder. So the tip's speed and direction depend on the pose.
 
-The Jacobian tabulates this for the current pose: joint speeds in, tip velocity out. Its transpose turns a push on the tip into the torque each motor needs to resist it.
+The Jacobian is a table for the current pose: feed it joint speeds, get the tip's motion. Flip it on its side and it turns a push on the tip into the twist each motor must supply.
 
 ## Key Terms
 
-- **Jacobian (`J`)**: a matrix that turns joint speeds into tip velocity for the current pose.
+- **Jacobian (`J`)**: a table of numbers that turns joint speeds into the tip's speed and direction for the current pose.
 - **Tip**: the end of the arm, where the hand or tool sits.
 - **Torque (`tau`)**: a twisting force, such as a motor's push on a joint.
 - **Transpose (`J^T`)**: the same matrix with its rows and columns swapped.
 - **Finite difference**: estimating a slope by nudging an input a small step and watching the output.
-- **Dot product (`.`)**: multiply matching entries of two lists and add them up.
 
 ## The Problem
 
-You want a robot arm's hand to move in a straight line, and to know how hard each motor must push when the hand presses on something. Both need one table of numbers, and one wrong sign in it passes every test that only checks positions.
+You want a robot arm's hand to move straight, and to know how hard each motor must push when the hand presses on something. Both need one table of numbers, and a wrong sign in it would not show in a test that only checks positions.
 
 ## The Concept
 
-To move a hand straight or press on a table, each joint needs the right speed and force. The Jacobian is a table, recalculated for the current pose, that turns joint speeds into hand speed. Flipped on its side, the same table turns a push on the hand into the push each motor must make.
+To move a hand straight or press on a table, each joint needs the right speed and force. The Jacobian, recalculated for each pose, turns joint speeds into hand speed. Flipped on its side, it turns a push on the hand into the push each motor must make.
 
 ![One matrix, used twice](../assets/diagram-bridge.png)
 
@@ -35,9 +34,9 @@ To move a hand straight or press on a table, each joint needs the right speed an
 
 *Two ways to build it must agree.*
 
-![Step size and velocity ellipses](../assets/fig-jacobian.png)
+![Which hand motions are easy: bent arm and straight arm](../assets/fig-jacobian.png)
 
-*A bent arm moves its hand easily every way; a straight arm does not.*
+*A bent arm moves its hand easily in every direction. A straight arm cannot: one direction is hard.*
 
 ![Torque while stretching](../assets/clip-example.mp4)
 
@@ -58,7 +57,7 @@ J = np.array([[-l1*s1 - l2*s12, -l2*s12], [l1*c1 + l2*c12, l2*c12]])
 col = (fk(q + dq, L) - fk(q - dq, L)) / (2 * eps)   # one column per joint
 ```
 
-Then speeds go through `J @ qd` and forces through `J.T @ F`.
+Then speeds go through `J @ qd` (`qd`: the joint speeds) and forces through `J.T @ F` (`F`: the push on the tip).
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -68,7 +67,7 @@ python3 phases/02-manipulator-kinematics/03-jacobian-and-velocity/code/main.py
 
 ## Use It
 
-Physics engines and ROS 2 libraries return Jacobians; compare one with this on a two-link arm.
+Physics engines and ROS 2 libraries return Jacobians; compare one on a two-link arm.
 
 ## Ship It
 
@@ -77,5 +76,5 @@ Physics engines and ROS 2 libraries return Jacobians; compare one with this on a
 ## Exercises
 
 1. Compare the two builds at a few poses.
-2. Hang a heavier block and see the torque change.
-3. Straighten the arm and watch the easy directions shrink.
+2. Hang a heavier block.
+3. Straighten the arm; easy directions shrink.

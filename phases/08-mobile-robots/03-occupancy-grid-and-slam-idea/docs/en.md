@@ -6,16 +6,16 @@
 
 ## In Plain Words
 
-A rover measures a room with laser beams. A beam ends at the first thing it hits: the floor it crossed is empty, its end is an obstacle, and behind is unknown. An occupancy grid keeps this evidence in map squares.
+A rover measures a room with laser beams. A beam ends at the first thing it hits. The floor it crossed is empty, its end is an obstacle, and behind is unknown. An occupancy grid keeps this in map squares.
 
-If the rover's heading estimate worsens every step, obstacles land in the wrong squares and scans smear the map. SLAM corrects the pose from the map so far.
+If the rover's heading guess worsens every step, obstacles land in the wrong squares. Scans then smear the map. SLAM fixes the rover's position using the map so far.
 
 ## Key Terms
 
+- **Scan**: one sweep of laser beams.
 - **Occupancy grid**: a map split into small squares, each holding a score for "something is here".
-- **Cell**: one square of the occupancy grid.
-- **Log-odds (`L`)**: a cell's evidence score. Positive means probably occupied, negative probably free, and 0 unknown.
-- **SLAM**: mapping and locating at once, because each needs the other.
+- **Log-odds (`L`)**: a square's evidence score. Positive means probably occupied, negative probably free, and 0 unknown.
+- **SLAM**: drawing the map and finding your place on it at the same time.
 - **Heading**: the direction the robot faces.
 - **Drift**: a small error that adds up step after step.
 
@@ -25,7 +25,7 @@ Picture a robot's map after one lap of a room: every wall twice, slanted, with a
 
 ## The Concept
 
-A robot plans routes and avoids walls with its map, so a smeared map breaks everything built on it.
+A robot plans routes with its map, so a smeared map breaks what follows.
 
 The map is a grid of small squares. Each laser beam marks the squares it crossed as probably empty and the square where it stopped as probably wall. Seeing a wall again and again makes it certain.
 
@@ -35,21 +35,21 @@ The map is a grid of small squares. Each laser beam marks the squares it crossed
 
 ![Pillars grow](../assets/clip-example.mp4)
 
-*Walls rise, floor sinks.*
+*Each pillar is a cell's score. Walls rise, floor sinks.*
 
-This only works if the robot knows where it stood at each scan. A small heading error that grows each step smears the walls.
+This only works if the robot knows where it stood at each scan. A growing heading error smears the walls.
 
 ![Three maps](../assets/fig-grid-maps.png)
 
-*Left: the room. Middle: right places. Right: drifted places.*
+*Left: the room. Middle: map from true positions. Right: map from drifted positions.*
 
 ![Mapping and pose loop](../assets/diagram-slam-loop.png)
 
-*SLAM solves the map and the position together.*
+*The map fixes the position; the position adds to the map.*
 
 ![Wall quality curve](../assets/fig-smear-curve.png)
 
-*A small heading error ruins walls.*
+*The share of real wall squares falls fast as heading error grows.*
 
 <details><summary>The math (optional)</summary>
 
@@ -78,7 +78,7 @@ python3 phases/08-mobile-robots/03-occupancy-grid-and-slam-idea/code/main.py
 
 ## Use It
 
-Nav2's map server loads and saves grid maps like this one.
+Nav2, a robot-navigation package, loads and saves grid maps like this one.
 
 Sources: Nav2 `nav2_map_server` README, github.com/ros-navigation/navigation2, opened 2026-11-09.
 
@@ -89,5 +89,5 @@ Sources: Nav2 `nav2_map_server` README, github.com/ros-navigation/navigation2, o
 ## Exercises
 
 1. Make the laser noisier; watch the walls thicken.
-2. Count the squares still unknown after one scan.
+2. After one scan, count the squares that are neither empty nor wall.
 3. Give one scan a wrong position; see the damage.

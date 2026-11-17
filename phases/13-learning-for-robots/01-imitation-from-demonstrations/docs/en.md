@@ -2,7 +2,7 @@
 
 > Learn how to teach a robot by showing it examples instead of writing rules.
 
-**Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
@@ -16,8 +16,8 @@ The rover then looks up the nearest recorded spots and steers as you did.
 - **Observation**: what the robot senses. Here it is its spot on the floor.
 - **Action**: what the robot does next. Here it is a driving direction.
 - **Policy**: the rule that turns an observation into an action.
-- **Least squares**: a fit that draws one straight rule through all the examples.
-- **Nearest neighbours**: a fit that copies the actions of the closest examples.
+- **Least squares**: a way to pick the numbers so the model misses the examples by as little as possible. Here it gives one straight rule.
+- **Nearest neighbours**: a method that copies, or averages, the actions of the closest examples.
 
 ## The Problem
 
@@ -25,19 +25,19 @@ You want a toy rover to drive around a pillar from any starting spot. Writing ru
 
 ## The Concept
 
-Robots meet situations no one wrote rules for, and a person can often just show the right move. We save each spot the expert drove through with the move they made, then fit a rule to those pairs. One straight rule averages "go left" and "go right" into "go straight" and hits the pillar. Copying the closest examples works much better.
+Robots meet situations no one wrote rules for, and a person can often just show the right move. We save each spot the expert drove through with the move they made, then find a rule that matches those pairs. One straight rule averages "go left" and "go right" into "go straight" and hits the pillar. Copying the closest examples works much better.
 
 ![Pipeline](../assets/diagram-imitation-pipeline.png)
 
-*An expert drives, we save what they did, and a fit turns the saved pairs into a policy.*
+*An expert drives, we save what they did, and training turns the saved pairs into a policy.*
 
-![Two fits](../assets/diagram-imitation-fits.png)
+![Two rules](../assets/diagram-imitation-fits.png)
 
 *One straight rule goes straight at the pillar. Copying the closest examples goes around it.*
 
 ![Success](../assets/fig-imitation-success.png)
 
-*Left: copying the closest examples gets as good as the expert after about a dozen demonstrations, the straight rule gets worse. Right: one test drive.*
+*Left: how often the drive succeeds, by number of demonstrations. The closest-examples rule matches the expert after about a dozen, the straight rule gets worse. Right: one test drive.*
 
 ![One vs ten](../assets/clip-example.mp4)
 
@@ -45,13 +45,13 @@ Robots meet situations no one wrote rules for, and a person can often just show 
 
 <details><summary>The math (optional)</summary>
 
-A policy maps the rover's position `x` to a velocity. Least squares fits one straight rule. 3-nearest-neighbours averages the 3 closest recorded actions. Over 60 random starts it succeeds from 13% of starts with one demonstration, 92% with three and 100% with ten. A drive counts as a success only if it never enters the obstacle and ends within 0.1 m of the goal.
+A policy maps the rover's position `x` to a velocity. Least squares fits one straight rule. 3-nearest-neighbours averages the 3 closest recorded actions. Real robots replace both rules with a neural network (a large trained model). Over 60 random starts it succeeds from 13% of starts with one demonstration, 92% with three and 100% with ten. A drive counts as a success only if it never enters the obstacle and ends within 0.1 m of the goal.
 
 </details>
 
 ## Build It
 
-The expert adds a sideways push near the obstacle. The code stores the examples and fits both policies.
+The code's pretend expert steers sideways near the pillar. The code stores the examples and builds both policies.
 
 ```python
 X, A = collect(rng, n_demos)        # stacked (position, velocity) pairs
@@ -69,7 +69,7 @@ python3 phases/13-learning-for-robots/01-imitation-from-demonstrations/code/figu
 
 ## Use It
 
-A test checks our neighbour search against SciPy's `cKDTree`. Real robots replace both fits with a neural network.
+A test checks our neighbour search against SciPy's `cKDTree`, a ready-made nearest-neighbour finder.
 
 Sources: Ross, Gordon and Bagnell, arXiv:1011.0686 (opened 2026-11-09).
 

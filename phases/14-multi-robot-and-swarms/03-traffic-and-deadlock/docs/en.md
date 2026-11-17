@@ -2,19 +2,19 @@
 
 > Learn why robots can block each other forever at a crossing, and a simple rule that prevents it.
 
-**Type:** Build   **Prerequisites:** a graph as nodes and arrows   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Four toy cars meet at a crossing. Each stops on a square the next car needs and waits for the square ahead. The waits form a loop, so every car is stuck forever. That is deadlock.
+Four toy cars meet at a crossing. Each car sits on a square that the next car needs, and waits for the square in front of it. The waits form a loop, so every car is stuck forever. That is deadlock.
 
 ## Key Terms
 
 - **Deadlock**: robots waiting on each other in a loop, so none can move.
-- **Wait-for graph**: arrows from each robot to the robot it is waiting for.
+- **Wait-for graph**: a drawing with an arrow from each robot to the robot it is waiting for.
 - **Hold-and-wait**: keeping your square while waiting for the next one.
 - **Reservation**: claiming a whole route before entering it.
-- **Throughput**: the number of jobs finished per tick.
+- **Throughput**: the number of jobs finished per time step.
 
 ## The Problem
 
@@ -22,7 +22,11 @@ Four robots enter a small crossing. Each stops on a square because the next one 
 
 ## The Concept
 
-Warehouses and factories run many robots on one floor, so a single jam can stop the whole fleet. Draw an arrow from each robot to the robot it waits for. A loop of arrows is a deadlock. The fix is to enter only when the whole route is free and then claim all of it. A robot waiting outside holds nothing, so no loop can form. The price: claimed routes block other robots.
+Many robots share one floor, so a single jam can stop the whole fleet. Draw an arrow from each robot to the robot it waits for. A loop of arrows is a deadlock.
+
+The fix is to enter only when the whole route is free and then claim all of it.
+
+A waiting robot holds nothing, so nobody waits on it and no loop can form. The price: claimed routes block other robots.
 
 ![Wait-for loop](../assets/diagram-wait-cycle.png)
 
@@ -55,7 +59,7 @@ need = p if self.policy == "reserve" else p[:1]
 if len(self.at) < self.K and all(n not in self.occ and n not in self.res for n in need):
 ```
 
-Tests check the loop is found, and that under reservation nobody waits in a loop at any tick on 40 random jobs.
+Tests check the loop is found, and that reservation never leaves a loop on 40 random jobs.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -65,7 +69,7 @@ python3 phases/14-multi-robot-and-swarms/03-traffic-and-deadlock/code/figure.py
 
 ## Use It
 
-Cross-check `find_cycle` against a graph library's cycle finder.
+Cross-check `find_cycle` (a cycle is the loop of arrows) against a ready-made cycle finder.
 
 ## Ship It
 
@@ -74,5 +78,5 @@ Cross-check `find_cycle` against a graph library's cycle finder.
 ## Exercises
 
 1. Replace reservation with "back up one cell when a loop is found".
-2. Take cells one at a time in a fixed global order. Can a loop form?
+2. Number every square. Cars may only take squares in rising number order. Can a loop form?
 3. Use a 6 x 6 grid. When does reservation stop helping?

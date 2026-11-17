@@ -6,26 +6,25 @@
 
 ## In Plain Words
 
-A camera sits in three nested rings that turn it about the vertical, tilt it, and roll it about its viewing line. Tilted straight down, two rings twist the view about one line.
+A camera sits in three nested rings (a gimbal, like a gyroscope toy). One ring turns it about the vertical, one tilts it, one rolls it about its viewing line. Tilted straight down, two rings spin the view about the same line, so a direction is gone.
 
-Near that pose the same view has two ring settings. The code that reads the ring angles reports only one, so yaw and roll jump while the camera moves smoothly.
+Near that pose, two different ring settings make the same view. Code reading the angles picks one, so yaw and roll jump.
 
 ## Key Terms
 
 - **Euler angles**: three turns applied in a fixed order, named roll, pitch and yaw.
 - **Roll, pitch, yaw**: turns about the forward axis, the side axis and the vertical axis.
+- **Gimbal**: three nested rings that let something turn in any direction.
 - **Gimbal lock**: a pose where two rings line up and one direction of turning is lost.
 - **Euler rates**: how fast each ring is turning.
-- **Determinant (`det`)**: one number computed from a matrix; zero means the matrix flattens space.
-- **Low-pass filter**: a smoother that blurs fast changes.
 
 ## The Problem
 
-A camera on a robot reports three angles, roll, pitch and yaw. As it tilts through straight down, two of the numbers suddenly jump, or the controller asks the joints to spin impossibly fast.
+A camera on a robot reports three angles, roll, pitch and yaw. As it tilts through straight down, two of the numbers suddenly jump, or the arm's control program asks for impossibly fast joint spins.
 
 ## The Concept
 
-Many robot sensors report orientation as three angles, and near one pose those three numbers stop making sense. Picture the camera in three rings; when it looks straight down, two rings line up and turn the view about the same line.
+Many robot sensors report orientation as three angles, and near one pose those numbers stop making sense. Picture three rings, as in the first diagram; looking straight down, two line up.
 
 ![Rings lose a direction](../assets/diagram-gimbal-rings.png)
 
@@ -35,11 +34,11 @@ Many robot sensors report orientation as three angles, and near one pose those t
 
 *Two different ring settings, one identical view.*
 
-The code that reads the angles back must pick one of the two settings, and it switches as the camera passes through, so the numbers jump even though the camera moves smoothly.
+The code that reads the angles back must pick one of the two settings, and it switches as the camera passes through, so the numbers jump. To turn smoothly near straight down, the rings would have to spin faster and faster.
 
 ![Smooth turn, jump](../assets/diagram-angle-jump.png)
 
-*Roll and yaw flip.*
+*The camera turns smoothly; roll and yaw flip straight down.*
 
 ![Jump and rate blow-up](../assets/fig-gimbal-lock.png)
 
@@ -47,7 +46,7 @@ The code that reads the angles back must pick one of the two settings, and it sw
 
 <details><summary>The math (optional)</summary>
 
-At pitch 90 degrees roll `+a` equals yaw `-a`, so only `yaw - roll` matters. Reading angles back gives pitch between -90 and 90 degrees, so past 90 it switches to a second spelling with roll and yaw 180 degrees away. The rate matrix has determinant `cos(pitch)`, which is 0 at 90 degrees. The plot sweeps pitch from 60 to 120 degrees; for a 1 rad/s spin at yaw 0 the rates grow like 1 / cos(pitch). The clip turns the roll ring +1.2 rad and the yaw ring -1.2 rad. `locked=True` is reported within 1e-9 of the lock.
+At pitch 90 degrees roll `+a` equals yaw `-a`, so only `yaw - roll` matters. Reading angles back gives pitch between -90 and 90 degrees, so past 90 it switches to a second spelling with roll and yaw 180 degrees away. The rate matrix has determinant `cos(pitch)` (one number that is 0 when the matrix loses a direction), which is 0 at 90 degrees. The plot sweeps pitch from 60 to 120 degrees; for a 1 rad/s spin at yaw 0 the rates grow like 1 / cos(pitch). The clip turns the roll ring +1.2 rad and the yaw ring -1.2 rad. `locked=True` is reported within 1e-9 of the lock.
 
 </details>
 
@@ -68,14 +67,14 @@ python3 phases/01-math-foundations/05-euler-angles-and-gimbal-lock/code/main.py
 
 ## Use It
 
-Compare `R_to_euler()` with SciPy's `Rotation.as_euler("ZYX")`. SciPy warns at the lock, so compare the rotations, not the angles.
+Compare `R_to_euler()` with SciPy's `as_euler` (a Python add-on). SciPy warns at the lock, so compare rotations.
 
 ## Ship It
 
-`outputs/skill-euler-angle-audit.md` checks for Euler angles in control, logging and filters.
+`outputs/skill-euler-angle-audit.md` checks for Euler angles in control and logging.
 
 ## Exercises
 
-1. Tilt the camera to 89 degrees and then 90 and watch the output.
-2. Find a second pair of roll and yaw that gives the same rotation at pitch 90 degrees.
-3. Compare a smoothing filter on the angles with a smooth turn between the rotations.
+1. Tilt the camera to 89, then 90 degrees.
+2. At pitch 90, try another roll and yaw and check with `euler_to_R` that the rotation is the same.
+3. Compare averaging the three angles with the smooth turn (slerp) from lesson 01/03.

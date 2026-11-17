@@ -8,7 +8,7 @@
 
 작은 로봇 팔의 관절 안에는 encoder라는 센서가 있어서 팔꿈치 각도를 구십이라고 알려 줘요. degrees에서는 사분의 일 바퀴예요. radians에서는 열네 바퀴가 넘어요.
 
-numpy는 언제나 radians라고 가정하고 단위를 묻지 않아요. 배열의 shape이 틀려도 계산은 그대로 돌아가요. 데이터가 코드로 들어오는 자리에서 검사해야만 잡을 수 있어요.
+numpy는 숫자 격자를 다루는 Python 도구이고 언제나 radians라고 가정하고 단위를 묻지 않아요. 배열의 shape이 틀려도 계산은 그대로 돌아가요. 들어오는 숫자를 그 자리에서 검사해야만 잡을 수 있어요.
 
 ## 핵심 용어
 
@@ -16,8 +16,8 @@ numpy는 언제나 radians라고 가정하고 단위를 묻지 않아요. 배열
 - **Array shape**: 배열의 행과 열이 몇 개인지입니다. 예를 들어 5행 3열입니다.
 - **Rotation matrix**: 점을 어떤 축 둘레로 돌리는 작은 숫자 표입니다.
 - **Transpose (`.T`)**: 행렬의 행과 열을 맞바꿉니다.
-- **Guard**: 데이터가 코드로 들어오는 자리에서 나쁜 데이터를 분명한 오류로 멈추게 하는 검사입니다.
-- **venv**: 프로젝트 하나를 위한 패키지 전용 폴더입니다.
+- **Guard**: 들어오는 숫자를 검사해서 나쁜 값을 분명한 오류로 멈추게 하는 검사입니다.
+- **venv**: 프로젝트 하나에 쓰는 Python 도구를 담는 전용 폴더입니다.
 
 ## 문제
 
@@ -31,15 +31,15 @@ numpy는 언제나 radians라고 가정하고 단위를 묻지 않아요. 배열
 
 *센서는 90 degrees라고 하는데 코드는 90 radians로 읽습니다.*
 
-배열에도 같은 함정이 있습니다. 점을 행으로 저장하면 돌릴 때 한 단계(transpose)가 더 필요합니다. 그것을 빼먹으면 점이 반대로 돌고 오류는 없습니다.
+숫자 격자(배열)에도 같은 함정이 있습니다. 점을 하나씩 행으로 저장하므로 모두 돌리려면 먼저 rotation matrix의 행과 열을 맞바꾸는 transpose를 해야 합니다. 그것을 빼먹으면 점이 반대로 돌고 오류는 없습니다.
 
 ![점은 행입니다](../assets/diagram-shape-flow.png)
 
-*그 단계를 빼먹으면 점이 조용히 반대로 돕니다.*
+*transpose를 빼먹으면 점이 조용히 반대로 돕니다.*
 
 ![팔 두 대가 돕니다](../assets/clip-example.mp4)
 
-*초록은 손을 주황색 기둥으로 돌립니다. 파랑은 그 단계를 빼먹어서 반대로 휘돕니다.*
+*초록은 손을 주황색 기둥으로 돌립니다. 파랑은 transpose를 빼먹어서 반대로 휘돕니다.*
 
 ![단위 오류](../assets/fig-degrees-vs-radians.png)
 
@@ -70,7 +70,7 @@ def looks_like_degrees(q, limit=2 * np.pi):
     return bool(np.max(np.abs(q)) > limit)
 ```
 
-`joint_angles`와 `rotate_z`가 둘 다 씁니다. 한 바퀴를 넘게 도는 관절에는 상한을 더 크게 잡습니다.
+`joint_angles`와 `rotate_z`가 둘 다 씁니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -80,7 +80,7 @@ python3 phases/00-start-here/07-python-env-and-numpy/code/main.py
 
 ## 실제 도구로 보기
 
-`python3 -m venv .venv`는 프로젝트 하나를 위한 패키지 전용 폴더를 만듭니다. 좋은 습관은 프로젝트마다 venv를 하나씩 두고 테스트에 `np.testing.assert_allclose`를 쓰고 변수 이름에 `q_rad`처럼 단위를 붙이는 것입니다.
+`python3 -m venv .venv`는 프로젝트 하나에 쓰는 Python 도구를 담는 전용 폴더를 만듭니다. 좋은 습관은 프로젝트마다 venv를 하나씩 두고 변수 이름에 `angle_rad`처럼 단위를 붙이는 것입니다.
 
 출처: https://docs.python.org/3/library/venv.html (venv만), https://numpy.org/doc/stable/user/basics.broadcasting.html (broadcasting만).
 
@@ -92,4 +92,4 @@ python3 phases/00-start-here/07-python-env-and-numpy/code/main.py
 
 1. degrees 값을 `joint_angles`에 넣고 오류 메시지를 읽어 보세요.
 2. NaN을 거부하는 검사를 추가하세요.
-3. `points @ R`로 점을 돌려서 어느 쪽으로 도는지 보세요.
+3. `points`를 3행 배열로, `R`을 이 레슨의 rotation matrix로 만들고 `points @ R`을 돌려서 어느 쪽으로 도는지 보세요.

@@ -14,10 +14,10 @@ force control은 누르는 힘을 재고 약하면 더 들어가고 강하면 �
 
 - **Force control**: 계획한 위치가 아니라 잰 힘에 따라 도구를 움직이는 제어입니다.
 - **Hybrid control**: 어떤 축은 위치 제어로, 나머지 축은 힘 제어로 다루는 방식입니다.
-- **Stiffness (`ke`)**: 표면을 1 m 눌렀을 때 되미는 힘(N)입니다.
+- **Stiffness (`ke`)**: 표면을 1 m 누르면 그 표면이 되미는 힘의 크기입니다.
 - **Gain (`ki`)**: 힘 오차를 도구 속도로 바꾸는 배율입니다.
 - **Time constant**: 오차가 약 3분의 2만큼 줄어드는 데 걸리는 시간입니다.
-- **Selection matrix (`S`)**: 축마다 힘 법칙과 위치 법칙 중 하나를 고르는 스위치입니다.
+- **Selection matrix (`S`)**: 방향마다 힘 제어와 위치 제어 중 하나를 고르는 스위치입니다.
 
 ## 문제
 
@@ -65,14 +65,14 @@ spring 표면 `f = ke * x`에서 차이는 overshoot 없이 `1 / (ke * ki)`초�
 
 ## 만들기
 
-하이브리드 법칙은 두 법칙의 속도를 섞습니다.
+하이브리드 규칙은 미끄러지는 속도를 위치 규칙에서, 누르는 속도를 힘 규칙에서 가져옵니다.
 
 ```python
 v = (1 - S) * v_pos + S * v_frc
 p = p + np.clip(v, -lim, lim) * dt
 ```
 
-가정은 정확한 속도 추종, 마찰 없는 선형 spring, 잡음 없는 힘 측정입니다.
+가정은 도구가 명령대로 정확히 움직이고 스펀지가 마찰 없는 spring처럼 행동하며 힘 측정에 잡음이 없다는 것입니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -82,9 +82,9 @@ python3 phases/11-contact-and-manipulation/02-force-and-hybrid-control/code/main
 
 ## 실제 도구로 보기
 
-MuJoCo에서 같은 누르기를 돌리고 정착한 힘을 강성 곱하기 깊이와 비교하세요.
+물리 simulator인 MuJoCo에서 같은 누르기를 돌리고 정착한 힘을 강성 곱하기 깊이와 비교하세요.
 
-출처: Craig(11장)와 원 논문은 출판사 페이지가 403을 돌려주어 열어 보지 못했으므로 둘 다 대조하지 않았습니다.
+출처: Craig(11장)와 원 논문은 열어 보지 못했으므로 둘 다 대조하지 않았습니다.
 
 ## 결과물
 

@@ -6,21 +6,21 @@
 
 ## In Plain Words
 
-A rover must cross a field with three rocks, so the straight line to the flag is blocked. It picks a random spot, finds the closest point of its route so far, and steps a little toward the spot, keeping the step only if it clears every rock.
+A rover must cross a field with three rocks, so the straight line to the flag is blocked. It picks a random spot. It finds the closest point it has reached so far. It steps a little toward the spot, and keeps the step only if it clears every rock.
 
-RRT repeats this until a branch reaches the flag. The route wanders, so straight shortcuts between its points remove detours.
+RRT repeats this until a branch reaches the flag. The route wanders, so straight shortcuts remove detours.
 
 ## Key Terms
 
-- **RRT**: rapidly-exploring random tree, a planner that grows a tree of short steps by random sampling.
+- **RRT**: rapidly-exploring random tree, a method that grows branches of short steps toward random spots.
 - **Node**: one point of the tree; each new node remembers its parent.
-- **Goal bias**: the share of samples that are the goal itself, tilting the tree toward it.
+- **Goal bias**: how often the random spot is chosen to be the goal, which pulls the tree toward it.
 - **Shortcutting**: replacing part of a path with a straight segment when that segment is free.
 - **Seed**: the starting number of a random generator; the same seed repeats the same run.
 
 ## The Problem
 
-Picture a robot arm that must reach a goal past an obstacle. A random planner finds a way round quickly, but the path wanders and the arm would follow every detour.
+Picture a robot arm that must reach a goal past an obstacle. A random search finds a way round quickly, but the path wanders and the arm would follow every detour.
 
 ## The Concept
 
@@ -75,16 +75,16 @@ python3 phases/09-motion-planning/02-rrt/code/main.py
 
 ## Use It
 
-With thousands of nodes, swap the plain nearest search for `scipy.spatial.cKDTree`; a test checks both agree.
+With thousands of nodes, a faster ready-made search finds the nearest node. A test checks both agree.
 
 Sources: [RRT, Wikipedia](https://en.wikipedia.org/wiki/Rapidly-exploring_random_tree) and [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf), both opened 2026-11-09.
 
 ## Ship It
 
-`outputs/skill-rrt-path-check.md` reviews a sampling planner's path.
+`outputs/skill-rrt-path-check.md` reviews a path found by random sampling.
 
 ## Exercises
 
 1. Change how often the goal is sampled and watch the tree.
-2. Make an obstacle very thin and see whether a step can cut through it.
+2. Make an obstacle very thin. Can a step pass through it without being caught?
 3. Run the shortcut step twice and see whether it helps again.

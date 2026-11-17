@@ -1,14 +1,14 @@
 {
   "en": {
-    "hook": "Four robots, four cells, everyone waiting politely for everyone else. Nobody is broken and nobody moves.",
-    "mission": "In the `Sim(...)` line of `code/main.py` change `\"naive\"` to `\"reserve\"`. Predict what `find_cycle` prints now, then run `python3 code/main.py`.",
-    "clip": "Four robots meet at a crossing, and each needs the cell the next one stands on. The blue robots use the `naive` rule (move if the next cell is free), so `find_cycle()` finds the loop (red arrows) and nobody moves again. The green robots use `reserve`: a robot enters only when its whole route is free, and all four finish within 7 ticks of `Sim.step()`. One tick is 0.65 s, one grid step is drawn as 1 m, and the amber pads are reserved cells."
+    "hook": "Four robots, four squares, everyone politely waiting for everyone else. Nothing is broken and nothing moves.",
+    "mission": "Switch the robots to the rule that claims the whole route first and see what the loop check prints. In the `Sim(...)` line of `code/main.py` change `\"naive\"` (move if the next square is free) to `\"reserve\"` (claim the whole route first), predict what `find_cycle` prints now, then run `python3 code/main.py`.",
+    "clip": "Four robots meet at a crossing, and each needs the square the next one stands on. The blue robots move whenever the next square is free, so they form a loop of waiting (red arrows) and nobody moves again. The green robots enter only when their whole route is free, and all four finish within 7 ticks. One tick is 0.65 s. One grid step is drawn as 1 m. The amber pads are claimed squares."
   },
   "ko": {
-    "hook": "로봇 넷에 칸 넷이고 모두가 서로를 예의 바르게 기다립니다. 고장 난 로봇은 없는데 움직이는 로봇도 없습니다.",
-    "mission": "`code/main.py`의 `Sim(...)` 줄에서 `\"naive\"`를 `\"reserve\"`로 바꾸세요. `find_cycle`이 무엇을 출력할지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
-    "clip": "로봇 네 대가 교차로에서 만나고 각자 다음 로봇이 서 있는 칸이 필요합니다. 파란 로봇은 `naive` 규칙(다음 칸이 비면 이동)을 써서 `find_cycle()`이 찾은 고리(빨간 화살표)에 갇히고 아무도 다시 움직이지 못합니다. 초록 로봇은 `reserve`를 써서 경로 전체가 비었을 때만 들어가고 `Sim.step()` 7틱 안에 네 대가 모두 끝냅니다. 1틱은 0.65초이고 격자 한 칸은 1 m로 그렸으며 주황색 패드는 예약된 칸입니다."
+    "hook": "로봇 넷에 칸 넷이고 모두가 서로를 예의 바르게 기다려요. 고장 난 로봇은 없는데 움직이는 로봇도 없어요.",
+    "mission": "칸 하나씩 가던 규칙을 경로 전체를 먼저 잡는 규칙으로 바꾸고 고리 검사가 무엇을 출력하는지 보세요. `code/main.py`의 `Sim(...)` 줄에서 `\"naive\"`(다음 칸이 비면 이동)를 `\"reserve\"`(경로 전체를 먼저 잡기)로 바꾸고 `find_cycle`이 무엇을 출력할지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "로봇 네 대가 교차로에서 만나고 각자 다음 로봇이 서 있는 칸이 필요합니다. 파란 로봇은 다음 칸이 비면 움직이므로 서로 기다리는 고리(빨간 화살표)에 갇히고 아무도 다시 움직이지 못합니다. 초록 로봇은 경로 전체가 비었을 때만 들어가고 7틱 안에 네 대가 모두 끝냅니다. 1틱은 0.65초입니다. 격자 한 칸은 1 m로 그렸습니다. 주황색 패드는 잡아 둔 칸입니다."
   },
   "toy": null,
- "three": "deadlock-grid-3d"
+  "three": "deadlock-grid-3d"
 }

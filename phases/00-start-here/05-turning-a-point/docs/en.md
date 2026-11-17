@@ -15,7 +15,7 @@ Turning a point works the same way. Your fingertip is the origin, the spot every
 - **Origin**: the starting spot, (0, 0), that positions are measured from and things turn around.
 - **Rotate**: turn a point around the origin by an angle.
 - **Rotation matrix**: a small table of numbers that turns a point when you multiply the two.
-- **`@`**: numpy's symbol for multiplying a table by a point.
+- **At sign (`@`)**: the symbol numpy uses to multiply a table by a point.
 
 ## The Problem
 

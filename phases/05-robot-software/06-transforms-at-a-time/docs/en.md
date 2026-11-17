@@ -2,7 +2,7 @@
 
 > Learn why a turning robot's laser scan bends a straight wall, and how timestamps fix it.
 
-**Type:** Build   **Prerequisites:** 01/04 Frames and Transform Trees, 05/04 Time Sync and Traces   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** 05/04 Time Sync and Traces   **Time:** ~15 minutes
 
 ## In Plain Words
 
@@ -12,14 +12,14 @@ A rover turns while its laser scans a straight wall. The rover turned a little b
 
 - **Frame**: a coordinate system attached to a body, such as the rover or the laser.
 - **Pose**: a body's position and direction at one moment.
-- **Transform**: the pose of one frame as seen from another.
+- **Transform**: where one frame sits and which way it points, measured from another frame.
 - **Time stamp**: the moment a measurement was taken.
 - **Interpolate**: estimate a value between two known samples.
 - **Extrapolate**: guess a value past the newest sample by continuing the last motion.
 
 ## The Problem
 
-A rover's laser scans a straight wall while the rover turns. Using the newest pose for every point bends the wall, more the faster it turns.
+A rover's laser scans a straight wall while the rover turns. Using the newest pose for every point bends the wall.
 
 ## The Concept
 
@@ -29,13 +29,11 @@ A robot must know where its body was at the instant of each measurement.
 
 *The newest pose fits only the last point. The pose at the stamp keeps the wall straight.*
 
-A transform tree says where one part of the robot is as seen from another. Add time and it says where it was at that instant. Poses arrive at separate moments, so the buffer answers in three ways. Between two stored poses it blends them. A little past the newest it may guess, within a limit. Anything else is an error.
+A transform tree (how the robot's parts are placed relative to each other) says where one part is as seen from another. Add time and it says where it was at that instant. The buffer answers in three ways. Between two stored poses it blends them (interpolates). A little past the newest it may guess (extrapolates), within a limit. Anything else is an error.
 
 ![Three answers for one lookup](../assets/diagram-lookup-rules.png)
 
 *Between samples: blend. Slightly past the newest: guess within a limit. Else: error.*
-
-Refusing is a feature: guessing would hide a late message.
 
 ![Interpolated answer and a refusal](../assets/clip-example.mp4)
 
@@ -47,7 +45,7 @@ Refusing is a feature: guessing would hide a late message.
 
 <details><summary>The math (optional)</summary>
 
-Position is a lerp (straight-line blend). Orientation uses the slerp from 01/03, a blend of two rotations along the shortest arc. The guess limit is 0 s by default. Poses at 0 s and 1 s are 1.2 m and 1 rad apart. A lookup at 0.5 s answers 0.6 m and 0.5 rad. At 1.5 s it raises `LookupError`: 0.500 s past the newest sample, and the limit is 0. The wall is scanned for 0.5 s while turning 1 rad/s.
+Position is a lerp (straight-line blend). Orientation uses the slerp from 01/03, a blend of two rotations along the shortest arc. The guess limit is 0 s by default. Refusing is a feature: a guess would hide that data arrived late. Poses at 0 s and 1 s are 1.2 m and 1 rad apart. A lookup at 0.5 s answers 0.6 m and 0.5 rad. At 1.5 s it raises `LookupError`: 0.500 s past the newest sample, and the limit is 0. The wall is scanned for 0.5 s while turning 1 rad/s.
 
 </details>
 
@@ -59,7 +57,7 @@ a = (t - self.t[i]) / (self.t[i + 1] - self.t[i])
 return (1 - a) * self.p[i] + a * self.p[i + 1], slerp(self.q[i], self.q[i + 1], a).copy()
 ```
 
-`lookup()` raises `LookupError` outside the stored times plus `max_extrapolation`. `to_world()` places scan points with stamped or newest poses.
+`lookup()` raises `LookupError` for a time outside the stored poses, allowing `max_extrapolation` past the newest. `to_world()` places scan points with stamped or newest poses.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +67,7 @@ python3 phases/05-robot-software/06-transforms-at-a-time/code/main.py
 
 ## Use It
 
-ROS 2's tf2 buffers raise an extrapolation exception for the same reason.
+ROS 2's transform library, tf2, raises an error for the same reason.
 
 ## Ship It
 
@@ -78,5 +76,5 @@ ROS 2's tf2 buffers raise an extrapolation exception for the same reason.
 ## Exercises
 
 1. Raise `max_extrapolation` a little and see when the guess stays good.
-2. Feed poses slower and compare the midpoint error.
-3. Compose two buffers at one stamp.
+2. Feed poses more slowly and compare the midpoint error.
+3. Make two `PoseBuffer`s (one per frame) and combine their answers at one stamp.

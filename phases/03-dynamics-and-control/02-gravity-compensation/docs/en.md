@@ -6,18 +6,18 @@
 
 ## In Plain Words
 
-A bench arm holding its hand out needs motor torque to carry its own weight. Gravity compensation is the motor's advance guess of that weight.
+A desk arm holding its hand out needs motor torque to carry its own weight. Gravity compensation is the motor's advance guess of that weight.
 
-If the guess is too low the hand sags; too high, it rises. The position controller pushes back with gain kp per unit of error, so a lower kp lets the same mistake move the hand farther.
+A guess too low lets the hand sag; too high, it rises. The position controller pulls the arm back toward its target like a spring, kp being the pull per unit of error. A lower kp lets the same wrong guess drift farther.
 
 ## Key Terms
 
-- **Gravity compensation**: adding a model's estimate of the arm's weight as torque in advance.
-- **Position gain (`kp`)**: how hard the motor pushes the arm back per radian of error.
-- **Feedforward (`ff`)**: torque added in advance from a model, before any error appears.
-- **Residual**: the model's error, the gap between `ff` and the torque gravity really needs.
-- **Sag**: how far the arm ends up below (or above) its commanded angle.
 - **Torque**: the twisting force a motor applies to a joint.
+- **Gravity compensation**: adding a model's estimate of the arm's weight as torque in advance.
+- **Position gain (`kp`)**: how hard the motor pulls the arm back per radian of error.
+- **Feedforward (`ff`)**: torque added in advance from a model, before any error appears.
+- **Residual**: the model's error, the gap between the feedforward and the torque gravity really needs.
+- **Sag**: how far the arm ends up below (or above) its commanded angle.
 
 ## The Problem
 
@@ -25,7 +25,7 @@ You soften a robot arm so a person can push it, by lowering the position gain `k
 
 ## The Concept
 
-A robot arm must hold up its own weight, and a wrong guess shows up as sag. The controller adds a guess of the weight in advance, and whatever the guess misses is left to the position spring. A soft spring covers it poorly.
+A robot arm must hold up its own weight, and a wrong guess shows up as sag. The controller adds a guess of the weight in advance, and whatever it misses is left to the position controller, which pulls the arm back like a spring. A weak spring covers it poorly. The stretched-out arm sags most.
 
 ![Residual over kp](../assets/diagram-sag-flow.png)
 
@@ -37,11 +37,11 @@ A robot arm must hold up its own weight, and a wrong guess shows up as sag. The 
 
 ![Two models](../assets/clip-example.mp4)
 
-*Same soft spring: the left arm droops, the right floats.*
+*Same low kp: the left arm droops, the right floats.*
 
 ![Sag against kp](../assets/fig-gravity-sag.png)
 
-*Halving the spring strength doubles the error.*
+*Halving kp doubles the error.*
 
 <details><summary>The math (optional)</summary>
 
@@ -68,7 +68,7 @@ python3 phases/03-dynamics-and-control/02-gravity-compensation/code/figure.py
 
 ## Use It
 
-Real arms get the weight torque from a physics model, for example MuJoCo's bias force at zero velocity. Model weights are often wrong, so measure the sag at two poses and fit a correction.
+Real arms get the weight torque from a physics model; MuJoCo can compute the gravity torque for a pose. Model weights are often wrong, so measure the sag at two poses and correct the model.
 
 ## Ship It
 
@@ -77,5 +77,5 @@ Real arms get the weight torque from a physics model, for example MuJoCo's bias 
 ## Exercises
 
 1. Make the model 20% too light, then too heavy, and compare the sag.
-2. Halve the spring strength and watch the sag double.
+2. Halve `kp` and watch the sag double.
 3. Add a third joint and check the stretched pose is still the worst.

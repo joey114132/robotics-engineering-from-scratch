@@ -6,14 +6,14 @@
 
 ## In Plain Words
 
-Hold a drone, nose to the door. Roll it a quarter turn about its nose, then spin it a quarter turn about the vertical: the nose points left. Spin first, then roll: the nose swings up to the ceiling.
+Hold a drone, nose to the door. Roll it a quarter turn about the line to the door, then spin it a quarter turn about the vertical: the nose points left. Spin first, then roll about that same line: the nose swings up to the ceiling.
 
-The first turn changes what the second turn acts on. A pose is orientation plus position, and multiplying poses in order tracks both.
+A pose is which way something faces plus where it is. Combining poses in order tracks both, and the order matters.
 
 ## Key Terms
 
 - **Rotation matrix**: a 3x3 grid of numbers that turns a point without stretching it.
-- **Pose**: an object's orientation plus its position.
+- **Pose**: which way an object faces plus where it is.
 - **Transform (`T`)**: a 4x4 matrix that stores a rotation and a shift in one table.
 - **Frame**: x, y, z axes attached to something, such as the camera or the arm's base.
 - **Inverse**: the transform that undoes another one.
@@ -31,7 +31,7 @@ A robot must know where each part is and which way it faces.
 
 *One pose tells you how to go from the camera's view to the base's view.*
 
-A pose is a turn plus a shift, and the order matters: turning then shifting lands somewhere different from shifting then turning.
+Turning then shifting lands somewhere different from shifting then turning.
 
 ![Two drones, opposite orders](../assets/clip-example.mp4)
 
@@ -41,15 +41,15 @@ A pose is a turn plus a shift, and the order matters: turning then shifting land
 
 *The same two turns in a different order point the nose in different directions.*
 
-Rounding errors slowly bend a rotation, so long programs repair it from time to time.
+Rounding errors slowly stop a rotation matrix from being a true rotation, so long programs repair it from time to time.
 
-![Float32 drift with and without repair](../assets/fig-rotation-drift.png)
+![Drift with and without repair](../assets/fig-rotation-drift.png)
 
 *Without the repair the error keeps growing. With it the error stays tiny.*
 
 <details><summary>The math (optional)</summary>
 
-A rotation matrix `R` has perpendicular unit-length columns and determinant +1. A pose `T` stacks `R` and a position `p` into one 4x4 matrix: it turns a point by `R`, then shifts it by `p`, and in `A @ B` the right matrix acts first. The inverse is `[R^T, -R^T p]`. A quarter turn about z plus `p = (1, 2, 0)`: turn then shift sends (1, 0, 0) to (1, 3, 0); shift then turn sends it to (-2, 2, 0). 20,000 small float32 rotations drift; `reorthonormalize` every 100 steps keeps the error at rounding level.
+A rotation matrix `R` has perpendicular unit-length columns and determinant +1. A pose `T` stacks `R` and a position `p` into one 4x4 matrix: it turns a point by `R`, then shifts it by `p`, and in `A @ B` the right matrix acts first. The inverse is `[R^T, -R^T p]`. Such 4x4 poses together are called SE(3), the name in the title. A quarter turn about z plus `p = (1, 2, 0)`: turn then shift sends (1, 0, 0) to (1, 3, 0); shift then turn sends it to (-2, 2, 0). 20,000 small float32 rotations drift; `reorthonormalize` every 100 steps keeps the error at rounding level.
 
 </details>
 
@@ -70,8 +70,6 @@ def reorthonormalize(R):
     return U @ np.diag([1, 1, np.linalg.det(U @ Vt)]) @ Vt
 ```
 
-The other helpers are in `code/main.py`.
-
 ```bash
 cd robotics-engineering-from-scratch
 python3 -m pytest phases/01-math-foundations/01-rotations-and-se3 -q
@@ -79,7 +77,7 @@ python3 -m pytest phases/01-math-foundations/01-rotations-and-se3 -q
 
 ## Use It
 
-`scipy.spatial.transform.Rotation` does all of this; the last test compares it with `rot_z(0.8)`.
+SciPy, a Python add-on, has `Rotation`, which does all this; a test compares it with the lesson's 0.8 radian z turn.
 
 Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2.
 
@@ -89,6 +87,6 @@ Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2.
 
 ## Exercises
 
-1. Turn a point 90 degrees about z, then shift it, and swap the order. See how the answers differ.
-2. Multiply many tiny turns together and watch `is_rotation` fail.
+1. Turn then shift a point, swap the order, and compare.
+2. Multiply a tiny turn by itself many thousand times, then run the rotation check.
 3. Write `compose` that multiplies a list of poses.

@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-You control walking speed with where each foot lands. A foot well ahead leaves your body behind it, so gravity pulls you back and you slow down. A foot too close lets your body pass over it, so gravity pulls you forward and you speed up.
+You control walking speed with where each foot lands. Put a foot well ahead and your body stays behind it. Gravity pulls you back, so you slow down. Put a foot too close and your body passes over it. Gravity pulls you forward, so you speed up.
 
 A walking model picks each spot from the body's position and speed.
 
@@ -15,9 +15,8 @@ A walking model picks each spot from the body's position and speed.
 - **Foot placement**: choosing where the next foot lands in order to control speed.
 - **Stance**: the time one foot stays on the ground.
 - **Touchdown**: the moment a swinging foot lands.
-- **Deadbeat**: a controller that reaches the target in one step and then stays exact.
-- **`Tc`**: the time scale of the body's fall, from lesson 01.
-- **`sinh`, `cosh`**: curves built from `exp(t/Tc)` and `exp(-t/Tc)`; they describe the falling body.
+- **Deadbeat**: a rule that hits the target speed in one step and stays there.
+- **Time constant (`Tc`)**: how quickly the body tips over, the same number as in lesson 01.
 
 ## The Problem
 
@@ -43,13 +42,13 @@ A foot placed well ahead leaves the body behind it, and gravity slows the body. 
 
 *Too short: speed runs away. Too long: speed swings.*
 
-![Centre of mass](../assets/fig-com-over-steps.png)
+![Speed over steps](../assets/fig-com-over-steps.png)
 
-*The right steps lock the speed from the second step.*
+*With the right steps, the speed settles from the second step.*
 
 <details><summary>The math (optional)</summary>
 
-Stance lasts `T` and the next foot sits at `p`. Let `u = x - p` be how far the body is ahead of that foot at touchdown. Lesson 01's model gives the speed at the end of the stance: `v' = (u/Tc) sinh(T/Tc) + v cosh(T/Tc)`. Setting `v' = v_target` and solving for `u` gives the foot, `p = x - u`. Start at 0.3 m/s with target 0.6 m/s. Deadbeat speeds after each step (m/s): 0.31, 0.60, 0.60 (the first foot was set in advance). Steps 1.5 times too long give 0.31, 0.42, 0.22, 0.67, -0.34. Steps scaled by 0.6 reach 5 m/s by step six. In steady walking the deadbeat step is `2 Tc v tanh(T/2Tc)`: 0.21 m for `T = 0.4 s`, `h = 0.9 m`, `v = 0.6 m/s`.
+Stance lasts `T` and the next foot sits at `p`. Let `u = x - p` be how far the body is ahead of that foot at touchdown. Lesson 01's model gives the speed at the end of the stance: `v' = (u/Tc) sinh(T/Tc) + v cosh(T/Tc)`, where `sinh` and `cosh` are curves built from `exp(t/Tc)` that describe the falling body. Setting `v' = v_target` and solving for `u` gives the foot, `p = x - u`. Start at 0.3 m/s with target 0.6 m/s. Deadbeat speeds after each step (m/s): 0.31, 0.60, 0.60 (the first foot was set in advance). Steps 1.5 times too long give 0.31, 0.42, 0.22, 0.67, -0.34. Steps scaled by 0.6 reach 5 m/s by step six. In steady walking the deadbeat step is `2 Tc v tanh(T/2Tc)`: 0.21 m for `T = 0.4 s`, `h = 0.9 m`, `v = 0.6 m/s`.
 
 </details>
 
@@ -72,14 +71,14 @@ python3 phases/10-legged-and-aerial/02-walking-by-foot-placement/code/main.py
 
 ## Use It
 
-The last test checks the first step against SciPy's integrator.
+The last test checks the first step against a ready-made SciPy solver.
 
 ## Ship It
 
-`outputs/skill-foot-placement-check.md` reviews a step controller for deadbeat consistency and reach limits.
+`outputs/skill-foot-placement-check.md` reviews a foot-placement rule for deadbeat consistency and reach limits.
 
 ## Exercises
 
 1. Make the steps longer or shorter and watch the speed.
 2. Limit the step length and find the fastest speed the walker can hold.
-3. Add a small error to the measured body position and see how far the speed misses.
+3. Make the measured body position a little wrong and see how far the speed misses.

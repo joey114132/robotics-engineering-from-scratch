@@ -6,9 +6,9 @@
 
 ## 쉽게 말하면
 
-watchdog은 작업대 위 로봇 팔을 조종하는 프로그램이 "아직 살아 있다"는 신호를 규칙적으로 보내기를 기다리다가 조용한 시간이 timeout을 넘기면 정지를 명령해요.
+watchdog은 작업대 위 로봇 팔을 조종하는 프로그램이 규칙적으로 보내는 "아직 살아 있다"는 신호를 듣고 있어요. 신호가 너무 오래 끊기면 정지를 명령해요. 그 기다림이 timeout이에요.
 
-팔은 그 timeout 동안에도 계속 움직이고 제동에도 거리가 들어요. 전원을 끊는 것은 제동이 아니에요. 자전거에서 페달만 멈추듯 팔은 그냥 굴러가요.
+팔은 그 timeout 동안에도 계속 움직이고 제동에도 거리가 들어요. 전원을 끊는 것은 제동이 아니에요. 자전거 페달을 멈춰도 계속 굴러가듯 팔도 계속 굴러가요.
 
 ## 핵심 용어
 
@@ -17,7 +17,7 @@ watchdog은 작업대 위 로봇 팔을 조종하는 프로그램이 "아직 살
 - **Timeout `T`**: watchdog이 작동하기 전까지 조용한 시간을 참아 주는 길이입니다.
 - **Deceleration `a`**: 제동하는 동안 속도가 줄어드는 빠르기입니다.
 - **Hard stop**: 관절의 움직임 끝을 막는 블록입니다.
-- **Jitter**: 메시지 도착 시각이 흔들리는 정도입니다.
+- **Timing jitter**: 메시지 도착 시각이 흔들리는 정도입니다.
 
 ## 문제
 
@@ -46,7 +46,7 @@ timeout이 길면 위험하고 너무 짧으면 팔이 이유 없이 멈춥니�
 
 ![timeout 예산](../assets/fig-timeout-budget.png)
 
-*timeout이 길수록 초과 이동이 직선으로 늘어납니다.*
+*timeout이 길수록 팔이 한계를 더 멀리 지나서 끝나고 그 거리가 고르게 늘어납니다.*
 
 <details><summary>The math (optional)</summary>
 
@@ -60,7 +60,7 @@ timeout은 heartbeat 주기에 jitter를 더한 값보다도 커야 하며 그�
 
 ## 만들기
 
-작은 함수 둘이 숫자를 줍니다.
+`stop_distance`는 제동 거리를 주고 `max_timeout`은 남은 거리에 맞는 가장 긴 timeout을 줍니다.
 
 ```python
 def stop_distance(v, a):
@@ -70,7 +70,7 @@ def max_timeout(room, v, a):
     return (room - stop_distance(v, a)) / v   # raises if this is <= 0
 ```
 
-`simulate()`는 0.5초에 명령 프로그램을 죽인 뒤 토크를 끊거나(`"cut"`) 일정하게 제동합니다(`"ramp"`).
+`simulate()`는 0.5초에 명령 프로그램을 죽인 뒤 모터를 끄거나(`"cut"`) 일정하게 제동합니다(`"ramp"`).
 
 ```bash
 cd robotics-engineering-from-scratch

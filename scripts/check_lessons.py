@@ -16,6 +16,7 @@ MATH_WORDS = 160  # the optional fold <details><summary>The math (optional)</sum
 MATH_FOLD = re.compile(r"<details>\s*<summary>[^<]*</summary>(.*?)</details>", re.S)
 PLAIN_WORDS = 70
 TERMS_MIN, TERMS_MAX, TERM_DEF_WORDS = 3, 6, 25
+TERM_MATH = re.compile(r"\b(?:exp|sqrt|cos|sin|tan|atan2?|sinh|cosh)\(")
 PLAIN_KO_CHARS = 600
 MIN_IMAGES = 3
 IMG = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
@@ -105,7 +106,13 @@ def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[st
         terms = key_terms(t, lang)
         if not TERMS_MIN <= len(terms) <= TERMS_MAX:
             errs.append(f"{lang}: key terms {len(terms)}, need {TERMS_MIN}-{TERMS_MAX} lines '- **Term**: definition'")
+        errs += [f"{lang}: key term '{k}' needs a plain word in its name, not only a code symbol" for k, _ in terms if not re.sub(r"`[^`]*`|[\W\d_]", "", k)]
+        errs += [f"{lang}: key term '{k}' definition has code or math; say it in plain words" for k, v in terms if "`" in v or TERM_MATH.search(v)]
         if lang == "en":
+            names = [re.sub(r"\s*\(.*?\)|`", "", k).strip().lower() for k, _ in terms]
+            for i, (k, v) in enumerate(terms):
+                late = [terms[j][0] for j in range(i + 1, len(terms)) if len(names[j]) > 3 and re.search(rf"\b{re.escape(names[j])}s?\b", v.lower())]
+                errs += [f"en: key term '{k}' uses '{x}' before it is defined; reorder the list or reword" for x in late]
             errs += [f"en: key term '{k}' definition {len(v.split())} words, limit {TERM_DEF_WORDS}" for k, v in terms if len(v.split()) > TERM_DEF_WORDS]
         else:
             en = (d / "docs" / "en.md").read_text() if (d / "docs" / "en.md").exists() else ""

@@ -1,13 +1,13 @@
 {
   "en": {
-    "hook": "Last boss: a learned policy that is allowed to be wrong, and three plain rules that make wrong harmless. Prove the rules.",
-    "mission": "Victory lap: in `code/main.py` change `Safety()` to `Safety(max_age=30)`. Predict the `hold` count and peak q of the lost-observation run, then run `python3 code/main.py`.",
-    "clip": "Two arms reach for the same target while the camera feed drops out for 0.5 s and its lamp goes grey. The blue arm has no safety wrapper, so it keeps pushing on the last image it saw and swings past the red joint limit. The green arm commands zero torque once the image is stale and settles on the target below the limit. The motion comes from this lesson's `rollout()` with and without `Safety()`, played at half speed."
+    "hook": "Last boss: a learned model that is allowed to be wrong, and three plain rules that make wrong harmless. Prove the rules.",
+    "mission": "Victory lap: let the wrapper accept much older pictures and see how the lost-camera run changes. In `code/main.py` change `Safety()` to `Safety(max_age=30)` (`max_age` is how many steps old a picture may be), predict the `hold` count (steps with no push) and peak q (the highest joint angle) of the lost-observation run, then run `python3 code/main.py`.",
+    "clip": "Two arms reach for the same target while the camera feed drops out for 0.5 s and its lamp goes grey. The blue arm has no safety wrapper, so it keeps pushing on the last picture it saw and swings past the red limit. The green arm cuts its push to zero once the picture is stale and settles on the target below the limit. Played at half speed."
   },
   "ko": {
-    "hook": "마지막 보스입니다. 틀려도 되는 learned policy 하나와 틀림을 무해하게 만드는 평범한 규칙 세 개가 있습니다. 그 규칙을 증명해 봅시다.",
-    "mission": "마무리 과제입니다. `code/main.py`에서 `Safety()`를 `Safety(max_age=30)`으로 바꾸세요. lost-observation run의 `hold` 횟수와 peak q를 예측한 뒤 `python3 code/main.py`를 실행하세요.",
-    "clip": "두 팔이 같은 목표로 움직이는 동안 카메라 화면이 0.5초 끊기고 카메라의 램프가 회색이 됩니다. 파란 팔에는 안전 wrapper가 없어서 마지막으로 본 화면만 믿고 계속 힘을 주다가 빨간 joint limit을 넘어 흔들립니다. 초록 팔은 화면이 낡았다고 판단하면 토크를 0으로 두고 limit 아래에서 목표에 멈춥니다. 움직임은 이 레슨의 `rollout()`을 `Safety()`가 있을 때와 없을 때로 돌린 결과이고 절반 속도로 재생합니다."
+    "hook": "마지막 보스예요. 틀려도 되는 학습된 모델 하나와 틀림을 무해하게 만드는 평범한 규칙 세 개가 있어요. 그 규칙을 증명해 봐요.",
+    "mission": "마무리 과제입니다. wrapper가 훨씬 오래된 화면도 받아들이게 해서 카메라가 끊긴 실행이 어떻게 바뀌는지 보세요. `code/main.py`에서 `Safety()`를 `Safety(max_age=30)`(`max_age`는 화면이 몇 step까지 오래돼도 되는지)으로 바꾸고 lost-observation run의 `hold` 횟수(힘을 주지 않은 step 수)와 peak q(관절이 닿은 가장 높은 각도)를 예측한 뒤 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 팔이 같은 목표로 움직이는 동안 카메라 화면이 0.5초 끊기고 카메라의 램프가 회색이 됩니다. 파란 팔에는 안전 wrapper가 없어서 마지막으로 본 화면만 믿고 계속 힘을 주다가 빨간 한계를 넘어 흔들립니다. 초록 팔은 화면이 낡았다고 판단하면 미는 힘을 0으로 두고 한계 아래에서 목표에 멈춥니다. 절반 속도로 재생했습니다."
   },
   "toy": null,
   "three": "wrapped-policy-arms-3d"

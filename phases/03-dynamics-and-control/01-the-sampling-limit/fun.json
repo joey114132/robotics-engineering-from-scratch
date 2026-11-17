@@ -1,13 +1,13 @@
 {
   "en": {
-    "hook": "My damper pushes against a speed that is already one tick old. Even a kind hug from the past can knock me over.",
-    "mission": "In `code/main.py` change `(10, 30, 50)` to `(20,)`. With r = dt*kd/J, predict the velocity after one tick, then run `python3 code/main.py`.",
-    "clip": "Two arms get the same joint damper. The green arm uses `kd = 10` (r = 0.5): its velocity fades away without a sign flip. The blue arm uses `kd = 41`, just above the limit `max_stable_kd()` = 40: its velocity flips sign every control tick and the swing keeps growing. Rendered from `simulate_damper()`; one control tick is drawn 0.125 s long and 1 rad/s is drawn as 0.4 rad of turn per tick."
+    "hook": "My brake pushes against a speed that is already one step old. Even a kind hug from the past can knock me over.",
+    "mission": "Brake harder and see the speed flip sign. In `code/main.py` change `(10, 30, 50)` to `(20,)`. With r = dt*kd/J, predict the velocity after one tick, then run `python3 code/main.py`.",
+    "clip": "Two arms get the same kind of brake. The green arm brakes gently: its speed fades away without flipping sign. The blue arm brakes just above the safe limit of 40: its speed flips sign every step and the swing keeps growing. One control step is drawn 0.125 s long."
   },
   "ko": {
-    "hook": "제 damper는 이미 한 tick 지난 속도를 보고 밉니다. 과거의 다정한 포옹도 저를 쓰러뜨릴 수 있습니다.",
-    "mission": "`code/main.py`에서 `(10, 30, 50)`을 `(20,)`으로 바꾸세요. r = dt*kd/J로 한 tick 뒤의 속도를 예측한 다음 `python3 code/main.py`를 실행하세요.",
-    "clip": "두 팔에 같은 관절 damper를 겁니다. 초록 팔은 `kd = 10`(r = 0.5)이라 속도가 부호 반전 없이 사라집니다. 파란 팔은 한계 `max_stable_kd()` = 40을 살짝 넘는 `kd = 41`이라 control tick마다 속도의 부호가 뒤집히고 흔들림이 계속 커집니다. `simulate_damper()` 결과를 렌더했고 한 tick을 0.125초로, 1 rad/s를 tick당 0.4 rad 회전으로 그렸습니다."
+    "hook": "제 브레이크는 이미 한 단계 지난 속도를 보고 밀어요. 과거의 다정한 포옹도 저를 쓰러뜨릴 수 있어요.",
+    "mission": "브레이크를 세게 걸면 속도가 부호를 뒤집는 것을 봅니다. `code/main.py`에서 `(10, 30, 50)`을 `(20,)`으로 바꾸세요. r = dt*kd/J로 한 tick 뒤의 속도를 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "두 팔에 같은 종류의 브레이크를 겁니다. 초록 팔은 살살 걸어서 속도가 부호 반전 없이 사라집니다. 파란 팔은 안전 한계 40을 살짝 넘게 걸어서 단계마다 속도의 부호가 뒤집히고 흔들림이 계속 커집니다. 제어 한 단계를 0.125초로 그렸습니다."
   },
   "toy": "sampling-limit",
   "three": "damper-ticks-arm-3d"

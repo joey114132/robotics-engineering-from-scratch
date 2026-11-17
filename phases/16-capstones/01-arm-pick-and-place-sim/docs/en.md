@@ -13,9 +13,8 @@ Gravity feedforward adds that push in advance. Without it, the controller pushes
 ## Key Terms
 
 - **Inverse kinematics (IK)**: finding the joint angles that put the hand at a chosen point.
-- **Quintic**: a smooth curve that starts and ends at rest.
-- **PD loop**: pushes by how far off the arm is and brakes by how fast it moves.
-- **Feedforward**: a push added in advance from a model, instead of waiting for an error.
+- **PD loop**: a controller, the program that drives the motor, which pushes by how far off the arm is and brakes by how fast it moves.
+- **Feedforward**: a push worked out before the arm moves, not after an error shows.
 - **Sag**: the steady drop of the arm below its planned pose because of gravity.
 - **Waypoint**: a pose the path must pass through, such as hovering over A.
 
@@ -25,7 +24,7 @@ Each earlier lesson passes its own test, yet the arm sets the ball 2 cm off its 
 
 ## The Concept
 
-Real robot tasks chain several parts together, so one small missing part can ruin the whole task. Four parts work together: IK finds the poses, a smooth path joins them, a controller follows it, and gravity feedforward holds the arm up. Remove the quiet one and the arm sags.
+Real robot tasks chain several parts together, so one small missing part can ruin the whole task. Four parts work together: IK finds the poses, a smooth path joins them, a controller follows it, and gravity feedforward holds the arm up. Remove the feedforward, which works quietly, and the arm sags.
 
 ![System](../assets/diagram-pick-place-system.png)
 
@@ -33,11 +32,11 @@ Real robot tasks chain several parts together, so one small missing part can rui
 
 ![Broken chain](../assets/diagram-pick-place-broken.png)
 
-*Without feedforward gravity's pull becomes error, and the controller turns it into sag.*
+*Without feedforward, gravity pulls the arm off its plan, and the controller pushes back only after it sags.*
 
 ![Two arms](../assets/clip-example.mp4)
 
-*Blue, without feedforward, stops short of the marker. Green keeps it. The sag is drawn bigger.*
+*Blue, without feedforward, stops short of the marker. Green reaches it. The sag is drawn bigger.*
 
 ![Success](../assets/fig-pick-place-result.png)
 
@@ -49,7 +48,7 @@ Real robot tasks chain several parts together, so one small missing part can rui
 
 <details><summary>The math (optional)</summary>
 
-Holding the arm at B, the shoulder must carry 6.11 Nm (`gravity()`). With `kp = 150` (Nm per radian of error) and no feedforward it sinks about `6.11 / 150 = 0.04` rad. The tip, 0.5 m away, moves about 0.02 m, and `run()` reports 20.24 mm. With feedforward the tip lags the plan by up to 9 mm while moving, then settles to 0.00 mm at B. Without it the tip sits 14 to 37 mm off the plan. Sag is drawn 6 times larger in the clip. The arm model is `M(q) a + C(q, v) + g(q) = tau`.
+Holding the arm at B, the shoulder must carry 6.11 Nm (`gravity()`). With `kp = 150` (Nm per radian of error) and no feedforward it sinks about `6.11 / 150 = 0.04` rad. The tip, 0.5 m away, moves about 0.02 m, and `run()` reports 20.24 mm. With feedforward the tip lags the plan by up to 9 mm while moving, then settles to 0.00 mm at B. Without it the tip sits 14 to 37 mm off the plan. Sag is drawn 6 times larger in the clip. The smooth path between poses is a quintic (a curve that starts and ends at rest). The arm model is `M(q) a + C(q, v) + g(q) = tau`. Compare MuJoCo's `qfrc_bias` with `coriolis + gravity` from this lesson.
 
 </details>
 
@@ -61,7 +60,7 @@ The new part is the arm itself, stepped every millisecond.
 q, v = step(q, v, ff * gravity(qd) + kp * (qd - q) + kd * (vd - v))
 ```
 
-`ik()` gives the waypoints, `reference()` the planned path, and `ff` scales the feedforward. `run()` returns the pick error, the place error and `passed` (place error under 5 mm).
+`ik()` gives the waypoints and `ff` scales the feedforward. `run()` returns `passed` (place error under 5 mm).
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -71,7 +70,7 @@ python3 phases/16-capstones/01-arm-pick-and-place-sim/code/main.py
 
 ## Use It
 
-Compare MuJoCo's `qfrc_bias` with `coriolis + gravity` from this lesson.
+MuJoCo and other simulators compute the arm's motion for you.
 
 Sources: [MuJoCo mjData reference](https://mujoco.readthedocs.io/en/stable/APIreference/APItypes.html), read 2026-11-09.
 
@@ -81,6 +80,6 @@ Sources: [MuJoCo mjData reference](https://mujoco.readthedocs.io/en/stable/APIre
 
 ## Exercises
 
-1. Use only 90% of the feedforward. How strong must the controller be to still pass?
-2. Add a 0.5 kg block to link 2 after the pick.
-3. Replace the smooth path with a trapezoid.
+1. Use only 90% of the feedforward. How hard must the controller push back to still pass?
+2. In the code, add 0.5 kg to link 2 after the pick.
+3. Replace the smooth path with a speed-up, cruise, slow-down path.

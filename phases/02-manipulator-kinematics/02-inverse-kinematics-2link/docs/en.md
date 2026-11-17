@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-A bench arm has two links, and its hand must touch a ball. Base, elbow and ball form a triangle, and the elbow can sit on either side of the base-to-ball line, giving two ways to reach it.
+A desk arm has two links, and its hand must touch a ball. Base, elbow and ball form a triangle, and the elbow can sit on either side of the base-to-ball line, giving two ways to reach it.
 
 Past full stretch nothing reaches. Inverse kinematics (IK) finds joint angles for a target; forward kinematics (FK) checks them.
 
@@ -15,8 +15,8 @@ Past full stretch nothing reaches. Inverse kinematics (IK) finds joint angles fo
 - **Inverse kinematics (IK)**: finding joint angles that put the hand on a target.
 - **Elbow down / elbow up**: the two arm shapes that reach the same target.
 - **Law of cosines**: a rule that gives a triangle's angle from its three side lengths.
-- **Reach band**: the ring of targets the arm can touch, between `|L1 - L2|` and `L1 + L2` from the base.
-- **`nan`**: "not a number", the result of an impossible calculation such as `acos` of a value above 1.
+- **Reach band**: the ring of targets the arm can touch: no closer than the difference of the two link lengths and no farther than their sum.
+- **Not-a-number (`nan`)**: what a calculation gives when it has no answer, such as asking for the angle whose cosine is 2.
 - **Tolerance**: a tiny allowed error, so rounding noise is not treated as a failure.
 
 ## The Problem
@@ -53,7 +53,7 @@ The law of cosines gives `cos q2 = (r² - L1² - L2²) / (2 L1 L2)`; positive `q
 
 ## Build It
 
-The code uses the law of cosines for the elbow, then subtracts the triangle's inner angle from the target direction for the shoulder.
+The code uses the law of cosines for the elbow. For the shoulder, it takes the direction to the target and subtracts the triangle's angle at the base.
 
 ```python
 c2 = (x*x + y*y - l1*l1 - l2*l2) / (2*l1*l2)
@@ -63,7 +63,7 @@ q2 = np.arctan2(s2, c2)
 q1 = np.arctan2(y, x) - np.arctan2(l2*s2, l1 + l2*c2)
 ```
 
-A small tolerance stops rounding noise from causing a false refusal. Tests run `fk(ik(p))` on 200 targets per branch.
+A small tolerance stops rounding noise from causing a false refusal. Tests run `fk(ik(p))` on 200 targets for each elbow choice.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -73,14 +73,14 @@ python3 phases/02-manipulator-kinematics/02-inverse-kinematics-2link/code/main.p
 
 ## Use It
 
-Arms with more joints use numerical solvers; compare one with this closed form.
+Bigger arms use numerical solvers; compare one with this formula.
 
 ## Ship It
 
-`outputs/skill-ik-answer-check.md` is the check an IK answer must pass before a controller sees it.
+`outputs/skill-ik-answer-check.md` checks every IK answer before it moves the arm.
 
 ## Exercises
 
-1. Ask for a target just inside, then just outside, the reach.
+1. Ask for targets just inside and just outside the reach.
 2. Switch between elbow up and elbow down.
-3. Limit the elbow to 2.8 rad and pick the other elbow when needed.
+3. Reject any answer with elbow angle above 2.8 rad and use the other elbow shape instead.

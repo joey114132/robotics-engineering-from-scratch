@@ -2,20 +2,20 @@
 
 > 관절에 부드럽게 움직이라고 해도 뻣뻣하게 버티는 이유와 그 해결책을 배웁니다.
 
-**유형:** 만들기   **선수 지식:** 04/01 모터와 기어박스, 03/03 임피던스 제어   **시간:** 약 15분
+**유형:** 만들기   **선수 지식:** 없음   **시간:** 약 15분
 
 ## 쉽게 말하면
 
-bench 팔의 손을 위로 밀어 보세요. 관절 안에서는 drive가 손을 목표 각도 쪽으로 세기가 정해진 스프링처럼 끌어당겨요. 프로그램이 더 부드러운 스프링을 요청해도 position 모드에서는 그 요청이 스프링에 닿지 않아요.
+로봇 팔의 손을 위로 밀어 보세요. 관절 안에서는 drive가 손을 목표 각도 쪽으로 세기가 정해진 스프링처럼 끌어당겨요. 프로그램이 더 부드러운 스프링을 요청해도 position 모드에서는 drive가 그 요청을 무시해요.
 
 토크 모드에서는 프로그램이 끌어당기는 힘을 직접 써요.
 
 ## 핵심 용어
 
 - **Torque mode**: 프로그램이 drive에 얼마나 세게 비틀지 알려 주면 drive가 그대로 따르는 방식입니다.
-- **Position mode**: 프로그램은 목표 각도만 주고 토크는 drive 자신의 controller가 정하는 방식입니다.
-- **PD controller**: 각도 오차에 비례해 끌어당기고(`kp`) 속도에 비례해 제동하는(`kd`) controller입니다.
-- **Gain**: `kp`처럼 controller가 얼마나 세게 반응할지 정하는 배율입니다.
+- **Position mode**: 프로그램은 목표 각도만 주고 토크는 drive 자신의 제어 코드(controller)가 정하는 방식입니다.
+- **PD controller**: 목표 각도에서 얼마나 떨어졌는지에 비례해 끌어당기고 속도에 비례해 제동하는 controller입니다.
+- **Gain**: controller가 얼마나 세게 반응할지 정하는 숫자입니다. 클수록 세게 당깁니다.
 - **Stiffness (`K`)**: 오차 1 radian(각도 단위)당 토크입니다. 값이 크면 관절이 밀려도 잘 버팁니다.
 - **Admittance layer**: 미는 힘을 재서 목표를 옮겨 관절이 부드럽게 움직이게 하는 코드입니다.
 
@@ -29,20 +29,20 @@ bench 팔의 손을 위로 밀어 보세요. 관절 안에서는 drive가 손을
 
 ![누가 토크를 쓰는가](../assets/diagram-mode-loops.png)
 
-*토크 모드에서는 내 프로그램이 토크를 씁니다. position 모드에서는 drive 안쪽 controller가 씁니다.*
+*토크 모드에서는 내 프로그램이 토크를 씁니다. position 모드에서는 drive 안쪽 제어 코드가 씁니다.*
 
-position 모드에서 drive는 gain이 정해진 자기 controller를 돌립니다. 세기가 정해진 스프링과 같습니다. 밀면 관절은 그 스프링이 균형을 잡는 곳까지 움직이고 프로그램이 얼마나 부드럽게 해 달라고 했는지는 상관없습니다.
+position 모드에서 drive는 gain이 정해진 자기 제어 코드를 돌립니다. 세기가 정해진 스프링과 같습니다. 밀면 관절은 그 스프링이 균형을 잡는 곳까지 움직이고 프로그램이 얼마나 부드럽게 해 달라고 했는지는 상관없습니다.
 토크 모드에서는 스프링을 내가 고르므로 관절이 얼마나 밀릴지도 내가 정합니다.
 
 admittance 층은 미는 힘을 재서 목표를 옮기므로 관절이 부드럽게 움직입니다.
 
 ![admittance 영상](../assets/clip-example.mp4)
 
-*둘 다 position 모드이고 위로 밀립니다(빨강). 파랑은 손이 거의 움직이지 않습니다. 초록은 층이 주황색 목표를 올립니다.*
+*둘 다 position 모드이고 위로 밀립니다(빨강). 파랑은 거의 움직이지 않습니다. 초록은 층이 주황색 목표를 올립니다.*
 
 ![모드 선택지](../assets/diagram-mode-options.png)
 
-*부드러운 관절에는 토크 명령이나 바깥 층이 필요합니다.*
+*어떤 선택지가 관절을 부드럽게 만드는지 보세요.*
 
 ![외력 응답과 강성](../assets/fig-mode-stiffness.png)
 
@@ -69,7 +69,7 @@ elif mode == "admittance":
     tau = kp_in * (q_des + ext / K - q) - kd_in * qd
 ```
 
-테스트는 `position`이 `K = kp_in, D = kd_in`인 `torque`와 같다는 것을 보입니다.
+테스트는 drive의 고정된 스프링(`kp_in`, `kd_in`)이 그 강성과 제동을 준 토크 모드와 같은 토크를 낸다는 것을 보입니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -79,7 +79,7 @@ python3 phases/04-actuators-and-sensors/02-torque-vs-position-modes/code/figure.
 
 ## 실제 도구로 보기
 
-ros2_control에서는 관절마다 position이나 effort 같은 command 인터페이스를 선언합니다. controller가 hardware에 없는 인터페이스를 요청하면 실패합니다.
+ros2_control(ROS 2의 모터 제어 틀)에서는 관절마다 position이나 effort(토크) 같은 command 인터페이스를 선언합니다.
 
 출처 (2026년 11월 9일 접속):
 
@@ -92,5 +92,5 @@ ros2_control에서는 관절마다 position이나 effort 같은 command 인터�
 ## 연습 문제
 
 1. `kp_in`을 바꾸고 관절이 얼마나 밀리는지 보세요.
-2. 측정한 외력에 작은 지연을 넣어 보세요.
-3. 층이 요청한 것의 절반만큼만 뻣뻣하게 느껴지게 해 보세요.
+2. 측정한 외력(`ext`)에 작은 지연을 넣어 보세요.
+3. `K`를 절반으로 해 보고 관절이 얼마나 뻣뻣하게 느껴지는지 보세요.

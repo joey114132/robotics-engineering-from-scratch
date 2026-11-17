@@ -2,21 +2,19 @@
 
 > Learn the ways a robot joint can fail quietly, and how to spot each one early.
 
-**Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A bench arm moves toward its target when its sensor freezes. The frozen reading says the arm is still fast, so the controller keeps braking and drives the arm back into the hard stop. The controller never broke. It obeyed a bad reading.
-
-This lesson injects five faults and measures the damage and how early a cheap check could warn.
+A bench arm moves toward its target when its sensor freezes. The frozen reading keeps saying the arm is fast, so the controller (the program that drives the motor) keeps braking, and the brake pushes the arm back into the hard stop. The controller never broke. It obeyed a bad reading.
 
 ## Key Terms
 
 - **Fault injection**: deliberately breaking a sensor, command or timing to see what happens.
-- **PD controller**: pulls a joint toward its target like a spring and brakes it by its speed.
+- **PD controller**: a program that pulls a joint toward its target like a spring and brakes it by its speed.
 - **Hard stop**: a block that ends the joint's travel.
 - **Torque**: the twisting push a motor gives a joint.
-- **Saturation**: a command capped at the motor's maximum, so the push stays small.
+- **Saturation**: a command cut off at the motor's maximum, so the motor cannot push as hard as asked.
 - **Monitor**: a cheap check on signals the controller can see that raises an alarm.
 
 ## The Problem
@@ -25,7 +23,7 @@ A robot arm that worked well all week suddenly slams into its hard stop, and the
 
 ## The Concept
 
-A robot arm can hurt people and itself, so learn how it fails before you decide what to guard. We break a simple controller five ways: a wrong sign, a frozen sensor, a brief dropout, a delay and a weak motor. For each one we watch how badly the arm ends up and how early a cheap check could have warned.
+A robot arm can hurt people and itself, so learn how it fails before you decide what to guard. We break a simple controller five ways: a push that points the wrong way (wrong sign), a frozen sensor, a reading that disappears for a moment (dropout), a delay and a weak motor. For each one we watch how badly the arm ends up and how early a cheap check could have warned.
 
 ![Fault points](../assets/diagram-fault-points.png)
 
@@ -33,7 +31,7 @@ A robot arm can hurt people and itself, so learn how it fails before you decide 
 
 ![Wrong sign](../assets/clip-example.mp4)
 
-*Blue runs the wrong way and the warning lamp lights before it hits the stop. Green settles on the target.*
+*Blue runs the wrong way and the warning lamp lights before the stop. Green settles on the target.*
 
 ![Fault responses](../assets/fig-fault-responses.png)
 
@@ -45,7 +43,7 @@ A robot arm can hurt people and itself, so learn how it fails before you decide 
 
 ![Checks](../assets/diagram-fault-checks.png)
 
-*Four cheap checks together flag all five faults.*
+*Each fault trips at least one of four cheap checks.*
 
 <details><summary>The math (optional)</summary>
 
@@ -96,4 +94,4 @@ The same injection works in a MuJoCo joint or a ROS 2 node.
 
 1. Inject the stuck sensor after the joint settles. What happens?
 2. Find the delay where the loop first starts to wobble.
-3. Add an encoder that reads twice the true angle and rank it.
+3. Add a sensor that reads twice the true angle and rank it.

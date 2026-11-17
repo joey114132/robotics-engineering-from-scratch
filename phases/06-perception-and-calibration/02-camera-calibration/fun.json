@@ -1,13 +1,13 @@
 {
   "en": {
-    "hook": "My datasheet swears the focal length is perfect and my camera begs to differ. A few tilted views of a grid will settle it.",
-    "mission": "In `code/main.py` change `make_views(K, 6, 0.5, 1)` to use 3 views and run `python3 code/main.py`. Predict whether the pixel error rises or falls, then compare with the original 2.24.",
-    "clip": "A checkerboard visits six tilted poses in front of a camera, and this lesson's `calibrate()` turns those six views (0.5 px noise) into `fx, fy, cx, cy`. A pixel near the image edge is then turned back into a 3D point. Amber is the truth, green uses the calibrated values (about 0.5 cm off), and blue uses datasheet values (about 6 cm off), so the camera moves in on the three points at the end. The balls are marker sized (amber is the large see-through one with green inside it) and only their positions are true scale. Board poses come from `make_views()`, at true scale."
+    "hook": "My datasheet swears the zoom is perfect, and my camera begs to differ. A few tilted views of a checkerboard settle it.",
+    "mission": "Use fewer photos and see whether the error gets worse. In `code/main.py` change `make_views(K, 6, 0.5, 1)` to use 3 views and run `python3 code/main.py`. Predict whether the pixel error rises or falls, then compare with the original 2.24.",
+    "clip": "A checkerboard visits six tilted poses in front of a camera, and the calibration turns those six photos into the camera's own numbers. A pixel near the image edge is then turned back into a 3D point. Amber is the truth, green uses the calibrated numbers (about 0.5 cm off) and blue uses the datasheet numbers (about 6 cm off). The balls are marker sized, so only their positions are true scale."
   },
   "ko": {
-    "hook": "datasheet는 focal length가 완벽하다고 우깁니다. 제 카메라는 생각이 다릅니다. 기울인 격자 몇 장이면 결판이 납니다.",
-    "mission": "`code/main.py`에서 `make_views(K, 6, 0.5, 1)`의 6을 3으로 바꾸고 `python3 code/main.py`를 실행하세요. pixel 오차가 오를지 내릴지 먼저 예측하고 원래 값 2.24와 비교하세요.",
-    "clip": "체커보드가 카메라 앞에서 기울어진 여섯 자세를 거칩니다. 이 레슨의 `calibrate()`가 그 여섯 장(pixel noise 0.5 px)으로 `fx, fy, cx, cy`를 구합니다. 그다음 영상 가장자리의 pixel 하나를 3D 점으로 되돌립니다. 주황은 실제 위치이고 초록은 보정한 값으로 계산한 점으로 약 0.5 cm, 파랑은 datasheet 값으로 계산한 점으로 약 6 cm 벗어나서 끝에서는 카메라가 세 점으로 다가갑니다. 공은 표시용 크기이고(주황은 초록이 안에 든 큰 투명한 공) 위치만 실제 크기 그대로입니다. 보드 자세는 `make_views()`가 뽑은 것이고 크기는 실제 그대로입니다."
+    "hook": "datasheet는 줌이 완벽하다고 우기는데 제 카메라는 아니라고 해요. 기울인 체커보드 사진 몇 장이면 결판이 납니다.",
+    "mission": "사진을 줄이면 오차가 더 나빠지는지 확인합니다. `code/main.py`에서 `make_views(K, 6, 0.5, 1)`이 시점 3개를 쓰도록 바꾸고 `python3 code/main.py`를 실행하세요. pixel 오차가 오를지 내릴지 예측한 다음 원래 값 2.24와 견주세요.",
+    "clip": "체커보드가 카메라 앞에서 기울어진 자세 여섯 개를 거치고 calibration이 그 여섯 장의 사진을 카메라 자신의 값으로 바꿉니다. 그다음 이미지 가장자리 근처의 pixel 하나를 다시 3D 점으로 되돌립니다. 주황색은 참값이고 초록은 calibration으로 얻은 값(약 0.5 cm 어긋남)을 쓰고 파랑은 datasheet 값(약 6 cm 어긋남)을 씁니다. 공은 표시용 크기라서 위치만 실제 크기 그대로입니다."
   },
   "toy": null,
   "three": "camera-calibration-3d"

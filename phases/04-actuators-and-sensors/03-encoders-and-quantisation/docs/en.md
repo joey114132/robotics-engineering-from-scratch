@@ -2,7 +2,7 @@
 
 > Learn why a slow joint gives a jumpy speed reading, and why smoothing it makes it late.
 
-**Type:** Build   **Prerequisites:** 04/01 Motor and Gearbox, 03/01 The Sampling Limit   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
@@ -16,8 +16,8 @@ Check often and you mostly see nothing, then one edge, so the speed jumps. Wait 
 - **Count**: one step an encoder reports, here one slot edge passing the reader.
 - **CPR**: counts per revolution, the number of steps in one full turn.
 - **Quantisation**: rounding a smooth value to whole steps, so small changes stay invisible.
-- **Window**: the number of samples between the two counts you compare to get a speed.
-- **Damping term**: `kd * velocity`, a brake that grows with speed.
+- **Window**: how many readings apart the two counts are that you subtract to get a speed.
+- **Damping term**: a brake that grows with speed, so a fast joint is braked harder.
 
 ## The Problem
 
@@ -41,11 +41,11 @@ You can smooth the speed by comparing counts further apart, a longer window. Tha
 
 ![Two dials](../assets/clip-example.mp4)
 
-*Blue (one sample) sits on the true speed. Green (many samples) trails behind it.*
+*Blue (counts one reading apart) sits on the true speed. Green (many readings apart) trails behind it.*
 
 ![Noise and delay](../assets/fig-encoder-velocity.png)
 
-*Left: fast sampling gives rare tall spikes, slower sampling small steps. Right: longer windows cut noise but add delay.*
+*Left: checking often gives rare tall spikes, checking less often small steps. Right: longer windows cut noise but add delay.*
 
 <details><summary>The math (optional)</summary>
 
@@ -85,5 +85,5 @@ Sources: [maxon, encoder selection part three](https://www.maxongroup.com/en-us/
 ## Exercises
 
 1. Time the gap between counts instead and compare the noise at slow speed.
-2. Find the speed above which a one-sample difference is good enough.
-3. Change the ramp speed and watch the dip in the figure move.
+2. Find the speed above which a one-reading difference gives a steady speed.
+3. Change the ramp speed and watch the dip in the right plot of "Noise and delay" move.

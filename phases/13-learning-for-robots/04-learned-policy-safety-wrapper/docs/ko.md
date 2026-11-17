@@ -6,7 +6,7 @@
 
 ## 쉽게 말하면
 
-장난감 자동차의 속도 명령은 학습된 policy가 내는데 이 policy는 가끔 엉뚱한 값을 내요. safety wrapper는 모터 앞에서 명령을 작게 하고 천천히 바뀌게 해요.
+장난감 자동차의 속도 명령은 학습된 policy(예시로 훈련한 모델)가 내는데 이 policy는 가끔 엉뚱한 값을 내요. safety wrapper는 모터 앞에서 명령을 작게 하고 천천히 바뀌게 해요.
 
 카메라 영상이 오래됐으면 wrapper는 마지막 명령을 되풀이하다가 자동차를 서서히 멈춰 세워요.
 
@@ -25,7 +25,7 @@
 
 ## 개념
 
-학습된 모델은 예상 밖의 일을 하므로 사람을 다치게 할 수 있는 로봇에는 절대 예상 밖의 일을 하지 않는 안전 장치가 필요합니다. wrapper는 평범한 코드 몇 줄입니다.
+학습된 모델은 예상 밖의 일을 하므로 사람을 다치게 할 수 있는 로봇에는 절대 예상 밖의 일을 하지 않는 안전 장치가 필요합니다. wrapper는 평범한 코드입니다.
 화면이 얼마나 오래됐는지 보고 명령을 안전한 범위로 자르고 명령이 바뀌는 속도를 제한합니다. 평범하기 때문에 세게 시험할 수 있습니다.
 
 ![wrapper 파이프라인](../assets/diagram-wrapper-pipeline.png)
@@ -34,11 +34,11 @@
 
 ![사다리](../assets/diagram-wrapper-ladder.png)
 
-*짧은 공백에는 마지막 명령을 되풀이하고 긴 공백에는 정지로 서서히 내립니다.*
+*조금 오래된 화면에는 마지막 명령을 되풀이하고 아주 오래된 화면에는 정지로 서서히 내립니다.*
 
 ![억제](../assets/fig-wrapper-containment.png)
 
-*wrapper가 없으면 부호가 뒤집힌 burst가 자동차를 목표 너머로 멀리 던집니다. wrapper가 있으면 거의 움직이지 않습니다.*
+*wrapper가 없으면 명령이 반대로 뒤집힌 burst가 자동차를 목표 너머로 멀리 던집니다. wrapper가 있으면 거의 움직이지 않습니다.*
 
 ![화살표가 달린 자동차들](../assets/clip-example.mp4)
 
@@ -63,7 +63,7 @@ target = fallback if not np.isfinite(raw) else float(np.clip(raw, lo, hi))
 out = float(np.clip(target, last_out - max_step, last_out + max_step))
 ```
 
-fuzz 테스트는 NaN을 포함한 무작위 명령 2000개를 보내고 모든 출력이 두 제한을 지키는지 확인합니다.
+fuzz 테스트는 NaN을 포함한 무작위 명령 2000개를 보내고 두 제한이 지켜지는지 확인합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -73,7 +73,7 @@ python3 phases/13-learning-for-robots/04-learned-policy-safety-wrapper/code/figu
 
 ## 실제 도구로 보기
 
-실제 제어기에는 이미 limiter가 들어 있습니다. ROS 2 `joint_limits` 패키지가 그 예입니다. 나이 검사는 그 앞에 놓습니다.
+실제 제어기에는 이미 limiter가 들어 있습니다. ROS 2(로봇 소프트웨어 프레임워크)의 `joint_limits`가 그 예입니다. 
 
 출처: ROS Index, `joint_limits`(index.ros.org/p/joint_limits). 2026년 11월 9일에 열어 확인했습니다.
 
@@ -83,6 +83,6 @@ python3 phases/13-learning-for-robots/04-learned-policy-safety-wrapper/code/figu
 
 ## 연습 문제
 
-1. 속도에 따라 달라지는 제한을 추가하고 fuzz하세요.
+1. 자동차가 빠를수록 제한이 작아지게 하고 fuzz하세요.
 2. fallback이 0으로 내려가는 tick 수를 바꿔 보세요.
 3. 기록된 policy 로그를 `Wrapper.act`에 다시 넣으세요.

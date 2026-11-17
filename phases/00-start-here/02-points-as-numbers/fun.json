@@ -1,13 +1,13 @@
 {
   "en": {
     "hook": "Where is the treasure? Two numbers. How far away is it? One more line of math, and a robot can answer both.",
-    "mission": "Run `cd code && python3 main.py`. Before you look at the output, guess how much shorter the straight line from A to C is than the trip through B.",
-    "clip": "A small rover visits three marks on the floor in order. Each mark is a pair of numbers from the lesson's `ROUTE`. The rover rests on each mark, turns toward the next one, and drives straight there along the lesson's `lerp()`."
+    "mission": "Compare a straight trip with a trip through a middle stop. Run `cd code && python3 main.py`. Before you look at the output, guess how much shorter the straight line from A to C is than the trip through B.",
+    "clip": "A small rover visits three marks on the floor in order. It rests on each mark, turns toward the next one, and drives straight there. Each mark is just a pair of numbers."
   },
   "ko": {
-    "hook": "보물은 어디에 있을까요? 숫자 두 개면 됩니다. 얼마나 먼가요? 계산 한 줄이면 로봇도 둘 다 답할 수 있습니다.",
-    "mission": "`cd code && python3 main.py`를 실행합니다. 출력을 보기 전에 A에서 C로 곧장 가는 길이 B를 거치는 길보다 얼마나 짧을지 예측해 보세요.",
-    "clip": "작은 rover가 바닥에 표시한 세 점을 차례로 찾아갑니다. 각 점은 이 레슨 `ROUTE`의 숫자 한 쌍입니다. rover는 점마다 잠시 쉬고 다음 점 쪽으로 돈 다음 레슨의 `lerp()`를 따라 곧게 달립니다."
+    "hook": "보물은 어디에 있을까요? 숫자 두 개면 돼요. 얼마나 먼가요? 계산 한 줄이면 로봇도 둘 다 답할 수 있어요.",
+    "mission": "곧장 가는 길과 중간에 들르는 길을 비교해 봅니다. `cd code && python3 main.py`를 실행하세요. 출력을 보기 전에 A에서 C로 곧장 가는 길이 B를 거치는 길보다 얼마나 짧을지 예측해 보세요.",
+    "clip": "작은 rover가 바닥에 표시한 세 점을 차례로 찾아갑니다. 점마다 잠시 쉬고 다음 점 쪽으로 돈 다음 곧게 달립니다. 각 점은 숫자 한 쌍일 뿐입니다."
   },
   "toy": null,
   "three": "route-points-3d"

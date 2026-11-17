@@ -6,20 +6,20 @@
 
 ## In Plain Words
 
-A desk arm has motors at the shoulder and the elbow. Forward kinematics follows the turns from base to hand: step along each link in the direction all earlier joint angles give it, add the steps, and you know where the tip lands.
+A desk arm has motors at the shoulder and the elbow. Forward kinematics follows the turns from base to hand. Each link points in a direction set by all the joint angles before it. Step along each link that way, add the steps, and you know where the tip lands.
 
 ## Key Terms
 
-- **Forward kinematics (FK)**: finding where the tip is from the joint angles.
 - **Link**: the rigid bar between two joints.
-- **Joint angle (`q`)**: how far a joint is turned from its zero position.
-- **Tip pose**: the position and orientation of the end of the arm.
+- **Joint angle (`q`)**: how far a joint is turned from the position where its angle is 0.
+- **Forward kinematics (FK)**: finding where the tip is from the joint angles.
+- **Tip pose**: where the end of the arm is and which way it points.
 - **Workspace**: every place the tip can reach.
 - **Cartesian space**: ordinary x, y, z positions, as opposed to joint angles.
 
 ## The Problem
 
-You tell a robot arm to put its gripper at one spot, but its motors only know joint angles. Before the arm can reach anything, your code must work out where the hand ends up for a given set of angles.
+You tell a robot arm to put its hand at one spot, but its motors only know joint angles. Your code must work out where the hand ends up for a given set of angles.
 
 ## The Concept
 
@@ -27,11 +27,11 @@ To reach anything, a robot first has to know where its own hand is. Start at the
 
 ![Turn, then step](../assets/diagram-fk-walk.png)
 
-*Turn, step, turn, step, from base to tip.*
+*Turn, step, turn, step.*
 
 ![An arm turns its shoulder, then its elbow](../assets/clip-example.mp4)
 
-*Shoulder up, then elbow forward. The red ball forgot the shoulder's turn and is in the wrong place.*
+*Shoulder up, then elbow forward. The red ball is where the tip lands if the shoulder's turn is left out.*
 
 The hand is farthest from the base when the arm is straight, and closest when it folds back on itself.
 
@@ -51,7 +51,7 @@ The example target is the gripper at (0.5, 0.3). Each joint adds a turn `Rz(q)` 
 
 ## Build It
 
-One function adds up the headings of all links, and the other multiplies a turn and a slide for each link. A test checks that both agree on random poses.
+One function adds up the angles of all links; the other multiplies a turn and a shift for each link. A test checks that both agree on random poses.
 
 ```python
 def fk_planar(lengths, angles):
@@ -72,7 +72,7 @@ python3 -m pytest phases/01-math-foundations/02-forward-kinematics -q
 
 ## Use It
 
-Real arms describe their links with Denavit-Hartenberg tables or URDF files.
+Real arms describe their links in URDF files, or in tables covered in Phase 02.
 
 Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 3.
 

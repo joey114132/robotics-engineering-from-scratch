@@ -13,10 +13,9 @@
 ## 핵심 용어
 
 - **Calibration**: 줌이나 중심 같은 카메라 자신의 값을 아는 표적으로 재는 일입니다.
-- **Intrinsics (`K`)**: `fx, fy, cx, cy`를 담은 matrix(숫자 격자)입니다.
-- **Homography (`H`)**: 평평한 보드 위의 점을 pixel로 보내는 3x3 matrix입니다.
+- **Intrinsics (`K`)**: 카메라 자신의 줌과 중심 값을 담은 matrix(숫자 표)입니다.
+- **Homography (`H`)**: 평평한 보드 위의 한 지점을 pixel로 바꿔 주는 3x3 숫자 표입니다.
 - **Degenerate views**: 같은 단서를 되풀이해서 풀 수 없는 시점들입니다.
-- **SVD**: matrix 분해 도구입니다. 가장 작은 특이 벡터가 "이 곱을 0에 최대한 가깝게"라는 문제를 풉니다.
 - **Reprojection error**: 내 값으로 투영한 모서리가 실제로 본 모서리와 얼마나 떨어져 있는지입니다.
 
 ## 문제
@@ -29,9 +28,10 @@
 
 ![선형 네 단계](../assets/diagram-calib-steps.png)
 
-*사진마다 숫자 몇 개가 나오고 모으면 카메라의 줌과 중심이 나옵니다.*
+*사진에서 카메라 숫자까지 이어지는 네 단계를 보세요.*
 
-평평한 체커보드의 모서리는 위치를 압니다. 새 각도에서 찍은 사진마다 그 위치와 pixel을 잇는 식이 나옵니다. 기울기가 다른 사진 두 장이면 선형 대수만으로 카메라의 줌과 중심을 풀 수 있습니다. 보드를 밀기만 한 사진은 같은 단서를 되풀이하므로 solver가 거부합니다.
+평평한 체커보드의 모서리는 위치를 압니다. 새 각도에서 찍은 사진마다 그 위치와 pixel을 잇는 식이 나옵니다. 기울기가 다른 사진 두 장이면 간단한 matrix 계산만으로 카메라의 줌과 중심을 풀 수 있습니다.
+보드를 밀기만 한 사진은 같은 단서를 되풀이하므로 solver가 거부합니다.
 
 ![밀기만 한 보드와 기울인 보드](../assets/clip-example.mp4)
 
@@ -64,7 +64,7 @@ cx, cy = -B13 / B11, -B23 / B22
 fx, fy = np.sqrt(lam / B11), np.sqrt(lam / B22)   # lam = B33 - B13^2/B11 - B23^2/B22
 ```
 
-`homography_dlt()`는 점을 정규화하고 가장 작은 특이 벡터를 취합니다. `calibrate()`는 퇴화했거나 물리적으로 말이 안 되는 결과면 오류를 일으킵니다.
+`homography_dlt()`는 점의 크기를 맞춘 뒤 가장 잘 맞는 값을 찾는 matrix 도구인 SVD를 씁니다. `calibrate()`는 퇴화한 시점과 물리적으로 말이 안 되는 결과를 거부합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -83,6 +83,6 @@ python3 -m pytest phases/06-perception-and-calibration/02-camera-calibration -q
 
 ## 연습 문제
 
-1. 기울인 시점을 하나 더하고 오차를 보세요.
+1. `make_views`의 시점 수를 늘리고 오차를 보세요.
 2. 모든 시점을 미는 것으로 만들고 거부되는 것을 보세요.
 3. pixel 노이즈를 더 주고 시점이 몇 장 필요한지 보세요.

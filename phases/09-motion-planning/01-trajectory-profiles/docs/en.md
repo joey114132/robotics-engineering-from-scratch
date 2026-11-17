@@ -2,22 +2,22 @@
 
 > Learn why a smooth-looking move can still jolt a robot arm, and how to plan a gentler one.
 
-**Type:** Build   **Prerequisites:** high-school calculus   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A bench arm swings from one pose to another and stops. To change speed the motor pushes, harder the faster the speed must change. That rate of change is acceleration.
+A bench arm swings from one pose to another and stops. To change speed, the motor pushes. The faster the speed must change, the harder it pushes. That rate of change is acceleration.
 
-If acceleration jumps from zero to a large value at once, the push jumps too and the arm gets a knock. A quintic profile starts and ends with zero acceleration, so the push grows from nothing.
+If acceleration jumps from zero to a large value, the push jumps too and the arm gets a knock. A quintic profile starts and ends with zero acceleration, so the push grows from nothing.
 
 ## Key Terms
 
 - **Trajectory profile**: the plan of how a joint's position changes over time between two poses.
 - **Acceleration**: how fast the speed changes; the motor's push follows it.
 - **Jerk**: how fast the acceleration changes. A jump in acceleration is a spike in jerk.
-- **Quintic**: a polynomial of degree 5, the lowest that can fix position, speed and acceleration at both ends.
+- **Quintic**: the simplest curve whose position, speed and push are all set at both ends.
 - **Torque**: the turning force a motor applies to a joint.
-- **Control tick**: one step of the controller; here 0.002 s.
+- **Control tick**: one step of the program that drives the motor; here 0.002 s.
 
 ## The Problem
 
@@ -27,7 +27,7 @@ Picture a robot arm moving between two poses along a smooth-looking curve. It re
 
 A real arm is worn and shaken by sudden pushes from its motors, so a plan should build the push up gradually.
 
-Three plans for the same move differ only at the ends. The trapezoid and the cubic make the push jump from nothing to a lot at once. The quintic eases in and eases out.
+Three plans for the same move differ only at the ends: a trapezoid (speed up, cruise, slow down), a cubic and a quintic. The first two make the push jump from nothing to a lot at once. The quintic eases in and eases out.
 
 ![Profiles](../assets/diagram-profile-choice.png)
 
@@ -43,7 +43,7 @@ Three plans for the same move differ only at the ends. The trapezoid and the cub
 
 ![Jerk](../assets/fig-jerk-vs-dt.png)
 
-*Faster sampling makes the jumpy plans look worse.*
+*Checking the plan more often makes the jumpy plans look worse.*
 
 ![Two arms](../assets/clip-example.mp4)
 
@@ -51,7 +51,7 @@ Three plans for the same move differ only at the ends. The trapezoid and the cub
 
 <details><summary>The math (optional)</summary>
 
-Each condition fixes one number of a polynomial. Position and speed at both ends give four conditions, a cubic; adding acceleration at both ends gives six, a quintic. With `s = t/T` and `d = qf - q0`, the quintic is `q0 + d(10 s^3 - 15 s^4 + 6 s^5)`. Jerk is how fast acceleration changes. Halving the sample period doubles cubic and trapezoid jerk; the quintic stays at `60 d / T^3`. For a 1 rad move in 2 s sampled every 0.002 s, the trapezoid accelerates at 1.33 rad/s² for 0.5 s, so acceleration steps four times, each a jerk of 667. The quintic peaks at 7.5. Doubling the move time cuts the quintic's peak acceleration to a quarter.
+A quintic is a polynomial of degree 5. Each condition fixes one number of a polynomial. Position and speed at both ends give four conditions, a cubic; adding acceleration at both ends gives six, a quintic. With `s = t/T` and `d = qf - q0`, the quintic is `q0 + d(10 s^3 - 15 s^4 + 6 s^5)`. Jerk is how fast acceleration changes. Halving the sample period doubles cubic and trapezoid jerk; the quintic stays at `60 d / T^3`. For a 1 rad move in 2 s sampled every 0.002 s, the trapezoid accelerates at 1.33 rad/s² for 0.5 s, so acceleration steps four times, each a jerk of 667. The quintic peaks at 7.5. Doubling the move time cuts the quintic's peak acceleration to a quarter.
 
 </details>
 
@@ -73,7 +73,7 @@ python3 phases/09-motion-planning/01-trajectory-profiles/code/main.py
 
 ## Use It
 
-SciPy's `BPoly.from_derivatives` builds the same quintic, and the last test compares them.
+SciPy, a Python maths library, can build the same quintic, and the last test compares them.
 
 Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 7.
 
@@ -85,4 +85,4 @@ Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 7.
 
 1. Make the move take twice as long and see how the peak push changes.
 2. Shorten the sample period and watch the jumpy plans get worse.
-3. Draw a plan that also starts with zero jerk and see how it looks.
+3. Make the move bigger and see how the peak push changes.

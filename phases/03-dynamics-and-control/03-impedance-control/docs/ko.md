@@ -6,16 +6,16 @@
 
 ## 쉽게 말하면
 
-책상 위 로봇 팔의 손을 손가락 하나로 밀어 보세요. 모터는 관절이 움직임을 거스르는 damper가 달린 spring처럼 반응하게 해요. 그런 반응을 impedance라고 해요.
+작은 로봇 팔의 손을 손가락 하나로 밀어 보세요. 모터는 관절이 움직임을 거스르는 damper가 달린 spring처럼 반응하게 해요. 그런 반응을 impedance라고 해요.
 
-spring이 뻣뻣할수록 같은 힘을 더 조금만 움직이고도 버텨요. damper는 팔이 멈추는 자리를 바꾸지 않고 출렁이며 자리를 잡을지 미끄러지듯 자리를 잡을지를 바꿔요.
+spring이 뻣뻣할수록 같은 힘을 더 조금만 움직이고도 버텨요. damper는 팔이 멈추는 자리를 바꾸지 않고 앞뒤로 출렁이다가 자리를 잡을지 미끄러지듯 자리를 잡을지를 바꿔요.
 
 ## 핵심 용어
 
 - **Impedance**: 관절을 밀었을 때 spring과 damper처럼 되미는 방식입니다.
+- **Deflection**: 힘에 밀려 관절이 원래 자세에서 움직인 거리입니다.
 - **Stiffness (`K`)**: 처짐 한 단위당 되미는 힘입니다.
 - **Damping (`D`)**: 속도를 거스르는 저항입니다.
-- **Deflection**: 힘에 밀려 관절이 원래 자세에서 움직인 거리입니다.
 - **Damping ratio (`zeta`)**: damper가 관절을 얼마나 세게 가라앉히는지입니다. 1이면 미끄러지듯 멈추고 1보다 작으면 출렁입니다.
 - **Overshoot**: 최종 위치를 지나쳤다가 돌아오는 것입니다.
 
@@ -25,13 +25,13 @@ spring이 뻣뻣할수록 같은 힘을 더 조금만 움직이고도 버텨요.
 
 ## 개념
 
-사람 가까이에 있는 로봇은 닿으면 물러나야 하므로 각 joint가 얼마나 세게 되밀지를 직접 정합니다. joint는 충격 흡수 장치가 달린 스프링처럼 움직입니다. 밀수록 더 세게 되밀고 흡수 장치는 출렁일지 부드럽게 자리 잡을지를 정합니다.
+사람 가까이에 있는 로봇은 닿으면 물러나야 하므로 각 joint가 얼마나 세게 되밀지를 직접 정합니다. joint는 damper가 달린 spring처럼 움직입니다. 밀수록 더 세게 되밀고 damper는 팔이 출렁일지 부드럽게 자리 잡을지를 정합니다.
 
 ![스프링, damper, 중력 feedforward가 한 관절에 작용합니다](../assets/diagram-impedance-structure.png)
 
 *컨트롤러가 스프링과 damper를 더하고 노란색은 바깥에서 미는 힘입니다.*
 
-스프링이 뻣뻣할수록 같은 힘에 덜 움직입니다. 흡수 장치는 멈추는 자리가 아니라 거기 가는 모양을 바꿉니다.
+스프링이 뻣뻣할수록 같은 힘에 덜 움직입니다. damper는 멈추는 자리가 아니라 거기 가는 모양을 바꿉니다.
 
 ![step 응답과 K에 따른 처짐](../assets/fig-impedance-response.png)
 
@@ -43,7 +43,7 @@ spring이 뻣뻣할수록 같은 힘을 더 조금만 움직이고도 버텨요.
 
 ![K와 D 고르기](../assets/diagram-impedance-recipe.png)
 
-*stiffness를 고르고 damping을 고른 뒤 step 한계를 확인합니다.*
+*stiffness를 고르고 damping을 고른 뒤 03/01의 윙윙거림 한계를 확인합니다.*
 
 <details><summary>The math (optional)</summary>
 
@@ -65,7 +65,7 @@ def damping_for_zeta(K, J, zeta):
     return 2*zeta*np.sqrt(K*J)
 ```
 
-`simulate()`는 관절 하나를 일정한 torque로 밉니다. 테스트는 밀려난 거리, stiffness를 두 배로 하면 절반이 되는지, ratio 1에서 overshoot가 없는지 확인합니다.
+`simulate()`는 관절 하나를 일정한 torque로 밉니다. 테스트는 deflection, stiffness를 두 배로 하면 절반이 되는지, ratio 1에서 overshoot가 없는지 확인합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,7 +75,7 @@ python3 phases/03-dynamics-and-control/03-impedance-control/code/figure.py
 
 ## 실제 도구로 보기
 
-예상되는 가장 큰 힘과 허용하는 가장 큰 밀려남으로 스프링을 고르세요.
+예상되는 가장 큰 힘과 허용하는 가장 큰 deflection으로 스프링을 고르세요.
 
 ## 결과물
 
@@ -83,6 +83,6 @@ python3 phases/03-dynamics-and-control/03-impedance-control/code/figure.py
 
 ## 연습 문제
 
-1. stiffness를 두 배로 하고 밀려난 거리가 절반이 되는 것을 보세요.
+1. stiffness를 두 배로 하고 deflection이 절반이 되는 것을 보세요.
 2. damping ratio를 0.2와 1로 해서 비교하세요.
-3. 마찰을 넣고 새 정지 자리를 찾으세요.
+3. 관절의 움직임을 늘 거스르는 힘을 더하고 새 정지 자리를 찾으세요.

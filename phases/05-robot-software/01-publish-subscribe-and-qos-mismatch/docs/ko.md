@@ -32,7 +32,7 @@
 *로버는 best effort를 제공하고 팔은 reliable을 요구하므로 맞지 않습니다.*
 
 양쪽은 각자 전달 약속을 밝힙니다. best effort는 한 번 보내고 넘어가고 reliable은 잃어버린 메시지를 다시 보냅니다. 듣는 쪽이 보내는 쪽의 제공보다 더 많이 요구하지 않을 때만 연결됩니다.
-reliable 보내는 쪽에 best effort 듣는 쪽은 괜찮고 반대는 안 됩니다.
+reliable 보내는 쪽에 best effort 듣는 쪽은 괜찮고 best effort 보내는 쪽에 reliable 듣는 쪽은 안 됩니다.
 
 ![깊이가 있는 queue](../assets/diagram-qos-queue.png)
 
@@ -42,7 +42,7 @@ reliable 보내는 쪽에 best effort 듣는 쪽은 괜찮고 반대는 안 됩�
 
 ![메시지 8개와 팔 두 개](../assets/clip-example.mp4)
 
-*같은 묶음입니다. 파랑은 칸이 하나여서 대부분의 메시지가 떨어집니다. 초록은 칸이 충분해서 팔이 모두 따라갑니다.*
+*같은 여덟 메시지 묶음입니다. 파랑의 queue는 하나만 담아서 대부분이 버려집니다. 초록은 충분히 담아서 팔이 모두 따라갑니다.*
 
 ![전달과 손실](../assets/fig-qos-delivery.png)
 
@@ -66,7 +66,7 @@ def compatible(pub, sub):
     return True, "ok"
 ```
 
-`Queue.push()`는 `depth`를 넘으면 가장 오래된 것을 빼며 버린 수를 셉니다.
+`Queue.push()`는 queue가 가득 차면 가장 오래된 메시지를 버리고 버린 수를 셉니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,7 +75,7 @@ python3 -m pytest phases/05-robot-software/01-publish-subscribe-and-qos-mismatch
 
 ## 실제 도구로 보기
 
-`compatible()`을 ROS 2 QoS 문서의 표와 비교해 보세요.
+`compatible()`을 아래 문서의 호환성 표와 비교해 보세요.
 
 출처: ROS 2 Jazzy, "Quality of Service settings" (https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Quality-of-Service-Settings.html), 2026년 11월 9일 확인.
 
@@ -87,4 +87,4 @@ python3 -m pytest phases/05-robot-software/01-publish-subscribe-and-qos-mismatch
 
 1. 보내는 쪽이나 듣는 쪽의 설정을 바꾸고 언제 연결되는지 보세요.
 2. queue를 더 깊게 하고 버리는 수가 어떻게 변하는지 보세요.
-3. 늦게 온 듣는 쪽이 지난 메시지를 받게 해 보세요.
+3. 늦게 온 듣는 쪽이 지난 메시지를 받게 해 보세요(durability 설정 `transient_local`).

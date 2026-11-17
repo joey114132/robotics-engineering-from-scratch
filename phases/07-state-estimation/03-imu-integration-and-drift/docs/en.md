@@ -2,20 +2,20 @@
 
 > Learn why a robot that adds up tiny sensor errors thinks it is rolling away while standing still.
 
-**Type:** Build   **Prerequisites:** 07/02 Kalman Filter   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A robot sits still, but its gyro reads a tiny turn that is not there. Adding them up, it thinks it is tilting. It subtracts gravity with the wrong tilt, leaving a fake sideways push. Adding that up twice, it thinks it is rolling away.
+A robot sits still, but its gyro reads a tiny turn that is not there. Adding them up, it thinks it is tilting. Its accelerometer also feels gravity, which the robot subtracts using its tilt. With the wrong tilt, a fake sideways push is left. Adding that up twice, it thinks it is rolling away.
 
 ## Key Terms
 
-- **IMU**: a motion sensor made of a gyro and an accelerometer.
+- **Gyro**: a sensor that measures how fast something turns.
 - **Accelerometer**: measures push (acceleration), and also feels gravity.
+- **IMU**: a motion sensor made of a gyro and an accelerometer.
 - **Bias**: a small steady error that is always there.
 - **Integrate**: add readings up over time, turning turn speed into angle or acceleration into speed.
 - **Drift**: the slowly growing error that integrating a biased reading produces.
-- **Gyro**: a sensor that measures how fast something turns.
 
 ## The Problem
 
@@ -39,11 +39,11 @@ A tiny steady gyro error, added up once, gives an angle error that grows in a st
 
 *A tilt error makes the robot subtract gravity wrongly; the leftover looks like acceleration.*
 
-A wrong tilt makes the robot subtract gravity the wrong way, so a bit of gravity is left over and looks like a real push. Adding that up twice makes the position error grow even faster than the accelerometer's own.
+That fake push, added up twice, makes the position error grow even faster than the accelerometer's own.
 
-![Cubic overtakes quadratic](../assets/fig-gravity-leak.png)
+![The fast curve overtakes the slower one](../assets/fig-gravity-leak.png)
 
-*The gyro's fast curve passes the accelerometer's slower one.*
+*The error from a tilt mistake grows fastest and passes the plain accelerometer error.*
 
 ![Still robot slides](../assets/clip-example.mp4)
 
@@ -65,7 +65,7 @@ fake_a = G * np.sin(bias_g * t)          # tilt error b*t leaks gravity
 pos = np.cumsum(np.cumsum(fake_a) * dt) * dt
 ```
 
-Tests compare the sums with the exact discrete formulas and the three derived ones.
+Tests compare the sums with the exact answers.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -74,7 +74,7 @@ python3 -m pytest phases/07-state-estimation/03-imu-integration-and-drift -q
 
 ## Use It
 
-`imu_filter_madgwick` in `imu_tools` fuses gyro and accelerometer readings.
+`imu_filter_madgwick`, from `imu_tools` (a robot-software package for IMU data), combines gyro and accelerometer readings.
 
 Sources: imu_tools README, https://github.com/CCNYRoboticsLab/imu_tools (2026-11-09).
 

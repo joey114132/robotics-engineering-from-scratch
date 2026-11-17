@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-Watch a ball drop in slow motion, frame by frame. In each frame it has fallen a bit more and is going a bit faster.
+Watch a ball drop in slow motion, one picture at a time. In each picture it has fallen a bit more and is going a bit faster.
 
 A computer moves things the same way. It jumps forward one small slice of time, updates the speed and the position, and repeats. The smaller the slice, the closer the picture stays to what really happens.
 
@@ -29,7 +29,7 @@ Robots are tested in simulation first, so how the time is cut up decides whether
 
 *In each step the speed changes first, then the position moves by the new speed times the step (`dt`).*
 
-At a steady speed the step size does not matter. When the speed keeps changing, as in a fall, big steps drift from the real motion and small steps stay close.
+At a steady speed the step size does not matter. When the speed keeps changing, as in a fall, big steps wander away from the real motion and small steps stay close.
 
 ![Big and small steps](../assets/diagram-big-small.png)
 

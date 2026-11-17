@@ -2,52 +2,52 @@
 
 > Learn how a robot that drives in curves tracks its position, and why a wrong start can leave it confidently wrong.
 
-**Type:** Build   **Prerequisites:** 07/02 Kalman Filter, 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** 07/02 Kalman Filter   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A robot measures how far a post is. An extended Kalman filter swaps the curved motion for a straight-line rule at its current estimate. The rule holds only near the truth: far off, the filter still reports small uncertainty while its error grows.
+A robot drives along a curved path and measures how far a post is. A filter, the program that tracks where the robot is, pretends a short piece of that curve is straight. This works only near where the robot really is. Far off, the filter still says it is nearly sure while its real error grows.
 
 ## Key Terms
 
-- **EKF**: extended Kalman filter, a Kalman filter that straightens the model at the current estimate.
+- **EKF**: extended Kalman filter, a program that tracks where the robot is, using a straight-line rule at its current guess.
 - **Linearise**: replace a curve by its straight-line approximation at one point.
-- **Jacobian (`F`, `H`)**: the matrix of slopes that says how a small change in the state changes the output.
 - **Heading**: the direction the robot faces.
+- **Jacobian (`F`, `H`)**: a table of slopes. It says how much the filter's prediction changes when the robot's position and heading change a little.
 - **Landmark**: a post at a known place that the robot measures.
-- **NEES**: the error in units of the filter's own claimed uncertainty. It should average the state size.
+- **NEES**: a score for whether the filter's doubt matches its real error. An honest filter scores about 3 here, one per value it tracks.
 
 ## The Problem
 
-A robot drives in a curve and tracks itself with one post as a landmark. Its heading guess starts off, and the filter drifts away while reporting small uncertainty.
+A robot on a curved path tracks itself with one post as a landmark. Its heading guess starts wrong, and the filter drifts away while saying it is nearly sure.
 
 ## The Concept
 
-A robot that is confidently wrong is more dangerous than one that is unsure.
+A confidently wrong robot is more dangerous than an unsure one.
 
 ![One EKF cycle](../assets/diagram-ekf-loop.png)
 
-*The straight-line rule is rebuilt at the current estimate each cycle.*
+*The straight-line rule is rebuilt each cycle.*
 
-A Kalman filter needs straight-line motion, but a turning robot moves in curves. The extended filter swaps the curve for its straight-line approximation at the current estimate and rebuilds it every cycle. That works while the estimate is close to the truth.
+A Kalman filter needs straight-line motion, but the robot's real path is a curve. The extended filter pretends a short piece of the curve around its current guess is straight, and redraws that piece every cycle.
 
 ![Bad linearisation feeds itself](../assets/diagram-ekf-spiral.png)
 
-*A wrong heading gives a wrong rule, a wrong correction, a wronger heading.*
+*A wrong heading gives a wrong rule, a wrong correction, a worse heading.*
 
-NEES checks whether the filter's claimed doubt matches its real error. It should average the state size.
+NEES checks whether the filter's claimed doubt matches its real error.
 
 ![NEES against heading error](../assets/fig-ekf-run.png)
 
-*Left: the EKF follows the truth. Right: with four landmarks the score stays healthy, with one it explodes as the starting error grows.*
+*Left: the EKF follows the truth. Right: with four landmarks NEES stays near the dashed line (3); with one it climbs far above as the start error grows.*
 
 ![One post, four posts](../assets/clip-example.mp4)
 
-*Both start with the heading wrong. With one post (blue) the estimate ends far off while its uncertainty disc stays small. With four (green) it stays on the robot.*
+*Both start with a wrong heading. This picture compares one post (blue) with four (green); the lead clip uses three. With one post the guess ends far off while its small circle says the filter is sure. With four it stays on the robot.*
 
 <details><summary>The math (optional)</summary>
 
-The state is `[x, y, heading]`; the robot moves along a curve `f(x, u)` with speed `v` and turn rate `w`. `F` is the Jacobian of the motion, `H` that of the landmark's range and bearing `h(x)`. Covariance is predicted by `P = F P F^T + Q`. Bearing differences are wrapped. NEES is `e^T P^-1 e` and averages the state size, 3. With a heading guess 1 rad off and one landmark, NEES averages 100.5 over 30 runs and the estimate ends 2.8 m off. With four it averages 2.7. In the figure NEES stays near 3 with four landmarks and grows from about 4 to several hundred with one. Tests check NEES near 3 over 150 seeds, and over 20 times larger with one landmark and a 1.5 rad heading error. 1 m is drawn as 0.5 m.
+The state is `[x, y, heading]`; the robot moves along a curve `f(x, u)` with speed `v` and turn rate `w`. `F` is the Jacobian of the motion, `H` that of the landmark's range and bearing `h(x)`. Covariance is predicted by `P = F P F^T + Q`. Bearing differences are wrapped. NEES is `e^T P^-1 e` and averages the state size, 3 (two for position, one for heading). With a heading guess 1 rad off and one landmark, NEES averages 100.5 over 30 runs and the estimate ends 2.8 m off. With four it averages 2.7. In the figure NEES stays near 3 with four landmarks and grows from about 4 to several hundred with one. Tests check NEES near 3 over 150 seeds, and over 20 times larger with one landmark and a 1.5 rad heading error. 1 m is drawn as 0.5 m.
 
 </details>
 
@@ -65,7 +65,7 @@ y = z - h(x, lm); y[1] = wrap(y[1])
 x = x + K @ y
 ```
 
-Tests compare both Jacobians with finite differences.
+Tests check both Jacobians against a numeric slope.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,16 +75,16 @@ python3 phases/07-state-estimation/05-extended-kalman-filter/code/main.py
 
 ## Use It
 
-ROS's `robot_localization` ships `ekf_node` (`ekf_localization_node` in ROS 1 docs).
+`robot_localization`, a robot-software package, ships `ekf_node`.
 
 Sources: robot_localization state estimation nodes, https://docs.ros.org/en/melodic/api/robot_localization/html/state_estimation_nodes.html (2026-11-09), and the `ekf_node` target in its `CMakeLists.txt`, https://github.com/cra-ros-pkg/robot_localization (2026-11-10).
 
 ## Ship It
 
-`outputs/skill-ekf-consistency-check.md` reviews an EKF for wrong Jacobians and overconfidence.
+`outputs/skill-ekf-consistency-check.md` reviews an EKF for overconfidence.
 
 ## Exercises
 
-1. Drop the minus sign in `jac_f` and watch NEES.
-2. Add a second landmark and watch how the failure changes.
-3. Inflate `Q` by 4 and compare NEES.
+1. Drop the minus sign in `jac_f` (the motion Jacobian) and watch NEES.
+2. Add a second landmark and watch NEES.
+3. Make the motion-noise number `Q` four times bigger and compare NEES.

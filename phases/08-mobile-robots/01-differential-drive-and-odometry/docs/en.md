@@ -2,13 +2,14 @@
 
 > Learn why a robot can say it came home when it did not, and what causes it.
 
-**Type:** Build   **Prerequisites:** 01/01 Rotations and SE(3)   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
 Walk a square but turn a little less than [90°](https://mathworld.wolfram.com/RightAngle.html) at each corner. A notebook that logs every turn as [90°](https://mathworld.wolfram.com/RightAngle.html) draws a closed square, yet you miss the start.
 
-A robot with a wrong wheel size does the same. Its notebook shares the wrong value, so the path closes on paper.
+A robot with a wrong wheel size does the same.
+Its notebook uses the same wrong value, so the path closes on paper.
 
 ## Key Terms
 
@@ -16,18 +17,18 @@ A robot with a wrong wheel size does the same. Its notebook shares the wrong val
 - **Odometry**: a position guess made by adding up how far the wheels turned.
 - **Wheel radius (`r`)**: the distance from a wheel's center to its edge.
 - **Track width (`b`)**: the distance between the two wheels.
-- **Dead reckoning**: tracking position by adding up each small movement from a known start.
+
 - **rad/s**: radians per second, a spin speed. One full turn is about 6.28 radians.
 
 ## The Problem
 
-Picture a robot driving around a square. Its record says it came back to the start, but a tape measure shows 18 cm. The wheels did what they were told, so two settings must be wrong: wheel size and wheel gap.
+Picture a robot driving a square. Its record says it is back at the start, but a tape measure shows 18 cm. The wheels did what they were told, so the settings must be wrong: wheel radius and track width.
 
 ## The Concept
 
 A robot that trusts a wrong position makes every later plan wrong too.
 
-It works out how far it moved by counting how much each wheel turned. Equal turns mean a straight line. If one wheel turns faster, the robot curves toward the slower side.
+It counts how much each wheel turned. Equal turns mean a straight line. A faster wheel makes it curve toward the slower side.
 
 ![Wheel speeds to pose](../assets/diagram-wheels-to-pose.png)
 
@@ -37,11 +38,11 @@ It works out how far it moved by counting how much each wheel turned. Equal turn
 
 *Blue drives straight. Green curves left because its right wheel turns faster.*
 
-Now make the settings slightly wrong. The robot still believes its own record, so the loop closes on paper. In reality every turn is a little too small, so the four sides no longer cancel.
+Now make the settings slightly wrong. The robot still believes its own record, so the loop closes on paper. In reality the wheels are farther apart than the settings say, so every turn is a little too small and the four sides no longer cancel.
 
 ![One hidden gap](../assets/diagram-two-errors.png)
 
-*The record and the plan share the same mistake, so nothing looks wrong.*
+*Same mistake in notebook and commands, so the loop looks closed. Find the gap.*
 
 ![Odometry drift](../assets/fig-odometry-drift.png)
 
@@ -76,16 +77,16 @@ python3 phases/08-mobile-robots/01-differential-drive-and-odometry/code/main.py
 
 ## Use It
 
-ROS 2's diff_drive_controller asks for the wheel spacing and the wheel size. Its docs say a wrong spacing misbehaves in curves.
+ROS 2, a robot software toolkit, has a ready-made wheeled-robot driver. It asks for the wheel spacing and size; a wrong spacing misbehaves in curves.
 
 Sources: control.ros.org, diff_drive_controller user doc (jazzy), opened 2026-11-09.
 
 ## Ship It
 
-`outputs/skill-odometry-calibration-check.md` turns a closure gap into a suspected parameter and a calibration run.
+`outputs/skill-odometry-calibration-check.md` turns a closure gap into a suspected setting.
 
 ## Exercises
 
 1. Make the wheels slightly different sizes; watch a line bend.
-2. Drive the square the other way round and see which way the gap points.
-3. Pretend a wheel slips; guess which setting it looks like.
+2. Drive the square the other way; see which way the gap points.
+3. Make one wheel slip a little. Compare the gap with the radius error and the track-width error.

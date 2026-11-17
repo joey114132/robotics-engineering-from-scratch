@@ -6,18 +6,18 @@
 
 ## 쉽게 말하면
 
-책상 위 로봇 팔이 손을 뻗고 있으면 자기 무게를 버티는 모터 torque가 필요해요. gravity compensation은 그 무게를 모터가 미리 어림해서 더해 주는 일이에요.
+작은 로봇 팔이 손을 뻗고 있으면 자기 무게를 버티는 모터 torque가 필요해요. gravity compensation은 그 무게를 모터가 미리 어림해서 더해 주는 일이에요.
 
-어림이 너무 낮으면 손이 처지고 너무 높으면 손이 올라가요. position controller는 오차 한 단위당 kp만큼 되밀어서 kp가 낮으면 같은 오차에도 손이 더 멀리 움직여요.
+어림이 너무 낮으면 손이 처지고 너무 높으면 손이 올라가요. position controller는 팔을 목표 쪽으로 spring처럼 당기고 kp는 오차 한 단위당 당기는 힘이에요. kp가 낮으면 같은 틀린 어림에도 손이 더 멀리 움직여요.
 
 ## 핵심 용어
 
+- **Torque**: 모터가 관절을 돌리는 힘입니다.
 - **Gravity compensation**: 팔의 무게를 모델로 어림해서 torque로 미리 더해 주는 것입니다.
 - **Position gain (`kp`)**: 각도 오차 1 rad당 모터가 팔을 얼마나 세게 되돌리는지입니다.
 - **Feedforward (`ff`)**: 오차가 생기기 전에 모델로 미리 더하는 torque입니다.
-- **Residual**: 모델의 오차로 `ff`와 중력이 실제로 필요로 하는 torque의 차이입니다.
+- **Residual**: 모델의 오차로 feedforward와 중력이 실제로 필요로 하는 torque의 차이입니다.
 - **Sag**: 팔이 명령한 각도보다 얼마나 아래(또는 위)에 머무는지입니다.
-- **Torque**: 모터가 관절을 돌리는 힘입니다.
 
 ## 문제
 
@@ -25,7 +25,9 @@
 
 ## 개념
 
-로봇 팔은 자기 무게를 버텨야 하고 무게를 잘못 어림하면 처짐으로 나타납니다. 컨트롤러는 무게의 어림을 미리 더해 주고 어림이 놓친 만큼은 position 스프링이 떠안습니다. 부드러운 스프링은 그것을 제대로 감당하지 못합니다.
+로봇 팔은 자기 무게를 버텨야 하고 무게를 잘못 어림하면 처짐으로 나타납니다. 컨트롤러는 무게의 어림을 미리 더해 주고 어림이 놓친 만큼은 팔을 spring처럼 되당기는 position controller가 떠안습니다. 약한 spring은 그것을 제대로 감당하지 못합니다.
+
+쭉 뻗은 팔이 가장 많이 처집니다.
 
 ![잔차를 kp로 나누면 처짐](../assets/diagram-sag-flow.png)
 
@@ -37,11 +39,11 @@
 
 ![가벼운 모델과 무거운 모델](../assets/clip-example.mp4)
 
-*같은 부드러운 스프링에서 왼쪽 팔은 처지고 오른쪽 팔은 뜹니다.*
+*같은 낮은 kp에서 왼쪽 팔은 처지고 오른쪽 팔은 뜹니다.*
 
 ![kp에 따른 처짐](../assets/fig-gravity-sag.png)
 
-*스프링 세기를 절반으로 하면 오차가 두 배가 됩니다.*
+*kp를 절반으로 하면 오차가 두 배가 됩니다.*
 
 <details><summary>The math (optional)</summary>
 
@@ -69,7 +71,7 @@ python3 phases/03-dynamics-and-control/02-gravity-compensation/code/figure.py
 
 ## 실제 도구로 보기
 
-실제 팔은 MuJoCo의 속도 0 bias force 같은 물리 모델에서 무게 torque를 가져옵니다. 모델의 질량은 자주 틀리므로 자세 두 곳에서 처짐을 재서 보정값을 맞추세요.
+실제 팔은 물리 모델에서 무게 torque를 가져오고 MuJoCo는 한 자세의 중력 torque를 계산해 줍니다. 모델의 질량은 자주 틀리므로 자세 두 곳에서 처짐을 재서 모델을 고치세요.
 
 ## 결과물
 
@@ -78,5 +80,5 @@ python3 phases/03-dynamics-and-control/02-gravity-compensation/code/figure.py
 ## 연습 문제
 
 1. 모델이 20% 가벼울 때와 무거울 때의 처짐을 비교하세요.
-2. 스프링 세기를 절반으로 하고 처짐이 두 배가 되는 것을 보세요.
+2. `kp`를 절반으로 하고 처짐이 두 배가 되는 것을 보세요.
 3. 관절을 하나 더 넣고 쭉 뻗은 자세가 여전히 최악인지 확인하세요.

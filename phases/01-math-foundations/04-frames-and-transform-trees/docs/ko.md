@@ -8,48 +8,49 @@
 
 마스트에 달린 카메라가 카메라에서 잰 컵의 위치를 알려 줘요. 팔에는 자기 base에서 잰 위치가 필요한데 카메라는 반대쪽을 보고 있어서 그 숫자를 그대로 쓰면 팔이 엉뚱한 곳을 향해요.
 
-transform tree는 각 frame(부품에 붙은 x, y, z 방향)이 부모 안에 어떻게 놓이는지를 저장해요. 컵의 위치를 바꾸려면 사슬을 따라 transform을 곱해요.
+각 부품의 자리는 그 부품이 매달린 부품을 기준으로 저장돼요. 저장된 이 자리들을 한 부품에서 다른 부품까지 사슬을 따라 곱하면 위치를 두 부품의 시점 사이에서 바꿀 수 있어요.
 
 ## 핵심 용어
 
 - **Frame**: 카메라나 base 같은 부품에 붙은 x, y, z 방향의 묶음입니다.
+- **Transform**: 위치를 한 frame의 시점에서 다른 frame의 시점으로 바꿔 주는 숫자들입니다.
 - **Transform tree**: 모든 frame이 부모 frame 하나에 매달린 지도입니다.
-- **`T_to_from`**: `from` frame의 좌표를 `to` frame의 좌표로 바꾸는 transform입니다.
-- **Common ancestor**: 트리에서 두 frame 위쪽의 가장 가까운 frame으로 두 경로가 만나는 곳입니다.
-- **Cycle**: frame이 자기 자신의 조상이 되는 고리입니다.
+- **Transform name (`T_to_from`)**: transform이 어느 frame에서 어느 frame으로 바꾸는지 알려 주는 이름입니다.
+- **Shared parent**: 트리에서 두 frame 위쪽의 가장 가까운 frame으로 두 경로가 만나는 곳입니다.
 - **tf2**: transform 트리를 저장하는 ROS 2 라이브러리입니다.
 
 ## 문제
 
-카메라는 컵을 보고 팔은 자기 base에서 잰 컵의 위치가 필요합니다. 누군가 transform을 잘못된 순서로 곱하거나 엉뚱한 것에 inverse를 씌우면 답은 그럴듯해 보이지만 엉뚱한 곳입니다.
+팔은 자기 base에서 잰 컵의 위치가 필요합니다. 누군가 transform을 잘못된 순서로 곱하거나 엉뚱한 것을 뒤집으면(inverse) 답은 그럴듯해 보이지만 엉뚱한 곳입니다.
 
 ## 개념
 
-로봇의 부품은 저마다 자기 자리에서 세상을 보므로 모든 측정값을 바꿔 주어야 합니다. 실수를 막는 습관은 모든 transform에 양 끝의 이름을 붙여 `T_to_from`으로 쓰는 것입니다.
+로봇의 부품은 저마다 자기 자리에서 세상을 보므로 모든 측정값을 바꿔 주어야 합니다. 모든 transform에 `T_base_cam`처럼 양 끝의 이름을 붙입니다. 카메라가 본 위치를 base가 본 위치로 바꿔 줍니다.
 
-두 번째 frame의 좌표를 첫 번째 frame의 좌표로 바꾸고 이웃한 이름은 분수처럼 약분됩니다.
+이웃한 이름은 분수처럼 약분됩니다. base-from-camera에 camera-from-cup을 곱하면 base-from-cup이 됩니다.
 
 ![frame마다 부모가 하나인 트리](../assets/diagram-tf-tree.png)
 
 *화살표 하나가 transform 하나입니다. 카메라와 손은 둘 다 base에 달려 있습니다.*
 
-손에서 본 컵을 구하려면 손과 컵에서 공통 부모까지 올라간 다음 한쪽으로 내려옵니다.
+손에서 본 컵을 구하려면 카메라가 본 컵에서 시작해 공통 부모(base)까지 올라간 다음 손까지 내려옵니다.
 
-![조회는 공통 조상까지 올라갑니다](../assets/diagram-tf-lookup.png)
+![조회는 공통 부모까지 올라갑니다](../assets/diagram-tf-lookup.png)
 
 *두 frame에서 base까지 올라갔다가 내려옵니다.*
 
 ![같은 컵을 카메라와 base와 손에서 잰 모습](../assets/clip-example.mp4)
 
-*같은 컵을 향한 화살표 세 개입니다. 카메라에서, base에서, 손에서 나옵니다.*
+*같은 컵을 세 시점에서 본 모습입니다. 위치 숫자가 셋으로 달라집니다.*
 
 ![잘못된 곱의 비용](../assets/fig-wrong-order-error.png)
 
-*순서가 바뀌거나 inverse가 잘못 들어가면 컵이 멀리 어긋날 수 있습니다.*
+*순서를 바꾸거나 transform 하나를 실수로 뒤집으면 컵이 멀리 어긋날 수 있습니다.*
 
 <details><summary>The math (optional)</summary>
 
-`T_a_b @ T_b_c = T_a_c`에서 안쪽 이름이 약분됩니다. 카메라가 base frame의 (0.5, 0, 0.4)에 반대쪽을 향해 있고 컵을 (0.2, 0, 0.5)에서 보면 base frame에서 컵은 (0.3, 0, 0.9)에 있습니다.
+`T_to_from`은 두 번째 frame의 값을 첫 번째 frame의 값으로 바꾸고 `T_a_b @ T_b_c = T_a_c`에서 안쪽 이름이 약분됩니다.
+카메라가 base frame의 (0.5, 0, 0.4)에 반대쪽을 향해 있고 컵을 (0.2, 0, 0.5)에서 보면 base frame에서 컵은 (0.3, 0, 0.9)에 있습니다.
 (0.3, 0, 0.7)에 있는 손에게는 컵이 (0, 0, 0.2)로 보입니다. 곱의 순서를 바꾸면 최대 0.4 m, inverse를 잘못 쓰면 최대 1.3 m 어긋납니다.
 
 </details>
@@ -74,7 +75,7 @@ python3 -m pytest phases/01-math-foundations/04-frames-and-transform-trees -q
 
 ## 실제 도구로 보기
 
-ROS 2의 `tf2`도 같은 트리이고 `lookup_transform`은 target을 먼저 받습니다. 그 결과를 `TFTree.lookup`과 비교해 보세요.
+ROS 2의 `tf2`도 같은 트리이고 `lookup_transform`은 답을 얻고 싶은 frame을 먼저 받습니다. 그 결과를 `TFTree.lookup`과 비교해 보세요.
 
 출처: 이 시그니처는 로컬 ROS 2 Jazzy 설치의 `tf2_ros/buffer.py`에서 확인했습니다.
 

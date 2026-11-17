@@ -2,11 +2,11 @@
 
 > Learn why a stiff robot jams a peg in a tight hole, and why a gentler wrist slides it in.
 
-**Type:** Build   **Prerequisites:** 11/01 Contact Models, 11/02 Force and Hybrid Control   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** 11/01 Contact Models   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A robot arm pushes a thin peg into a tight hole, starting a little off to one side. A rigid wrist fights the offset, shoving the peg sideways into the walls, and their friction resists the downward push.
+A robot arm pushes a thin peg into a tight hole. It starts a little off to one side. A rigid wrist fights the offset and shoves the peg sideways into the walls. Their friction resists the downward push.
 
 A wrist that gives way sideways, called compliance, lets the peg straighten and slide in.
 
@@ -15,9 +15,8 @@ A wrist that gives way sideways, called compliance, lets the peg straighten and 
 - **Compliance**: the ability to give way under a force instead of holding a position rigidly.
 - **Jam**: the peg stops and pushing harder only holds it more firmly.
 - **Stiffness (`kx`)**: the sideways force per metre the wrist is stretched.
-- **Wrench**: a push and a twist packed together.
-- **Chamfer**: a bevelled hole edge that guides the peg in.
-- **Quasi-static**: moving so slowly that speeds and inertia can be ignored.
+
+- **Chamfer**: a slanted hole edge that guides the peg in.
 
 ## The Problem
 
@@ -45,7 +44,7 @@ A soft wrist gives way sideways, called compliance. The side force stays small, 
 
 ![Jam map](../assets/fig-jam-map.png)
 
-*Stiff wrists jam. Soft wrists insert.*
+*Orange marks jams. Stiff wrists jam. Soft wrists insert.*
 
 ![Forces](../assets/fig-contact-forces.png)
 
@@ -55,7 +54,7 @@ Without friction the peg never jams.
 
 <details><summary>The math (optional)</summary>
 
-Stiffness `kx` is sideways force per metre of stretch, so the side force at the tip is about `kx` times the misalignment. With a 1 mm offset and a 5 N push, the tilted peg's top sits about 2.1 mm from the hole centre while the tool holds 1 mm, so the wrist stretches about 1.1 mm: 1e5 N/m gives 112 N sideways, 1e3 N/m gives 1.1 N and slides in. At 34.6 mm depth the forces in the two friction cones can balance the wrist's push and twist: the stiff peg locks. A jam means the negated wrist wrench is a non-negative mix of three of the four cone-edge wrenches. A stiff wrist jams from about 0.7 mm of offset; a wrist below about 2.5e3 N/m inserts for every offset shown.
+Stiffness `kx` is sideways force per metre of stretch, so the side force at the tip is about `kx` times the misalignment. With a 1 mm offset and a 5 N push, the tilted peg's top sits about 2.1 mm from the hole centre while the tool holds 1 mm, so the wrist stretches about 1.1 mm: 1e5 N/m gives 112 N sideways, 1e3 N/m gives 1.1 N and slides in. At 34.6 mm depth the forces in the two friction cones can balance the wrist's push and twist: the stiff peg locks. A jam means the negated wrist wrench (a push and a twist) is a non-negative mix of three of the four cone-edge wrenches. A stiff wrist jams from about 0.7 mm of offset; a wrist below about 2.5e3 N/m inserts for every offset shown.
 
 </details>
 
@@ -79,7 +78,7 @@ python3 phases/11-contact-and-manipulation/04-compliance-in-assembly/code/main.p
 
 ## Use It
 
-Real cells use a remote center compliance device or software compliance. Compare your wrist's stiffness with the jam map.
+Real work cells use a wrist that gives sideways, or software that lets the arm give. Compare the stiffness you chose with the jam map.
 
 Sources: Wikipedia, "Remote center compliance" (opened 2026-11-09).
 
@@ -91,4 +90,4 @@ Sources: Wikipedia, "Remote center compliance" (opened 2026-11-09).
 
 1. Find the stiffest wrist that still inserts a 1 mm offset.
 2. Make the surfaces grippier; see the jam boundary move.
-3. Add a bevelled hole edge and see whether it helps.
+3. Start the wedge shallower to mimic a chamfer; does the peg go in more easily?

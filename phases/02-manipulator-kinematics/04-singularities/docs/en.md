@@ -6,22 +6,20 @@
 
 ## In Plain Words
 
-A bench arm straightens its elbow to move the hand outward. Near full stretch the links line up, so an elbow turn moves the hand mostly sideways. The elbow must spin ever faster, and at full stretch no turn moves the hand outward.
+A desk arm straightens its elbow to move the hand outward. Near full stretch the links line up, so an elbow turn moves the hand mostly sideways. The elbow must spin ever faster, and at full stretch no turn moves the hand outward.
 
-That pose is a singularity, where a plain Jacobian inverse asks for a huge joint speed; damped least squares caps it.
+That pose is a singularity. The plain way of finding joint speeds then asks for a huge speed. A trick called damped least squares caps it.
 
 ## Key Terms
 
 - **Singularity**: a pose where the arm loses a direction of tip motion, such as a fully straight arm.
-- **Jacobian inverse**: the matrix that turns a wanted tip velocity back into joint speeds.
-- **Determinant (`det J`)**: one number from a matrix that falls to 0 when the matrix loses a direction.
-- **Manipulability**: a score, `sqrt(det(J J^T))`, for how freely the tip can move; it peaks at a right-angle elbow.
-- **Singular value**: how much a matrix stretches one direction; a small one means a nearly lost direction.
-- **Damped least squares**: an inverse that accepts a small error, set by `lam`, to keep joint speeds bounded.
+- **Jacobian inverse**: the table that turns a wanted hand motion back into joint speeds.
+- **Manipulability**: a score for how freely the tip can move.
+- **Damped least squares**: a way of finding joint speeds that allows a small error so the speeds never pass a cap.
 
 ## The Problem
 
-You tell a robot's hand to move straight outward at a gentle speed. As the arm nears full stretch, the controller demands a wildly fast elbow, the motor hits its limit, and the hand leaves the path.
+You tell a robot's hand to move straight outward at a gentle speed. As the arm nears full stretch, the program steering the arm demands a wildly fast elbow, the motor hits its limit, and the hand leaves the path.
 
 ## The Concept
 
@@ -47,13 +45,13 @@ The cure is damping: accept a small error so the joint speeds stay bounded.
 
 <details><summary>The math (optional)</summary>
 
-For this arm `det J = L1 L2 sin q2` is zero when fully straight or folded (Craig, Ch. 5, Sec. 5.8). At `q2 = 1.4` rad `det J = 0.5 * 0.4 * sin 1.4 = 0.20`. Damped least squares adds `lam^2 I` inside the inverse, so speed is at most `|v| / (2 lam)`. Solid curves use lam = 0.05, dashed 0.15. The command is 0.1 m/s.
+The determinant `det J` is one number that is 0 when a table loses a direction; here `det J = L1 L2 sin q2`, zero when fully straight or folded (Craig, Ch. 5, Sec. 5.8). Manipulability is `sqrt(det(J J^T))` and peaks at a right-angle elbow. A singular value says how much a table stretches one direction. At `q2 = 1.4` rad `det J = 0.5 * 0.4 * sin 1.4 = 0.20`. Damped least squares adds `lam^2 I` inside the inverse, so speed is at most `|v| / (2 lam)`. Solid curves use lam = 0.05, dashed 0.15. The command is 0.1 m/s.
 
 </details>
 
 ## Build It
 
-`solve(J, v, lam)` is the plain inverse when `lam` is zero and the damped inverse otherwise.
+`solve(J, v, lam)` takes the Jacobian `J` and the wanted hand motion `v`. It gives the plain answer when `lam` is zero and the damped answer otherwise.
 
 ```python
 def solve(J, v, lam):
@@ -71,11 +69,11 @@ python3 phases/02-manipulator-kinematics/04-singularities/code/main.py
 
 ## Use It
 
-Libraries compute pseudo-inverses with a cutoff on small singular values; compare with `solve` near `q2 = 0.01`.
+Robot libraries have their own versions of this safeguard; compare one with `solve` near `q2 = 0.01`.
 
 ## Ship It
 
-`outputs/skill-singularity-guard.md` guards a velocity controller with a manipulability monitor.
+`outputs/skill-singularity-guard.md` guards speed commands with a manipulability monitor.
 
 ## Exercises
 

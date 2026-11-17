@@ -6,22 +6,22 @@
 
 ## In Plain Words
 
-A small arm's file says the elbow sits a fixed distance ahead of the shoulder. Ahead means along the link, not along the room, so a turned shoulder makes ahead point sideways.
+A small arm's description file (a URDF) says the elbow sits a fixed distance ahead of the shoulder. Ahead means along the link, not along the room, so a turned shoulder makes ahead point sideways.
 
-A URDF, the robot's description file, lists links (rigid parts) joined by joints. Each joint offset follows the previous link's axes, so turn each offset by every turn before it, then add.
+The file lists links (rigid parts) joined by joints. Each joint's offset is measured in the directions of the part before it. So turn each offset by all the earlier turns, then add them up.
 
 ## Key Terms
 
-- **URDF**: a text file that describes a robot as links joined by joints.
 - **Link**: one rigid part of the robot, such as an upper arm.
-- **Joint**: the connection that lets a child link move relative to its parent link.
+- **Joint**: a hinge between two links that lets one turn relative to the other.
+- **URDF**: a text file that describes a robot as links joined by joints.
 - **Frame**: a set of x, y, z axes attached to something, such as a link or the room.
-- **`<origin>`**: a joint's position (`xyz`) and rotation (`rpy`) relative to its parent link.
+- **Joint offset (`<origin>`)**: how far a joint sits from the part before it and how much it is turned, in that part's own directions.
 - **Transform**: a 4x4 table of numbers holding one turn and one shift.
 
 ## The Problem
 
-A robot's description file says each part sits a set distance ahead of the part before it. You add the distances to find the hand, and the answer is far from where the viewer shows it.
+A robot's description file says each part sits a set distance ahead of the part before it. You add the distances to find the hand, and the answer is far from where the arm really is.
 
 ## The Concept
 
@@ -31,7 +31,7 @@ Every simulator and robot program starts from this file, so misreading it breaks
 
 *Each box is a part, each arrow a joint.*
 
-The file measures each offset in the previous part's own directions, so after a turned shoulder, "ahead" points sideways. Read it in the room's fixed directions and you get the wrong spot.
+Each offset is measured in the previous part's own directions. Read in the room's fixed directions, it gives the wrong spot.
 
 ![Which frame](../assets/diagram-origin-frame.png)
 
@@ -65,7 +65,7 @@ for e in root.findall("joint"):
 # T = T @ T_origin @ R_axis(q), for each joint on the chain
 ```
 
-`chain()` walks from tip to root. `link_positions()` applies the origin first, then the joint's own turn, and rejects values outside the limits.
+`chain()` walks from the tip back to the base. `link_positions()` applies the origin first, then the joint's own turn, and rejects values outside the limits.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -74,7 +74,7 @@ python3 -m pytest phases/00-start-here/09-reading-a-urdf -q
 
 ## Use It
 
-ROS 2's `robot_state_publisher` turns the file and the joint values into poses. Compare them with `link_positions()`.
+ROS 2, robot software made of small programs, has `robot_state_publisher`, which turns the file and joint values into every part's place. Compare it with `link_positions()`.
 
 Sources: https://wiki.ros.org/urdf/XML/joint, https://github.com/ros/robot_state_publisher
 
@@ -84,6 +84,6 @@ Sources: https://wiki.ros.org/urdf/XML/joint, https://github.com/ros/robot_state
 
 ## Exercises
 
-1. Add a sliding joint to the example and move a link along it.
+1. Add a joint that slides straight instead of turning, and move a link along it.
 2. Print every part that has more than one child.
-3. Make the parser reject a file with two roots.
+3. Make the parser reject a file with two base parts.

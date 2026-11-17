@@ -168,3 +168,19 @@ def test_humanizer_guard_keeps_new_heading_and_facts_locked():
     assert not errs
     cmp_md(old, old.replace("## In Plain Words\n", ""), "lesson", errs)
     assert any("headings changed" in e for e in errs)
+
+
+def test_key_term_name_needs_a_plain_word(lesson):
+    edit(lesson, "en", "- **Frame**: a set of axes.", "- **`Tc`**: a set of axes.")
+    edit(lesson, "ko", "- **Frame**:", "- **`Tc`**:")
+    assert any("plain word" in e for e in checks.check_doc(lesson, "en"))
+
+
+def test_key_term_definition_has_no_code(lesson):
+    edit(lesson, "en", "a set of axes.", "a set from `exp(t)`.")
+    assert any("code or math" in e for e in checks.check_doc(lesson, "en"))
+
+
+def test_key_term_is_defined_before_it_is_used(lesson):
+    edit(lesson, "en", "a set of axes.", "axes fixed to a link.")
+    assert any("before it is defined" in e for e in checks.check_doc(lesson, "en"))

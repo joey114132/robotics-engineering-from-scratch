@@ -12,19 +12,19 @@ Computers expect radians. Give them a number in degrees and they turn the wrong 
 
 ## Key Terms
 
+- **Full turn**: one complete trip around, back to the direction you started in.
 - **Angle**: how much something has turned from its starting direction.
 - **Degree**: one slice when a full turn is cut into 360 equal slices.
 - **Radian**: an angle unit where a full turn is about 6.28. Code uses this unit.
-- **Full turn**: one complete trip around, back to the direction you started in.
 - **Wrap**: bring an angle back into one full turn without changing the direction it points.
 
 ## The Problem
 
-A joint sensor says 90. Is that a quarter turn, or more than fourteen full turns? It depends on the unit, and the code will not tell you.
+A sensor in an arm's elbow says 90. Is that a quarter turn, or more than fourteen full turns? It depends on the unit, and the code will not tell you.
 
 ## The Concept
 
-Every joint of a robot arm turns by an angle, so every arm program needs the right unit.
+Every hinge of a robot arm turns by an angle, so every arm program needs the right unit.
 
 ![One turn, two names](../assets/diagram-two-names.png)
 
@@ -44,7 +44,7 @@ An angle can also be bigger than one turn. Going around once more leaves the arm
 
 ![An arm turns a quarter turn](../assets/clip.mp4)
 
-*The arm joint turns a quarter turn. The amber bars mark where it starts and where it ends.*
+*The arm's hinge turns a quarter turn. The amber bars mark where it starts and where it ends.*
 
 ![Conversion and wrapping](../assets/fig-conversion-and-wrap.png)
 
@@ -80,7 +80,7 @@ Python has the same conversions as `math.radians` and `math.degrees`, and numpy 
 
 ## Ship It
 
-`outputs/skill-angle-unit-check.md` is a short checklist for catching a wrong angle unit before it moves a joint.
+`outputs/skill-angle-unit-check.md` is a short checklist for catching a wrong angle unit before it moves the arm.
 
 ## Exercises
 

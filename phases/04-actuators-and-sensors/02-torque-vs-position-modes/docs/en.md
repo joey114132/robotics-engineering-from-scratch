@@ -2,18 +2,18 @@
 
 > Learn why a robot joint can stay stiff when you ask it to be soft, and what fixes that.
 
-**Type:** Build   **Prerequisites:** 04/01 Motor and Gearbox, 03/03 Impedance Control   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Press up on the hand of a bench arm. Inside the joint, the drive pulls the hand back toward its target angle like a spring of fixed strength. Your program can ask for a softer spring, but in position mode the request never reaches it. In torque mode your program writes the pull itself.
+Press up on the hand of a robot arm. Inside the joint, the drive pulls the hand back toward its target angle like a spring of fixed strength. Your program can ask for a softer spring, but in position mode the drive ignores the request. In torque mode your program writes the pull itself.
 
 ## Key Terms
 
 - **Torque mode**: your program tells the drive how hard to twist, and the drive obeys.
-- **Position mode**: your program gives a target angle, and the drive's own controller picks the torque.
-- **PD controller**: pulls back in proportion to the angle error (`kp`) and brakes in proportion to speed (`kd`).
-- **Gain**: a multiplier such as `kp` that sets how strongly a controller reacts.
+- **Position mode**: your program gives a target angle, and the drive's own control code picks the torque.
+- **PD controller**: pulls back in proportion to how far the angle is from the target, and brakes in proportion to speed.
+- **Gain**: a number that sets how strongly a controller reacts. A bigger gain means a harder pull.
 - **Stiffness (`K`)**: torque per radian (a unit of angle) of error. High means the joint resists a push.
 - **Admittance layer**: code that measures a push and moves the target so the joint acts soft.
 
@@ -23,23 +23,23 @@ You push on a robot arm that should give way like a soft spring, but it stays st
 
 ## The Concept
 
-A robot that works beside people must give way when it is pushed.
+A robot beside people must give way when pushed.
 
 ![Who writes torque](../assets/diagram-mode-loops.png)
 
-*In torque mode your program writes the torque. In position mode the drive's inner controller does.*
+*In torque mode your program writes the torque. In position mode the drive's inner control code does.*
 
-In position mode the drive runs its own controller, like a spring of fixed strength. A push moves the joint until that spring balances it, whatever softness you asked for. In torque mode you choose the spring, so you choose how much the joint gives way.
+In position mode the drive runs its own control code, like a spring of fixed strength. A push moves the joint until that spring balances it, whatever softness you asked for. In torque mode you choose the spring, so you choose how much the joint gives way.
 
 An admittance layer measures the push and moves the target, so the joint acts soft.
 
 ![Admittance clip](../assets/clip-example.mp4)
 
-*Both in position mode, pushed up (red). Blue: the hand barely moves. Green: the layer lifts the amber target.*
+*Both in position mode, pushed up (red). Blue barely moves. Green: the layer lifts the amber target.*
 
 ![Mode options](../assets/diagram-mode-options.png)
 
-*Soft joints need torque commands or an outside layer.*
+*Look at which options can make a joint soft.*
 
 ![Push response and stiffness](../assets/fig-mode-stiffness.png)
 
@@ -64,7 +64,7 @@ elif mode == "admittance":
     tau = kp_in * (q_des + ext / K - q) - kd_in * qd
 ```
 
-A test shows `position` equals `torque` with `K = kp_in, D = kd_in`.
+A test shows the drive's fixed spring (`kp_in`, `kd_in`) gives the same torque as torque mode with that stiffness and braking.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -74,7 +74,7 @@ python3 phases/04-actuators-and-sensors/02-torque-vs-position-modes/code/figure.
 
 ## Use It
 
-ros2_control joints declare command interfaces such as position or effort. A controller fails if it asks for one the hardware lacks.
+In ros2_control (the ROS 2 framework for motor control), joints declare command interfaces such as position or effort (torque).
 
 Sources: [ros2_control full tutorial](https://control.ros.org/master/doc/ros2_control_demos/example_7/doc/userdoc.html), accessed 2026-11-09.
 
@@ -85,5 +85,5 @@ Sources: [ros2_control full tutorial](https://control.ros.org/master/doc/ros2_co
 ## Exercises
 
 1. Change `kp_in` and watch how much the joint gives way.
-2. Add a small delay.
-3. Make the layer feel half as stiff as you asked.
+2. Add a small delay to the measured push (`ext`).
+3. Try a `K` half as large and see how stiff the joint feels.

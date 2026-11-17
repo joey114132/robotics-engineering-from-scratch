@@ -11,10 +11,9 @@ A camera looks at a checkerboard. Every square has the same size and square corn
 ## Key Terms
 
 - **Calibration**: measuring a camera's own numbers, such as zoom and centre, from a target you know.
-- **Intrinsics (`K`)**: the matrix (a grid of numbers) holding `fx, fy, cx, cy`.
-- **Homography (`H`)**: a 3x3 matrix that maps points on the flat board to pixels.
+- **Intrinsics (`K`)**: the matrix (a table of numbers) holding a camera's own zoom and centre values.
+- **Homography (`H`)**: a 3x3 table of numbers that turns a spot on the flat board into a pixel.
 - **Degenerate views**: views that repeat the same clue, so they cannot be solved.
-- **SVD**: a matrix tool. Its smallest singular vector solves "make this product as close to zero as possible".
 - **Reprojection error**: how far corners projected with your numbers land from the corners seen.
 
 ## The Problem
@@ -27,9 +26,9 @@ Every camera differs a little, and a robot that trusts the datasheet misjudges w
 
 ![Four linear steps](../assets/diagram-calib-steps.png)
 
-*Each photo gives a few numbers, and together they give the camera's zoom and centre.*
+*Look at the four steps from photo to camera numbers.*
 
-A flat checkerboard has corners at known spots. Each photo from a new angle links those spots to pixels. With photos from two different tilts you can solve for the camera's zoom and centre with plain linear algebra. Photos where the board only slides repeat the same clue, so the solver refuses them.
+A flat checkerboard has corners at known spots. Each photo from a new angle links those spots to pixels. With photos from two different tilts, simple matrix maths gives the camera's zoom and centre. Photos where the board only slides repeat the same clue, so the solver refuses them.
 
 ![Slid and tilted boards](../assets/clip-example.mp4)
 
@@ -58,7 +57,7 @@ cx, cy = -B13 / B11, -B23 / B22
 fx, fy = np.sqrt(lam / B11), np.sqrt(lam / B22)   # lam = B33 - B13^2/B11 - B23^2/B22
 ```
 
-`homography_dlt()` normalises the points and takes the smallest singular vector. `calibrate()` raises for degenerate or unphysical results.
+`homography_dlt()` rescales the points, then uses the SVD, a matrix tool that finds the best fit. `calibrate()` refuses degenerate views and results that make no physical sense.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -77,6 +76,6 @@ Sources: the [OpenCV calibration tutorial](https://opencv24-python-tutorials.rea
 
 ## Exercises
 
-1. Add one more tilted view and watch the error.
+1. Raise the number of views in `make_views` and watch the error.
 2. Make every view a slide and see the refusal.
 3. Add more pixel noise and see how many views you need.

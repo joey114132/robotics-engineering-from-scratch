@@ -8,20 +8,19 @@
 
 A rover learns to drive round a pillar from clean runs with no bumps. One bump pushes it to a spot none of those runs visited, where its steering is a poor guess.
 
-DAgger lets the rover drive first. The expert then labels the spots the rover actually reached, and the rover learns again from them.
+DAgger lets the rover drive first. The expert then marks, for each spot the rover reached, the move it should have made, and the rover learns again from them.
 
 ## Key Terms
 
 - **Behaviour cloning**: training a policy to copy an expert's actions at recorded spots.
 - **Compounding error**: a small slip leads to an unfamiliar spot, which causes a bigger slip.
 - **Rollout**: one test drive of a policy from a start spot.
-- **DAgger**: the learner drives, the expert labels the spots it reached, and the labels join the training data.
-- **Held-out data**: examples kept aside from training so you can test fairly.
 - **Learner**: the policy being trained.
+- **DAgger**: the learner drives, the expert marks the right move at the spots it reached, and the marks join the training data.
 
 ## The Problem
 
-A rover that copied your driving scores well on saved demonstrations, yet on the floor it drifts off the path. Training only checked spots you drove through, never the odd spots a small slip leaves it in.
+A rover that copied your driving scores well on saved demonstrations, yet on the floor it drifts off the path. Training only checked spots you drove through.
 
 ## The Concept
 
@@ -33,15 +32,15 @@ A real robot always slips a little, so it must handle places its teacher never s
 
 ![DAgger loop](../assets/diagram-dagger-loop.png)
 
-*One DAgger round: the learner drives, the expert labels where it went, the learner trains again.*
+*One DAgger round: the learner drives, the expert marks the right move where it went, the learner trains again.*
 
 ![Drift and success](../assets/fig-cloning-drift.png)
 
-*Left: plain copying drifts further and further, DAgger stays close. Right: DAgger reaches expert level in about two rounds.*
+*Left: plain copying drifts further and further, DAgger stays close to the expert's path. Right: DAgger reaches expert level in about two rounds.*
 
 ![Two rovers](../assets/clip-example.mp4)
 
-*The line shows how far each rover is from anything it was taught. Blue's grows until the pillar, green's stays short.*
+*The line is each rover's distance from anything it was taught. Blue's grows until the pillar, green's stays short.*
 
 <details><summary>The math (optional)</summary>
 
@@ -51,7 +50,7 @@ Noise added to the commanded velocity mimics wheel slip. With four clean demonst
 
 ## Build It
 
-`dagger()` with `rounds=0` is plain cloning. Each round adds spots labelled by the expert.
+`dagger()` with `rounds=0` is plain cloning. Each round adds spots where the expert marked the right move.
 
 ```python
 for _ in range(rounds):
@@ -60,7 +59,7 @@ for _ in range(rounds):
     pol = fit_knn(X, A)
 ```
 
-Labels always come from `expert(x)`, never from the learner.
+The marks always come from `expert(x)`, never from the learner.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -70,7 +69,7 @@ python3 phases/13-learning-for-robots/02-behaviour-cloning-pitfalls/code/figure.
 
 ## Use It
 
-Often the expert is not around while the robot drives, so a person or planner labels the spots later.
+Often the expert is not around while the robot drives, so a person marks the spots later.
 
 Sources: Ross, Gordon and Bagnell, arXiv:1011.0686, opened 2026-11-09.
 
@@ -80,6 +79,6 @@ Sources: Ross, Gordon and Bagnell, arXiv:1011.0686, opened 2026-11-09.
 
 ## Exercises
 
-1. Plot how far the learner is from the data and see when it leaves.
+1. Plot the learner's distance to the nearest demonstration spot and see when it grows.
 2. Halve the noise. How many rounds do you still need?
-3. Let the expert help less and less each round.
+3. Lower `per_round`, the new drives added each round.

@@ -6,22 +6,22 @@
 
 ## In Plain Words
 
-A quadrotor model predicts a drone's motion from its tilt and its thrust, the upward push its propellers get by throwing air down.
+A drone hovers because its propellers throw air down, and the air pushes the drone up. That push is called thrust.
 
-Tilt a hovering drone and part of the push shoves it sideways, so less holds it up. At the same thrust, a tilted drone sinks.
+Tilt the hovering drone and part of the push shoves it sideways, so less holds it up. At the same thrust, a tilted drone sinks.
 
 ## Key Terms
 
 - **Quadrotor**: a drone with four propellers.
 - **Thrust (`T`)**: the total upward push of the propellers.
 - **Pitch (`theta`)**: the tilt angle of the drone body.
-- **Torque (`tau`)**: a twist that tilts the drone; the only way to change `theta`.
-- **Hover**: staying at one height with zero acceleration.
+- **Torque (`tau`)**: a twist that tilts the drone; the only way to change the tilt.
+- **Hover**: staying at one height.
 - **Integration**: adding up a rate over time to get a total, like speed to distance.
 
 ## The Problem
 
-Picture a drone told to move to the right. It seems to ignore you, then tips, drifts and loses height. It has only two controls, thrust and one twist, for three things to move.
+Picture a drone told to move to the right. It seems to ignore you, then tips, drifts and loses height. It has only two controls, thrust and one twist, for three things to move: sideways, up and down, and tilt.
 
 ## The Concept
 
@@ -41,7 +41,7 @@ So a tilted drone sinks unless it pushes harder. And a position command seems to
 
 ![Torque](../assets/diagram-torque-to-position.png)
 
-*A steady twist reaches position slowly.*
+*A steady twist first tilts the drone, then it moves sideways, slowly.*
 
 ![Tilt](../assets/fig-tilt-then-move.png)
 
@@ -61,7 +61,7 @@ def deriv(s, T, tau, m, I, g=G):
     return np.array([s[3], s[4], s[5], T*np.sin(th)/m, T*np.cos(th)/m - g, tau/I])
 ```
 
-State is `[x, z, theta, vx, vz, omega]` and `simulate()` steps it forward (RK4).
+State is sideways position, height, tilt and their three rates; `simulate()` steps it forward in small steps.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -71,7 +71,7 @@ python3 phases/10-legged-and-aerial/03-quadrotor-model/code/main.py
 
 ## Use It
 
-The last test compares the end state with SciPy's ODE solver.
+The last test compares the end state with a ready-made SciPy solver.
 
 ## Ship It
 
@@ -81,4 +81,4 @@ The last test compares the end state with SciPy's ODE solver.
 
 1. Tilt the drone further and see how much more thrust holding height needs.
 2. Twist for longer and watch the sideways motion arrive late.
-3. Add air drag and see the speed settle.
+3. Add air resistance (drag) and see the speed settle.

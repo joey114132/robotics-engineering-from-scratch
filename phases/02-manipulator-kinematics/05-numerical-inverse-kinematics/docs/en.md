@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-A three-link bench arm must touch a ball, and no formula gives the joint angles. Bend the joints a little, see where the hand went, and correct. A big bend can overshoot; a joint at its stop cannot bend further.
+A three-link desk arm must touch a ball, and no formula gives the joint angles. Bend the joints a little, see where the hand went, and correct. A big bend can shoot past the ball; a joint at its stop cannot bend further.
 
 Numerical inverse kinematics repeats these small corrections, using the Jacobian to predict each one. The starting pose decides which answer it finds, so it restarts from several.
 
@@ -16,8 +16,8 @@ Numerical inverse kinematics repeats these small corrections, using the Jacobian
 - **Seed**: the starting pose of one run.
 - **Joint limit**: how far a joint may turn; the joint stops there.
 - **Clamp**: cut a value back to the allowed range.
-- **Converged**: the error has fallen below the tolerance, here 1e-6 m.
-- **Jacobian**: the matrix that predicts how the tip moves for a small joint change.
+- **Converged**: the error has fallen below the tolerance, here one millionth of a metre.
+- **Jacobian**: a table of numbers that predicts how the tip moves for a small joint change.
 
 ## The Problem
 
@@ -31,15 +31,15 @@ Most real arms have no angle formula, so robots find angles by trying and correc
 
 *Measure the miss, nudge, check, repeat.*
 
-Small nudges keep the guess honest, and a joint at its stop is held there. The start decides which answer you find, so the robot tries several random starts.
+Small nudges keep each correction accurate, and a joint at its stop is held there. The start decides which answer you find, so the robot tries several random starts.
 
 ![Restarts](../assets/diagram-ik-restarts.png)
 
 *Each start slides into a nearby answer.*
 
-![Ghost arms and convergence](../assets/fig-numerical-ik.png)
+![Faint arms and convergence](../assets/fig-numerical-ik.png)
 
-*Reachable targets shrink the miss; an unreachable one stays flat.*
+*Faint arms are the steps. The miss shrinks, but stays flat for an unreachable target.*
 
 ![Two start poses reach the same ball](../assets/clip-example.mp4)
 
@@ -53,7 +53,7 @@ Each nudge is the damped solve from 02/04, `dq = J^T (J J^T + lam^2 I)^-1 e`, wh
 
 ## Build It
 
-Each loop step is three lines: build the table, solve for a small nudge, then clip to the joint limits.
+Each loop step is three lines: build the table, solve for a small nudge, then clamp to the joint limits.
 
 ```python
 J = jacobian(q, L)
@@ -61,7 +61,7 @@ dq = J.T @ np.linalg.solve(J @ J.T + lam**2 * np.eye(2), e)
 q = np.clip(q + dq * min(1.0, max_step / np.abs(dq).max()), lo, hi)
 ```
 
-`solve_ik()` returns the angles and whether it converged; for an unreachable target it returns the closest pose and `False`. `ik_restarts()` tries random starts so you can pick the answer nearest the current pose.
+`solve_ik()` returns the angles and whether it converged (`False` plus the closest pose for an unreachable target). `ik_restarts()` tries random starts.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -71,7 +71,7 @@ python3 phases/02-manipulator-kinematics/05-numerical-inverse-kinematics/code/ma
 
 ## Use It
 
-Compare with `scipy.optimize.least_squares` on the miss, with the joint limits as bounds. Craig, chapter 4, covers the closed form.
+Compare with `scipy.optimize.least_squares` on the miss, with the joint limits as bounds. Craig, chapter 4, covers the direct formula.
 
 ## Ship It
 
@@ -81,4 +81,4 @@ Compare with `scipy.optimize.least_squares` on the miss, with the joint limits a
 
 1. Pick the answer closest to the current pose.
 2. Add a fourth link and count how many starts succeed.
-3. Start from a straight arm.
+3. Start from a straight arm and say what the solver does.

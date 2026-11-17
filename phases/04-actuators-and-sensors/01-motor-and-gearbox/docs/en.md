@@ -2,26 +2,25 @@
 
 > Learn why a gearbox makes a heavy load feel almost weightless to the motor.
 
-**Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A small motor spins a heavy flywheel through a gearbox. The flywheel turns far slower than the motor shaft, so the motor feels it as much lighter than it is.
+A small motor spins a heavy metal wheel through a gearbox. The wheel turns far slower than the motor shaft, so the motor feels it as much lighter than it is.
 
-A fast motor also pushes against itself with its own voltage, so its push fades as it speeds up.
+A spinning motor also makes a voltage that fights its power supply, so the faster it spins, the weaker its push.
 
 ## Key Terms
 
 - **Torque**: a twisting push, the kind of force a motor puts on a shaft.
-- **Back-EMF**: the voltage a spinning motor makes against its own supply, which cuts the current and the push.
-- **Inertia**: how hard something is to spin up. A heavy flywheel has a lot.
-- **Gear ratio (`N`)**: how many motor turns make one output turn. Torque grows `N` times and speed shrinks `N` times.
-- **Stall torque**: the push a motor gives when held still, its strongest.
+- **Back-EMF**: the voltage a spinning motor makes against its own supply. It weakens the push.
+- **Inertia**: how hard something is to spin up. A heavy wheel has a lot.
+- **Gear ratio (`N`)**: how many motor turns make one output turn. Torque grows by that number and speed shrinks by it.
 - **Drive**: the electronics that power and control the motor.
 
 ## The Problem
 
-Your robot arm moves the same way before and after you hang a heavy tool on it. The gearbox hides the load from the drive.
+Your robot arm moves the same way before and after you hang a heavy tool on it. The gearbox hides the heavy load from the motor's electronics (the drive).
 
 ## The Concept
 
@@ -31,13 +30,13 @@ This tells you how much motor a joint needs, and why one tuning keeps working wh
 
 *Look at the red box: the faster the motor spins, the less it can push.*
 
-A spinning motor makes its own voltage that works against the power supply. So the faster it spins, the weaker its push gets.
+The faster the motor spins, the more voltage it makes against its supply, so the weaker its push gets.
 
 ![Reflected inertia](../assets/diagram-reflected-inertia.png)
 
-*The gearbox shrinks the load's weight as the motor feels it.*
+*The gearbox makes the load feel much lighter to the motor.*
 
-A gearbox turns the motor many times for one turn of the load. It multiplies the push and makes the load feel much lighter. With a big ratio the motor feels almost only its own spinning part, so the load hardly matters.
+A gearbox turns the motor many times for one turn of the load. It multiplies the push and makes the load feel lighter. With a big ratio the motor feels almost only its own spinning part.
 
 ![Two gear ratios](../assets/clip-example.mp4)
 
@@ -45,7 +44,7 @@ A gearbox turns the motor many times for one turn of the load. It multiplies the
 
 ![Torque line and spin-up](../assets/fig-motor-gearbox.png)
 
-*Left: the gearbox moves the push-against-speed line without bending it. Right: with a big ratio, loaded and bare motors spin up alike.*
+*Left: with a gearbox the push-against-speed line shifts but stays straight. Right: with a big ratio, loaded and bare motors spin up alike.*
 
 <details><summary>The math (optional)</summary>
 
@@ -68,7 +67,7 @@ def inertia_sensitivity(J_rotor, J_load, N):
     return (J_rotor + load_at_motor(J_load, N)) / J_rotor
 ```
 
-`spin_up()` simulates the motor speeding up. A sensitivity of 1.0 means the drive cannot see the load.
+`spin_up()` simulates the motor speeding up. Sensitivity is how many times heavier the motor feels with the load than without; 1.0 means the drive cannot see the load.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -89,5 +88,5 @@ Sources: [MuJoCo DC motor model](https://mujoco.readthedocs.io/en/latest/_static
 ## Exercises
 
 1. Change the gear ratio and watch how the spin-up time changes.
-2. Add friction and see what happens to the top speed.
-3. Make the load ten times heavier.
+2. Add a slowing drag (friction) and see what happens to the top speed.
+3. Make the load (`J_load`) ten times heavier.

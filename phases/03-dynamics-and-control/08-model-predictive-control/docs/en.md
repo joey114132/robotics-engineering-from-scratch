@@ -14,14 +14,14 @@ Model predictive control plans the next few pushes with that brake limit built i
 
 - **Model predictive control (MPC)**: plan a short future under the limits, apply the first command, then plan again.
 - **Horizon (`N`)**: how many steps ahead each plan looks.
+- **Cost**: a score for how bad a plan is.
 - **Terminal cost**: a price on where the plan ends, so a short plan still sees what comes after.
 - **Quadratic**: a cost shaped like a bowl, easy to minimise.
-- **Box constraint**: every command must stay between `-umax` and `umax`.
-- **Plant**: the thing being controlled.
+- **Box constraint**: every push must stay within plus or minus the biggest allowed push.
 
 ## The Problem
 
-A robot's motor can only push so hard. A controller asks for more, the command is clipped, and since it never knew the limit it brakes too late and overshoots.
+A robot's motor can only push so hard. A controller (the program steering the arm) asks for more, the command is clipped, and since it never knew the limit it brakes too late and overshoots.
 
 ## The Concept
 
@@ -33,7 +33,7 @@ Real motors have limits, so plan with them instead of asking for the impossible 
 
 ![Clip or plan](../assets/diagram-mpc-clip.png)
 
-*The limit lives after the controller, or inside it.*
+*Two places for the limit: clipped after the controller, or built into the plan (MPC).*
 
 ![Clipped LQR vs MPC](../assets/fig-mpc-vs-clip.png)
 
@@ -53,14 +53,14 @@ Stack the next `N` states as `X = Phi x0 + Gam U`. The cost plus a terminal cost
 
 ## Build It
 
-Two lines take a downhill step, clip it into the box, and add momentum.
+Two short lines solve the planning problem (details in the fold).
 
 ```python
 U_new = np.clip(Y - step * (H @ Y + f), -umax, umax)   # projected gradient
 Y = U_new + (t - 1) / t_new * (U_new - U)               # momentum
 ```
 
-`prediction()` builds the stacked model, `plan()` solves the clipped problem, and `simulate()` plans again every step. Tests check the prediction against a real run, that the limit is obeyed, and that a loose limit matches LQR.
+`prediction()` works out where the car ends up for a list of pushes, `plan()` finds the lowest-cost list that stays within the limit, and `simulate()` plans again every step. Tests check the prediction against a real run, that the limit is obeyed, and that a loose limit matches LQR.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -70,7 +70,7 @@ python3 phases/03-dynamics-and-control/08-model-predictive-control/code/figure.p
 
 ## Use It
 
-Production MPC uses a QP solver such as OSQP; solve one step with it and compare the first push with `plan()`.
+Real systems use a ready-made solver library such as OSQP; solve one step with it and compare the first push with `plan()`.
 
 Sources: [OSQP documentation](https://osqp.org/docs/), checked 2026-11-10.
 
@@ -81,5 +81,5 @@ Sources: [OSQP documentation](https://osqp.org/docs/), checked 2026-11-10.
 ## Exercises
 
 1. Change the plan length and watch the overshoot.
-2. Add a speed limit; what does the box become?
-3. Stop the solver after 20 loops and see how much the cost rises.
+2. Add a speed limit. Which numbers must the plan now keep inside limits?
+3. Stop `plan()` after 20 loops (set `iters=20`) and see how much the cost rises.

@@ -2,7 +2,7 @@
 
 > 시뮬레이터가 실제 관절에서 빼먹는 것이 무엇인지, 그중 무엇이 가장 큰 손해인지 알아봅니다.
 
-**유형:** 만들기   **선수 지식:** 03/02 중력 보상   **시간:** 약 15분
+**유형:** 만들기   **선수 지식:** 없음   **시간:** 약 15분
 
 ## 쉽게 말하면
 
@@ -12,12 +12,11 @@
 
 ## 핵심 용어
 
-- **Plant**: 제어하는 대상입니다. 여기서는 흔들리는 팔 관절 하나입니다.
 - **Torque**: 모터가 관절을 돌리려고 주는 비트는 힘입니다.
 - **Friction**: 움직임을 조금씩 빼앗는 마찰입니다.
 - **Motor lag**: 모터의 힘이 명령을 따라잡기까지 걸리는 지연입니다.
 - **Open-loop**: 센서로 확인해서 고치지 않고 명령만 보내는 방식입니다.
-- **RMS error**: 두 곡선이 평균적으로 얼마나 벌어졌는지 나타내는 숫자 하나입니다.
+- **RMS error**: 복사본이 실제 팔에서 평균적으로 얼마나 벌어졌는지 나타내는 숫자 하나입니다. 빠진 효과의 비용이라고 부릅니다.
 
 ## 문제
 
@@ -33,17 +32,17 @@
 
 ![Replay](../assets/diagram-replay-rank.png)
 
-*둘 다 feedback 없이 같은 명령을 받으므로 차이는 계속 커집니다.*
+*둘 다 같은 명령을 받고 센서로 확인해서 고치지 않으므로 차이는 계속 커집니다.*
 
 ![Divergence](../assets/fig-divergence.png)
 
-*마찰을 뺀 복사본은 실제 팔에서 크게 벗어납니다. 지연을 빼는 것은 거의 영향이 없습니다.*
+*마찰을 뺀 복사본은 크게 벗어납니다. 지연을 빼는 것은 거의 영향이 없습니다.*
 
 마찰이 지연보다 훨씬 중요하므로 마찰을 먼저 모델링하세요.
 
 ![세 팔](../assets/clip-example.mp4)
 
-*파란 팔이 실제 관절입니다. 유령 팔은 각각 마찰, motor lag, sensor delay 중 하나를 뺐습니다. 왼쪽 유령 팔만 벗어납니다.*
+*파란 팔이 실제 관절입니다. 유령 팔은 각각 마찰, motor lag, sensor delay 중 하나를 뺐습니다. 마찰을 뺀 유령 팔만 벗어납니다.*
 
 <details><summary>The math (optional)</summary>
 
@@ -75,7 +74,7 @@ python3 phases/12-simulation-and-sim-to-real/01-what-a-simulator-approximates/co
 
 ## 실제 도구로 보기
 
-MuJoCo는 이 효과들을 하나씩 켤 수 있습니다. 마른 마찰, 느린 actuator, 늦게 들어오는 명령입니다.
+MuJoCo는 이 효과들을 하나씩 켤 수 있습니다. 일정한 마찰(dry friction), 느린 actuator(모터의 구동 부분), 늦게 들어오는 명령입니다.
 
 출처는 MuJoCo XML reference의 `joint/frictionloss`, `actuator/dyntype`, `actuator/delay`입니다. 2026년 11월 9일에 열어 확인했습니다.
 

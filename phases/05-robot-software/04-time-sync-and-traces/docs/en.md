@@ -2,11 +2,11 @@
 
 > Learn how to line up two clocks, and how a step-by-step log shows where a run first went wrong.
 
-**Type:** Build   **Prerequisites:** 05/03 Control Loop Jitter   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A car has an IMU (a motion sensor) and a camera on separate computers. A filter merging their readings trusts each time stamp, so a clock running ahead puts events in the wrong order.
+A car has an IMU (a motion sensor) and a camera on separate computers. Software that merges their readings trusts each time stamp, so a clock running ahead puts events in the wrong order.
 
 ## Key Terms
 
@@ -29,19 +29,17 @@ A robot understands its sensors only if every reading is placed at the moment it
 
 *One computer asks the other for its time and notes when it asked and when the answer came back.*
 
-Half of the round trip is the one-way travel time, so the notes reveal how far the clocks differ. Trust the try with the shortest round trip.
+The request's note shows the clock gap plus the trip time, and the reply's shows the gap minus it. Averaging cancels the trip. Trust the try with the shortest round trip, whose error is smallest.
 
 ![Offset estimate and order errors](../assets/fig-time-sync.png)
 
 *Left: the best of several tries beats a single one. Right: sensors close in time swap order once the clock offset is big enough.*
 
-A trace logs the state before and after each step. A reader checks each step against its intent and names the first one that went wrong.
+A trace logs the state before and after each step. A trace reader (a small checking program) checks each step against its intent and names the first one that went wrong.
 
 ![Trace reader](../assets/diagram-trace-reader.png)
 
 *The reader checks intents in order and stops at the first mismatch.*
-
-If step 2 changes nothing, the reader names step 2 and never looks at step 3.
 
 ![Arm skips target two](../assets/clip-example.mp4)
 
@@ -60,7 +58,7 @@ def estimate(t0, t1, t2, t3):
     return ((t1 - t0) + (t2 - t3)) / 2, (t3 - t0) - (t2 - t1)
 ```
 
-`order_errors()` counts slots where sorting by stamp differs from the true order. `first_mismatch()` returns the first failing intent.
+`order_errors()` counts readings that land in the wrong place when sorted by time stamp. `first_mismatch()` returns the first failing intent.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,16 +67,16 @@ python3 -m pytest phases/05-robot-software/04-time-sync-and-traces -q
 
 ## Use It
 
-`estimate()` follows the NTP formulas.
+`estimate()` follows the standard clock-sync formulas (NTP).
 
 Sources: RFC 5905 (https://datatracker.ietf.org/doc/html/rfc5905) and ROS 2 design article "Clock and Time" (https://design.ros2.org/articles/clock_and_time.html), both read 2026-11-09.
 
 ## Ship It
 
-`outputs/skill-trace-first-mismatch.md` names the first failing step of a trace.
+`outputs/skill-trace-first-mismatch.md` names a trace's first failing step.
 
 ## Exercises
 
 1. Give the camera clock a bigger offset and count the order errors.
-2. Make the forward and return delays different and see the error.
+2. Make the outgoing and return delays differ and see the error.
 3. Break one step of a trace and see what the reader says.

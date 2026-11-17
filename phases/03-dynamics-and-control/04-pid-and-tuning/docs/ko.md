@@ -6,22 +6,22 @@
 
 ## 쉽게 말하면
 
-장난감 자동차를 정지선에 세운다고 해 보세요. P는 차가 선에서 멀수록 더 세게 밟고 D는 빠를수록 더 세게 브레이크를 걸어요. I는 차가 선에 못 미친 채 있는 시간이 길수록 미는 힘을 더해서 계속 부는 맞바람도 이겨 내요.
+P, I, D 세 부분을 가진 컨트롤러가 장난감 자동차를 정지선에 세운다고 해 보세요. P는 차가 선에서 멀수록 더 세게 밀어요. D는 빠를수록 더 세게 브레이크를 걸어요. I는 차가 선에 못 미친 채 있는 시간이 길수록 미는 힘을 더해서 계속 부는 맞바람도 이겨 내요.
 
-throttle(가속 페달)을 끝까지 밟고 있으면 I는 실제 힘을 더하지 못하는데도 계속 쌓고 쌓인 힘이 차를 선 너머로 밀어요. anti-windup은 한계에 있는 동안 쌓는 것을 멈춰요.
+페달을 끝까지 밟고 있어도 I는 못 미친 만큼을 계속 쌓고 나중에 차를 선 너머로 밀어요. anti-windup은 그것을 멈춰요.
 
 ## 핵심 용어
 
-- **PID**: P 항(오차)과 I 항(시간에 따라 쌓은 오차)과 D 항(속도 브레이크)을 더하는 컨트롤러입니다.
-- **Steady offset**: 일정한 부하가 P+D만 있는 제어를 계속 밀 때 남는 오차입니다.
+- **PID**: 세 부분으로 조종하는 방법입니다. P(오차)와 I(시간에 따라 쌓은 오차)와 D(속도에 거는 브레이크)입니다.
+- **Gain**: 컨트롤러가 얼마나 세게 반응하는지입니다. 예를 들어 오차 한 단위당 미는 힘입니다.
+- **Steady offset**: 무언가가 관절을 계속 밀고 P와 D만 일하고 있을 때 남는 오차입니다.
 - **Saturation**: 모터가 토크 한계에 닿아서 더 세게 밀 수 없는 상태입니다.
-- **Windup**: 포화된 동안 적분이 계속 쌓였다가 overshoot를 일으키는 현상입니다.
-- **Eigenvalue**: 한 움직임 패턴이 tick마다 몇 배가 되는지를 나타내는 숫자로 모두 크기가 1보다 작으면 loop가 안정합니다.
-- **Plant**: 제어 대상으로 여기서는 관절과 모터입니다.
+- **Windup**: 포화된 동안 I 부분이 계속 쌓였다가 overshoot를 일으키는 현상입니다.
+- **Stable**: 윙윙거리거나 폭주하지 않고 가라앉는 loop입니다.
 
 ## 문제
 
-로봇 관절이 진동해서 누군가 미는 힘과 브레이크의 gain을 올렸습니다. 이제 관절이 윙윙거립니다. gain은 자유로운 손잡이처럼 보이지만 관절의 무게와 모터의 힘과 제어 주기가 각각 gain에 한계를 겁니다.
+로봇 관절이 진동해서 누군가 미는 힘과 브레이크의 세기(gain)를 올렸습니다. 이제 관절이 윙윙거립니다. gain은 자유로운 손잡이처럼 보이지만 관절의 무게와 모터의 힘과 제어 주기가 각각 gain에 한계를 겁니다.
 
 ## 개념
 
@@ -58,7 +58,8 @@ gain이 너무 높으면 loop가 단계별로 안정한 조건도 깨집니다.
 <details><summary>The math (optional)</summary>
 
 일정한 부하는 P+D에서 offset `load / kp`를 남깁니다. `kp = 100`이고 힘이 20이면 offset은 `20 / 100 = 0.2`이고 부하는 5초에 걸립니다. clamp가 없으면 windup으로 약 1.5 rad 넘어갑니다.
-loop는 2x2 갱신 행렬의 고유값 크기가 모두 1보다 작을 때만 안정하고 `kd`가 약 `2J/dt`를 넘으면 깨집니다(Craig 9.7).
+ROS 2 `control_toolbox`는 `none`, `back_calculation`, `conditional_integration` anti-windup을 주고 `gains.<dof_names>.antiwindup_strategy`로 관절마다 고릅니다.
+loop는 2x2 갱신 행렬의 고유값(각 움직임 패턴이 tick마다 몇 배가 되는지) 크기가 모두 1보다 작을 때만 안정하고 `kd`가 약 `2J/dt`를 넘으면 깨집니다(Craig 9.7).
 
 </details>
 
@@ -84,9 +85,7 @@ python3 phases/03-dynamics-and-control/04-pid-and-tuning/code/figure.py
 
 ## 실제 도구로 보기
 
-ROS 2 `control_toolbox`는 `none`, `back_calculation`, `conditional_integration` anti-windup을 주고 `gains.<dof_names>.antiwindup_strategy`로 관절마다 고릅니다.
-
-이 레슨의 clamp와 비교해 보세요.
+ROS 2의 control toolbox에는 만들어진 anti-windup이 있습니다. 이 레슨의 clamp와 비교해 보세요.
 
 출처: [control_toolbox 문서](https://control.ros.org/master/doc/control_toolbox/doc/index.html), [PID controller 사용자 문서](https://control.ros.org/rolling/doc/ros2_controllers/pid_controller/doc/userdoc.html), 2026년 11월 9일 확인.
 
@@ -98,4 +97,4 @@ ROS 2 `control_toolbox`는 `none`, `back_calculation`, `conditional_integration`
 
 1. clamp를 빼고 overshoot를 보세요.
 2. 명령이 단계마다 뒤집힐 때까지 `kd`를 올려 보세요.
-3. clamp 대신 back-calculation을 써 보세요.
+3. 윙윙거림이 멈출 때까지 `kd`를 낮춰 보세요.

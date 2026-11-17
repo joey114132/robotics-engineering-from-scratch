@@ -6,16 +6,16 @@
 
 ## In Plain Words
 
-A car's position sensor is off by a couple of metres. You also roughly know its speed. If the sensor is very noisy, move your estimate only a little toward its report. If your prediction is shakier, move more.
+A car's position sensor is off by a couple of metres. You also roughly know its speed. If the sensor is very jumpy (noisy), move your estimate only a little toward its report. If your prediction is shakier, move more.
 
 ## Key Terms
 
 - **State (`x`)**: the numbers the filter tracks, here position and velocity.
-- **Covariance (`P`)**: how unsure the estimate is. For one number it is the variance, the spread squared.
+- **Covariance (`P`)**: how unsure the estimate is. For one number it is the spread squared.
 - **Kalman gain (`K`)**: how far the estimate moves toward a new reading, from 0 (ignore it) to 1 (trust it fully).
-- **Process noise (`Q`)**: doubt added each step because the real motion may differ from the model.
-- **Measurement noise (`R`)**: the variance of the sensor's error.
-- **Innovation**: the surprise `z - H x`, the reading minus what the model expected.
+- **Process noise (`Q`)**: doubt added each step because the real motion may differ from the rule the filter uses to predict.
+- **Measurement noise (`R`)**: how jumpy the sensor is, as the spread of its error squared.
+- **Innovation**: the surprise, the reading minus what the filter expected.
 
 ## The Problem
 
@@ -29,11 +29,11 @@ A robot needs a position it can trust more than any single sensor reading.
 
 *Predict with the model, then correct with the reading.*
 
-A Kalman filter keeps its best guess and how unsure it is. Each cycle it predicts where the robot should be, which adds doubt. Then it moves the guess toward the sensor reading by an amount called the gain. A very noisy sensor gets a small gain, so the filter mostly follows its model. A shaky model gets a large gain, so it follows the sensor. After each correction the filter is less unsure.
+A Kalman filter keeps its best guess and how unsure it is. Each cycle it predicts where the robot should be, using its model (a rule for how the robot moves), which adds doubt. Then it moves the guess toward the sensor reading by an amount called the gain. A very noisy sensor gets a small gain, so the filter mostly follows its model. A shaky model gets a large gain, so it follows the sensor. After each correction the filter is less unsure.
 
 ![Same reading, two roads](../assets/clip-example.mp4)
 
-*Blue road: noisy sensor, the pin barely moves. Green road: it moves halfway.*
+*Blue road: noisy sensor, the estimate (the pin) barely moves. Green road: it moves halfway.*
 
 ![The gain is a trust dial](../assets/diagram-kalman-trust.png)
 
@@ -61,7 +61,7 @@ x = x + K @ (z[None, :] - H @ x)     # update
 P = (np.eye(2) - K @ H) @ P
 ```
 
-Tests check that no other gain leaves less doubt and that 95% of errors fall inside two sigma.
+Tests check that no other gain leaves less doubt and that 95% of errors fall inside the filter's own claimed uncertainty band.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -70,7 +70,7 @@ python3 -m pytest phases/07-state-estimation/02-kalman-filter -q
 
 ## Use It
 
-ROS's `robot_localization` ships `ekf_localization_node`, an extended Kalman filter.
+`robot_localization`, a robot-software package, ships `ekf_localization_node`, an extended Kalman filter.
 
 Sources: robot_localization state estimation nodes, https://docs.ros.org/en/melodic/api/robot_localization/html/state_estimation_nodes.html (2026-11-09).
 

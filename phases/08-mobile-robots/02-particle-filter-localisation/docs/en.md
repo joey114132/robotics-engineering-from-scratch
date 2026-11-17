@@ -6,26 +6,28 @@
 
 ## In Plain Words
 
-A rover stands in a room with four posts and measures its distance to each. It keeps many guesses of where it is, copies the guesses that match, drops the rest and moves them all as far as it drove.
+A rover stands in a room with four posts. It measures its distance to each.
+It keeps many guesses of where it is. It copies the good ones and drops the rest.
+Then it moves every guess as far as it drove.
 
-Now someone carries the rover to another corner. Every old guess is far from the new spot. A few random guesses across the room give new measurements something to find.
+Now someone carries the rover to another corner. Every old guess is now far off. A few random guesses across the room give new measurements something to find.
 
 ## Key Terms
 
-- **Particle**: one guess of the robot's pose, `(x, y, heading)`.
+- **Particle**: one guess of where the robot is and which way it faces.
 - **Particle filter**: a crowd of particles that is moved, scored by measurements and resampled.
 - **Landmark**: an object at a known place, like a post, whose distance the robot can measure.
-- **Weight**: a score for how well a particle's predicted distances match the measured ones.
+- **Weight**: a score for how closely the distances this guess would see match the distances the robot measured.
 - **Resampling**: copying high-weight particles and dropping low-weight ones, keeping the count fixed.
 - **Kidnap**: the robot is picked up and put somewhere else without being told.
 
 ## The Problem
 
-Picture a robot in a building with two look-alike hallways. Its wheel counts drift, and one best guess cannot say "either hallway". A crowd of guesses can, but a crowd can grow too sure of itself.
+Picture a robot in a building with two look-alike hallways. One best guess cannot say "either hallway". A crowd of guesses can point at both. But it can also bunch up too early on the wrong one.
 
 ## The Concept
 
-A robot needs this to know where it is on a map, and to recover when it is carried away.
+A robot needs this to know where it is on a map, and to recover when carried away.
 
 It keeps hundreds of guesses of where it might be. Guesses that fit what it measures are copied; the rest are dropped. Then all guesses move as far as the robot drove.
 
@@ -47,7 +49,7 @@ The fix: scatter a few random guesses at every step. One lands near the truth, a
 
 ![Plain and random clouds](../assets/clip-example.mp4)
 
-*Plain blue never finds it. Green, with random guesses, jumps to it.*
+*Blue has no random guesses and never finds it. Green has some and jumps to it.*
 
 ![Error after kidnap](../assets/fig-pf-kidnap.png)
 
@@ -81,7 +83,7 @@ python3 phases/08-mobile-robots/02-particle-filter-localisation/code/figure.py
 
 ## Use It
 
-Nav2's AMCL finds a robot on a known map from a laser scan.
+Nav2, a robot-navigation package, has a ready-made version of this for laser scans.
 
 Sources: Nav2 `nav2_amcl` README, github.com/ros-navigation/navigation2, opened 2026-11-09.
 
@@ -93,4 +95,4 @@ Sources: Nav2 `nav2_amcl` README, github.com/ros-navigation/navigation2, opened 
 
 1. Change the number of guesses; watch how fast they settle.
 2. Turn the random guesses off and carry the robot again.
-3. Put all the posts on one line; see which direction stays unclear.
+3. Put all the posts in a row. In which direction do the guesses fail to settle?

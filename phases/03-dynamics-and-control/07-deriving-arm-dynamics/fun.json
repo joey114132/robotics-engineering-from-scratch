@@ -1,13 +1,13 @@
 {
   "en": {
-    "hook": "I used to take M(q) on faith. Now I build it from kinetic energy, and if one sign is wrong my arm gains energy from nowhere.",
-    "mission": "In `code/main.py` double `m2` in the parameters of `energy_drift` and run it with `h_sign=1` and `h_sign=-1`. Which one stays near zero, and by how much does the other drift?",
-    "clip": "Two arms move freely in a horizontal plane with no motor torque, from the same start. The green arm uses the lesson's correct Coriolis term and keeps its kinetic energy; the blue arm has that term's sign flipped and gains energy from nowhere (49% more after 3 s). The amber bars between the arms are their kinetic energy from `kinetic()` (blue on the left, green on the right), 0.6 m tall at the start, with a thin dark line at that start height. Rendered with `mass()` and `lagrange_tau()`, the same loop as `energy_drift()`, at 0.6 speed."
+    "hook": "I used to trust the numbers for how heavy my arm feels. Now I build them from the energy of motion, and if one sign is wrong my arm gains energy from nowhere.",
+    "mission": "Make the second link heavier and see which sign keeps the energy steady. In `code/main.py` double `m2` (link 2's mass) in the parameters of `energy_drift` and run it with `h_sign=1` and `h_sign=-1` (`h_sign` flips the sign of `h`). Which one stays near zero, and by how much does the other drift?",
+    "clip": "Two arms swing freely with no motor pushing, from the same start. The green arm uses the correct sign and keeps its energy. The blue arm has one sign flipped and gains energy from nowhere, 49% more after 3 s. The amber bars between the arms show their energy of motion (blue on the left, green on the right), and the thin dark line is the starting height. Slowed down."
   },
   "ko": {
-    "hook": "예전엔 M(q)를 그냥 믿었습니다. 이제는 운동에너지에서 만들고 부호 하나만 틀려도 제 팔은 공짜 에너지를 얻습니다.",
-    "mission": "`code/main.py`의 `energy_drift` 파라미터에서 `m2`를 두 배로 하고 `h_sign=1`과 `h_sign=-1`로 돌리세요. 어느 쪽이 0 근처에 머물고 다른 쪽은 얼마나 흔들리나요?",
-    "clip": "두 팔이 같은 자세에서 출발해 모터 토크 없이 수평면에서 자유롭게 움직입니다. 초록 팔은 올바른 Coriolis 항을 써서 운동에너지를 지키고 파란 팔은 그 항의 부호가 뒤집혀 공짜 에너지를 얻습니다(3초 뒤 49% 증가). 두 팔 사이의 호박색 막대는 `kinetic()`으로 구한 운동에너지이고(왼쪽이 파랑, 오른쪽이 초록) 처음에 0.6 m 높이이며 그 시작 높이에 가는 어두운 선을 그었습니다. `mass()`와 `lagrange_tau()`로 `energy_drift()`와 같은 계산을 돌려 0.6배 속도로 렌더했습니다."
+    "hook": "예전엔 제 팔이 얼마나 무겁게 느껴지는지 나타내는 숫자를 그냥 믿었어요. 이제는 움직임의 에너지에서 만들고 부호 하나만 틀려도 제 팔은 공짜 에너지를 얻어요.",
+    "mission": "둘째 link를 무겁게 하면 어느 부호가 에너지를 일정하게 지키는지 봅니다. `code/main.py`의 `energy_drift` 파라미터에서 `m2`(link 2의 질량)를 두 배로 하고 `h_sign=1`과 `h_sign=-1`(`h_sign`은 `h`의 부호를 뒤집습니다)로 돌리세요. 어느 쪽이 0 근처에 머물고 다른 쪽은 얼마나 흔들리나요?",
+    "clip": "두 팔이 같은 자세에서 출발해 모터가 밀지 않는 채로 자유롭게 흔들립니다. 초록 팔은 올바른 부호를 써서 에너지를 지킵니다. 파란 팔은 부호 하나가 뒤집혀서 공짜 에너지를 얻고 3초 뒤 49% 늘어납니다. 두 팔 사이의 호박색 막대는 움직임의 에너지이고(왼쪽이 파랑, 오른쪽이 초록) 얇고 어두운 선은 시작 높이입니다. 느리게 재생했습니다."
   },
   "toy": "inertia-by-pose",
   "three": "arm-energy-sign-3d"

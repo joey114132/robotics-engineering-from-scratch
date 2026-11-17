@@ -2,7 +2,7 @@
 
 > Find out which things a simulator leaves out of a real joint, and which one costs you most.
 
-**Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
@@ -12,12 +12,11 @@ The motor is also slow to push and the sensor is late. This lesson removes one e
 
 ## Key Terms
 
-- **Plant**: the thing being controlled. Here it is one swinging arm joint.
 - **Torque**: the twisting push a motor gives a joint.
 - **Friction**: rubbing that slowly drains movement.
 - **Motor lag**: the delay before the motor's push catches up with the command.
 - **Open-loop**: sending commands without checking sensors to correct them.
-- **RMS error**: one number for how far apart two curves are, on average.
+- **RMS error**: one number for how far the copy is from the real arm, on average. We call it the cost of a missing effect.
 
 ## The Problem
 
@@ -33,17 +32,17 @@ A simulator is where you test robot code safely, so you need to know how far to 
 
 ![Replay](../assets/diagram-replay-rank.png)
 
-*Both get the same commands with no feedback, so any difference keeps growing.*
+*Both get the same commands and neither checks its sensor, so any gap keeps growing.*
 
 ![Divergence](../assets/fig-divergence.png)
 
-*The copy without friction drifts far from the real arm. Missing lag or delay barely matters.*
+*Without friction the copy drifts far. Missing lag or delay barely matters.*
 
 Friction matters far more than the delays, so model it first.
 
 ![Three arms](../assets/clip-example.mp4)
 
-*Blue is the real arm. Each ghost misses one effect: friction, motor lag, sensor delay. Only the left one drifts.*
+*Blue is the real arm. Each ghost misses one effect: friction, motor lag, sensor delay. Only the ghost with no friction drifts.*
 
 <details><summary>The math (optional)</summary>
 
@@ -71,7 +70,7 @@ python3 phases/12-simulation-and-sim-to-real/01-what-a-simulator-approximates/co
 
 ## Use It
 
-MuJoCo can switch these effects on one at a time: dry friction, a slow actuator and a delayed command.
+MuJoCo can switch these on: a constant rub (dry friction), a slow actuator (the motor's driving part) and a delayed command.
 
 Sources: MuJoCo XML reference, `joint/frictionloss`, `actuator/dyntype`, `actuator/delay` (https://mujoco.readthedocs.io/en/stable/XMLreference.html, opened 2026-11-09).
 
@@ -83,4 +82,4 @@ Sources: MuJoCo XML reference, `joint/frictionloss`, `actuator/dyntype`, `actuat
 
 1. Halve the friction. Is it still the biggest cost?
 2. Make the commands ten times faster. Does delay matter more now?
-3. Remove all three effects at once. Is the cost the sum of the single costs?
+3. Remove all three effects at once. Is the combined cost the sum of the single costs?

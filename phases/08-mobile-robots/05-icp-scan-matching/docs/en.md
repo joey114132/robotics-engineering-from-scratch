@@ -2,25 +2,25 @@
 
 > Learn how a robot lines up two laser scans to work out how far it moved.
 
-**Type:** Build   **Prerequisites:** 01/01 Rotations and SE(3), 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** 08/01 Differential Drive and Odometry   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A rover scans an L-shaped room and gets dots along the walls. After moving a little it scans again, and the new dots miss the old ones. ICP pairs each new dot with the nearest old dot, slides and turns the new set to bring pairs closer, and repeats.
+A rover scans an L-shaped room and gets wall dots. It moves a little and scans again, and the new dots do not line up with the old ones. ICP pairs each new dot with the nearest old one, moves the new set to close the gaps, and repeats.
 
-From far away, nearest dots pair the wrong walls, so the dots get closer while the move is wrong.
+If the second scan starts far off, nearest dots belong to the wrong walls. The move comes out wrong.
 
 ## Key Terms
 
 - **ICP**: iterative closest point, the loop of pairing nearest dots and fitting a move.
-- **Rigid move**: a turn plus a slide that keeps all distances inside the shape unchanged.
+- **Rigid move**: a turn plus a slide that does not stretch or bend the shape.
 - **Nearest neighbour**: the closest dot in the other scan.
-- **SVD**: a standard matrix tool; here it finds the best turn for a set of pairs.
+
 - **Local minimum**: a dead end where small moves no longer reduce the error, although the answer is wrong.
 
 ## The Problem
 
-Picture a robot that scans a room, drives a little, and scans again. Its wheel counts drift, so you want the real move from the two scans alone, which are just clouds of dots.
+Picture a robot that scans a room, drives a little, and scans again. Its wheel counts drift, so you want the real move from the two dot clouds alone.
 
 ## The Concept
 
@@ -77,7 +77,7 @@ python3 phases/08-mobile-robots/05-icp-scan-matching/code/main.py
 
 ## Use It
 
-Open3D's ICP registration takes a rough starting guess. Compare it with `icp()`.
+Open3D, a 3D library, has a ready-made ICP that takes a rough starting guess. Compare it with `icp()`.
 
 Sources: Open3D ICP registration tutorial, https://www.open3d.org/docs/latest/tutorial/pipelines/icp_registration.html (opened 2026-11-10).
 
@@ -88,5 +88,5 @@ Sources: Open3D ICP registration tutorial, https://www.open3d.org/docs/latest/tu
 ## Exercises
 
 1. Add a little noise to both scans and see how the answer changes.
-2. Start ICP from a rough wheel guess and find how big a turn it can repair.
+2. Start ICP from a guess that is off by some turn. Increase the turn until ICP fails.
 3. Remove a corner of the room and see what happens.

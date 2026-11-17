@@ -6,15 +6,16 @@
 
 ## In Plain Words
 
-A toy car follows a painted line by steering toward a point on the line a fixed distance ahead, the lookahead. A close point makes a small drift swing the car hard, and since its wheels respond late it overshoots the line.
+A toy car follows a painted line. It steers toward a point on the line a fixed distance ahead, the lookahead.
 
-A far point gives gentle corrections, but near a bend it lies beyond the corner, so the car cuts across.
+A close point makes a small drift swing the car hard. Its wheels respond late, so it overshoots the line.
+A far point gives gentle corrections. But near a bend that point lies beyond the corner, so the car cuts across.
 
 ## Key Terms
 
 - **Pure pursuit**: steering a robot toward a point on the path a fixed distance ahead.
 - **Lookahead (`Ld`)**: that fixed distance; the one knob you tune.
-- **Curvature (`k`)**: how sharply a path bends. It is `1 / R` for a circle of radius `R`.
+- **Curvature (`k`)**: how sharply a path bends. A tight turn has a large curvature.
 - **Robot frame**: coordinates that move with the robot, x forward and y left.
 - **Gain**: how strongly the robot corrects a given error.
 - **Lag**: the delay before the wheels follow a steering command.
@@ -27,7 +28,7 @@ Picture a delivery robot following a path with a sharp corner. Aiming at a point
 
 A robot must neither wobble nor clip corners, and one distance decides both.
 
-It always aims at a point on the path a fixed distance ahead, and steers along the circle that reaches it. That distance is the lookahead.
+It always aims at a point on the path a fixed distance ahead, and steers along the curve, a piece of a circle, that ends at that point. That distance is the lookahead.
 
 ![Step](../assets/diagram-pp-step.png)
 
@@ -37,11 +38,11 @@ Aim close and every small drift causes a hard turn, so a robot with slow wheels 
 
 ![Circles](../assets/clip-example.mp4)
 
-*Blue turns hard and crosses the line early. Green turns gently.*
+*Blue aims close and turns hard, swinging across the line. Green aims far and turns gently.*
 
 ![Tradeoff](../assets/diagram-pp-tradeoff.png)
 
-*Short steers hard. Long cuts corners.*
+*A short lookahead steers hard. A long one cuts corners.*
 
 ![Paths](../assets/fig-lookahead-paths.png)
 
@@ -77,7 +78,7 @@ python3 phases/08-mobile-robots/04-path-following-pure-pursuit/code/main.py
 
 ## Use It
 
-Nav2's pure pursuit controller steers toward a point ahead on the path. Its README says the right distance depends on robot size and speed.
+Nav2, a robot-navigation package, has a pure pursuit steering rule that aims at a point ahead on the path. Its README says the right distance depends on robot size and speed.
 
 Sources: Nav2 `nav2_regulated_pure_pursuit_controller` README, github.com/ros-navigation/navigation2, opened 2026-11-09.
 
@@ -88,5 +89,5 @@ Sources: Nav2 `nav2_regulated_pure_pursuit_controller` README, github.com/ros-na
 ## Exercises
 
 1. Make the lookahead longer and shorter; watch the wobble and the corner.
-2. Round the corner with a short curve and see the cut shrink.
+2. Replace the sharp corner with a gentle curve and see how much less the robot cuts across.
 3. Slow the wheels down and see what the short lookahead does.

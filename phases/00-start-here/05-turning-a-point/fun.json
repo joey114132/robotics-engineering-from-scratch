@@ -1,13 +1,13 @@
 {
   "en": {
     "hook": "Spin a pen on a desk and every point on it draws a circle. That is all turning a point is.",
-    "mission": "Run `cd code && python3 main.py`. Then turn the point (1, 0) by half a turn (`math.pi`) and guess where it lands before you run it.",
-    "clip": "A drone turns in place about 150 degrees. The amber ball in front of its amber nose block is placed each frame by the lesson's `rotate()` function and follows the nose around a circle. The faint amber ball marks where it started."
+    "mission": "Turn a point by half a turn and see where it lands. Run `cd code && python3 main.py`. Then turn the point (1, 0) by half a turn (`math.pi`) and guess where it lands before you run it.",
+    "clip": "A drone turns in place about 150 degrees. The amber ball in front of its nose follows the nose around a circle. The faint amber ball marks where it started."
   },
   "ko": {
-    "hook": "책상 위에서 펜을 돌리면 펜 위의 모든 점이 원을 그립니다. 점을 돌린다는 것은 그게 전부입니다.",
-    "mission": "`cd code && python3 main.py`를 실행하세요. 이어서 점 (1, 0)을 반 바퀴(`math.pi`) 돌리고 어디에 놓일지 먼저 예측한 뒤 실행하세요.",
-    "clip": "드론이 제자리에서 약 150도 돕니다. 기체 앞쪽의 주황색 공은 매 프레임 이 레슨의 `rotate()` 함수로 자리를 구해서 주황색 앞부분을 따라 원을 그립니다. 흐린 주황색 공은 출발 자리를 표시합니다."
+    "hook": "책상 위에서 펜을 돌리면 펜 위의 모든 점이 원을 그려요. 점을 돌린다는 것은 그게 전부예요.",
+    "mission": "점을 반 바퀴 돌리면 어디에 놓이는지 봅니다. `cd code && python3 main.py`를 실행하세요. 이어서 점 (1, 0)을 반 바퀴(`math.pi`) 돌리고 어디에 놓일지 먼저 예측한 뒤 실행하세요.",
+    "clip": "드론이 제자리에서 약 150도 돕니다. 앞쪽의 주황색 공은 앞부분을 따라 원을 그립니다. 흐린 주황색 공은 출발 자리를 표시합니다."
   },
   "toy": null,
   "three": "turn-point-3d"

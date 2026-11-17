@@ -2,24 +2,24 @@
 
 > Learn why a control loop with a perfect average timing can still make a robot arm twitch.
 
-**Type:** Build   **Prerequisites:** 05/02 Executors and Callbacks   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A control loop gives an arm a new target on every beat, like a metronome. If each beat waits one period after the last move, the beats drift later and later. Beats fixed on the clock stay on schedule. Rarely, another program holds the processor, one wake-up comes late and the arm twitches.
+A control loop gives an arm a new target on every cycle, like the beats of a metronome. If each cycle waits one period after the last move, the cycles drift later and later. Cycles fixed on the clock stay on schedule. Rarely, another program keeps the processor busy, one wake-up comes late, and the arm twitches.
 
 ## Key Terms
 
 - **Control loop**: code that repeats at a fixed rate to read sensors, compute and command the motors.
-- **Period (`T`)**: the planned time between two turns of the loop.
-- **Jitter**: how far a turn's real timing is from the plan.
-- **Deadline**: the time by which a turn must finish.
+- **Period (`T`)**: the planned time between two cycles of the loop.
+- **Jitter**: how far a cycle's real timing is from the plan.
+- **Deadline**: the time by which a cycle must finish.
 - **p99**: the delay that 99% of cycles stay under.
 - **Preemption**: the operating system pausing your program to run another one.
 
 ## The Problem
 
-A robot arm twitches every few seconds, yet its control loop reports a perfect average timing. One bad cycle barely moves the average, but it causes the twitch.
+A robot arm twitches every few seconds, yet its control loop reports a perfect average timing. One bad cycle barely moves the average but causes the twitch.
 
 ## The Concept
 
@@ -27,9 +27,9 @@ An arm is only as steady as its slowest control cycle, not its average one.
 
 ![One turn of the loop](../assets/diagram-loop-anatomy.png)
 
-*Each turn sleeps until a fixed time, wakes a little late, works, and must finish before the next deadline.*
+*Each cycle sleeps until a fixed time, wakes a little late, works, and must finish before the next deadline.*
 
-Sleeping until a fixed time on the clock keeps the average perfect, so late wake-ups show up only as spread. One very late wake-up makes the next turn late too, so the arm's command goes out late while the target moves on.
+If the loop sleeps until a fixed clock time, the average stays perfect. Late wake-ups show only as scatter around it. One very late wake-up makes the next cycle late too, so the arm's command goes out late while the target moves on.
 
 ![Mean versus worst](../assets/diagram-average-hides.png)
 
@@ -37,7 +37,7 @@ Sleeping until a fixed time on the clock keeps the average perfect, so late wake
 
 ![Arm behind its target](../assets/clip-example.mp4)
 
-*The ball steps on schedule, the arm when its command goes out, so it lags once and then jumps.*
+*The ball moves on schedule. The arm moves when its command goes out, so it lags once, then jumps.*
 
 ![Jitter histogram and timeline](../assets/fig-jitter.png)
 
@@ -67,16 +67,16 @@ python3 phases/05-robot-software/03-control-loop-jitter/code/main.py
 
 ## Use It
 
-On Linux, `clock_nanosleep` with `TIMER_ABSTIME` sleeps to an absolute time.
+On Linux, `clock_nanosleep` with `TIMER_ABSTIME` sleeps until a fixed time on the clock.
 
 Sources: clock_nanosleep(2) (https://man7.org/linux/man-pages/man2/clock_nanosleep.2.html) and ROS 2 Jazzy "Understanding real-time programming" (https://docs.ros.org/en/jazzy/Tutorials/Demos/Real-Time-Programming.html), both read 2026-11-09.
 
 ## Ship It
 
-`outputs/skill-loop-jitter-report.md` turns loop timestamps into a mean, p99, worst and miss report.
+`outputs/skill-loop-jitter-report.md` turns loop timestamps into a timing report.
 
 ## Exercises
 
 1. Make the rare spikes more common.
-2. Explain why the period right after a miss is shorter.
+2. Explain why the cycle after a late one can still start late.
 3. Add a watchdog that trips after two misses in a row.

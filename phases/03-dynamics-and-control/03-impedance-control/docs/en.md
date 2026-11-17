@@ -6,17 +6,17 @@
 
 ## In Plain Words
 
-Push the hand of a bench arm with one finger. The motor makes the joint act like a spring with a damper, which resists motion. That behaviour is impedance.
+Push the hand of a desk arm with one finger. The motor makes the joint act like a spring with a damper, which resists motion. That behaviour is impedance.
 
-A stiffer spring balances the same push with less movement. The damper does not change where the arm stops; it changes whether the arm rings or glides in.
+A stiffer spring balances the same push with less movement. The damper does not change where the arm stops; it changes whether the arm wobbles back and forth before settling or glides in.
 
 ## Key Terms
 
 - **Impedance**: how a joint pushes back when pushed, like a spring plus a damper.
+- **Deflection**: how far a push moves the joint from its rest pose.
 - **Stiffness (`K`)**: push back per unit of deflection.
 - **Damping (`D`)**: resistance to speed.
-- **Deflection**: how far a push moves the joint from its rest pose.
-- **Damping ratio (`zeta`)**: how strongly the damper settles the joint; 1 glides in, below 1 rings.
+- **Damping ratio (`zeta`)**: how strongly the damper calms the joint: at 1 it glides in, below 1 it wobbles.
 - **Overshoot**: passing the final position before coming back.
 
 ## The Problem
@@ -25,17 +25,17 @@ A stiff robot arm fights every touch with full force. A robot handing you a cup 
 
 ## The Concept
 
-A robot near people must give way when touched, so we choose how hard each joint pushes back. The joint acts like a spring with a shock absorber: the farther you push, the harder it pushes back, and the absorber decides whether it rings or settles smoothly.
+A robot near people must give way when touched, so we choose how hard each joint pushes back. The joint acts like a spring with a damper: the farther you push, the harder it pushes back, and the damper decides whether the arm wobbles or settles smoothly.
 
 ![Spring, damper, gravity](../assets/diagram-impedance-structure.png)
 
 *The controller adds a spring and a damper; yellow is the outside push.*
 
-A stiffer spring moves less for the same push. The absorber changes how the arm gets there, not where it stops.
+A stiffer spring moves less for the same push. The damper changes how the arm gets there, not where it stops.
 
 ![Step response](../assets/fig-impedance-response.png)
 
-*Three absorber strengths end at the same place.*
+*Three damper strengths end at the same place.*
 
 ![Same push, two stiffnesses](../assets/clip-example.mp4)
 
@@ -43,7 +43,7 @@ A stiffer spring moves less for the same push. The absorber changes how the arm 
 
 ![Choosing K and D](../assets/diagram-impedance-recipe.png)
 
-*Pick stiffness, then damping, then check the step limit.*
+*Pick stiffness, then damping, then check the buzzing limit from 03/01.*
 
 <details><summary>The math (optional)</summary>
 
@@ -63,7 +63,7 @@ def damping_for_zeta(K, J, zeta):
     return 2*zeta*np.sqrt(K*J)
 ```
 
-`simulate()` pushes one joint with a constant torque. Tests check the push-in, that doubling the stiffness halves it, and that there is no overshoot at ratio one.
+`simulate()` pushes one joint with a constant torque. Tests check the deflection, that doubling the stiffness halves it, and that there is no overshoot at ratio one.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -73,7 +73,7 @@ python3 phases/03-dynamics-and-control/03-impedance-control/code/figure.py
 
 ## Use It
 
-Choose the spring from the largest push you expect and the largest push-in you accept.
+Choose the spring from the largest push you expect and the largest deflection you accept.
 
 ## Ship It
 
@@ -81,6 +81,6 @@ Choose the spring from the largest push you expect and the largest push-in you a
 
 ## Exercises
 
-1. Double the stiffness and watch the push-in halve.
-2. Try a damping ratio of 0.2 and of 1 and compare.
-3. Add friction and find the new resting point.
+1. Double the stiffness and watch the deflection halve.
+2. Compare damping ratios 0.2 and 1.
+3. Add a force that always opposes the joint's motion and find the new resting point.

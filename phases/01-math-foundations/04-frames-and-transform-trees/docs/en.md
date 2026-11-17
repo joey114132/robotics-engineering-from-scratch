@@ -6,52 +6,52 @@
 
 ## In Plain Words
 
-A camera on a mast reports a cup's position from its own view, but the arm needs it from its base. A transform tree stores how each part (frame) sits in its parent; multiply the transforms along the chain to convert.
+A camera on a mast reports a cup's position from its own view, but the arm needs it from its base. Each part's place is stored relative to the part it hangs from. Multiplying these placements along the chain from one part to the other converts a position between their views.
 
 ## Key Terms
 
 - **Frame**: a set of x, y, z directions attached to a part, such as the camera or the base.
+- **Transform**: the numbers that convert a position from one frame's view to another's.
 - **Transform tree**: a map where each frame hangs off exactly one parent frame.
-- **`T_to_from`**: a transform that converts coordinates from the `from` frame into the `to` frame.
-- **Common ancestor**: the nearest frame above two frames on the tree, where their paths meet.
-- **Cycle**: a loop in which a frame becomes its own ancestor.
+- **Transform name (`T_to_from`)**: a name that tells which frame a transform converts from and which it converts into.
+- **Shared parent**: the nearest frame above two frames on the tree, where their paths meet.
 - **tf2**: the ROS 2 library that stores a transform tree.
 
 ## The Problem
 
-A camera sees a cup, and the arm needs the cup's position from its own base. Someone multiplies the transforms in the wrong order, or inverts the wrong one, and the answer is a valid-looking spot in the wrong place.
+The arm needs the cup's position from its own base. Someone multiplies in the wrong order, or turns the wrong one around (inverts it), and gets a valid-looking spot in the wrong place.
 
 ## The Concept
 
-Each part of a robot sees the world from its own spot, so every reading must be converted. The habit that prevents mistakes is to name every transform with both ends, `T_to_from`: it converts from the second frame into the first, and neighbouring names cancel like fractions.
+Each part of a robot sees the world from its own spot, so every reading must be converted. Name every transform with both ends, like `T_base_cam`: it turns a position seen by the camera into one seen by the base. Neighbouring names cancel like fractions: base-from-camera times camera-from-cup gives base-from-cup.
 
 ![A tree with one parent per frame](../assets/diagram-tf-tree.png)
 
-*Each arrow is one transform. The camera and the hand both hang off the base.*
+*Each arrow is one transform; camera and hand hang off the base.*
 
-To see the cup from the hand, climb from the hand and from the cup up to a shared parent, then come down one side.
+To see the cup from the hand, start with the cup as the camera sees it, climb to the shared parent (the base), then come down to the hand.
 
-![Lookup climbs to the common ancestor](../assets/diagram-tf-lookup.png)
+![Lookup climbs to the shared parent](../assets/diagram-tf-lookup.png)
 
-*Climb both frames up to the base, then come down.*
+*Climb to the base, then come down.*
 
 ![One cup measured from the camera, the base and the hand](../assets/clip-example.mp4)
 
-*Three views of the same cup.*
+*The same cup from three views: three different position numbers.*
 
 ![Cost of a wrong product](../assets/fig-wrong-order-error.png)
 
-*A swapped order or a stray inverse can put the cup far off.*
+*Swapping the order, or turning one transform around by mistake, can put the cup far off.*
 
 <details><summary>The math (optional)</summary>
 
-In `T_a_b @ T_b_c = T_a_c` the inner names cancel. The camera sits at (0.5, 0, 0.4) in the base frame, turned around, and sees the cup at (0.2, 0, 0.5), so in the base frame the cup is at (0.3, 0, 0.9). A hand at (0.3, 0, 0.7) sees it at (0, 0, 0.2). A swapped product is off by up to 0.4 m, a stray inverse by up to 1.3 m.
+`T_to_from` converts from the second frame into the first, and in `T_a_b @ T_b_c = T_a_c` the inner names cancel. The camera sits at (0.5, 0, 0.4) in the base frame, turned around, and sees the cup at (0.2, 0, 0.5), so in the base frame the cup is at (0.3, 0, 0.9). A hand at (0.3, 0, 0.7) sees it at (0, 0, 0.2). A swapped product is off by up to 0.4 m, a stray inverse by up to 1.3 m.
 
 </details>
 
 ## Build It
 
-`add()` refuses a second parent or a loop. `lookup()` climbs from both frames to the first shared parent and multiplies the transforms on the way.
+`add()` refuses a second parent or a loop. `lookup()` climbs to the first shared parent, multiplying on the way.
 
 ```python
 def lookup(self, to, frm):
@@ -69,7 +69,7 @@ python3 -m pytest phases/01-math-foundations/04-frames-and-transform-trees -q
 
 ## Use It
 
-ROS 2's `tf2` keeps the same tree, and its `lookup_transform` takes the target first. Compare it with `TFTree.lookup`.
+ROS 2's `tf2` keeps the same tree, and its `lookup_transform` takes the frame you want the answer in first. Compare it with `TFTree.lookup`.
 
 Sources: signature checked in `tf2_ros/buffer.py` of the local ROS 2 Jazzy install.
 
@@ -79,6 +79,6 @@ Sources: signature checked in `tf2_ros/buffer.py` of the local ROS 2 Jazzy insta
 
 ## Exercises
 
-1. Add a new frame under the camera and check the chain still works.
+1. Add a frame under the camera.
 2. Make `lookup` list the frames it passes.
-3. Try to add a second parent and read the error.
+3. Add a second parent and read the error.

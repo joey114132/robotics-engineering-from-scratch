@@ -18,13 +18,13 @@ You have never studied robotics. You can write a little Python (variables, loops
 
 Every robot repeats three steps, many times a second:
 
-1. **Sense**: read cameras, encoders and other sensors to learn what is happening.
+1. **Sense**: read cameras and other sensors to learn what is happening.
 2. **Think**: work out where it is and what to do next.
 3. **Act**: send commands to motors so something moves.
 
 The phases follow that loop. Phase 00 starts from zero: what a robot is, points, angles, joints and time steps, one small idea per lesson. Then you learn to describe where things are (phases 01 and 02), then how to make motors move a body (03 to 05), how to sense and estimate (06 and 07), how to drive, plan, walk and fly (08 to 11), and finally how to test, learn, work in teams and stay safe (12 to 16).
 
-![Learning path: six stages from setup and math to fleets, safety and capstones](docs/img/roadmap.png)
+![Learning path: six stages from first ideas and math to robot teams, safety and projects](docs/img/roadmap.png)
 
 <details>
 <summary>See all 17 phases</summary>
@@ -69,7 +69,7 @@ The clips are computed, not drawn: the motion comes from each lesson's own code.
 <td width="50%"><img src="docs/img/clip-quadrotor.gif" alt="Two quadrotors: the blue one gets more thrust and only climbs, the green one gets a small pitch torque, tilts first and then moves sideways"></td>
 </tr>
 <tr>
-<td><em>Lesson 03-04: integral windup, and the clamp that fixes it.</em></td>
+<td><em>Lesson 03-04: a car that rolls past its stop line, and the small fix.</em></td>
 <td><em>Lesson 10-03: a drone must tilt before it can move sideways.</em></td>
 </tr>
 </table>

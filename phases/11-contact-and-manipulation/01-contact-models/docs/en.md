@@ -2,11 +2,11 @@
 
 > Learn why a gripped part slides out when the wrist tilts, and how to predict the angle.
 
-**Type:** Build   **Prerequisites:** 03/02 Gravity Compensation   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** none   **Time:** ~15 minutes
 
 ## In Plain Words
 
-Place an eraser on a textbook and slowly tilt the book. Gravity pulls the eraser downhill and friction pulls it back uphill.
+Place an eraser on a textbook and slowly tilt the book. Gravity pulls the eraser downhill. Friction, the grip between the surfaces, pulls it back uphill.
 
 Friction has a cap: at most `mu` times the force pressing the eraser into the book. All friction forces up to that cap form the friction cone. When the friction needed passes the cap, the eraser slides.
 
@@ -14,8 +14,8 @@ Friction has a cap: at most `mu` times the force pressing the eraser into the bo
 
 - **Contact model**: the rule a simulator uses to compute the forces where two bodies touch.
 - **Normal force**: the push of a surface straight out of itself, perpendicular to the surface.
-- **`mu`**: the friction coefficient; how grippy the surfaces are.
-- **Friction cone**: all friction forces that do not exceed `mu` times the normal force.
+- **Friction coefficient (`mu`)**: how grippy the surfaces are.
+- **Friction cone**: all friction forces up to the grip limit, the friction coefficient times the normal force.
 - **Stick and slip**: two states of a contact; holding still, or sliding.
 - **Penetration**: how far a simulated body sinks into a surface.
 
@@ -27,11 +27,11 @@ Picture a robot hand holding a part. Tilt the wrist a few degrees and the part s
 
 A gripper drops a part when friction runs out, so you need to know the angle where that happens.
 
-Place an eraser on a book and tilt it. Friction holds the eraser until the slope gets too steep, then it slides. Friction can only push back up to a limit, set by how hard the surfaces press together and how grippy they are.
+Friction holds the eraser until the slope gets too steep, then it slides. Friction can only push back up to a limit, set by how hard the surfaces press together and how grippy they are.
 
 ![Layers](../assets/diagram-penalty-layers.png)
 
-*A simulated block sinks a hair, which sets how hard friction can hold.*
+*A simulated block sinks a tiny bit. The deeper it sinks, the harder friction can hold.*
 
 ![Tilting plank](../assets/clip-example.mp4)
 
@@ -45,7 +45,7 @@ Place an eraser on a book and tilt it. Friction holds the eraser until the slope
 
 *Sticking blocks stay inside the cone. The sliding block rides its edge.*
 
-A heavier block slides at the same angle.
+
 
 <details><summary>The math (optional)</summary>
 
@@ -55,7 +55,7 @@ With tilt `theta`, mass `m` and gravity `g`, gravity presses the block into the 
 
 ## Build It
 
-A spring-damper pushes back on penetration. Friction is a sideways spring clipped at `mu * fn`.
+A spring and a shock absorber push back on penetration. Friction is a sideways spring, cut off at `mu` times the normal force.
 
 ```python
 fn = max(K * pen - C * nv, 0.0)
@@ -65,7 +65,7 @@ if abs(ft) > mu * fn:
     anchor = s + ft / KT
 ```
 
-Assumptions: point block, one contact, planar slope, fixed spring constants, small time step (0.1 ms).
+Assumptions: point block, one contact, flat slope, fixed springs.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,16 +75,16 @@ python3 phases/11-contact-and-manipulation/01-contact-models/code/main.py
 
 ## Use It
 
-MuJoCo uses the same two ideas. Build the same block there and compare sliding angles.
+MuJoCo, a physics simulator, works the same way. Build the same block there and compare sliding angles.
 
 Sources: MuJoCo documentation, Computation chapter (opened 2026-11-09).
 
 ## Ship It
 
-`outputs/skill-contact-model-check.md` checks a contact setup for a stick/slip surprise before you blame the controller.
+`outputs/skill-contact-model-check.md` checks a contact setup for a stick/slip surprise before you blame the robot's control code.
 
 ## Exercises
 
 1. Tilt the plank a little at a time and find where the block starts to slide.
 2. Make the surface more or less grippy and watch the angle move.
-3. Add a sideways push and see when the block slides up.
+3. Push the block along the slope; find the push that makes it slide uphill.
