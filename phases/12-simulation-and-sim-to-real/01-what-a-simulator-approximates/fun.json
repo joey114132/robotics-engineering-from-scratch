@@ -2,12 +2,12 @@
   "en": {
     "hook": "Every simulator leaves some real-life chores out. I want to know which missing chore costs the most.",
     "mission": "Make the joint's rub half as strong and watch whether friction still costs the most. In `REAL` in `code/main.py` change `c=0.05` to `c=0.025`, guess the answer, then run `python3 code/main.py` and compare the costs.",
-    "clip": "The same push is sent twice to a joint on a wall for 5.5 s. The solid blue arm is the real joint, with friction and a slow motor. The ghost arm is a simulation that leaves both out, so it swings farther. The late sensor only changes the reported angle, so it is not drawn. Played at real speed."
+    "clip": "The same push is sent twice to a joint on a wall for 5.5 s. The solid blue arm is the real joint, with friction and a slow motor. The ghost arm is a simulation that leaves both out, so it swings farther. The late sensor only changes the reported angle, so it is not drawn."
   },
   "ko": {
     "hook": "시뮬레이터는 현실의 일을 몇 가지 빼먹어요. 빼먹은 일 중에 어느 것이 가장 큰 손해인지 알고 싶어요.",
     "mission": "관절의 마찰을 절반으로 줄이고 friction이 여전히 가장 큰 비용인지 지켜보세요. `code/main.py`의 `REAL`에서 `c=0.05`를 `c=0.025`로 바꾸고 답을 짐작한 뒤 `python3 code/main.py`를 실행해 비용을 비교하세요.",
-    "clip": "벽에 붙은 관절 하나가 같은 힘을 5.5초 동안 두 번 받습니다. 단색 파란 팔은 마찰과 느린 모터가 있는 실제 관절입니다. 유령 팔은 둘 다 뺀 시뮬레이션이라서 더 멀리 흔들립니다. 늦는 센서는 보고되는 각도만 바꾸므로 그리지 않았습니다. 실제 속도로 재생했습니다."
+    "clip": "벽에 붙은 관절 하나가 같은 힘을 5.5초 동안 두 번 받습니다. 단색 파란 팔은 마찰과 느린 모터가 있는 실제 관절입니다. 유령 팔은 둘 다 뺀 시뮬레이션이라서 더 멀리 흔들립니다. 늦는 센서는 보고되는 각도만 바꾸므로 그리지 않았습니다."
   },
   "toy": null,
   "three": "joint-sim-gap-3d"

@@ -2,7 +2,7 @@
   "en": {
     "hook": "My gyro is a smooth talker who drifts, and my accelerometer is honest but twitchy. One time constant decides who speaks when.",
     "mission": "Pick a time constant by hand and see whether the combined tilt gets worse. In `code/main.py` swap the `best_tau(dt, b, sa)` argument of `complementary(...)` for `0.05` and run `python3 code/main.py`. Predict whether fused rmse beats the best tau's 0.0068.",
-    "clip": "Each solid board shows one method's estimate of a rocking board's tilt, and the thin dark plank under it is the true tilt. Blue uses only the gyro, so its steady error becomes a growing offset. Amber uses only the accelerometer, so it is right on average but shakes. Green blends the two with the best time constant and follows the true tilt. Seconds 12 to 17.5 of a 20 s run, in real time."
+    "clip": "Each solid board shows one method's estimate of a rocking board's tilt, and the thin dark plank under it is the true tilt. Blue uses only the gyro, so its steady error becomes a growing offset. Amber uses only the accelerometer, so it is right on average but shakes. Green blends the two with the best time constant and follows the true tilt."
   },
   "ko": {
     "hook": "제 gyro는 말은 매끄럽지만 서서히 틀어지고 accelerometer는 정직하지만 떨려요. time constant 하나가 누가 언제 말할지 정합니다.",

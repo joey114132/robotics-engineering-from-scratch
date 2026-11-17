@@ -2,12 +2,12 @@
   "en": {
     "hook": "My map is only as honest as the spot where I straighten the curve. Start me with a wrong heading and one landmark and I lie with a straight face.",
     "mission": "Compare one landmark with two and see which keeps the filter honest. In `code/main.py` run `mean_nees(30, 0.6, lms=LMS[:1])`, then the same with `LMS[:2]`. Predict which one stays near 3 before you run it. (`LMS` is the list of post positions, so `LMS[:1]` keeps only the first post.)",
-    "clip": "A robot drives a circle and measures how far and in which direction three posts (amber lines) are. Both ghosts start with a wrong idea of where the robot faces, because its true heading is 0.6 rad off. The blue ghost only follows its own motion and drifts further away, while the green ghost corrects itself with the posts and ends up on the robot. 8 s of motion played at 1.5 times speed. The picture further down compares one post with four."
+    "clip": "A robot drives a circle and measures how far and in which direction three posts (amber lines) are. Both ghosts start with a wrong idea of where the robot faces, because its true heading is 0.6 rad off. The blue ghost only follows its own motion and drifts further away, while the green ghost corrects itself with the posts and ends up on the robot. The picture further down compares one post with four."
   },
   "ko": {
     "hook": "제 지도는 곡선을 펴는 그 자리만큼만 정직해요. heading을 틀리게 잡은 채 landmark 하나로 시작하면 저는 시치미를 떼고 거짓말을 해요.",
     "mission": "landmark 하나와 둘을 견주어 어느 쪽이 필터를 정직하게 유지하는지 확인합니다. `code/main.py`에서 `mean_nees(30, 0.6, lms=LMS[:1])`을 실행하고 같은 것을 `LMS[:2]`로도 실행하세요. 실행하기 전에 어느 쪽이 3 근처에 머물지 예측하세요. (`LMS`는 기둥 위치의 목록이라 `LMS[:1]`은 첫 기둥만 남깁니다.)",
-    "clip": "로봇이 원을 그리며 달리면서 기둥 세 개(주황 선)가 얼마나 멀리 어느 방향에 있는지 잽니다. 두 유령은 로봇의 참 heading이 0.6 rad 틀려서 로봇이 어느 쪽을 보는지 잘못 알고 출발합니다. 파란 유령은 자기 움직임만 따라가서 갈수록 멀어지고 초록 유령은 기둥으로 자기를 바로잡아 로봇 위에 놓입니다. 8초의 움직임을 1.5배 속도로 재생합니다. 아래 그림은 기둥 하나와 넷을 견줍니다."
+    "clip": "로봇이 원을 그리며 달리면서 기둥 세 개(주황 선)가 얼마나 멀리 어느 방향에 있는지 잽니다. 두 유령은 로봇의 참 heading이 0.6 rad 틀려서 로봇이 어느 쪽을 보는지 잘못 알고 출발합니다. 파란 유령은 자기 움직임만 따라가서 갈수록 멀어지고 초록 유령은 기둥으로 자기를 바로잡아 로봇 위에 놓입니다. 아래 그림은 기둥 하나와 넷을 견줍니다."
   },
   "toy": "ekf-consistency",
   "three": "ekf-circle-3d"

@@ -2,12 +2,12 @@
   "en": {
     "hook": "Final boss: the plan is perfect and I am still hugging the wall, because I believe I am somewhere I am not. Beat the drift.",
     "mission": "Victory lap: make the wheel errors smaller and see whether the rover without corrections still hits the wall. In `code/main.py` set `bad` to `scale_err=0.01, w_bias=0.01, sigma=0.02`, guess whether the run without the fix still hits the wall, then run `python3 code/main.py`.",
-    "clip": "Two rovers follow the same planned route past the first wall, and the pale blue ghost shows where the blue rover believes it is. Both read their wheels with the same error, but the blue rover trusts its drifting belief and drives into the first wall. The green rover corrects its position once a second from two landmark posts (out of frame) and steers through the gap in the wall. Drawn at 0.45 scale. The clip starts 7 s into the drive and plays at real speed."
+    "clip": "Two rovers follow the same planned route past the first wall, and the pale blue ghost shows where the blue rover believes it is. Both read their wheels with the same error, but the blue rover trusts its drifting belief and drives into the first wall. The green rover corrects its position once a second from two landmark posts (out of frame) and steers through the gap in the wall."
   },
   "ko": {
     "hook": "최종 보스예요. 계획은 완벽한데 저는 제가 있지도 않은 곳에 있다고 믿어서 벽을 껴안고 있어요. drift를 물리쳐요.",
     "mission": "마무리 과제입니다. 바퀴 오차를 줄여서 보정 없는 로버가 여전히 벽에 닿는지 보세요. `code/main.py`에서 `bad`를 `scale_err=0.01, w_bias=0.01, sigma=0.02`로 바꾸고 fix 없는 run이 여전히 벽에 닿을지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
-    "clip": "로버 두 대가 같은 계획 경로를 따라 첫 번째 벽 옆을 지나갑니다. 파란 반투명 로버는 파란 로버가 자기가 있다고 믿는 위치입니다. 둘 다 같은 크기의 바퀴 오차를 갖지만 파란 로버는 어긋난 믿음을 그대로 따라가다 첫 번째 벽에 부딪힙니다. 초록 로버는 화면 밖의 두 landmark 기둥으로 1초에 한 번 위치를 고쳐서 벽의 틈을 지나갑니다. 0.45배 크기로 그렸습니다. 클립은 주행 7초 뒤부터 실제 속도로 재생합니다."
+    "clip": "로버 두 대가 같은 계획 경로를 따라 첫 번째 벽 옆을 지나갑니다. 파란 반투명 로버는 파란 로버가 자기가 있다고 믿는 위치입니다. 둘 다 같은 크기의 바퀴 오차를 갖지만 파란 로버는 어긋난 믿음을 그대로 따라가다 첫 번째 벽에 부딪힙니다. 초록 로버는 화면 밖의 두 landmark 기둥으로 1초에 한 번 위치를 고쳐서 벽의 틈을 지나갑니다. 0.45배 크기로 그렸습니다."
   },
   "toy": null,
   "three": "navigation-floor-3d"

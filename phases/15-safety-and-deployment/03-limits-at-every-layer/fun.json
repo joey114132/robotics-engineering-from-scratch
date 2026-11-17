@@ -2,12 +2,12 @@
   "en": {
     "hook": "The planner says fast, the drive says slow, and nobody tells me. The tightest limit wins in silence.",
     "mission": "Change one layer's limit and see whether the mismatch warnings go away. In `MISMATCHED` in `code/main.py` change the controller `vel=3.0` to `1.5`, predict whether the mismatch count drops below 3 and who owns `vel`, then run `python3 code/main.py`.",
-    "clip": "Two bench joints get the same goal, 1.4 rad (the amber block), and the same settings. The grey ghost is where the planner thinks the joint is. Green has matching limits, so the joint trails the ghost closely (largest lag 0.12 rad). On blue the planner asks for 3.0 rad/s but the drive quietly allows 1.5, so the ghost runs ahead and the lag grows to 0.82 rad. Played at 0.4x speed. The green planner is slower on purpose, so compare the gap, not who arrives first."
+    "clip": "Two bench joints get the same goal, 1.4 rad (the amber block), and the same settings. The grey ghost is where the planner thinks the joint is. Green has matching limits, so the joint trails the ghost closely (largest lag 0.12 rad). On blue the planner asks for 3.0 rad/s but the drive quietly allows 1.5, so the ghost runs ahead and the lag grows to 0.82 rad. The green planner is slower on purpose, so compare the gap, not who arrives first."
   },
   "ko": {
     "hook": "planner는 빠르게 가라 하고 drive는 느리게 가라 하는데 아무도 저에게 알려 주지 않아요. 가장 빡빡한 한계가 조용히 이겨요.",
     "mission": "한 계층의 한계를 바꿔서 어긋남 경고가 사라지는지 보세요. `code/main.py`의 `MISMATCHED`에서 controller의 `vel=3.0`을 `1.5`로 바꾸고 mismatch가 3 아래로 내려갈지와 `vel`을 누가 쥘지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
-    "clip": "작업대 위 관절 두 개가 같은 목표 1.4 rad(주황색 블록)와 같은 설정을 받습니다. 회색 반투명 팔은 planner가 관절이 있다고 믿는 위치입니다. 초록은 한계가 맞아 있어서 관절이 반투명 팔을 바짝 따라갑니다(가장 큰 지연 0.12 rad). 파란 쪽은 planner가 3.0 rad/s를 요구하지만 drive가 조용히 1.5만 허용해서 반투명 팔이 앞서가고 지연이 0.82 rad까지 벌어집니다. 0.4배 속도로 재생했습니다. 초록 planner는 일부러 느리게 잡혀 있으니 누가 먼저 도착하는지가 아니라 둘 사이의 간격을 보세요."
+    "clip": "작업대 위 관절 두 개가 같은 목표 1.4 rad(주황색 블록)와 같은 설정을 받습니다. 회색 반투명 팔은 planner가 관절이 있다고 믿는 위치입니다. 초록은 한계가 맞아 있어서 관절이 반투명 팔을 바짝 따라갑니다(가장 큰 지연 0.12 rad). 파란 쪽은 planner가 3.0 rad/s를 요구하지만 drive가 조용히 1.5만 허용해서 반투명 팔이 앞서가고 지연이 0.82 rad까지 벌어집니다. 초록 planner는 일부러 느리게 잡혀 있으니 누가 먼저 도착하는지가 아니라 둘 사이의 간격을 보세요."
   },
   "toy": null,
   "three": "limit-stack-3d"

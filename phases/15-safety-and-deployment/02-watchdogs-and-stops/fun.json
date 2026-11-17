@@ -7,7 +7,7 @@
   "ko": {
     "hook": "늦게 짖는 watchdog은 시끄러운 목격자일 뿐이에요. timeout을 정하기 전에 멈추는 거리부터 계산하세요.",
     "mission": "팔이 빠르고 여유가 작을 때 watchdog이 아예 가능한지 확인하세요. 0.5 rad 여유로 4 rad/s에서 a=8일 때 timeout이 가능한지 예측한 뒤 `cd code && python3 -c 'from main import max_timeout; print(max_timeout(0.5, 4.0, 8.0))'`를 실행하세요. 에러도 정답입니다.",
-    "clip": "작업대 위 관절 두 개가 2 rad/s로 hard stop을 향해 돌다가 0.5초에 명령을 보내던 프로그램이 죽습니다. watchdog이 작동하면 램프가 켜집니다. 파란 관절은 미는 힘만 잃어서 그대로 stop에 부딪힙니다. 초록 관절은 8 rad/s^2로 브레이크를 걸어 stop 앞에서 멈춥니다. 4분의 1 속도로 재생했습니다."
+    "clip": "작업대 위 관절 두 개가 2 rad/s로 hard stop을 향해 돌다가 0.5초에 명령을 보내던 프로그램이 죽습니다. watchdog이 작동하면 램프가 켜집니다. 파란 관절은 미는 힘만 잃어서 그대로 stop에 부딪힙니다. 초록 관절은 8 rad/s^2로 브레이크를 걸어 stop 앞에서 멈춥니다."
   },
   "toy": "watchdog-budget",
   "three": "watchdog-stop-3d"

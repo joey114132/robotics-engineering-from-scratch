@@ -24,7 +24,7 @@ def test_clip_script_and_captions(clip):
     fun = json.loads((clip.parents[1] / "fun.json").read_text(encoding="utf-8"))
     for lang in ("en", "ko"):
         cap = fun[lang].get("clip", "")
-        assert 40 <= len(cap) <= 620, f"{lang} caption length {len(cap)}"   # two to four sentences, with the scale or speed when it was changed
+        assert 40 <= len(cap) <= 620, f"{lang} caption length {len(cap)}"   # two to four sentences on what to look at; no playback-speed or scale notes, only "exaggerated" when a quantity is drawn larger than it is
     assert re.search("[가-힣]", fun["ko"]["clip"]) and not re.search("[가-힣]", fun["en"]["clip"])
     assert "수업" not in fun["ko"]["clip"] and "—" not in fun["ko"]["clip"] and "·" not in fun["ko"]["clip"]
 

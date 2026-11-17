@@ -2,12 +2,12 @@
   "en": {
     "hook": "A stiff arm fights every touch. Make me a spring with a damper instead and my handshake turns polite.",
     "mission": "Make the damper stronger and see whether the joint still overshoots. In `code/main.py` change the `0.2` in `damping_for_zeta(100.0, 1.0, 0.2)` to `1.0`. Predict how `peak` compares with `steady`, then run `python3 code/main.py`.",
-    "clip": "Two arms have the same stiffness and get the same push (the red arrow). The amber ball marks where the arm should settle. The blue arm has a weak damper, overshoots the ball by more than half and wobbles. The green arm has a stronger damper and glides to the ball without overshoot. Slowed down, and the deflection is drawn 12 times larger."
+    "clip": "Two arms have the same stiffness and get the same push (the red arrow). The amber ball marks where the arm should settle. The blue arm has a weak damper, overshoots the ball by more than half and wobbles. The green arm has a stronger damper and glides to the ball without overshoot. Exaggerated so it is easy to see."
   },
   "ko": {
     "hook": "뻣뻣한 팔은 건드릴 때마다 싸워요. 저를 damper가 달린 스프링으로 만들어 주면 악수가 훨씬 예의 발라져요.",
     "mission": "damper를 세게 하면 관절이 여전히 지나치는지 봅니다. `code/main.py`에서 `damping_for_zeta(100.0, 1.0, 0.2)`의 `0.2`를 `1.0`으로 바꾸세요. `peak`가 `steady`와 어떻게 다를지 예측한 다음 `python3 code/main.py`를 실행하세요.",
-    "clip": "두 팔은 stiffness가 같고 같은 힘(빨간 화살표)으로 눌립니다. 호박색 공은 팔이 자리 잡을 곳입니다. 파란 팔은 damper가 약해서 공을 절반 넘게 지나쳤다가 출렁입니다. 초록 팔은 damper가 더 세서 overshoot 없이 공에 미끄러지듯 닿습니다. 느리게 재생했고 처짐은 12배로 크게 그렸습니다."
+    "clip": "두 팔은 stiffness가 같고 같은 힘(빨간 화살표)으로 눌립니다. 호박색 공은 팔이 자리 잡을 곳입니다. 파란 팔은 damper가 약해서 공을 절반 넘게 지나쳤다가 출렁입니다. 초록 팔은 damper가 더 세서 overshoot 없이 공에 미끄러지듯 닿습니다. 잘 보이도록 과장해서 그렸습니다."
   },
   "toy": null,
   "three": "impedance-spring-joint-3d"

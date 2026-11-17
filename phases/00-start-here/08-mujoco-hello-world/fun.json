@@ -2,12 +2,12 @@
   "en": {
     "hook": "A pendulum that gains energy on its own sounds like a free lunch. It is just two lines in the wrong order.",
     "mission": "Compare the two ways of stepping and see which one ends with more energy. Run `cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`. Predict which scheme ends with more energy before you look.",
-    "clip": "Two identical pendulums start from rest at the same height, marked by the amber line. The green one is stepped the right way and never rises above the line. The blue one is stepped the wrong way and climbs higher with every swing. The steps are the biggest the lesson tries (0.04 s), played at about real time."
+    "clip": "Two identical pendulums start from rest at the same height, marked by the amber line. The green one is stepped the right way and never rises above the line. The blue one is stepped the wrong way and climbs higher with every swing. The steps are the biggest the lesson tries (0.04 s)."
   },
   "ko": {
     "hook": "혼자 에너지가 불어나는 진자는 공짜 점심 같아요. 알고 보면 코드 두 줄의 순서가 틀렸을 뿐이에요.",
     "mission": "두 가지 스텝 방식 중 어느 쪽이 에너지가 더 많이 남는지 비교합니다. `cd code && python3 -c \"from main import *; print([energy(simulate(0.05,0.001,20.0,scheme=s),0.001)[-2] for s in ('semi','euler')])\"`를 실행하기 전에 어느 scheme이 에너지가 더 많이 남을지 예측해 보세요.",
-    "clip": "똑같은 진자 두 개가 같은 높이에서 가만히 출발하고, 주황색 선이 그 높이입니다. 초록 진자는 맞는 방식으로 계산해서 선 위로 올라가지 않습니다. 파란 진자는 틀린 방식으로 계산해서 한 번 흔들릴 때마다 더 높이 올라갑니다. 스텝 크기는 이 레슨이 시험하는 가장 큰 값(0.04초)이고 거의 실제 속도로 재생합니다."
+    "clip": "똑같은 진자 두 개가 같은 높이에서 가만히 출발하고, 주황색 선이 그 높이입니다. 초록 진자는 맞는 방식으로 계산해서 선 위로 올라가지 않습니다. 파란 진자는 틀린 방식으로 계산해서 한 번 흔들릴 때마다 더 높이 올라갑니다. 스텝 크기는 이 레슨이 시험하는 가장 큰 값(0.04초)입니다."
   },
   "toy": null,
   "three": "pendulum-timestep-3d"

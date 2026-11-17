@@ -7,7 +7,7 @@
   "ko": {
     "hook": "저는 thread가 하나라서 느린 callback 하나는 줄이 긴 커피 머신이고 제 timer는 그 줄에 갇혀 기다려요.",
     "mission": "느린 작업을 줄이면 timer가 얼마나 덜 기다리는지 확인합니다. `code/main.py`에서 느린 callback의 `60`을 `30`으로 바꾸세요. thread 1개일 때 timer의 최악 대기 시간을 예측한 다음 `python3 code/main.py`를 실행하세요.",
-    "clip": "각 자동차는 timer가 10 ms마다 계속 울리는 동안에만 달리고 마지막 울림이 25 ms보다 오래되면 watchdog이 차를 세웁니다. thread 하나(파랑)에서는 60 ms짜리 느린 callback이 timer를 최대 59 ms 막아서 차가 계속 멈추고 1.5 m를 갑니다. callback group이 나뉜 thread 둘(초록)에서는 timer가 기다리지 않고 차가 2.6 m를 갑니다. 25 ms 한도와 차의 속도는 우리가 정한 값이고 처음 1초는 다섯 배 느리게 재생합니다."
+    "clip": "각 자동차는 timer가 10 ms마다 계속 울리는 동안에만 달리고 마지막 울림이 25 ms보다 오래되면 watchdog이 차를 세웁니다. thread 하나(파랑)에서는 60 ms짜리 느린 callback이 timer를 최대 59 ms 막아서 차가 계속 멈추고 1.5 m를 갑니다. callback group이 나뉜 thread 둘(초록)에서는 timer가 기다리지 않고 차가 2.6 m를 갑니다. 25 ms 한도와 차의 속도는 우리가 정한 값입니다."
   },
   "toy": null,
   "three": "executor-lanes-3d"

@@ -2,12 +2,12 @@
   "en": {
     "hook": "A pixel is not a spot but a whole ray. Tell me how far along it the cup is, or I will happily grab the wall behind it.",
     "mission": "Remove the pixel error and see which mistake matters more, the pixel one or the depth one. In `code/main.py` set `du=0.0` and run `python3 code/main.py`. Predict first whether the 4 m error drops a lot or barely at all, then name the bigger villain, depth error or pixel error.",
-    "clip": "A camera sees the rim of a cup at one pixel, and that pixel is a whole ray. Reading the depth of the wall 0.15 m behind the cup slides the estimated point (blue) along the ray, so the arm reaches for the wall beside the cup. True scale."
+    "clip": "A camera sees the rim of a cup at one pixel, and that pixel is a whole ray. Reading the depth of the wall 0.15 m behind the cup slides the estimated point (blue) along the ray, so the arm reaches for the wall beside the cup."
   },
   "ko": {
     "hook": "pixel은 한 점이 아니라 ray 전체예요. 컵이 그 위 어디쯤인지 알려 주지 않으면 저는 신나게 컵 뒤의 벽을 집을 겁니다.",
     "mission": "pixel 오차를 없애고 pixel 오차와 depth 오차 중 어느 쪽이 더 큰 문제인지 확인합니다. `code/main.py`에서 `du=0.5`를 `du=0.0`으로 바꾸고 `python3 code/main.py`를 실행하세요. 먼저 4 m 오차가 크게 줄지 거의 안 줄지 예측한 다음 더 큰 악당이 depth 오차인지 pixel 오차인지 말해 보세요.",
-    "clip": "카메라가 컵 가장자리를 pixel 하나로 보고 그 pixel은 ray 전체입니다. 컵 뒤 0.15 m에 있는 벽의 depth를 읽으면 추정한 점(파랑)이 ray를 따라 밀려서 팔이 컵 옆의 벽을 향해 뻗습니다. 실제 크기 그대로입니다."
+    "clip": "카메라가 컵 가장자리를 pixel 하나로 보고 그 pixel은 ray 전체입니다. 컵 뒤 0.15 m에 있는 벽의 depth를 읽으면 추정한 점(파랑)이 ray를 따라 밀려서 팔이 컵 옆의 벽을 향해 뻗습니다."
   },
   "toy": "pinhole-depth",
   "three": "pinhole-ray-3d"

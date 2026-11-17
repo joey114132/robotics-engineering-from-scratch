@@ -2,12 +2,12 @@
   "en": {
     "hook": "My bouncing ball got taller when I changed the time step. The physics did not change. My update rule made up bounce out of nothing.",
     "mission": "Use a much smaller time step and see how high the speed-first update bounces. In `code/main.py` replace `1.9e-2` with `5e-3`, guess the semi-implicit rebound height at that step, then run `python3 code/main.py` and compare it with the euler column.",
-    "clip": "Two crates drop 0.1 m onto a stiff pad and bounce, both with a 3 ms time step. The blue crate uses the old-speed update and bounces to 0.27 m, far above the amber ticks that mark the drop height. The green crate uses the speed-first update and comes back to about 0.1 m, level with the ticks. Drawn 2.2 times larger and slowed 10 times."
+    "clip": "Two crates drop 0.1 m onto a stiff pad and bounce, both with a 3 ms time step. The blue crate uses the old-speed update and bounces to 0.27 m, far above the amber ticks that mark the drop height. The green crate uses the speed-first update and comes back to about 0.1 m, level with the ticks."
   },
   "ko": {
     "hook": "time step을 바꿨더니 제 공이 더 높이 튀어요. 물리가 한 일이 아니에요. 제 갱신 규칙이 없던 튐을 만들어 냈어요.",
     "mission": "훨씬 작은 time step을 쓰고 속도 먼저 갱신하는 방식이 얼마나 높이 튀는지 보세요. `code/main.py`에서 `1.9e-2`를 `5e-3`으로 바꾸고 그 step에서 semi-implicit의 반발 높이를 짐작한 뒤 `python3 code/main.py`를 실행해 euler 열과 비교하세요.",
-    "clip": "상자 두 개를 0.1 m 높이에서 단단한 패드에 떨어뜨립니다. time step은 둘 다 3 ms입니다. 파란 상자는 옛 속도 갱신이라서 0.27 m까지 튀어 올라 주황색 눈금이 표시한 낙하 높이보다 훨씬 높이 갑니다. 초록 상자는 속도 먼저 갱신하는 방식이라서 약 0.1 m, 곧 눈금 높이로 돌아옵니다. 2.2배 크게 그렸고 10배 느리게 재생했습니다."
+    "clip": "상자 두 개를 0.1 m 높이에서 단단한 패드에 떨어뜨립니다. time step은 둘 다 3 ms입니다. 파란 상자는 옛 속도 갱신이라서 0.27 m까지 튀어 올라 주황색 눈금이 표시한 낙하 높이보다 훨씬 높이 갑니다. 초록 상자는 속도 먼저 갱신하는 방식이라서 약 0.1 m, 곧 눈금 높이로 돌아옵니다."
   },
   "toy": "dt-blowup",
   "three": "timestep-pendulums-3d"

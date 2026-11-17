@@ -2,12 +2,12 @@
   "en": {
     "hook": "I drove a perfect square and still ended up 18 cm from home. Two numbers I typed in a hurry did it.",
     "mission": "Make the wheel gap a little more wrong and see how much farther from home the robot ends. In `code/main.py` change `B * 1.01` to `B * 1.02` (`B` is the gap between the wheels, the track width) and run `python3 code/main.py`. Guess the gap between the end and the start for that row (the closure error, 0.089 m now) before looking, then check.",
-    "clip": "Two rovers drive the same 2 m square. The green disc shows where the robot believes it is, and it always closes the square. The blue rover's wheels are really 5% farther apart than the settings say, so every turn falls short and it stops about 0.44 m from the start. Time is sped up, and the error is made bigger than in the lesson so the gap is easy to see."
+    "clip": "Two rovers drive the same 2 m square. The green disc shows where the robot believes it is, and it always closes the square. The blue rover's wheels are really 5% farther apart than the settings say, so every turn falls short and it stops about 0.44 m from the start. The error is made bigger than in the lesson so the gap is easy to see."
   },
   "ko": {
     "hook": "사각형을 완벽하게 달렸는데 출발점에서 18 cm 떨어져 돌아왔어요. 서두르다 잘못 적은 숫자 두 개 때문이에요.",
     "mission": "바퀴 간격을 조금 더 틀리게 해서 집에서 얼마나 더 멀어지는지 보세요. `code/main.py`에서 `B * 1.01`을 `B * 1.02`로(`B`는 바퀴 사이의 간격인 track width) 바꾸고 `python3 code/main.py`를 실행하세요. 그 줄의 끝과 시작 사이의 틈(closure error, 지금 0.089 m)이 얼마가 될지 보기 전에 맞혀 보세요.",
-    "clip": "두 로버가 한 변이 2 m인 같은 사각형을 돕니다. 초록 원판은 로봇이 믿는 위치이고 항상 사각형을 닫습니다. 파란 로버는 바퀴 간격이 설정보다 실제로 5% 더 넓어서 모든 회전이 모자라고 출발점에서 약 0.44 m 떨어져 멈춥니다. 재생 속도를 높였고 틈이 잘 보이도록 레슨보다 오차를 크게 잡았습니다."
+    "clip": "두 로버가 한 변이 2 m인 같은 사각형을 돕니다. 초록 원판은 로봇이 믿는 위치이고 항상 사각형을 닫습니다. 파란 로버는 바퀴 간격이 설정보다 실제로 5% 더 넓어서 모든 회전이 모자라고 출발점에서 약 0.44 m 떨어져 멈춥니다. 틈이 잘 보이도록 레슨보다 오차를 크게 잡았습니다."
   },
   "toy": "diff-drive",
   "three": "odometry-drift-3d"

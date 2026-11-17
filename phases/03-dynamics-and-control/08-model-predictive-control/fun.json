@@ -2,12 +2,12 @@
   "en": {
     "hook": "I plan twenty steps ahead and then use exactly one. A clipped command brakes late. I saw the stop line coming.",
     "mission": "Plan more steps ahead and see which run overshoots most. In `code/main.py` run `simulate` with `N` (how many steps ahead) = 2, 5 and 20 and `umax` (the biggest allowed push) = 0.5, starting at `[4.0, 0.0]`. Print the lowest position of each run (below 0 means it passed the stop line) and see which one overshoots most.",
-    "clip": "Two cars start 4 m from the stop line and the push is limited. The blue car never knew about the limit, brakes too late and overshoots by 1.28 m. The green car plans two seconds ahead (the green beads) and overshoots by only 0.31 m. Double speed, with the cars drawn larger than life."
+    "clip": "Two cars start 4 m from the stop line and the push is limited. The blue car never knew about the limit, brakes too late and overshoots by 1.28 m. The green car plans two seconds ahead (the green beads) and overshoots by only 0.31 m."
   },
   "ko": {
     "hook": "저는 스무 걸음 앞을 계획하고 딱 한 걸음만 써요. 잘려 나간 명령은 늦게 브레이크를 밟지만 저는 정지선이 오는 걸 봤어요.",
     "mission": "계획을 더 멀리 세우면 어느 실행이 가장 많이 지나치는지 봅니다. `code/main.py`에서 `[4.0, 0.0]`에서 출발해 `umax`(허용된 가장 큰 힘) 0.5로 `N`(몇 걸음 앞까지 보는지)을 2, 5, 20으로 `simulate`를 돌리세요. 각 실행의 최저 위치를 출력해(0보다 아래면 정지선을 넘은 것입니다) 어느 쪽이 가장 많이 넘치는지 보세요.",
-    "clip": "두 차가 정지선에서 4 m 떨어진 곳에서 출발하고 미는 힘은 제한됩니다. 파란 차는 한계를 몰라서 브레이크를 너무 늦게 밟고 1.28 m를 넘어갑니다. 초록 차는 2초 앞까지 계획하고(초록 구슬) 0.31 m만 넘어갑니다. 2배속으로 재생했고 자동차는 실제보다 크게 그렸습니다."
+    "clip": "두 차가 정지선에서 4 m 떨어진 곳에서 출발하고 미는 힘은 제한됩니다. 파란 차는 한계를 몰라서 브레이크를 너무 늦게 밟고 1.28 m를 넘어갑니다. 초록 차는 2초 앞까지 계획하고(초록 구슬) 0.31 m만 넘어갑니다."
   },
   "toy": "mpc-horizon",
   "three": "mpc-horizon-car-3d"
