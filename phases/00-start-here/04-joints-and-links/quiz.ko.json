@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "로봇 팔에서 link는 무엇입니까?", "options": ["돌아가는 경첩", "관절 두 개 사이의 단단한 막대", "팔의 끝"], "answer": 1, "explanation": "link는 휘지 않는 막대입니다. 돌아가는 경첩은 joint입니다."},
+  {"id": 2, "stage": "check", "question": "길이 0.4인 link가 똑바로 위를 향합니다. 끝은 옆으로 얼마나 갔습니까?", "options": ["0.4", "0", "0.2"], "answer": 1, "explanation": "똑바로 위면 옆으로는 가지 않습니다. 0.4 전부가 위쪽입니다."},
+  {"id": 3, "stage": "check", "question": "두 번째 joint의 각도는 무엇을 기준으로 잽니까?", "options": ["바닥", "첫 번째 link", "손"], "answer": 1, "explanation": "각 joint의 각도는 바로 앞 link를 기준으로 잽니다."},
+  {"id": 4, "stage": "check", "question": "joint가 돌면 link의 길이는 어떻게 됩니까?", "options": ["그대로입니다", "길어집니다", "짧아집니다"], "answer": 0, "explanation": "link는 단단해서 방향만 바뀝니다."},
+  {"id": 5, "stage": "post", "question": "길이 0.4와 0.3인 link 두 개가 모두 곧게 펴져 있습니다. 손은 어깨에서 얼마나 떨어져 있습니까?", "options": ["0.1", "0.5", "0.7"], "answer": 2, "explanation": "곧게 편 link는 길이가 더해집니다. 0.4 + 0.3입니다."},
+  {"id": 6, "stage": "post", "question": "각도를 '옆으로'와 '위로'로 바꿔 주는 한 쌍은 무엇입니까?", "options": ["cos와 sin", "더하기와 빼기", "min과 max"], "answer": 0, "explanation": "cos가 옆으로 간 거리를, sin이 위로 간 거리를 줍니다."}
+]

@@ -21,35 +21,39 @@ If acceleration jumps from zero to a large value at once, the push jumps too and
 
 ## The Problem
 
-Picture a robot arm on a smooth-looking curve that still knocks at the start. Position and speed are fine; acceleration jumps from zero to a large value in one control tick.
+Picture a robot arm moving between two poses along a smooth-looking curve. It reaches the target at rest, yet it knocks at the start of the move.
 
 ## The Concept
 
-A real arm is worn and shaken by sudden torque, so plans should change acceleration gradually.
+A real arm is worn and shaken by sudden pushes from its motors, so a plan should build the push up gradually.
+
+Three plans for the same move differ only at the ends. The trapezoid and the cubic make the push jump from nothing to a lot at once. The quintic eases in and eases out.
 
 ![Profiles](../assets/diagram-profile-choice.png)
 
-*Same move, three profiles. Red marks bad acceleration.*
-
-Each condition fixes one number of a polynomial, a sum of powers of time. Position and speed at both ends give four conditions, so a cubic (highest power 3). Acceleration at both ends makes six, so a quintic (power 5). A trapezoid speeds up, cruises, then slows down. With `s = t/T` and `d = qf - q0`, the quintic is `q0 + d(10 s^3 - 15 s^4 + 6 s^5)`.
+*Same move, three plans.*
 
 ![Profiles](../assets/fig-profiles.png)
 
-*Acceleration (right): only the quintic starts and ends at zero.*
+*Only the quintic starts and ends with zero push.*
 
 ![Jerk chain](../assets/diagram-jerk-chain.png)
 
-*The motor sees a jerk spike as a step in torque.*
+*A jump in push reaches the motor as a hard knock.*
 
 ![Jerk](../assets/fig-jerk-vs-dt.png)
 
-*Halving the sample period doubles cubic and trapezoid jerk. The quintic stays at `60 d / T^3`.*
-
-Take a 1 rad move in 2 s, sampled every 0.002 s. The trapezoid accelerates at 1.33 rad/s² for 0.5 s, so acceleration steps four times, each a jerk of `1.33 / 0.002 = 667`. The quintic peaks at 7.5.
+*Faster sampling makes the jumpy plans look worse.*
 
 ![Two arms](../assets/clip-example.mp4)
 
-*Red arrow: acceleration. Blue (trapezoid) jumps on, off, backward, off. Green (quintic) changes smoothly.*
+*Blue jumps on and off. Green eases in.*
+
+<details><summary>The math (optional)</summary>
+
+Each condition fixes one number of a polynomial. Position and speed at both ends give four conditions, a cubic; adding acceleration at both ends gives six, a quintic. With `s = t/T` and `d = qf - q0`, the quintic is `q0 + d(10 s^3 - 15 s^4 + 6 s^5)`. Jerk is how fast acceleration changes. Halving the sample period doubles cubic and trapezoid jerk; the quintic stays at `60 d / T^3`. For a 1 rad move in 2 s sampled every 0.002 s, the trapezoid accelerates at 1.33 rad/s² for 0.5 s, so acceleration steps four times, each a jerk of 667. The quintic peaks at 7.5. Doubling the move time cuts the quintic's peak acceleration to a quarter.
+
+</details>
 
 ## Build It
 
@@ -59,7 +63,7 @@ def quintic(q0, qf, T):
     return np.array([q0, 0.0, 0.0, 10*d/T**3, -15*d/T**4, 6*d/T**5])
 ```
 
-`poly` evaluates position, velocity and acceleration; `trapezoid` accelerates for `ta`, cruises, then decelerates; `peak_jerk` assumes the joint rests before and after.
+`poly` evaluates position, velocity and acceleration. `trapezoid` speeds up, cruises, then slows. `peak_jerk` assumes the joint rests before and after.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +73,7 @@ python3 phases/09-motion-planning/01-trajectory-profiles/code/main.py
 
 ## Use It
 
-SciPy's `BPoly.from_derivatives` builds the same quintic; the last test compares them.
+SciPy's `BPoly.from_derivatives` builds the same quintic, and the last test compares them.
 
 Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 7.
 
@@ -79,6 +83,6 @@ Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 7.
 
 ## Exercises
 
-1. Add a seventh condition, zero jerk at both ends; find the degree.
-2. For a trapezoid, find the smallest `ta` that keeps peak acceleration under a limit.
-3. Time-scale a quintic to `2T`; show peak acceleration drops by four.
+1. Make the move take twice as long and see how the peak push changes.
+2. Shorten the sample period and watch the jumpy plans get worse.
+3. Draw a plan that also starts with zero jerk and see how it looks.

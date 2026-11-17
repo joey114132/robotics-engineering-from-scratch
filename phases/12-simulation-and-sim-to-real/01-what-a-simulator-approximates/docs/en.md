@@ -12,12 +12,12 @@ The motor is also slow to push and the sensor is late. This lesson removes one e
 
 ## Key Terms
 
-- **Plant**: the thing being controlled. Here it is one pendulum joint.
-- **Torque**: the twisting push a motor applies to a joint.
-- **Friction**: a rubbing force that drains motion energy.
+- **Plant**: the thing being controlled. Here it is one swinging arm joint.
+- **Torque**: the twisting push a motor gives a joint.
+- **Friction**: rubbing that slowly drains movement.
 - **Motor lag**: the delay before the motor's push catches up with the command.
-- **Open-loop**: sending commands without sensor feedback to correct them.
-- **RMS error**: a typical size of the gap between two signals.
+- **Open-loop**: sending commands without checking sensors to correct them.
+- **RMS error**: one number for how far apart two curves are, on average.
 
 ## The Problem
 
@@ -25,31 +25,35 @@ You test an arm in simulation and it looks perfect. On the real robot the same c
 
 ## The Concept
 
-A simulator is where you test robot code safely, so you need to know how far to trust it.
+A simulator is where you test robot code safely, so you need to know how far to trust it. We give a real arm and a simulated copy the same commands, then delete one real effect at a time from the copy and see how far it drifts.
 
 ![Real vs sim](../assets/diagram-real-vs-sim.png)
 
-*The real command passes through motor lag, a joint with friction and a delayed sensor. The simple sim skips all three.*
-
-Inertia `J` is how hard the arm is to speed up, damping `b` is drag that grows with speed, Coulomb friction `c` is a constant rub, `k = m*g*l` is gravity's pull, `Tm` is motor lag.
+*The real command goes through a slow motor, a rubbing joint and a late sensor. The simple simulator skips all three.*
 
 ![Replay](../assets/diagram-replay-rank.png)
 
-*Open-loop commands cannot correct themselves, so every difference shows up as divergence.*
+*Both get the same commands with no feedback, so any difference keeps growing.*
 
 ![Divergence](../assets/fig-divergence.png)
 
-*RMS error is 0.545 rad without friction, 0.042 without lag, 0.029 without delay.*
+*The copy without friction drifts far from the real arm. Missing lag or delay barely matters.*
 
-One radian (rad) is about 57 degrees. On the clip's 0.4 m arm, 0.545 rad is a fingertip 22 cm off. Lag and delay cost 1 to 2 cm. Friction costs 13 times more than lag, so model it first.
+Friction matters far more than the delays, so model it first.
 
 ![Three arms](../assets/clip-example.mp4)
 
-*Blue is the real arm. Ghosts miss friction, motor lag, sensor delay, left to right.*
+*Blue is the real arm. Each ghost misses one effect: friction, motor lag, sensor delay. Only the left one drifts.*
+
+<details><summary>The math (optional)</summary>
+
+The model is `J*w' = tm - b*w - c*tanh(w/eps) - k*sin(q)` and `Tm*tm' = u - tm`, stepped with RK4. `J` is how hard the arm is to speed up, `b` a drag that grows with speed, `c` a constant rub, `k = m*g*l` gravity's pull and `Tm` the motor lag. RMS error is 0.545 rad without friction, 0.042 rad without lag and 0.029 rad without delay (1 rad is about 57 degrees). On a 0.4 m arm 0.545 rad is a fingertip 22 cm off, while lag and delay cost 1 to 2 cm, so friction costs 13 times more than lag. A joint with no friction and no lag keeps its energy to 1e-6.
+
+</details>
 
 ## Build It
 
-`q` is the angle, `w` its speed, `u` the command, `tm` the motor torque. Integrate `J*w' = tm - b*w - c*tanh(w/eps) - k*sin(q)` and `Tm*tm' = u - tm` with RK4 (a standard step method). The measured angle is the true angle shifted by `delay`.
+The model is a swinging arm with friction, a slow motor and a late sensor.
 
 ```python
 def measured(p, u_fn, T):
@@ -57,7 +61,7 @@ def measured(p, u_fn, T):
     return np.concatenate([np.full(n, q[0]), q[: len(q) - n]]) if n else q
 ```
 
-`effect_costs()` removes one effect at a time and returns the RMS error. A frictionless, lag-free joint conserves energy to 1e-6, so the integrator is not the cause.
+`effect_costs()` removes one effect at a time and returns the error.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -67,7 +71,7 @@ python3 phases/12-simulation-and-sim-to-real/01-what-a-simulator-approximates/co
 
 ## Use It
 
-MuJoCo switches these on one at a time: `frictionloss`, actuator `dyntype="filter"` and actuator `delay` with `nsample`.
+MuJoCo can switch these effects on one at a time: dry friction, a slow actuator and a delayed command.
 
 Sources: MuJoCo XML reference, `joint/frictionloss`, `actuator/dyntype`, `actuator/delay` (https://mujoco.readthedocs.io/en/stable/XMLreference.html, opened 2026-11-09).
 
@@ -77,6 +81,6 @@ Sources: MuJoCo XML reference, `joint/frictionloss`, `actuator/dyntype`, `actuat
 
 ## Exercises
 
-1. Halve `c`. Is friction still the biggest cost?
-2. Make the command ten times faster. Does delay overtake friction?
-3. Why is "all three" not the sum of the single costs?
+1. Halve the friction. Is it still the biggest cost?
+2. Make the commands ten times faster. Does delay matter more now?
+3. Remove all three effects at once. Is the cost the sum of the single costs?

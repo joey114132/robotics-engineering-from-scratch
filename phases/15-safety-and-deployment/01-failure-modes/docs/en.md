@@ -13,45 +13,49 @@ This lesson injects five faults and measures the damage and how early a cheap ch
 ## Key Terms
 
 - **Fault injection**: deliberately breaking a sensor, command or timing to see what happens.
-- **PD controller**: pulls the joint toward its target like a spring and brakes it by its speed.
+- **PD controller**: pulls a joint toward its target like a spring and brakes it by its speed.
 - **Hard stop**: a block that ends the joint's travel.
-- **Torque**: the twisting push a motor applies to a joint.
+- **Torque**: the twisting push a motor gives a joint.
 - **Saturation**: a command capped at the motor's maximum, so the push stays small.
 - **Monitor**: a cheap check on signals the controller can see that raises an alarm.
 
 ## The Problem
 
-A robot arm that worked well all week suddenly slams into its hard stop, and the log shows no error. We break a small controller five ways to see how that can happen.
+A robot arm that worked well all week suddenly slams into its hard stop, and the log shows no error.
 
 ## The Concept
 
-A robot arm can hurt people and itself, so learn how it fails before you decide what to guard.
+A robot arm can hurt people and itself, so learn how it fails before you decide what to guard. We break a simple controller five ways: a wrong sign, a frozen sensor, a brief dropout, a delay and a weak motor. For each one we watch how badly the arm ends up and how early a cheap check could have warned.
 
 ![Fault points](../assets/diagram-fault-points.png)
 
-*Outgoing: wrong sign flips the push, saturation caps it. Returning: stuck freezes the reading, dropout zeroes it, delay makes it old.*
-
-A wrong sign turns the spring into a repeller. The joint runs away from the target and hits the stop at 0.460 s. A check on the controller's own signals, "error grew in the last 100 ms", trips at 0.205 s, 0.255 s of warning.
+*Faults can hit the push going out or the reading coming back.*
 
 ![Wrong sign](../assets/clip-example.mp4)
 
-*Amber ghost: the target. Green settles. Blue runs away, and the lamp lights at 0.205 s.*
+*Blue runs the wrong way and the warning lamp lights before it hits the stop. Green settles on the target.*
 
 ![Fault responses](../assets/fig-fault-responses.png)
 
-*Dashed gray is the healthy run, the blue line the first alarm. Wrong sign and stuck end at the stop; dropout recovers, delay wobbles.*
+*Wrong sign and a frozen sensor end at the stop. A dropout recovers, a delay wobbles.*
 
 ![Damage and warning](../assets/fig-fault-ranking.png)
 
-*Left: error left at the end. Right: the alarm beats the limit for every fault that reaches it, except saturation.*
+*Left: how far off each fault leaves the arm. Right: the alarm usually comes before the arm hits its stop.*
 
 ![Checks](../assets/diagram-fault-checks.png)
 
-*Four checks flag all five faults: flat reading while the motor pushes, jumping reading, error growing for 100 ms, not at target after 2 s.*
+*Four cheap checks together flag all five faults.*
+
+<details><summary>The math (optional)</summary>
+
+A wrong sign turns the spring into a repeller: the joint hits the stop at 0.460 s, and the check "error grew in the last 100 ms" trips at 0.205 s, which is 0.255 s of warning. The four checks are: reading flat while the motor pushes, reading jumps, error grows for 100 ms, not at target after 2 s. Saturation trips only the last, a 2 s deadline. The joint is `J qdd = tau - b qd` with a hard stop at 2 rad (about 115 degrees).
+
+</details>
 
 ## Build It
 
-`simulate(fault)` runs a 1-DOF joint (`J qdd = tau - b qd`) with a hard stop at 2 rad (about 115 degrees). Each fault is a few lines inside the loop, for example:
+`simulate(fault)` runs one joint with a hard stop. Each fault is a few lines inside the loop, for example:
 
 ```python
 if fault == "stuck" and on:
@@ -62,7 +66,7 @@ if fault == "wrong_sign":
     tau = -tau
 ```
 
-`metrics()` measures the true joint. `alarm_time()` uses only what the controller can see. `ranked()` sorts by reached-limit, then final error, then speed.
+`metrics()` measures the true joint. `alarm_time()` uses only what the controller can see. `ranked()` sorts the faults worst first.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -91,5 +95,5 @@ The same injection works in a MuJoCo joint or a ROS 2 node.
 ## Exercises
 
 1. Inject the stuck sensor after the joint settles. What happens?
-2. Find the delay where the loop first oscillates.
+2. Find the delay where the loop first starts to wobble.
 3. Add an encoder that reads twice the true angle and rank it.

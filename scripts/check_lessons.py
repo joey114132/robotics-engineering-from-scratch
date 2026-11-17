@@ -11,7 +11,9 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = ["docs/en.md", "docs/ko.md", "code/main.py", "quiz.json", "quiz.ko.json"]
 EN_SECTIONS = SECTIONS["en"]
 KO_SECTIONS = SECTIONS["ko"]
-MAX_WORDS = 440   # outside code and outside Key Terms (that list has its own caps)
+MAX_WORDS = 380   # main reading path: outside code, Key Terms and the optional math fold
+MATH_WORDS = 160  # the optional fold <details><summary>The math (optional)</summary>...</details>, all folds together
+MATH_FOLD = re.compile(r"<details>\s*<summary>[^<]*</summary>(.*?)</details>", re.S)
 PLAIN_WORDS = 70
 TERMS_MIN, TERMS_MAX, TERM_DEF_WORDS = 3, 6, 25
 PLAIN_KO_CHARS = 600
@@ -123,13 +125,18 @@ def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[st
         elif not target.exists():
             errs.append(f"{lang}: image not found: {p}")
     if lang == "en":
-        w = prose_words(t) - sum(len(f"- **{k}**: {v}".split()) for k, v in key_terms(t, "en"))
+        folds = [prose_words(b) for b in MATH_FOLD.findall(t)]
+        if sum(folds) > MATH_WORDS:
+            errs.append(f"en: {sum(folds)} words in optional math folds, limit {MATH_WORDS}")
+        w = prose_words(MATH_FOLD.sub("", t)) - sum(len(f"- **{k}**: {v}".split()) for k, v in key_terms(t, "en"))
         if w > MAX_WORDS:
             errs.append(f"en: {w} prose words, limit {MAX_WORDS}")
     else:
         en = (d / "docs" / "en.md").read_text() if (d / "docs" / "en.md").exists() else ""
         if len(headings(t, 2)) != len(headings(en, 2)):
             errs.append(f"{lang}: heading count differs from en")
+        if len(MATH_FOLD.findall(en)) != len(MATH_FOLD.findall(t)):
+            errs.append(f"{lang}: optional math folds differ from en")
         if IMG.findall(en) != imgs:
             errs.append(f"{lang}: images differ from en")
         if [g for g, _ in fences(en)] != [g for g, _ in blocks]:

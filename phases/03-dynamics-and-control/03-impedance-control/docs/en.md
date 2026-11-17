@@ -21,35 +21,39 @@ A stiffer spring balances the same push with less movement. The damper does not 
 
 ## The Problem
 
-A stiff robot arm fights every touch with full force. A robot handing over a cup needs a chosen stiffness and damping, so a push causes a bounded deflection instead of a fight.
+A stiff robot arm fights every touch with full force. A robot handing you a cup should give a little when you take it, so a push moves the arm a small, known amount.
 
 ## The Concept
 
-A robot near people must give way when touched, so we choose how hard each joint pushes back.
+A robot near people must give way when touched, so we choose how hard each joint pushes back. The joint acts like a spring with a shock absorber: the farther you push, the harder it pushes back, and the absorber decides whether it rings or settles smoothly.
 
 ![Spring, damper, gravity](../assets/diagram-impedance-structure.png)
 
-*Blue: the controller. Yellow: the outside push `F`.*
+*The controller adds a spring and a damper; yellow is the outside push.*
 
-The law is `tau = K (q_des - q) - D qd + tau_g` (`qd` speed, `tau_g` cancels gravity). A constant push `F` settles the joint at `F / K`.
-
-The damping ratio `zeta = D / (2 sqrt(K J))` (`J` is inertia) sets how it settles: no overshoot at `zeta = 1`; below 1 it rings, with overshoot fraction `exp(-pi zeta / sqrt(1 - zeta^2))`, about 0.53 at `zeta = 0.2`.
+A stiffer spring moves less for the same push. The absorber changes how the arm gets there, not where it stops.
 
 ![Step response](../assets/fig-impedance-response.png)
 
-*Left: all three `zeta` end at `F / K`; only overshoot differs. Right: doubling `K` halves the deflection.*
-
-Example: `F = 2` Nm and `J = 1`. `K = 100` settles at `2 / 100 = 0.02` rad, and `K = 200` at 0.01 rad. Both use `zeta = 1` (`D` = 20, 28.3).
+*Three absorber strengths end at the same place.*
 
 ![Same push, two stiffnesses](../assets/clip-example.mp4)
 
-*Amber balls: resting points. Blue (`K = 100`) is pushed twice as far as green (`K = 200`). Drawn 15 times larger.*
+*Same push: the stiff arm moves half as far.*
 
 ![Choosing K and D](../assets/diagram-impedance-recipe.png)
 
-*Choose `K`, then `D`, then check lesson 03/01's limit.*
+*Pick stiffness, then damping, then check the step limit.*
+
+<details><summary>The math (optional)</summary>
+
+`tau = K (q_des - q) - D qd + tau_g`. A constant push `F` settles the joint at `F / K`. The damping ratio is `zeta = D / (2 sqrt(K J))`: no overshoot at 1, ringing below 1, overshoot `exp(-pi zeta / sqrt(1 - zeta^2))`, about 0.53 at 0.2. With `F = 2` Nm and `J = 1`: `K = 100` settles at 0.02 rad, `K = 200` at 0.01 rad, using `D` of 20 and 28.3. Choose `K = F_max / x_max`. The clip draws the push 15 times larger.
+
+</details>
 
 ## Build It
+
+The controller is one line, and a helper picks the damping for a chosen damping ratio.
 
 ```python
 def impedance_torque(q, qd, q_des, K, D, tau_g):
@@ -59,7 +63,7 @@ def damping_for_zeta(K, J, zeta):
     return 2*zeta*np.sqrt(K*J)
 ```
 
-`simulate()` pushes one joint. Tests check deflection against `F / K`, halving under doubled `K`, no overshoot at `zeta = 1`, and the formula at `zeta = 0.2`.
+`simulate()` pushes one joint with a constant torque. Tests check the push-in, that doubling the stiffness halves it, and that there is no overshoot at ratio one.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +73,7 @@ python3 phases/03-dynamics-and-control/03-impedance-control/code/figure.py
 
 ## Use It
 
-Choose `K` from the largest push you expect and the largest deflection you accept: `K = F_max / x_max`.
+Choose the spring from the largest push you expect and the largest push-in you accept.
 
 ## Ship It
 
@@ -77,6 +81,6 @@ Choose `K` from the largest push you expect and the largest deflection you accep
 
 ## Exercises
 
-1. Add friction and find the new steady state.
-2. Use a reversing step; compare settling time for `zeta` of 0.7 and 1.
-3. Find the largest `D` a 1 kHz loop allows for `J = 0.05`.
+1. Double the stiffness and watch the push-in halve.
+2. Try a damping ratio of 0.2 and of 1 and compare.
+3. Add friction and find the new resting point.

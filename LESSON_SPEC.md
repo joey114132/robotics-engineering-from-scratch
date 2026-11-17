@@ -19,7 +19,7 @@ phases/NN-slug/NN-lesson-slug/
   fun.json                      extras: en and ko text (hook, mission, clip caption), plus the names of the lesson's toy and three (3D scene); the separate website repo reads the last two
 ```
 
-## Doc shape: at most 440 English words outside code blocks and Key Terms, at least 3 images
+## Doc shape: at most 380 English words outside code, Key Terms and the math fold, at least 3 images
 
 ```text
 # Title
@@ -58,7 +58,7 @@ Apply these five rules in both languages.
 | "A notebook records every corner as a right angle, so the drawn square closes even though your smaller turns leave you away from the start." | "A wrong stride length distorts distances." (This does not explain why the notebook can hide the error.) |
 | "The showerhead pushes water away, so your hand feels a push in the opposite direction." | "A propeller's thrust points in the direction it blows air." |
 
-The English budget is 440 words outside fenced code and outside Key Terms, including headings and metadata (cut from 600 on 2026-11-16 for beginners). The last 60 are for one worked example with the lesson's own numbers, which may carry a clip (see Visuals).
+The English budget is 380 words outside fenced code, Key Terms and the math fold, including headings, metadata, captions and Sources (cut from 600 to 380 on 2026-11-16 for beginners). The main path is words and pictures. Formulas, parameters and exact numbers go in one optional fold at the end of The Concept, written exactly `<details><summary>The math (optional)</summary>` ... `</details>` with blank lines inside, at most 160 English words; ko has the same fold. Any number a quiz or test needs must appear somewhere in the lesson, the fold included.
 The opening cap counts visible prose, including link labels. Korean has a mechanical ceiling of 90 whitespace-separated words and 600 characters, including spaces and paragraph breaks; match the English meaning rather than filling the ceiling.
 Prefer words to equations in the opening. If a familiar number is needed for the causal scene, link it to a source or a lesson test. The 08-01 example keeps 90° / 90도 and links those labels to a verified definition of a right angle. Put detailed numeric examples and equations in the later sections.
 Korean opening paragraphs may exceed the general 160-character paragraph guideline when needed to preserve a connected explanation; the block still has the 600-character ceiling. Source lines must stay within the checker's 160-character limit. A soft line break does not create a new paragraph.

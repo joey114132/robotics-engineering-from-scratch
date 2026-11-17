@@ -21,35 +21,39 @@ That pose is a singularity, where a plain Jacobian inverse asks for a huge joint
 
 ## The Problem
 
-You command a robot's hand straight outward at 0.1 m/s. Near full stretch the controller asks the elbow for a hundred radians per second, the drive hits its limit, and the tip leaves the path.
+You tell a robot's hand to move straight outward at a gentle speed. As the arm nears full stretch, the controller demands a wildly fast elbow, the motor hits its limit, and the hand leaves the path.
 
 ## The Concept
 
-Real arms pass near poses where one direction of motion disappears.
+Real arms pass near poses where one direction of motion disappears. A fully straight arm cannot move its hand along its own length however fast the elbow turns, so asking for that needs an endless speed.
 
 ![The chain of events](../assets/diagram-chain.png)
 
-*A shrinking elbow angle shrinks `det J`; the inverse then asks for huge speeds.*
-
-For this arm `det J = L1 L2 sin q2`, so the arm is singular when fully straight or fully folded (Craig, Ch. 5, Sec. 5.8). Then no joint speeds move the tip along the arm.
-
-Each column of `J` is where the tip goes when one joint turns. At `q2 = 1.4` rad `det J = 0.5 * 0.4 * sin 1.4 = 0.20`; at `q2 = 0` the columns are parallel and `det J = 0`.
+*As the elbow straightens, the hand loses a direction.*
 
 ![Two arrows merge](../assets/clip-example.mp4)
 
-*The two columns of `J`: tip velocity per unit speed of shoulder (amber) and elbow (dark blue).*
+*Where the hand goes when the shoulder, or the elbow, turns. At full stretch the two line up.*
 
-Damped least squares adds `lam^2 I` (`I` is the identity matrix) inside the inverse.
+The cure is damping: accept a small error so the joint speeds stay bounded.
 
 ![Damped least squares](../assets/diagram-damping.png)
 
-*Speed can no longer exceed `|v| / (2 lam)`.*
+*Speed can no longer pass a fixed limit.*
 
 ![Joint speed and tip error](../assets/fig-speed-blowup.png)
 
-*Solid lam = 0.05, dashed 0.15. Left: the plain inverse grows like `1 / q2`; damped ones stay under dotted bounds. Right: damped ones lag.*
+*Without damping the speed explodes. With it, a small lag.*
+
+<details><summary>The math (optional)</summary>
+
+For this arm `det J = L1 L2 sin q2` is zero when fully straight or folded (Craig, Ch. 5, Sec. 5.8). At `q2 = 1.4` rad `det J = 0.5 * 0.4 * sin 1.4 = 0.20`. Damped least squares adds `lam^2 I` inside the inverse, so speed is at most `|v| / (2 lam)`. Solid curves use lam = 0.05, dashed 0.15. The command is 0.1 m/s.
+
+</details>
 
 ## Build It
+
+`solve(J, v, lam)` is the plain inverse when `lam` is zero and the damped inverse otherwise.
 
 ```python
 def solve(J, v, lam):
@@ -57,7 +61,7 @@ def solve(J, v, lam):
     return J.T @ np.linalg.solve(J @ J.T + lam**2 * np.eye(len(v)), v)
 ```
 
-Each singular value `s` of `J` becomes `s / (s^2 + lam^2)`, never above `1 / (2 lam)`. Small `lam` tracks closely but moves fast; large `lam` lags.
+Small `lam` follows the command closely but moves fast; large `lam` moves gently and lags. A test checks the speed bound.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,6 +79,6 @@ Libraries compute pseudo-inverses with a cutoff on small singular values; compar
 
 ## Exercises
 
-1. Grow `lam` only when `manipulability(J)` falls below a threshold.
-2. Find the smallest `lam` that keeps joint speed below 2 rad/s at `q2 = 0.01`.
-3. Show a path through the folded pose has the same trouble.
+1. Run `solve` with `lam = 0` near the straight pose and watch the speeds.
+2. Try `lam` of 0.05 and 0.15.
+3. Fold the arm and see the same trouble.

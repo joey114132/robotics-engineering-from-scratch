@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-A car's position sensor is off by a couple of metres. You also roughly know its speed, so you can predict where it goes next. If the sensor is very noisy, move your estimate only a little toward its report. If your prediction is shakier, move more.
+A car's position sensor is off by a couple of metres. You also roughly know its speed. If the sensor is very noisy, move your estimate only a little toward its report. If your prediction is shakier, move more.
 
 ## Key Terms
 
@@ -29,25 +29,25 @@ A robot needs a position it can trust more than any single sensor reading.
 
 *Predict with the model, then correct with the reading.*
 
-The state `x` is `[position, velocity]`, and 2 m of doubt is `P = 4`.
-
-Predict: `x = F x` and `P = F P F^T + Q` (`F` is one step of motion).
-
-A reading `z = H x + noise` sees only the position. Correct: `x = x + K (z - H x)`. The best `K = P H^T (H P H^T + R)^-1` leaves the least doubt, and `P` is updated in Joseph form.
-
-For position alone, `K = P / (P + R)`. From 0 with `P = 4` and a reading of 3 m, `R = 4` gives `K = 0.5`: the estimate moves 1.5 m and `P` falls to 2. A sensor with 6 m of noise has `R = 36`, so `K = 4 / 40 = 0.1` and it moves only 0.3 m.
+A Kalman filter keeps its best guess and how unsure it is. Each cycle it predicts where the robot should be, which adds doubt. Then it moves the guess toward the sensor reading by an amount called the gain. A very noisy sensor gets a small gain, so the filter mostly follows its model. A shaky model gets a large gain, so it follows the sensor. After each correction the filter is less unsure.
 
 ![Same reading, two roads](../assets/clip-example.mp4)
 
-*Blue road: noisy sensor (6 m), the pin barely moves. Green road: it moves halfway.*
+*Blue road: noisy sensor, the pin barely moves. Green road: it moves halfway.*
 
 ![The gain is a trust dial](../assets/diagram-kalman-trust.png)
 
-*Noisy sensor: small K. Shaky model: large K.*
+*Noisy sensor: small gain. Shaky model: large gain.*
 
 ![Estimate and measured error](../assets/fig-kalman-band.png)
 
-*Left: estimate inside its 2-sigma band. Right: over 4000 runs the error settles near 1.0 m, not 2.0 m.*
+*Left: the estimate stays inside its uncertainty band. Right: over many runs the error settles near half the raw error.*
+
+<details><summary>The math (optional)</summary>
+
+The state `x` is `[position, velocity]`, and 2 m of doubt is `P = 4`. Predict: `x = F x` and `P = F P F^T + Q` (`F` is one step of motion). A reading `z = H x + noise` sees only the position. Correct: `x = x + K (z - H x)`, with the best `K = P H^T (H P H^T + R)^-1`, and `P` updated in Joseph form. For position alone, `K = P / (P + R)`. From 0 with `P = 4` and a reading of 3 m, `R = 4` gives `K = 0.5`: the estimate moves 1.5 m and `P` falls to 2. A sensor with 6 m of noise has `R = 36`, so `K = 4 / 40 = 0.1` and it moves only 0.3 m. Over 4000 runs the error settles near 1.0 m, not 2.0 m, and 95% of errors fall inside 2 sigma.
+
+</details>
 
 ## Build It
 
@@ -61,7 +61,7 @@ x = x + K @ (z[None, :] - H @ x)     # update
 P = (np.eye(2) - K @ H) @ P
 ```
 
-Tests check that any other `K` raises the Joseph trace, 4000 runs match `P`, and 95% of errors fall inside 2 sigma.
+Tests check that no other gain leaves less doubt and that 95% of errors fall inside two sigma.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -70,7 +70,7 @@ python3 -m pytest phases/07-state-estimation/02-kalman-filter -q
 
 ## Use It
 
-ROS's `robot_localization` ships `ekf_localization_node`, an extended Kalman filter. SciPy's `solve_discrete_are` gives the settled `P`.
+ROS's `robot_localization` ships `ekf_localization_node`, an extended Kalman filter.
 
 Sources: robot_localization state estimation nodes, https://docs.ros.org/en/melodic/api/robot_localization/html/state_estimation_nodes.html (2026-11-09).
 
@@ -80,6 +80,6 @@ Sources: robot_localization state estimation nodes, https://docs.ros.org/en/melo
 
 ## Exercises
 
-1. Double `R_STD` and predict the settled `sqrt(P)`.
-2. Make `R` ten times too small and check 2-sigma coverage.
-3. Set `SA` to 0 and watch `K` shrink.
+1. Double the sensor noise and predict whether the settled uncertainty rises or falls.
+2. Make the filter think the sensor is ten times better than it is.
+3. Set the motion noise to zero and watch the gain shrink.

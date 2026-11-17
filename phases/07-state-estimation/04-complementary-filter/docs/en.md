@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-Adding up a gyro's readings follows quick tilts smoothly but drifts. The accelerometer gives the tilt from gravity but jitters. A complementary filter takes quick changes from the gyro and the slow average from the accelerometer.
+A flat board carries a tilt sensor. Adding up the gyro's readings follows quick tilts smoothly but drifts. The accelerometer gives the tilt from gravity but jitters. A complementary filter takes quick changes from the gyro and the slow average from the accelerometer.
 
 ## Key Terms
 
@@ -27,17 +27,15 @@ A balancing robot needs a tilt that is both smooth and honest over minutes.
 
 ![Two sensors](../assets/diagram-comp-split.png)
 
-*Gyro through a high-pass, accelerometer through a low-pass, then add.*
+*Fast changes come from the gyro, the slow average from the accelerometer.*
 
-Each step, `theta = a (theta + gyro dt) + (1 - a) acc`, where `acc` is the accelerometer's tilt and `a = tau / (tau + dt)`.
-
-The accelerometer path is a low-pass and the gyro path a high-pass. Their weights add to 1. They cross at `1 / (2 pi tau)` Hz.
+A complementary filter lets each sensor do what it is good at. The gyro is trusted for quick changes and the accelerometer for the long-run average. One setting, the time constant, decides how long the gyro is trusted before the accelerometer takes over.
 
 ![Estimates and crossover](../assets/fig-tilt-estimates.png)
 
-*Left: at `tau = 0.40 s` the fused tilt sits on the truth. Right: the crossover is 0.40 Hz.*
+*Left: the fused tilt sits on the truth. Right: the crossover separates where each sensor is trusted.*
 
-The gyro is trusted for about `tau` seconds, so a constant bias `b` piles up to an error of `tau b`. Accelerometer noise `s` leaves variance about `s^2 dt / (2 tau)`. Minimising `(tau b)^2 + s^2 dt / (2 tau)` gives `tau^3 = s^2 dt / (4 b^2)`.
+A long time constant gives a smooth angle but lets gyro drift through. A short one removes the drift but lets accelerometer jitter through. Between them lies a best value.
 
 ![Tuning tau](../assets/diagram-comp-tau.png)
 
@@ -45,13 +43,17 @@ The gyro is trusted for about `tau` seconds, so a constant bias `b` piles up to 
 
 ![Error against tau](../assets/fig-tau-tradeoff.png)
 
-*Simulation matches; the minimum is at 0.40 s.*
-
-Take `b = 0.01 rad/s`, `s = 0.05 rad`, `dt = 0.01 s`. Then `tau = 2 s` leaves a bias error of `2 * 0.01 = 0.02 rad`, `tau = 0.05 s` a noise error of 0.015 rad, and `tau = 0.40 s` only 0.004 and 0.0056, together `0.0068 rad`.
+*Simulation matches the predicted curve, which has a clear best value.*
 
 ![Three filters](../assets/clip-example.mp4)
 
-*Small `tau`: noise shakes the board. Large `tau`: a steady lean. The middle is closest to level. Errors drawn 10 times larger.*
+*Left: noise shakes the board. Right: a steady lean. The middle one is closest to level. Errors are exaggerated.*
+
+<details><summary>The math (optional)</summary>
+
+Each step, `theta = a (theta + gyro dt) + (1 - a) acc`, where `acc` is the accelerometer's tilt and `a = tau / (tau + dt)`. The accelerometer path is a low-pass and the gyro path a high-pass. Their weights add to 1. They cross at `1 / (2 pi tau)` Hz. A constant gyro bias `b` piles up to an error of `tau b`. Accelerometer noise `s` leaves variance about `s^2 dt / (2 tau)`. Minimising `(tau b)^2 + s^2 dt / (2 tau)` gives `tau^3 = s^2 dt / (4 b^2)`. With `b = 0.01 rad/s`, `s = 0.05 rad`, `dt = 0.01 s`: `tau = 2 s` leaves a bias error of 0.02 rad, `tau = 0.05 s` a noise error of 0.015 rad, and `tau = 0.40 s` only 0.004 and 0.0056, together 0.0068 rad. The crossover is then 0.40 Hz. The clip draws errors 10 times larger.
+
+</details>
 
 ## Build It
 
@@ -84,6 +86,6 @@ Sources: imu_tools README, https://raw.githubusercontent.com/CCNYRoboticsLab/imu
 
 ## Exercises
 
-1. Compute the bias error for `tau = 5 s`, `b = 0.01 rad/s`.
-2. Halve `s` and predict the new best `tau`.
-3. If the accelerometer is noisy only during shaking, what should `tau` do?
+1. Try a few time constants and pick the best by eye.
+2. Halve the accelerometer noise and see where the best value moves.
+3. What should the time constant do if the accelerometer is noisy only while shaking?

@@ -21,44 +21,44 @@ Near that pose the same view has two ring settings. The code that reads the ring
 
 ## The Problem
 
-A camera on a robot reports roll, pitch and yaw. As it tilts through straight down, roll and yaw jump by 180 degrees or the controller asks for huge joint speeds.
+A camera on a robot reports three angles, roll, pitch and yaw. As it tilts through straight down, two of the numbers suddenly jump, or the controller asks the joints to spin impossibly fast.
 
 ## The Concept
 
-Many robot sensors report orientation as three angles, and near one pose those three numbers stop making sense.
-
-Yaw is about the vertical z axis, pitch about the side y axis, roll about the forward x axis. In `R = Rz(yaw) Ry(pitch) Rx(roll)` roll acts first.
+Many robot sensors report orientation as three angles, and near one pose those three numbers stop making sense. Picture the camera in three rings; when it looks straight down, two rings line up and turn the view about the same line.
 
 ![Rings lose a direction](../assets/diagram-gimbal-rings.png)
 
-*At pitch 90 degrees (gimbal lock) the roll ring lines up with the yaw ring.*
-
-Then roll `+a` equals yaw `-a`; only `yaw - roll` matters, so one direction is lost.
+*Straight down, two rings line up and a direction is lost.*
 
 ![Two rigs, one pose](../assets/clip-example.mp4)
 
-*Left: roll ring +1.2 rad. Right: yaw ring -1.2 rad. The amber fins end aligned.*
+*Two different ring settings, one identical view.*
 
-Reading angles back from `R` gives pitch between -90 and 90 degrees, so past 90 it switches to a second spelling (`other_spelling()`) with roll and yaw 180 degrees away.
+The code that reads the angles back must pick one of the two settings, and it switches as the camera passes through, so the numbers jump even though the camera moves smoothly.
 
 ![Smooth turn, jump](../assets/diagram-angle-jump.png)
 
-*Roll and yaw flip by 180 degrees while the tool moves smoothly.*
-
-Euler rates need a matrix `E` with `det E = cos(pitch)`, 0 at 90 degrees, so some spins have none.
+*Roll and yaw flip.*
 
 ![Jump and rate blow-up](../assets/fig-gimbal-lock.png)
 
-*Left: pitch sweep from 60 to 120 degrees. Right: for a 1 rad/s world-x spin at yaw 0, Euler rates grow like 1 / cos(pitch).*
+*Near straight down, the needed ring speeds shoot up.*
+
+<details><summary>The math (optional)</summary>
+
+At pitch 90 degrees roll `+a` equals yaw `-a`, so only `yaw - roll` matters. Reading angles back gives pitch between -90 and 90 degrees, so past 90 it switches to a second spelling with roll and yaw 180 degrees away. The rate matrix has determinant `cos(pitch)`, which is 0 at 90 degrees. The plot sweeps pitch from 60 to 120 degrees; for a 1 rad/s spin at yaw 0 the rates grow like 1 / cos(pitch). The clip turns the roll ring +1.2 rad and the yaw ring -1.2 rad. `locked=True` is reported within 1e-9 of the lock.
+
+</details>
 
 ## Build It
+
+`euler_to_R` builds a rotation from three angles. `R_to_euler()` reads them back and reports `locked=True` near the lock, and `euler_rates()` refuses to run there.
 
 ```python
 def euler_to_R(roll, pitch, yaw):
     return _rot(2, yaw) @ _rot(1, pitch) @ _rot(0, roll)
 ```
-
-`R_to_euler()` reads pitch from `-R[2, 0]`. Within 1e-9 of lock it returns `locked=True` with roll 0. `euler_rates()` raises at gimbal lock.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -68,7 +68,7 @@ python3 phases/01-math-foundations/05-euler-angles-and-gimbal-lock/code/main.py
 
 ## Use It
 
-Compare `R_to_euler()` with SciPy's `Rotation.as_euler("ZYX")`. SciPy warns at gimbal lock, so compare rotations.
+Compare `R_to_euler()` with SciPy's `Rotation.as_euler("ZYX")`. SciPy warns at the lock, so compare the rotations, not the angles.
 
 ## Ship It
 
@@ -76,6 +76,6 @@ Compare `R_to_euler()` with SciPy's `Rotation.as_euler("ZYX")`. SciPy warns at g
 
 ## Exercises
 
-1. Find a second `(roll, yaw)` pair giving the same `R` at pitch 90 degrees.
-2. At yaw 0 and pitch 89.9 degrees, find the largest Euler rate for a 1 rad/s world-x spin.
-3. Compare a low-pass filter on angles with a slerp on `R`.
+1. Tilt the camera to 89 degrees and then 90 and watch the output.
+2. Find a second pair of roll and yaw that gives the same rotation at pitch 90 degrees.
+3. Compare a smoothing filter on the angles with a smooth turn between the rotations.

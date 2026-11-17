@@ -21,7 +21,7 @@
 
 ## 문제
 
-장난감 자동차가 갑자기 멈춥니다. timer가 초당 100번 heartbeat를 보내는데 callback이 60 ms 동안 이미지 작업을 해서 heartbeat가 끊기고 watchdog이 차를 세웁니다. CPU는 대부분 놀고 있는데도 그렇습니다.
+장난감 자동차가 갑자기 멈춥니다. 다른 일이 이미지 작업을 오래 하는 동안 heartbeat timer가 끊기고 watchdog이 차를 세웁니다. 프로세서는 대부분 놀고 있는데도 그렇습니다.
 
 ## 개념
 
@@ -31,21 +31,29 @@
 
 *timer는 느린 callback이 끝날 때까지 기다립니다.*
 
-mutually exclusive group은 그 안의 callback 두 개를 동시에 실행하지 않아서 공유 데이터를 지킵니다. 다른 group의 callback은 병렬로 실행될 수 있습니다.
+executor는 준비된 작업 중 무엇을 어느 일꾼이 실행할지 정합니다. mutually exclusive group은 그 안의 작업 두 개를 동시에 실행하지 않아서 공유 데이터를 지킵니다. 다른 group의 작업은 일꾼이 하나 더 있으면 병렬로 실행될 수 있습니다.
 
 ![스레드와 group](../assets/diagram-callback-groups.png)
 
-*두 callback이 서로 다른 group에 있을 때만 두 번째 thread가 도움이 됩니다.*
+*두 작업이 서로 다른 group에 있을 때만 두 번째 일꾼이 도움이 됩니다.*
 
-느린 callback이 0 ms에 시작해서 60 ms 동안 thread를 쥡니다. timer는 1 ms에 준비되므로 thread가 하나이거나 thread 둘에 group 하나이면 59 ms를 기다립니다. group이 나뉘어 있으면 바로 시작합니다.
+그래서 해결에는 일꾼 하나 더와 느린 작업만의 group이 함께 필요합니다.
 
 ![자동차 두 대와 각 thread 두 개](../assets/clip-example.mp4)
 
-*지붕의 등 하나가 thread 하나입니다. 파랑은 group을 공유해서 두 번째 등이 꺼진 채 차가 멈춥니다. 초록은 멈추지 않습니다.*
+*지붕의 등 하나가 일꾼 하나입니다. 파랑은 group을 공유해서 두 번째 등이 꺼진 채 차가 멈춥니다. 초록은 멈추지 않습니다.*
 
 ![두 구성의 타임라인](../assets/fig-executor-timeline.png)
 
-*thread 하나이면 timer가 최대 59 ms 늦게 시작합니다. thread 둘에 group이 나뉘면 늦지 않습니다.*
+*일꾼이 하나이면 timer가 아주 늦게 시작합니다. 일꾼 둘에 group이 나뉘면 늦지 않습니다.*
+
+<details><summary>The math (optional)</summary>
+
+timer는 초당 100번 heartbeat를 보내고 subscription callback은 60 ms 동안 이미지 작업을 합니다. 느린 callback이 0 ms에 시작해서 60 ms 동안 thread를 쥡니다.
+timer는 1 ms에 준비되므로 thread가 하나이거나 thread 둘에 group 하나이면 59 ms를 기다립니다. group이 나뉘어 있으면 바로 시작합니다.
+이 모델은 먼저 온 것을 먼저 처리하지만 ROS 2는 준비된 작업을 돌아가며 처리하므로 숫자를 비교하기 전에 "Scheduling semantics"를 읽어 보세요.
+
+</details>
 
 ## 만들기
 
@@ -54,8 +62,7 @@ busy = {g for _, g in running if g is not None}
 job = next((j for j in pending if j[3] is None or j[3] not in busy), None)
 ```
 
-`simulate()`는 시간을 1 ms씩 진행합니다. 매 스텝마다 timer callback을 풀어 주고 끝난 작업을 정리하며 쉬는 thread마다 group이 비어 있는 가장 오래된 대기 작업을 줍니다.
-이 모델은 먼저 온 것을 먼저 처리합니다. ROS 2는 준비된 작업을 돌아가며 처리하므로 숫자를 비교하기 전에 "Scheduling semantics"를 읽어 보세요.
+`simulate()`는 시간을 1 ms씩 진행하며 쉬는 thread마다 group이 비어 있는 가장 오래된 대기 작업을 줍니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -65,7 +72,7 @@ python3 phases/05-robot-software/02-executors-and-callbacks/code/main.py
 
 ## 실제 도구로 보기
 
-ROS 2의 group은 mutually exclusive이거나 reentrant(서로 겹칠 수 있음)입니다. group 없이 만든 callback은 기본 group 하나를 함께 쓰므로 thread를 늘리기 전에 느린 callback에 자기 group을 주세요.
+group 없이 만든 callback은 기본 group 하나를 함께 쓰므로 thread를 늘리기 전에 느린 callback에 자기 group을 주세요.
 
 출처: ROS 2 Jazzy, "Executors" (https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Executors.html), 2026년 11월 9일 확인.
 
@@ -75,6 +82,6 @@ ROS 2의 group은 mutually exclusive이거나 reentrant(서로 겹칠 수 있음
 
 ## 연습 문제
 
-1. 느린 작업 두 개가 있는 reentrant group(`None`)을 더하고 둘이 겹치는 것을 보이세요.
+1. 두 callback을 group 하나에 넣었다가 둘로 나누고 timer를 보세요.
 2. 놓친 timer tick을 쌓지 말고 버리게 하세요.
-3. 느린 callback을 10 ms 조각 여섯 개로 나누고 timer의 최악 대기 시간을 보고하세요.
+3. 느린 callback을 10 ms 조각 여섯 개로 나누고 timer를 보세요.

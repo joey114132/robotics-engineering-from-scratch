@@ -20,33 +20,37 @@ From far away, nearest dots pair the wrong walls, so the dots get closer while t
 
 ## The Problem
 
-Picture a robot that scans a room, drives a little, and scans again. Odometry drifts, so you want the real move from the two scans alone.
+Picture a robot that scans a room, drives a little, and scans again. Its wheel counts drift, so you want the real move from the two scans alone, which are just clouds of dots.
 
 ## The Concept
 
-A real robot uses this to correct its wheel-based guess with what its scanner sees.
+A robot uses this to correct its wheel-based guess with what its scanner sees.
+
+ICP pairs each new dot with the nearest old dot, then slides and turns the whole new scan to bring the pairs closer. It repeats until the pairs stop getting closer.
 
 ![ICP loop](../assets/diagram-icp-loop.png)
 
-*Pair points, fit one rigid move, apply it.*
+*Pair, move, repeat.*
 
-If the pairs were right, one step would give the best turn `R` and shift `t`. Centre both dot sets on their averages. The SVD of how paired dots line up gives `R`, with a sign fix that forbids a mirror image. Then `t = q_mean - R p_mean`.
-
-The dots sit 0.05 m apart. Started 0.2 rad off, the average distance from a new dot to its nearest old dot is 0.39 m, and 12 iterations bring it to 0.016 m. Started 2.6 rad off, it is 4.07 m, most pairs are wrong, and 25 iterations stop at 0.54 m, still 2.5 rad off.
+Starting close, the nearest dots are the true partners and the scans lock together. Starting far away, nearest dots belong to the wrong walls and the scans get stuck.
 
 ![Near start, far start](../assets/clip-example.mp4)
 
-*Green (0.2 rad) settles. Blue (2.6 rad) pairs wrong walls and gets stuck.*
+*Green settles. Blue pairs wrong walls and gets stuck.*
 
 ![Why a big offset fails](../assets/diagram-icp-failure.png)
 
-*A big offset puts the nearest dot on the wrong wall.*
-
-The error never rises: each fit is optimal and re-pairing only shortens distances.
+*A big offset pairs dots with the wrong wall.*
 
 ![ICP in four views](../assets/fig-icp-basin.png)
 
-*Right: final error against start rotation. Good to about 65 to 70 degrees, then a local minimum.*
+*Fine for small starting errors, stuck for big ones.*
+
+<details><summary>The math (optional)</summary>
+
+Centre both dot sets on their averages. The SVD (a standard matrix tool) of how paired dots line up gives the best turn `R`, with a sign fix that forbids a mirror image; the shift is `t = q_mean - R p_mean`. The dots sit 0.05 m apart. Started 0.2 rad off, the average distance to the nearest old dot is 0.39 m and 12 iterations bring it to 0.016 m. Started 2.6 rad off, it is 4.07 m and 25 iterations stop at 0.54 m, still 2.5 rad off. The error never rises: each fit is optimal for its pairs. The result is good up to a start rotation of about 65 to 70 degrees for this room; at 100 degrees it is a local minimum. One straight wall cannot fix sliding along it.
+
+</details>
 
 ## Build It
 
@@ -63,7 +67,7 @@ dR, dt = kabsch(cur, match)
 cur = cur @ dR.T + dt
 ```
 
-`icp()` repeats this and returns the total `R`, `t` and the error history.
+`icp()` repeats this and returns the total turn, shift and the error history.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -73,7 +77,7 @@ python3 phases/08-mobile-robots/05-icp-scan-matching/code/main.py
 
 ## Use It
 
-Open3D's ICP registration takes a rough starting transform; compare it with `icp()`.
+Open3D's ICP registration takes a rough starting guess. Compare it with `icp()`.
 
 Sources: Open3D ICP registration tutorial, https://www.open3d.org/docs/latest/tutorial/pipelines/icp_registration.html (opened 2026-11-10).
 
@@ -83,6 +87,6 @@ Sources: Open3D ICP registration tutorial, https://www.open3d.org/docs/latest/tu
 
 ## Exercises
 
-1. Add 2 cm of noise to both scans; compare the pose error with the spacing.
-2. Start ICP from an odometry guess; find the largest rotation drift it repairs.
-3. Ignore the worst 20% of pairs; test with a missing corner.
+1. Add a little noise to both scans and see how the answer changes.
+2. Start ICP from a rough wheel guess and find how big a turn it can repair.
+3. Remove a corner of the room and see what happens.

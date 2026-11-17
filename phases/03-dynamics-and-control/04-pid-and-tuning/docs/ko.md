@@ -21,43 +21,50 @@ throttle(가속 페달)을 끝까지 밟고 있으면 I는 실제 힘을 더하�
 
 ## 문제
 
-로봇 관절이 진동해서 누군가 `kp`(오차 한 단위당 미는 힘)와 `kd`(속도 한 단위당 거는 브레이크)를 올렸습니다. 이제 관절이 윙윙거립니다.
-
-각 gain은 독립인 손잡이처럼 보이지만 관절 자체와 모터의 토크 한계와 제어 주기가 각각 gain에 상한을 겁니다.
+로봇 관절이 진동해서 누군가 미는 힘과 브레이크의 gain을 올렸습니다. 이제 관절이 윙윙거립니다. gain은 자유로운 손잡이처럼 보이지만 관절의 무게와 모터의 힘과 제어 주기가 각각 gain에 한계를 겁니다.
 
 ## 개념
 
-로봇 관절 대부분은 PID 컨트롤러로 움직이므로 각 부분이 무엇을 하고 어디서 실패하는지 알아야 합니다.
+로봇 관절 대부분은 PID 제어를 쓰므로 각 부분이 무엇을 하고 어디서 실패하는지 알아야 합니다. P는 오차에 비례해서 밀고 D는 속도에 비례해서 브레이크를 걸고 I는 오차를 시간에 따라 쌓습니다.
 
 ![세 항과 하나의 한계](../assets/diagram-pid-structure.png)
 
-*세 항이 더해지고 모터가 그 합을 `umax`에서 잘라 냅니다.*
+*세 항이 더해지고 모터가 그 합을 잘라 냅니다.*
 
 ![P, P+D, P+I+D](../assets/fig-pid-terms.png)
 
-*5초에 일정한 부하가 걸립니다. P+D는 목표보다 `load / kp`만큼 아래에서 멈추고 I만 관절을 되돌립니다.*
+*일정한 부하가 걸리면 I만 관절을 되돌립니다.*
 
 ![일정한 힘이 밀어도 선을 지키려는 장난감 자동차 두 대](../assets/clip-example.mp4)
 
-*크기 20의 일정한 힘이 뒤로 밉니다(빨간 화살표). `kp = 100`일 때 파란 차(P+D)는 선에서 `20 / 100 = 0.2`만큼 밀린 채 서 있고 초록 차(P+I+D)는 밀렸다가 선으로 돌아옵니다.*
+*일정한 힘이 밉니다. 파랑(P와 D)은 못 미치고 초록(I 포함)은 돌아옵니다.*
 
-windup은 I가 포화된 동안에도 오차를 계속 더하고 오차의 부호가 바뀐 뒤에야 줄어드는 현상이라서 차가 선을 지나쳐야 갚을 수 있습니다.
+그런데 I는 모터가 한계에 있어도 계속 쌓다가 그 빚을 갚느라 지나칩니다. 이것이 windup입니다.
 
 ![windup이 적분 항을 쌓습니다](../assets/diagram-windup.png)
 
-*조건부 적분(clamp)은 모터가 포화되어 있고 오차가 더 깊이 밀 때는 더하기를 멈춥니다.*
+*해법은 한계에서 쌓는 것을 멈추는 것입니다.*
 
 ![windup과 clamp를 건 적분기](../assets/fig-windup.png)
 
-*주황색은 clamp가 없는 경우입니다. gain과 한계가 같은데도 약 1.5 rad 넘어갑니다.*
+*주황색은 해법이 없어서 지나칩니다.*
 
-gain을 올릴 때는 두 번째 한계가 있습니다. loop는 2x2 갱신 행렬의 고유값 크기가 모두 1보다 작을 때만 안정하고 `kd`가 약 `2J/dt`를 넘으면 이 조건이 깨집니다.
+gain이 너무 높으면 loop가 단계별로 안정한 조건도 깨집니다.
 
 ![올린 gain은 명령을 떨게 합니다](../assets/fig-raised-gains.png)
 
-*왼쪽은 gain을 바꾼 뒤의 torque 명령입니다. 오른쪽은 가장 큰 고유값이 `kd = 2J/dt` 근처에서 1을 넘는 모습입니다.*
+*gain이 너무 높으면 명령이 단계마다 뒤집힙니다.*
+
+<details><summary>The math (optional)</summary>
+
+일정한 부하는 P+D에서 offset `load / kp`를 남깁니다. `kp = 100`이고 힘이 20이면 offset은 `20 / 100 = 0.2`이고 부하는 5초에 걸립니다. clamp가 없으면 windup으로 약 1.5 rad 넘어갑니다.
+loop는 2x2 갱신 행렬의 고유값 크기가 모두 1보다 작을 때만 안정하고 `kd`가 약 `2J/dt`를 넘으면 깨집니다(Craig 9.7).
+
+</details>
 
 ## 만들기
+
+네 줄이 컨트롤러 전부입니다. 세 항을 더하고 모터 한계로 자르고 안전할 때만 기억에 더합니다.
 
 ```python
 raw = kp * e + I - kd * v
@@ -67,9 +74,7 @@ if u == raw or e * raw < 0:      # conditional integration
 v += dt / J * (u - b * v - load)
 ```
 
-`simulate()`가 이 loop를 돌립니다. `closed_loop_matrix()`와 `spectral_radius()`(가장 큰 고유값 크기)가 안정성 검사를 맡습니다.
-
-테스트는 offset `load / kp`, I와 D의 효과, clamp를 건 windup 비교를 확인합니다.
+`simulate()`가 loop를 돌리고 `spectral_radius()`가 안정성 검사를 맡습니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -79,16 +84,11 @@ python3 phases/03-dynamics-and-control/04-pid-and-tuning/code/figure.py
 
 ## 실제 도구로 보기
 
-ROS 2 `control_toolbox`는 `none`, `back_calculation`, `conditional_integration` anti-windup 전략을 줍니다.
+ROS 2 `control_toolbox`는 `none`, `back_calculation`, `conditional_integration` anti-windup을 주고 `gains.<dof_names>.antiwindup_strategy`로 관절마다 고릅니다.
 
-`pid_controller`에서는 관절마다 `gains.<dof_names>.antiwindup_strategy`로 하나를 고릅니다.
+이 레슨의 clamp와 비교해 보세요.
 
-그 conditional integration을 이 레슨의 clamp와 비교해 보세요. offset 논증은 Craig 9.7절에 있습니다.
-
-출처 (2026년 11월 9일 확인)
-
-- [control_toolbox 문서](https://control.ros.org/master/doc/control_toolbox/doc/index.html): 전략 세 가지
-- [PID controller 사용자 문서](https://control.ros.org/rolling/doc/ros2_controllers/pid_controller/doc/userdoc.html): 관절별 설정
+출처: [control_toolbox 문서](https://control.ros.org/master/doc/control_toolbox/doc/index.html), [PID controller 사용자 문서](https://control.ros.org/rolling/doc/ros2_controllers/pid_controller/doc/userdoc.html), 2026년 11월 9일 확인.
 
 ## 결과물
 
@@ -96,6 +96,6 @@ ROS 2 `control_toolbox`는 `none`, `back_calculation`, `conditional_integration`
 
 ## 연습 문제
 
-1. 조건부 적분을 back-calculation으로 바꾸고 overshoot를 비교하세요.
-2. 미분을 오차에 걸고 setpoint step에서 어떻게 되는지 보세요.
-3. `kd = 20`에서 spectral radius를 1 아래로 유지하는 가장 큰 `kp`를 찾으세요.
+1. clamp를 빼고 overshoot를 보세요.
+2. 명령이 단계마다 뒤집힐 때까지 `kd`를 올려 보세요.
+3. clamp 대신 back-calculation을 써 보세요.

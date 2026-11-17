@@ -21,33 +21,37 @@ A far point gives gentle corrections, but near a bend it lies beyond the corner,
 
 ## The Problem
 
-Picture a delivery robot following a path with a right-angle corner. Aiming close, it snakes along the straight parts. Aiming far, it sails across the corner.
+Picture a delivery robot following a path with a sharp corner. Aiming at a point close ahead, it snakes along the straight parts. Aiming far ahead, it sails across the corner.
 
 ## The Concept
 
-A real robot must neither wobble nor clip corners, and this one distance decides both.
+A robot must neither wobble nor clip corners, and one distance decides both.
+
+It always aims at a point on the path a fixed distance ahead, and steers along the circle that reaches it. That distance is the lookahead.
 
 ![Step](../assets/diagram-pp-step.png)
 
-*Steer along the circle through the point `Ld` ahead.*
+*Aim ahead, steer along the circle.*
 
-In the robot frame the target is `d` away and `y` to the left. The circle through it has curvature `k = 2 y / d^2`, so a bigger `|k|` is a tighter turn. The turn rate is `w = v k` for speed `v`, reached gradually (assumed, not measured: two thirds of the gap closes every 0.4 s).
-
-Start 0.6 m left of the path, so `y = -0.6`. With `Ld = 0.4 m` the target is the nearest path point, `d = 0.6`, so `k = 2 * -0.6 / 0.6^2 = -3.3`. With `Ld = 1.5 m`, `d = 1.5`, `k = -0.53`.
+Aim close and every small drift causes a hard turn, so a robot with slow wheels wobbles. Aim far and the target lies beyond the corner, so the robot cuts it.
 
 ![Circles](../assets/clip-example.mp4)
 
-*Blue (`Ld = 0.4`) crosses the line after 1.0 s, green (`Ld = 1.5`) after 2.8 s.*
+*Blue turns hard and crosses the line early. Green turns gently.*
 
 ![Tradeoff](../assets/diagram-pp-tradeoff.png)
 
-*Short steers hard; long cuts corners.*
+*Short steers hard. Long cuts corners.*
 
 ![Paths](../assets/fig-lookahead-paths.png)
 
-*`Ld = 0.4 m` crosses the line 10 times but hugs the corner (0.17 m). 1.5 m misses it by 0.41 m, 4 m by 1.37 m.*
+*Three lookaheads: the short one wobbles, the long ones cut the corner.*
 
-Without lag the short lookahead does not wobble: the wobble is high gain meeting a slow drive.
+<details><summary>The math (optional)</summary>
+
+In the robot's frame the target is `d` away and `y` to the left, so the circle through it has curvature `k = 2 y / d^2`; a bigger `|k|` is a tighter turn. The turn rate is `w = v k` for speed `v`, reached gradually (assumed: two thirds of the gap closes every 0.4 s). Starting 0.6 m left of the path, `Ld = 0.4 m` gives `d = 0.6` and `k = -3.3`; `Ld = 1.5 m` gives `d = 1.5` and `k = -0.53`. Blue (`Ld = 0.4`) crosses the line after 1.0 s, green (`Ld = 1.5`) after 2.8 s. `Ld = 0.4 m` crosses the line 10 times but hugs the corner (0.17 m); 1.5 m misses it by 0.41 m, 4 m by 1.37 m. Without lag the short lookahead does not wobble (tested).
+
+</details>
 
 ## Build It
 
@@ -63,7 +67,7 @@ def lookahead_point(path, pos, ld):
     return path[i + far[0]] if len(far) else path[-1]
 ```
 
-`follow()` runs the loop; `sign_changes()` counts line crossings.
+`follow()` runs the loop. `sign_changes()` counts line crossings.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -73,7 +77,7 @@ python3 phases/08-mobile-robots/04-path-following-pure-pursuit/code/main.py
 
 ## Use It
 
-Nav2's regulated pure pursuit controller steers toward a point ahead on the path. Its README says the right lookahead depends on robot size and speed.
+Nav2's pure pursuit controller steers toward a point ahead on the path. Its README says the right distance depends on robot size and speed.
 
 Sources: Nav2 `nav2_regulated_pure_pursuit_controller` README, github.com/ros-navigation/navigation2, opened 2026-11-09.
 
@@ -83,6 +87,6 @@ Sources: Nav2 `nav2_regulated_pure_pursuit_controller` README, github.com/ros-na
 
 ## Exercises
 
-1. Scale `Ld` with speed; compare the wobble at 0.5 and 2 m/s.
-2. Round the corner with a short arc; re-measure the cut.
-3. Find the smallest `Ld` with at most 2 line crossings at 0.2 s lag.
+1. Make the lookahead longer and shorter; watch the wobble and the corner.
+2. Round the corner with a short curve and see the cut shrink.
+3. Slow the wheels down and see what the short lookahead does.

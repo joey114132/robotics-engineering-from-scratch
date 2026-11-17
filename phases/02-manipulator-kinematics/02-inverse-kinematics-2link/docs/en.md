@@ -21,37 +21,39 @@ Past full stretch nothing reaches. Inverse kinematics (IK) finds joint angles fo
 
 ## The Problem
 
-You ask a robot arm to touch a point and `acos` returns `nan`, or the arm folds the wrong way. A solver that hides an out-of-reach target sends the arm to the wrong place.
+You ask a robot arm to touch a point, and the math fails with `nan` (not a number), or the arm folds the wrong way. A solver that hides an out-of-reach target sends the arm to the wrong place.
 
 ## The Concept
 
-A robot is told where to reach and must work out the joint angles.
-
-`q1` is the shoulder angle from the x axis. `q2` is the elbow angle, 0 when the arm is straight.
+A robot is told where to reach and must work out the joint angles. For two links this is a triangle: the links are two sides, and the line from base to target is the third.
 
 ![IK as a triangle](../assets/diagram-triangle.png)
 
-*Sides L1, L2, r.*
+*Base, elbow and target form a triangle.*
 
-The law of cosines gives `cos q2 = (r² - L1² - L2²) / (2 L1 L2)`. Positive `q2` is elbow down, negative elbow up. Two arms reach one target, merging at full stretch (Craig, Ch. 4).
+The triangle can bend either way, so there are two answers: elbow up and elbow down. A target too far, or too close, has none.
 
 ![Reach check and FK check](../assets/diagram-decision.png)
 
-*Targets outside the band are refused. FK confirms every answer.*
-
-At the inner edge the arm is fully folded, so a target 0.05 m away is refused.
+*Refuse out-of-reach targets, and check every answer.*
 
 ![Two elbows and the reach limit](../assets/fig-two-elbows.png)
 
-*Left: both arms touch the target. Right: the branches meet at full stretch.*
-
-A target (0.6, 0.3) m for the 0.5 m and 0.4 m arm has `r = 0.67` m and `cos q2 = (0.45 - 0.25 - 0.16) / 0.4 = 0.1`, so `q2 = ±1.47` rad (84°).
+*Both elbows reach; at full stretch they merge.*
 
 ![Elbows follow a circling target](../assets/clip-example.mp4)
 
-*Blue: elbow down. Green: elbow up. The target circles at 0.67 m and `q2` stays ±1.47 rad.*
+*The target circles; the elbow angle stays the same.*
+
+<details><summary>The math (optional)</summary>
+
+The law of cosines gives `cos q2 = (r² - L1² - L2²) / (2 L1 L2)`; positive `q2` is elbow down, negative elbow up (Craig, Ch. 4). `q1` is the shoulder angle, `q2` the elbow angle, 0 when straight. A target 0.05 m from the base is refused. Links 0.5 m and 0.4 m, target (0.6, 0.3) m: `r = 0.67` m, `cos q2 = 0.1`, `q2 = ±1.47` rad (84°).
+
+</details>
 
 ## Build It
+
+The code uses the law of cosines for the elbow, then subtracts the triangle's inner angle from the target direction for the shoulder.
 
 ```python
 c2 = (x*x + y*y - l1*l1 - l2*l2) / (2*l1*l2)
@@ -61,7 +63,7 @@ q2 = np.arctan2(s2, c2)
 q1 = np.arctan2(y, x) - np.arctan2(l2*s2, l1 + l2*c2)
 ```
 
-A small tolerance stops rounding noise at the edge causing a false refusal. Tests run `fk(ik(p))` on 200 targets per branch.
+A small tolerance stops rounding noise from causing a false refusal. Tests run `fk(ik(p))` on 200 targets per branch.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -79,6 +81,6 @@ Arms with more joints use numerical solvers; compare one with this closed form.
 
 ## Exercises
 
-1. Add a limit `|q2| < 2.8`; pick the other elbow when needed.
-2. Plot the reachable band as a heat map of valid answers.
-3. Show what `q1` does when `L1 = L2` and the target is the base.
+1. Ask for a target just inside, then just outside, the reach.
+2. Switch between elbow up and elbow down.
+3. Limit the elbow to 2.8 rad and pick the other elbow when needed.

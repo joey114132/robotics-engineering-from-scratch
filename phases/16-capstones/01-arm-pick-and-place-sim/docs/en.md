@@ -14,50 +14,54 @@ Gravity feedforward adds that push in advance. Without it, the controller pushes
 
 - **Inverse kinematics (IK)**: finding the joint angles that put the hand at a chosen point.
 - **Quintic**: a smooth curve that starts and ends at rest.
-- **PD loop**: pushes in proportion to the error and brakes in proportion to the speed.
-- **Feedforward**: a push added in advance from a model, instead of waiting for error.
-- **Sag**: the steady drop of the arm below its planned pose under gravity.
+- **PD loop**: pushes by how far off the arm is and brakes by how fast it moves.
+- **Feedforward**: a push added in advance from a model, instead of waiting for an error.
+- **Sag**: the steady drop of the arm below its planned pose because of gravity.
 - **Waypoint**: a pose the path must pass through, such as hovering over A.
 
 ## The Problem
 
-You ask an arm to pick up a ball and place it on a marker. Each earlier lesson passes its own test, yet the ball lands 2 cm off. Where does the miss come from?
+Each earlier lesson passes its own test, yet the arm sets the ball 2 cm off its marker. Where does the miss come from?
 
 ## The Concept
 
-Real robot tasks chain several parts together, so one small missing part can ruin the whole task.
+Real robot tasks chain several parts together, so one small missing part can ruin the whole task. Four parts work together: IK finds the poses, a smooth path joins them, a controller follows it, and gravity feedforward holds the arm up. Remove the quiet one and the arm sags.
 
 ![System](../assets/diagram-pick-place-system.png)
 
-*IK finds the joint angles for each stop, a quintic joins them, and a PD loop with feedforward drives the arm.*
+*IK finds poses, a smooth path joins them, a controller with feedforward drives the arm.*
 
 ![Broken chain](../assets/diagram-pick-place-broken.png)
 
-*Without feedforward all of gravity's torque becomes error, which the position spring turns into sag.*
-
-Hold the arm at B. The shoulder carries 6.11 Nm (`gravity()`). With `kp = 150` (Nm per radian of error) and no feedforward it sinks about `6.11 / 150 = 0.04` rad. The tip, 0.5 m away, moves about 0.02 m. `run()` reports 20.24 mm.
+*Without feedforward gravity's pull becomes error, and the controller turns it into sag.*
 
 ![Two arms](../assets/clip-example.mp4)
 
-*Blue, without feedforward, stops 20 mm from the marker. Green keeps it. Sag is drawn 6 times larger.*
+*Blue, without feedforward, stops short of the marker. Green keeps it. The sag is drawn bigger.*
 
 ![Success](../assets/fig-pick-place-result.png)
 
-*The tip lags the plan by up to 9 mm while moving, then settles to 0.00 mm at B.*
+*The tip follows the plan closely and ends exactly on the marker.*
 
 ![Sag](../assets/fig-pick-place-sag.png)
 
-*Without feedforward the tip sits 14 to 37 mm off the plan and the check fails.*
+*Without feedforward the tip sits off the plan and misses the marker, so the check fails.*
+
+<details><summary>The math (optional)</summary>
+
+Holding the arm at B, the shoulder must carry 6.11 Nm (`gravity()`). With `kp = 150` (Nm per radian of error) and no feedforward it sinks about `6.11 / 150 = 0.04` rad. The tip, 0.5 m away, moves about 0.02 m, and `run()` reports 20.24 mm. With feedforward the tip lags the plan by up to 9 mm while moving, then settles to 0.00 mm at B. Without it the tip sits 14 to 37 mm off the plan. Sag is drawn 6 times larger in the clip. The arm model is `M(q) a + C(q, v) + g(q) = tau`.
+
+</details>
 
 ## Build It
 
-The new part is the arm: `M(q) a + C(q, v) + g(q) = tau` (inertia, motion-coupling and gravity terms), stepped every millisecond.
+The new part is the arm itself, stepped every millisecond.
 
 ```python
 q, v = step(q, v, ff * gravity(qd) + kp * (qd - q) + kd * (vd - v))
 ```
 
-`ik()` gives the waypoints, `reference()` the planned angles and speeds `qd, vd`, and `ff` scales the feedforward. `run()` returns the pick error, the place error and `passed` (place error below 5 mm).
+`ik()` gives the waypoints, `reference()` the planned path, and `ff` scales the feedforward. `run()` returns the pick error, the place error and `passed` (place error under 5 mm).
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -77,6 +81,6 @@ Sources: [MuJoCo mjData reference](https://mujoco.readthedocs.io/en/stable/APIre
 
 ## Exercises
 
-1. Scale the feedforward to 0.9. What `kp` still passes?
+1. Use only 90% of the feedforward. How strong must the controller be to still pass?
 2. Add a 0.5 kg block to link 2 after the pick.
-3. Replace the quintic with a trapezoid.
+3. Replace the smooth path with a trapezoid.

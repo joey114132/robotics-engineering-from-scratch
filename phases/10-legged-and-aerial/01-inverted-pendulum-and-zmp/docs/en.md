@@ -21,33 +21,37 @@ A bigger shove carries your body farther before it would stop. That stopping spo
 
 ## The Problem
 
-Picture a walking robot shoved from behind. Its ankles push back hard, yet it keeps tipping: they only shift the ground's push inside the foot. Is a step needed, and where?
+Picture a walking robot shoved from behind. Its ankles push back hard, yet it keeps tipping, because ankles can only shift the push inside the foot. Is a step needed, and where?
 
 ## The Concept
 
-A real walker has little time to react, so it needs one number that says where to step.
+A walking robot has little time to react, so it needs one number that says where to step.
+
+A standing body falls like a balanced pencil: the farther it leans, the faster it falls. If you put a foot exactly where the body would come to rest, called the capture point, the fall stops.
 
 ![Leg to time constant](../assets/diagram-lipm-flow.png)
 
-*One mass on a massless leg; tipping speed becomes `Tc`.*
+*One mass on a thin leg.*
 
-`x` is the body's distance ahead of the ankle, `g` gravity and `h` the mass height. With the foot at `p`, `x'' = (g/h)(x - p)`. The solution grows like `exp(t/Tc)` with `Tc = sqrt(h/g)`, about 0.30 s for `h = 0.9 m`.
-
-Solved for `p`, the ZMP is `p = x - (h/g) x''`, and it cannot leave the foot. The capture point is `xi = x + v Tc` and moves at `xi' = (xi - p)/Tc`, so a foot placed on `xi` freezes it.
-
-A 10 cm foot lets the push sit at most 0.05 m from the ankle. With `v = 0.4 m/s`, `xi = 0.4 * 0.30 = 0.12 m`: the ankle alone fails. With 0.1 m/s, `xi = 0.03 m`, inside the foot: the ankle holds.
+For a small shove the capture point stays inside the foot, so the ankle alone can hold. For a big shove it lands beyond the toes, and only a step there helps.
 
 ![Two shoves](../assets/clip-example.mp4)
 
-*Purple: capture point. Dark: foot ends. Green (0.1 m/s) stays inside, blue (0.4 m/s) leaves.*
+*Green stays inside the foot. Blue leaves it and falls.*
 
 ![Ankle or step](../assets/diagram-capture-decision.png)
 
-*Inside the foot the ankle holds; outside, only a step helps.*
+*Inside the foot, the ankle holds. Outside, step.*
 
 ![Fall and recovery](../assets/fig-fall-and-recovery.png)
 
-*Ankle only: the body diverges. After 0.1 s `xi` is 0.15 m; a step there stops the body.*
+*Ankle only: it falls. A step to the capture point recovers.*
+
+<details><summary>The math (optional)</summary>
+
+`x` is the body's distance ahead of the ankle, `g` gravity and `h` the mass height. With the foot at `p`, `x'' = (g/h)(x - p)`. The solution grows like `exp(t/Tc)` with `Tc = sqrt(h/g)`, about 0.30 s for `h = 0.9 m`; a taller robot has a larger `Tc`, so more time to react. The ZMP is `p = x - (h/g) x''` and it must stay inside the foot. The capture point is `xi = x + v Tc` and moves at `xi' = (xi - p)/Tc`, so a foot placed on `xi` freezes it. A 10 cm foot lets the push sit at most 0.05 m from the ankle. With `v = 0.4 m/s`, `xi = 0.4 * 0.30 = 0.12 m`: the ankle alone fails. With 0.1 m/s, `xi = 0.03 m`: the ankle holds. After 0.1 s `xi` is 0.15 m, and a step there stops the body.
+
+</details>
 
 ## Build It
 
@@ -61,7 +65,7 @@ def capture_point(x, v, h, g=G):
     return x + v * time_constant(h, g)
 ```
 
-`simulate()` steps the equation forward (RK4); `fall_or_recover()` clamps the ZMP to the foot and optionally steps.
+`simulate()` steps the equation forward (RK4). `fall_or_recover()` clamps the ZMP to the foot and optionally steps.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -71,7 +75,7 @@ python3 phases/10-legged-and-aerial/01-inverted-pendulum-and-zmp/code/main.py
 
 ## Use It
 
-The last test checks `lipm_state` against SciPy's `solve_ivp`.
+The last test checks the model against SciPy's ODE solver.
 
 ## Ship It
 
@@ -79,6 +83,6 @@ The last test checks `lipm_state` against SciPy's `solve_ivp`.
 
 ## Exercises
 
-1. Raise `h` to 1.8 m; find the largest push the ankle alone absorbs.
-2. Delay the step by 0.3 s; where must the foot land?
-3. Add a foot width of 0.1 m; show the step target moves.
+1. Make the robot taller and see how much push the ankle can still absorb.
+2. Delay the step and see where the foot must land.
+3. Make the foot wider and watch the step target move.

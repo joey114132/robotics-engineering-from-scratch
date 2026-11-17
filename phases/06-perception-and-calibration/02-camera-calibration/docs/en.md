@@ -19,7 +19,7 @@ A camera looks at a checkerboard. Every square has the same size and square corn
 
 ## The Problem
 
-A robot reaches for what its camera sees and misses by a few centimetres near the image edge. The datasheet's focal length is not your camera's, so measure `fx` and `cx` from a known target.
+A robot reaches for what its camera sees and misses by a few centimetres near the image edge. The datasheet's focal length is not your camera's, so measure it from a known target.
 
 ## The Concept
 
@@ -27,13 +27,9 @@ Every camera differs a little, and a robot that trusts the datasheet misjudges w
 
 ![Four linear steps](../assets/diagram-calib-steps.png)
 
-*Each view gives `H`, the `H`s give `B`, and `B` gives `fx, fy, cx, cy`.*
+*Each photo gives a few numbers, and together they give the camera's zoom and centre.*
 
-Board corners are `(X, Y)` with `Z = 0`. Each view gives a 3x3 `H = K [r1 r2 t]` mapping `(X, Y, 1)` to pixels (`r1, r2` are the board's edge directions, `t` its position), so `h1 = K r1` and `h2 = K r2`.
-
-The edges are perpendicular and equally long, so `h1' B h2 = 0` and `h1' B h1 = h2' B h2` (`'` is transpose), with `B = K^-T K^-1` holding the unknowns: two equations per view. `B` is symmetric (six numbers), zero skew (the pixel grid's slant) removes one, and scale is unknown, so four equations suffice: two tilted views.
-
-With `fx = 620`, `fy = 580`, `cx = 330`, `cy = 235`, `make_views(K, 4, 0.0, 3)` makes 4 views (no noise, seed 3). Tilted 28 to 42 degrees, they return exactly that `K`. Only slid, they add the same clue and `calibrate()` raises `degenerate views`.
+A flat checkerboard has corners at known spots. Each photo from a new angle links those spots to pixels. With photos from two different tilts you can solve for the camera's zoom and centre with plain linear algebra. Photos where the board only slides repeat the same clue, so the solver refuses them.
 
 ![Slid and tilted boards](../assets/clip-example.mp4)
 
@@ -45,7 +41,13 @@ With `fx = 620`, `fy = 580`, `cx = 330`, `cy = 235`, `make_views(K, 4, 0.0, 3)` 
 
 ![Error against pixel noise](../assets/fig-calib-noise.png)
 
-*Median of 100 runs: 3 views give several times the pixel noise, more views halve it.*
+*Few photos give errors several times the pixel noise. More photos cut the error.*
+
+<details><summary>The math (optional)</summary>
+
+Each view gives a 3x3 `H = K [r1 r2 t]` that maps board corners `(X, Y, 1)` to pixels, where `K` holds `fx, fy, cx, cy`. The edges `r1, r2` are perpendicular and equally long, so `h1' B h2 = 0` and `h1' B h1 = h2' B h2` with `B = K^-T K^-1`: two equations per view. `B` is symmetric (six numbers), zero skew removes one, and scale is unknown, so four equations suffice: two tilted views. With `fx = 620`, `fy = 580`, `cx = 330`, `cy = 235`, `make_views(K, 4, 0.0, 3)` makes 4 views (no noise, seed 3), tilted 28 to 42 degrees, and returns exactly that `K`. At 1 px noise, going from 3 to 10 views roughly halves the error (median of 100 runs).
+
+</details>
 
 ## Build It
 
@@ -75,6 +77,6 @@ Sources: the [OpenCV calibration tutorial](https://opencv24-python-tutorials.rea
 
 ## Exercises
 
-1. Drop the zero-skew assumption by adding `B12`.
-2. Find the fewest views that survive 1 px noise.
-3. Add a refinement with `scipy.optimize.least_squares`.
+1. Add one more tilted view and watch the error.
+2. Make every view a slide and see the refusal.
+3. Add more pixel noise and see how many views you need.

@@ -21,27 +21,27 @@ Force control measures the push, going deeper when it is weak and backing off wh
 
 ## The Problem
 
-Picture a robot told to press a sponge with 10 N. It assumes 5000 N/m and commands a 2 mm squeeze, but the sponge top sits 0.4 mm lower, so only 1.6 mm gets squeezed. Then 1000 N/m gives 1.6 N, 5000 N/m 8 N, 25000 N/m 40 N.
+Picture a robot told to press a sponge with a steady force. It guesses how soft the sponge is and presses to a fixed depth. If the sponge is stiffer than guessed, it pushes far too hard.
 
 ![Three arms](../assets/clip-example.mp4)
 
-*Red bars: force, 1.6 cm per N.*
+*Same depth on three sponges: very different forces.*
 
 ## The Concept
 
-A real robot wiping or sanding needs a steady force, not a steady position.
+A robot wiping or sanding needs a steady force, not a steady position.
+
+Force control skips the guess: the robot measures the push. If it is weak, the tool goes deeper; if it is strong, it backs off.
 
 ![Position miss](../assets/diagram-position-miss.png)
 
-*The command is right only for the assumed stiffness.*
+*The command is right only for the guessed stiffness.*
 
 ![Force vs stiffness](../assets/fig-force-vs-stiffness.png)
 
-*Left: the force loop reaches 10 N everywhere. Right: position force grows with stiffness.*
+*Force control reaches the target on every surface.*
 
-The force loop moves the tool tip at `v = ki * (fd - f)`, with `fd` the wanted force and `f` the measured one. On a spring surface `f = ke * x`, so the force gap shrinks without overshoot, by about two thirds every `1 / (ke * ki)` seconds. Each step of `dt` multiplies the gap by `1 - ke * ki * dt`, so it is stable only while `ke * ki * dt < 2`.
-
-The selection matrix `S` gives each axis one law: force where `S = 1`, position where `S = 0`.
+Real tasks need both: slide along the surface by position, press into it by force. That is hybrid control.
 
 ![Selection](../assets/diagram-hybrid-selection.png)
 
@@ -49,11 +49,17 @@ The selection matrix `S` gives each axis one law: force where `S = 1`, position 
 
 ![Bumpy surface](../assets/fig-hybrid-bumpy.png)
 
-*Left: the path follows the bumps. Right: force stays near 10 N, not 0 to 20 N.*
+*The path follows the bumps and the force stays steady.*
+
+<details><summary>The math (optional)</summary>
+
+Pressing with 10 N, the robot assumes 5000 N/m and commands a 2 mm squeeze, but the sponge top sits 0.4 mm lower, so only 1.6 mm gets squeezed. Then 1000 N/m gives 1.6 N, 5000 N/m gives 8 N, 25000 N/m gives 40 N. The force loop moves the tool tip at `v = ki * (fd - f)`, with `fd` the wanted force and `f` the measured one. On a spring surface `f = ke * x` the gap shrinks by about two thirds every `1 / (ke * ki)` seconds, so a stiffer surface settles faster. Each step of `dt` multiplies the gap by `1 - ke * ki * dt`, so it is stable only while `ke * ki * dt < 2`: a loop that works on a soft pad can shake on steel. The selection matrix `S` gives each axis one law; `S = diag(0, 1)` means position on x and force on y.
+
+</details>
 
 ## Build It
 
-The hybrid law mixes `v_pos` and `v_frc`, the two laws' velocities.
+The hybrid law mixes the velocities of the two laws.
 
 ```python
 v = (1 - S) * v_pos + S * v_frc
@@ -70,7 +76,7 @@ python3 phases/11-contact-and-manipulation/02-force-and-hybrid-control/code/main
 
 ## Use It
 
-Repeat the press in MuJoCo; compare the force with `ke * depth`.
+Repeat the press in MuJoCo and compare the settled force with stiffness times depth.
 
 Sources: Craig (chapter 11) and the original hybrid-control paper could not be opened (403); both unchecked.
 
@@ -80,6 +86,6 @@ Sources: Craig (chapter 11) and the original hybrid-control paper could not be o
 
 ## Exercises
 
-1. Set `K_EST` to the true stiffness; position control hits 10 N, but only on that surface.
-2. Find the largest `KI` stable at `ke = 2.5e4` for `dt = 1 ms`.
-3. Add 10 ms of force-measurement delay; re-measure the limit.
+1. Tell the robot the true stiffness; position control then works, but only on that surface.
+2. Raise the loop gain until the force starts to shake.
+3. Add a small delay to the force reading and see the safe gain shrink.

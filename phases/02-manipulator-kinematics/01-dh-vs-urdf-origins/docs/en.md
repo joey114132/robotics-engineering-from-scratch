@@ -21,19 +21,15 @@ With the elbow straight both readings put the hand in the same place. Bend the e
 
 ## The Problem
 
-You copy a robot arm's DH table from a textbook. The zero pose looks right, so you move on. Later the arm misses its target at most other poses, with no error.
+You copy a robot arm's DH table, a table of numbers describing its links, from a textbook. The zero pose looks right, so you move on. Later the arm misses its target at most other poses, with no error.
 
 ## The Concept
 
-The table decides where your code thinks the hand is.
-
-A DH table has one row of four numbers per joint: `a` (link length), `alpha` (twist), `d` (slide along the joint axis) and `theta` (joint angle).
+The table decides where your code thinks the hand is. There are two ways to read it: slide along the link then turn, or turn then slide. With the elbow straight both give the same hand position, so the mistake hides.
 
 ![One arm, three descriptions](../assets/diagram-three-ways.png)
 
-*Three descriptions of one arm give one FK.*
-
-Craig's textbook convention (Ch. 3, Sec. 3.4) puts `a(i-1)` and `alpha(i-1)` on row `i`, so the link comes first. The other puts `a(i)` and `alpha(i)` there, shifting the table by one row.
+*Three descriptions of one arm should agree.*
 
 ![Silent failure path](../assets/diagram-silent-wrong.png)
 
@@ -41,24 +37,28 @@ Craig's textbook convention (Ch. 3, Sec. 3.4) puts `a(i-1)` and `alpha(i-1)` on 
 
 ![Wrong convention against right](../assets/fig-wrong-convention.png)
 
-*One table, two routines, two arms (left). Error against pose (right).*
-
-The 0.4 m and 0.3 m arm has Craig rows `(a, alpha, d, theta)` of `(0, 0, 0, 0)` and `(0.4, 0, 0, 0)`. Row 2 says slide 0.4 m, then turn the elbow; the standard routine turns first, so the upper link swings. A 0.5 rad shoulder turn leaves the hands together, but a 0.8 rad elbow bend parts them by 0.31 m.
+*Left: one table, two readings. Right: the error appears when the elbow bends.*
 
 ![Shoulder turn, then elbow bend](../assets/clip-example.mp4)
 
-*Blue: wrong routine. Green: Craig's. They part when the elbow bends.*
+*Blue reads the table wrongly and drifts from green.*
+
+<details><summary>The math (optional)</summary>
+
+A row has four numbers: link length `a`, twist `alpha`, slide `d` and joint angle `theta`. Craig's convention (Ch. 3, Sec. 3.4) puts `a(i-1)` and `alpha(i-1)` on row `i`; the other puts `a(i)` and `alpha(i)` there. Example arm: 0.4 m and 0.3 m, Craig rows `(0, 0, 0, 0)` and `(0.4, 0, 0, 0)`. A 0.5 rad shoulder turn leaves the hands together; a 0.8 rad elbow bend parts them by 0.31 m.
+
+</details>
 
 ## Build It
 
-Each routine multiplies four single turns or slides per row.
+Each way of reading the table multiplies the same four moves in a different order.
 
 ```python
 def dh_craig(a, alpha, d, th):    return rx(alpha) @ tr(a,0,0) @ rz(th) @ tr(0,0,d)
 def dh_standard(a, alpha, d, th): return rz(th) @ tr(0,0,d) @ tr(a,0,0) @ rx(alpha)
 ```
 
-`craig_to_standard()` shifts `(a, alpha)` up one row. `craig_to_urdf()` folds `d` into the origin and raises if a theta offset would be dropped.
+`craig_to_standard()` shifts the numbers up one row, and `craig_to_urdf()` folds the slide into the robot file's offset and complains if a turn offset would be lost.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -68,7 +68,7 @@ python3 phases/02-manipulator-kinematics/01-dh-vs-urdf-origins/code/main.py
 
 ## Use It
 
-A URDF loader or MuJoCo model reads origins, so convert a datasheet's DH table first, then compare tip poses at five random poses.
+A URDF loader or MuJoCo model reads offsets, so convert a datasheet's DH table first, then compare the hand position at five random poses.
 
 ## Ship It
 
@@ -76,6 +76,6 @@ A URDF loader or MuJoCo model reads origins, so convert a datasheet's DH table f
 
 ## Exercises
 
-1. Support a theta offset in `craig_to_urdf()` by converting `Rx(alpha) Rz(offset)` to `rpy`.
-2. Find a pose where the wrong convention is right anyway.
-3. Detect a convention mismatch from two measured tip positions.
+1. Bend the elbow in the demo and watch the two readings part.
+2. Find a pose where the wrong reading is right anyway.
+3. Detect a mismatch from two measured hand positions.

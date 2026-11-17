@@ -16,6 +16,7 @@ from . import figures
 from . import progress as P
 from . import ui as U
 
+_FOLD = re.compile(r"^<details>\s*<summary>([^<]*)</summary>$")
 _IMG = re.compile(r"^!\[(.*?)\]\((.+?)\)\s*$")
 _CAP = re.compile(r"^\*(?!\*)(.+?)\*\s*$")
 _META = re.compile(r"\*\*(.+?):\*\*\s*(.+?)(?=\s{2,}\*\*|$)")
@@ -116,6 +117,12 @@ def split_blocks(body):
             cap = _CAP.match(lines[k].strip()) if k < len(lines) else None
             out.append(("img", m[1], m[2], cap[1] if cap else m[1]))
             i = k + 1 if cap else i + 1
+            continue
+        fold = None if fence else _FOLD.match(ln.strip())
+        if fold:   # the optional math fold: a terminal has no folding, so show its title and the text under it
+            ln = f"**{fold[1]}**"
+        elif not fence and ln.strip() == "</details>":
+            i += 1
             continue
         buf.append(ln)
         i += 1

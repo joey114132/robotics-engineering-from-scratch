@@ -2,7 +2,7 @@
 
 > Learn why two ROS programs can both run fine and still never exchange a message.
 
-**Type:** Build   **Prerequisites:** 00/04 ROS 2 in One Page   **Time:** ~15 minutes
+**Type:** Build   **Prerequisites:** 00/10 ROS 2 in One Page   **Time:** ~15 minutes
 
 ## In Plain Words
 
@@ -29,21 +29,27 @@ A robot is many programs passing messages, and this silent mismatch looks just l
 
 *The rover offers best effort, the arm asks for reliable: no match.*
 
-Each side declares a QoS profile. Reliability: best effort sends once and moves on, reliable resends a lost message. Durability: volatile gives a late subscriber nothing, transient local gives it old messages. A pair connects only if the subscriber asks for no more than the publisher offers. A reliable publisher with a best effort subscriber is fine. The reverse is not.
+Each side declares a delivery promise. Best effort sends once and moves on, while reliable resends a lost message. A pair connects only if the listener asks for no more than the sender offers. A reliable sender with a best effort listener is fine. The reverse is not.
 
 ![Queue with depth](../assets/diagram-qos-queue.png)
 
-*A keep-last queue holds the newest N and drops the oldest.*
+*A keep-last queue holds the newest few and drops the oldest.*
 
-Even a matched pair loses messages when the callback is slower than the publisher. Say the rover sends 8 messages at once and the arm handles one per tick (a simulation step). With depth 1, `run()` delivers 1 and drops 7. With depth 8 it delivers all 8.
+A slow listener loses messages unless the queue is deep enough.
 
 ![Eight messages, two arms](../assets/clip-example.mp4)
 
-*Same burst. Blue has one slot: seven messages fall. Green has eight slots: the arm steps through all.*
+*Same burst. Blue has one slot: most messages fall. Green has enough slots: the arm steps through all.*
 
 ![Delivery and drops](../assets/fig-qos-delivery.png)
 
-*Left: the mismatched pair delivers 0%. Right: a burst of 8 needs depth 8, while constant overload drops half at any depth.*
+*Left: the mismatched pair delivers nothing. Right: a burst needs a queue as deep as the burst, while constant overload drops messages at any depth.*
+
+<details><summary>The math (optional)</summary>
+
+Another QoS setting is durability: volatile gives a late listener nothing, transient local gives it the old messages. Say the rover sends 8 messages at once and the arm handles one per tick (a simulation step). With depth 1, `run()` delivers 1 and drops 7. With depth 8 it delivers all 8. In the figure the mismatched pair delivers 0%, and a constant overload drops half the messages at any depth.
+
+</details>
 
 ## Build It
 
@@ -56,7 +62,7 @@ def compatible(pub, sub):
     return True, "ok"
 ```
 
-`Queue.push()` pops the oldest past `depth`, counting drops. `run()` publishes `arrivals[t]` messages per tick, loses some on a best effort link, and lets the callback take one per tick.
+`Queue.push()` pops the oldest past `depth`, counting drops.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,6 +81,6 @@ Sources: ROS 2 Jazzy, "Quality of Service settings" (https://docs.ros.org/en/jaz
 
 ## Exercises
 
-1. Add a deadline policy that rejects a subscriber deadline shorter than the publisher's.
-2. Give `Queue` a keep-all mode and show its memory growth.
-3. Make a transient-local publisher replay its last `depth` messages to a late subscriber.
+1. Change the sender or listener setting and see when they connect.
+2. Make the queue deeper and watch the drops change.
+3. Let a late listener receive the old messages.

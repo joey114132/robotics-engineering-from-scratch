@@ -21,35 +21,43 @@ Now someone carries the rover to another corner. Every old guess is far from the
 
 ## The Problem
 
-Picture a robot in a building with two look-alike hallways. Odometry drifts, and one best guess cannot say "either hallway", but a cloud of guesses can. A cloud can also grow too sure of itself.
+Picture a robot in a building with two look-alike hallways. Its wheel counts drift, and one best guess cannot say "either hallway". A crowd of guesses can, but a crowd can grow too sure of itself.
 
 ## The Concept
 
-A real robot needs this to know where it is on a map and to recover after a slip or a lift.
+A robot needs this to know where it is on a map, and to recover when it is carried away.
+
+It keeps hundreds of guesses of where it might be. Guesses that fit what it measures are copied; the rest are dropped. Then all guesses move as far as the robot drove.
 
 ![Particle filter cycle](../assets/diagram-pf-cycle.png)
 
-*Move with noise, score, then copy or drop by score.*
-
-A particle's weight grows as its predicted distances approach the measured ones (a Gaussian likelihood). Far from the truth every weight underflows to zero, so keep weights as logs and subtract the largest before `exp`. Systematic resampling draws `N` evenly spaced pointers from one random offset, so the cloud size stays fixed.
+*Move, score, copy.*
 
 ![Particles collapse](../assets/fig-pf-collapse.png)
 
-*1000 particles, 4 landmarks: error below 0.3 m after 40 steps.*
+*The guesses gather on the star.*
+
+If someone carries the robot away, every guess is far from the truth.
 
 ![Kidnap diagram](../assets/diagram-pf-kidnap.png)
 
-*After a kidnap no guess sits near the new pose.*
+*After the carry, no guess is near.*
 
-At step 40 the rover is carried 7.2 m, from `(2, 3)` to `(8, 7)`. One step later the plain filter's estimate is 3.79 m from the rover and ends 3.88 m away. With 5% random particles it is 0.43 m away and ends 0.24 m away.
+The fix: scatter a few random guesses at every step. One lands near the truth, and the crowd follows.
 
 ![Plain and random clouds](../assets/clip-example.mp4)
 
-*Tall blue (plain) never finds the lifted rover. Short green (5% random) jumps to it.*
+*Plain blue never finds it. Green, with random guesses, jumps to it.*
 
 ![Error after kidnap](../assets/fig-pf-kidnap.png)
 
-*Orange (plain) stays above 1.4 m. Blue (5% random) recovers, with a slightly noisier estimate.*
+*Orange never recovers. Blue does.*
+
+<details><summary>The math (optional)</summary>
+
+A particle is a pose `(x, y, heading)`. Its weight grows as its predicted distances approach the measured ones. Far from the truth every weight underflows to zero, so keep weights as logs and subtract the largest before `exp`. Systematic resampling draws `N` evenly spaced pointers from one random offset, so the cloud size stays fixed. With 1000 particles and 4 landmarks the error is below 0.3 m after 40 steps. At step 40 the rover is carried 7.2 m, from (2, 3) to (8, 7). One step later the plain filter's estimate is 3.79 m away and ends 3.88 m away, never below 1.4 m. With 5% random particles it is 0.43 m away and ends 0.24 m away.
+
+</details>
 
 ## Build It
 
@@ -73,7 +81,7 @@ python3 phases/08-mobile-robots/02-particle-filter-localisation/code/figure.py
 
 ## Use It
 
-Nav2's AMCL localises a robot on a known map from a 2D laser scan. Compare its cloud spread with this lesson's.
+Nav2's AMCL finds a robot on a known map from a laser scan.
 
 Sources: Nav2 `nav2_amcl` README, github.com/ros-navigation/navigation2, opened 2026-11-09.
 
@@ -83,6 +91,6 @@ Sources: Nav2 `nav2_amcl` README, github.com/ros-navigation/navigation2, opened 
 
 ## Exercises
 
-1. Plot `n_eff` (how many particles still matter) and resample only below N/2.
-2. Remove the max-subtraction; find where weights underflow.
-3. Put the landmarks on one line and see which direction stays ambiguous.
+1. Change the number of guesses; watch how fast they settle.
+2. Turn the random guesses off and carry the robot again.
+3. Put all the posts on one line; see which direction stays unclear.

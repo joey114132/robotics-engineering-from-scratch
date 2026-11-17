@@ -19,7 +19,7 @@ Press up on the hand of a bench arm. Inside the joint, the drive pulls the hand 
 
 ## The Problem
 
-You push on a robot arm that should give way like a soft spring, but it stays stiff. Your program asked for `K = 20` Nm per radian, yet the drive never heard the request.
+You push on a robot arm that should give way like a soft spring, but it stays stiff. The drive never heard the request.
 
 ## The Concept
 
@@ -27,11 +27,11 @@ A robot that works beside people must give way when it is pushed.
 
 ![Who writes torque](../assets/diagram-mode-loops.png)
 
-*Torque mode: your program writes the torque. Position mode: the drive's inner PD does.*
+*In torque mode your program writes the torque. In position mode the drive's inner controller does.*
 
-The inner PD has fixed `kp_in` and `kd_in`. A constant push `tau_ext` moves the joint until the spring balances it: `tau_ext / K` in torque mode, but `tau_ext / kp_in` in position mode, whatever `K` you send.
+In position mode the drive runs its own controller, like a spring of fixed strength. A push moves the joint until that spring balances it, whatever softness you asked for. In torque mode you choose the spring, so you choose how much the joint gives way.
 
-With a 2 Nm push and `kp_in = 400`, torque mode with `K = 20` gives way 0.1 rad and position mode only 0.005 rad. An admittance layer lifts the target by `tau_ext / K = 0.1` rad. With the inner spring the total is `tau_ext * (1/K + 1/kp_in) = 0.105` rad, never stiffer than `kp_in`.
+An admittance layer measures the push and moves the target, so the joint acts soft.
 
 ![Admittance clip](../assets/clip-example.mp4)
 
@@ -39,15 +39,21 @@ With a 2 Nm push and `kp_in = 400`, torque mode with `K = 20` gives way 0.1 rad 
 
 ![Mode options](../assets/diagram-mode-options.png)
 
-*Impedance needs torque commands. Position-only drives need an outside layer.*
+*Soft joints need torque commands or an outside layer.*
 
 ![Push response and stiffness](../assets/fig-mode-stiffness.png)
 
-*Left: one push, three responses. Right: only torque mode follows the requested stiffness.*
+*Left: one push, three responses. Right: only torque mode follows the stiffness you ask for.*
+
+<details><summary>The math (optional)</summary>
+
+The inner controller has fixed `kp_in` and `kd_in`. A constant push `tau_ext` moves the joint by `tau_ext / K` in torque mode but `tau_ext / kp_in` in position mode, whatever `K` you send. With a 2 Nm push and `kp_in = 400`, torque mode with `K = 20` gives way 0.1 rad and position mode only 0.005 rad. An admittance layer lifts the target by `tau_ext / K = 0.1` rad, so the total is `tau_ext * (1/K + 1/kp_in) = 0.105` rad, never stiffer than `kp_in`.
+
+</details>
 
 ## Build It
 
-One joint `J*qdd = tau - b*qd + tau_ext` (`qdd` is acceleration), three ways to make `tau`.
+One joint, three ways to make the torque.
 
 ```python
 if mode == "torque":
@@ -78,6 +84,6 @@ Sources: [ros2_control full tutorial](https://control.ros.org/master/doc/ros2_co
 
 ## Exercises
 
-1. Raise `kp_in` to 4000 and see how the deflection changes.
-2. Add a 3 ms delay to the measured push.
-3. Find the `K` at which the layer feels half as stiff as requested.
+1. Change `kp_in` and watch how much the joint gives way.
+2. Add a small delay.
+3. Make the layer feel half as stiff as you asked.

@@ -21,7 +21,7 @@ A gentle push slows the arm. A strong push, a light arm or a long wait lets the 
 
 ## The Problem
 
-A robot joint shakes, so you turn up the brake (damping gain `kd`), and now it buzzes. The host computes a torque once per tick and holds it, so the damper pushes against a speed one tick old.
+A robot joint shakes, so you turn up the brake, and now it buzzes. The controller reads the speed once per step and holds its push, so the brake keeps pushing against a speed that is already one step old.
 
 ## The Concept
 
@@ -29,25 +29,31 @@ A controller acts in steps, and that delay can turn a brake into a shove.
 
 ![Stale velocity](../assets/diagram-stale-command.png)
 
-*The torque uses the speed at tick start but acts all tick.*
+*The push uses the speed from the start of the step.*
 
-Take a pure inertia `J`. Hold the torque `-kd * v` for one tick `dt`: the speed changes by `-dt * kd * v / J`, so one tick later `v+ = v * (1 - r)`, where `r = dt * kd / J`.
+The key number is how much of the speed one step of braking removes. Below one, the speed shrinks smoothly. Between one and two it flips sign each step but still shrinks, which is the buzzing. Above two it grows.
 
 ![Three zones of r](../assets/diagram-r-zones.png)
 
-*Up to 1 the speed shrinks smoothly (at 1, to zero in one tick). Between 1 and 2 it flips sign but shrinks. Above 2 it grows.*
+*Three zones: smooth, buzzing, blowing up.*
 
 ![Speed per tick](../assets/fig-r-response.png)
 
-*Left: `r = 1.5` flips the sign but the swings shrink. Right: `1 - r` crosses 0 at `r = 1`.*
-
-Example: `J = 0.02`, `dt = 0.001`, `kd = 30` gives `r = 1.5`: speeds 1, -0.5, 0.25. Tripling `J` gives `r = 0.5`: 1, 0.5, 0.25.
+*In the buzzing zone the sign flips but the swings shrink.*
 
 ![Two arms](../assets/clip-example.mp4)
 
-*Same `kd = 30`. Light blue (`r = 1.5`) jerks in shrinking steps; weighted green (`r = 0.5`) glides to a stop.*
+*Same brake: the light arm buzzes, the heavy one glides.*
+
+<details><summary>The math (optional)</summary>
+
+Hold the torque `-kd * v` for one tick `dt` on inertia `J`: `v+ = v * (1 - r)` with `r = dt * kd / J`. Smooth for `r <= 1` (exactly 1 gives zero speed), chatter for `1 < r < 2`, divergent above 2. With `J = 0.02`, `dt = 0.001`, `kd = 30`: `r = 1.5`, speeds 1, -0.5, 0.25. Tripling `J` gives `r = 0.5`: 1, 0.5, 0.25. At that `J` and `dt` the limits are `kd = 20` and `40`.
+
+</details>
 
 ## Build It
+
+`step_damper` applies one step of braking, and `classify` says smooth, chatter or divergent.
 
 ```python
 def step_damper(v, J, kd, dt):
@@ -58,7 +64,7 @@ def classify(J, kd, dt):
     return "smooth" if r <= 1 else "chatter" if r < 2 else "divergent"
 ```
 
-Tests cover both sides of each boundary at `J = 0.02`, `dt = 0.001` (limits `kd = 20` and `40`), and check that `r = 1` gives zero speed.
+Tests check both sides of each boundary.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -68,7 +74,7 @@ python3 phases/03-dynamics-and-control/01-the-sampling-limit/code/figure.py
 
 ## Use It
 
-Many drives run an inner loop much faster, which removes the limit. Otherwise lower `kd`, raise the loop rate, or cap gains using the lowest-inertia pose.
+Many drives run an inner loop much faster, which removes the limit. Otherwise lower `kd`, raise the loop rate, or cap gains using the lightest pose.
 
 ## Ship It
 
@@ -76,6 +82,6 @@ Many drives run an inner loop much faster, which removes the limit. Otherwise lo
 
 ## Exercises
 
-1. Add a spring term and find the stable `(kp, kd)` region by simulation.
-2. Add one tick of delay; where do the limits move?
-3. Estimate a two-link wrist's effective inertia.
+1. Change `kd` until `classify` says chatter, then divergent.
+2. Make the joint heavier and see the limits move.
+3. Add one step of delay and see where the limits go.

@@ -8,7 +8,7 @@ A free, beginner-first course on how robots work. No robotics background needed:
 
 *Every motion here is computed by a lesson's own code.*
 
-81 short lessons (about 15 minutes each) in 17 phases: robot arms, wheeled and walking robots, drones, cameras and sensors, path planning, robot learning, robot teams and safety. Full list: [ROADMAP.md](ROADMAP.md).
+87 short lessons (about 15 minutes each) in 17 phases: robot arms, wheeled and walking robots, drones, cameras and sensors, path planning, robot learning, robot teams and safety. Full list: [ROADMAP.md](ROADMAP.md).
 
 ## Who this is for
 
@@ -22,7 +22,7 @@ Every robot repeats three steps, many times a second:
 2. **Think**: work out where it is and what to do next.
 3. **Act**: send commands to motors so something moves.
 
-The phases follow that loop. You first learn the math for describing where things are (phases 00 to 02), then how to make motors move a body (03 to 05), how to sense and estimate (06 and 07), how to drive, plan, walk and fly (08 to 11), and finally how to test, learn, work in teams and stay safe (12 to 16).
+The phases follow that loop. Phase 00 starts from zero: what a robot is, points, angles, joints and time steps, one small idea per lesson. Then you learn to describe where things are (phases 01 and 02), then how to make motors move a body (03 to 05), how to sense and estimate (06 and 07), how to drive, plan, walk and fly (08 to 11), and finally how to test, learn, work in teams and stay safe (12 to 16).
 
 ![Learning path: six stages from setup and math to fleets, safety and capstones](docs/img/roadmap.png)
 
@@ -35,13 +35,13 @@ The phases follow that loop. You first learn the math for describing where thing
 
 ## Start in three steps
 
-1. Open the [website](https://robotics-from-scratch.robotics-site.workers.dev) and read [lesson 00-01](phases/00-setup-and-tooling/01-python-env-and-numpy/docs/en.md). Nothing to install.
+1. Open the [website](https://robotics-from-scratch.robotics-site.workers.dev) and read [lesson 00-01, What Is a Robot](phases/00-start-here/01-what-is-a-robot/docs/en.md). Nothing to install.
 2. When you want to run the code, install Python 3.10 or newer, then:
    ```bash
    git clone https://github.com/joey114132/robotics-engineering-from-scratch
    cd robotics-engineering-from-scratch
    pip install -r requirements.txt
-   python3 phases/00-setup-and-tooling/01-python-env-and-numpy/code/main.py
+   python3 phases/00-start-here/01-what-is-a-robot/code/main.py
    ```
 3. Go in order. Each lesson takes about 15 minutes and names the lessons it builds on. Stuck on a word? Check the [glossary](GLOSSARY.md).
 

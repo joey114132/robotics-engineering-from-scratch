@@ -6,7 +6,9 @@
 
 ## In Plain Words
 
-A slotted disc turns slowly past a fixed reader. The reader can only say one more slot edge went by, one count. Speed is counts divided by the time you counted for. Check often and you mostly see nothing, then one edge, so the speed jumps. Wait longer and it steadies, but each reading is older.
+A slotted disc turns slowly past a fixed reader. The reader can only say one more slot edge went by, one count. Speed is counts divided by the time you counted for.
+
+Check often and you mostly see nothing, then one edge, so the speed jumps. Wait longer and it steadies, but each reading is older.
 
 ## Key Terms
 
@@ -25,27 +27,31 @@ A joint turns slowly and smoothly, yet its speed reading jumps between zero and 
 
 A joint's speed usually comes from encoder counts, so every slow robot meets this.
 
-Counts are steps, and differencing (subtracting the previous count) turns each step into a spike.
-
 ![Angle to velocity](../assets/diagram-encoder-pipeline.png)
 
-*Smooth shaft, stepped counts, spiky velocity.*
+*Smooth shaft, stepped counts, spiky speed.*
 
-One count is `2*pi / CPR` radians. Dividing by the sample time `dt` gives the smallest speed a one-sample difference can report, `2*pi / (CPR * dt)`: 1.53 rad/s for `CPR = 4096` and `dt = 1 ms`. A joint at 0.1 rad/s makes a count about every 15 ms, so 14 of 15 readings are zero and the rest read 1.53.
+An encoder only reports whole counts, so the angle goes up in small steps. Subtracting the last count to get speed turns each step into a spike. At slow speed most readings show no change and a few show a big jump.
 
 ![Window trade-off](../assets/diagram-window-tradeoff.png)
 
-*Longer window: smaller steps, less noise, older estimate.*
+*Longer window: less noise, older answer.*
 
-A window of `n` samples divides the step by `n` and delays a changing signal by `n*dt/2`. In the lag test speed rises at 2 rad/s^2 with `n = 20` and `dt = 1 ms`. The estimate is 10 ms old, so it reads `2 * 0.01 = 0.02` rad/s too low.
+You can smooth the speed by comparing counts further apart, a longer window. That cuts the noise but makes the answer describe an older moment, so the speed arrives late.
 
 ![Two dials](../assets/clip-example.mp4)
 
-*Blue (one sample) sits on the true speed, green (20 samples) trails by 10 ms.*
+*Blue (one sample) sits on the true speed. Green (many samples) trails behind it.*
 
 ![Noise and delay](../assets/fig-encoder-velocity.png)
 
-*Left: 1 kHz gives rare tall spikes, 100 Hz small steps. Right: longer windows cut noise but add delay.*
+*Left: fast sampling gives rare tall spikes, slower sampling small steps. Right: longer windows cut noise but add delay.*
+
+<details><summary>The math (optional)</summary>
+
+One count is `2*pi / CPR` radians. Dividing by the sample time `dt` gives the smallest speed one sample can report, `2*pi / (CPR * dt)`: 1.53 rad/s for `CPR = 4096` and `dt = 1 ms`. A joint at 0.1 rad/s makes a count about every 15 ms, so 14 of 15 readings are zero and the rest read 1.53. A window of `n` samples divides the step by `n` and delays a changing signal by `n*dt/2`. With speed rising at 2 rad/s^2, `n = 20` and `dt = 1 ms`, the estimate is 10 ms old and reads `2 * 0.01 = 0.02` rad/s too low. In the figure, 1 kHz means 1000 readings a second and 100 Hz means 100.
+
+</details>
 
 ## Build It
 
@@ -59,8 +65,6 @@ def window_velocity(c, cpr, dt, n):
 def window_lag(n, dt):
     return n * dt / 2
 ```
-
-Tests check whole-step output, no bias, the noise level and the lag `n*dt/2`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -80,6 +84,6 @@ Sources: [maxon, encoder selection part three](https://www.maxongroup.com/en-us/
 
 ## Exercises
 
-1. Time the gap between counts and compare its noise at 0.1 rad/s.
-2. Find the speed above which a one-sample difference has under 10% error.
-3. Show the dip near `n = 15` moves with the ramp speed.
+1. Time the gap between counts instead and compare the noise at slow speed.
+2. Find the speed above which a one-sample difference is good enough.
+3. Change the ramp speed and watch the dip in the figure move.

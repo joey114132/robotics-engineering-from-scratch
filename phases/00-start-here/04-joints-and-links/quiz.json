@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "What is a link on a robot arm?", "options": ["A hinge that turns", "A stiff bar between two joints", "The tip of the arm"], "answer": 1, "explanation": "A link is a rigid bar. The joints are the hinges that turn."},
+  {"id": 2, "stage": "check", "question": "A link of length 0.4 points straight up. How far across is its tip?", "options": ["0.4", "0", "0.2"], "answer": 1, "explanation": "Straight up means no distance across. All 0.4 is up."},
+  {"id": 3, "stage": "check", "question": "What is the second joint's angle counted from?", "options": ["The floor", "The first link", "The hand"], "answer": 1, "explanation": "Each joint angle is counted from the link before it."},
+  {"id": 4, "stage": "check", "question": "A joint turns. What happens to the link's length?", "options": ["It stays the same", "It grows", "It shrinks"], "answer": 0, "explanation": "A link is rigid, so only its direction changes."},
+  {"id": 5, "stage": "post", "question": "Two links, 0.4 and 0.3 long, are both straight. How far is the hand from the shoulder?", "options": ["0.1", "0.5", "0.7"], "answer": 2, "explanation": "Straight links add their lengths: 0.4 + 0.3."},
+  {"id": 6, "stage": "post", "question": "Which pair turns an angle into 'across' and 'up'?", "options": ["cos and sin", "add and subtract", "min and max"], "answer": 0, "explanation": "cos gives the across part and sin gives the up part."}
+]

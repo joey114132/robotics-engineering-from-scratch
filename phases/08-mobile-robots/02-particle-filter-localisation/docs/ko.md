@@ -22,36 +22,50 @@
 
 ## 문제
 
-복도 두 개가 똑같이 생긴 건물에 로봇이 있다고 상상해 보세요. odometry는 오차가 쌓이고 가장 좋은 추측 하나로는 "어느 복도든 될 수 있다"를 말할 수 없지만 particle 구름은 말할 수 있습니다. 다만 구름이 자기 확신이 너무 커질 수도 있습니다.
+복도 두 개가 똑같이 생긴 건물에 로봇이 있다고 상상해 보세요. 바퀴 기록은 어긋나고 가장 좋은 추측 하나로는 "어느 복도든"을 말할 수 없지만 추측 무리는 말할 수 있습니다. 다만 무리가 자기 확신이 너무 커질 수도 있습니다.
 
 ## 개념
 
-실제 로봇은 지도 위의 자기 위치를 알고 미끄러지거나 들려 옮겨진 뒤에 회복하는 데 이것이 필요합니다.
+로봇은 지도 위의 자기 위치를 알고 들려 옮겨진 뒤에 회복하는 데 이것이 필요합니다.
+
+로봇은 자기가 있을 만한 자리를 수백 곳 짐작해 둡니다. 측정과 잘 맞는 추측은 복제하고 나머지는 버립니다. 그다음 추측을 모두 로봇이 간 만큼 옮깁니다.
 
 ![Particle filter 한 주기](../assets/diagram-pf-cycle.png)
 
-*noise와 함께 움직이고 점수를 매긴 뒤 점수에 따라 복제하거나 버립니다.*
-
-particle이 예측한 거리가 측정한 거리에 가까울수록 weight가 커집니다(가우시안 likelihood). 참값에서 먼 구름은 weight가 전부 0으로 underflow하므로 weight를 로그로 두고 `exp` 전에 가장 큰 값을 뺍니다.
-systematic resampling은 무작위 offset 하나에서 같은 간격의 포인터 `N`개를 뽑으므로 구름 크기가 일정합니다.
+*움직이고 점수를 매기고 복제합니다.*
 
 ![참 자세로 모이는 particle](../assets/fig-pf-collapse.png)
 
-*particle 1000개와 landmark 4개에서 40 step 뒤 오차는 0.3 m 아래입니다.*
+*추측이 별 주위로 모입니다.*
 
-![붕괴한 구름은 옮겨진 로봇을 찾지 못합니다](../assets/diagram-pf-kidnap.png)
+누가 로봇을 들어 옮기면 모든 추측이 참값에서 멉니다.
 
-*kidnap 뒤에는 새 자세 근처에 particle이 하나도 없습니다.*
+![kidnap 도식](../assets/diagram-pf-kidnap.png)
 
-step 40에 로버가 `(2, 3)`에서 `(8, 7)`로 7.2 m 옮겨집니다. 한 step 뒤 일반 filter의 추정값은 로버에서 3.79 m 떨어져 있고 끝까지 3.88 m 떨어집니다. 무작위 particle을 5% 섞으면 0.43 m 떨어졌다가 끝에는 0.24 m 떨어집니다.
+*옮겨진 뒤에는 근처에 추측이 없습니다.*
 
-![kidnap 뒤 일반 구름과 무작위 particle을 섞은 구름](../assets/clip-example.mp4)
+해결책은 매 step마다 무작위 추측을 조금 흩어 두는 것입니다. 그중 하나가 참값 근처에 떨어지면 무리가 따라갑니다.
 
-*키 큰 파랑(일반)은 들려 옮겨진 로버를 끝내 찾지 못하고 키 작은 초록(무작위 5%)은 로버에게 건너뜁니다.*
+![일반 구름과 무작위 구름](../assets/clip-example.mp4)
 
-![kidnap 뒤 오차, random particle 유무 비교](../assets/fig-pf-kidnap.png)
+*일반 파랑은 끝내 못 찾고 무작위 추측을 섞은 초록은 로버에게 건너뜁니다.*
 
-*주황색(일반)은 1.4 m 아래로 돌아오지 못합니다. 파란색(무작위 5%)은 추정이 조금 더 흔들리는 대가로 회복합니다.*
+![kidnap 뒤 오차](../assets/fig-pf-kidnap.png)
+
+*주황색은 회복하지 못하고 파란색은 회복합니다.*
+
+<details><summary>The math (optional)</summary>
+
+particle은 자세 `(x, y, heading)`입니다.
+예측한 거리가 측정한 거리에 가까울수록 weight가 커집니다.
+참값에서 먼 구름은 weight가 전부 0으로 underflow하므로 weight를 로그로 두고 `exp` 전에 가장 큰 값을 뺍니다.
+systematic resampling은 무작위 offset 하나에서 같은 간격의 포인터 `N`개를 뽑으므로 구름 크기가 일정합니다.
+particle 1000개와 landmark 4개에서 40 step 뒤 오차는 0.3 m 아래입니다.
+step 40에 로버가 (2, 3)에서 (8, 7)로 7.2 m 옮겨집니다.
+한 step 뒤 일반 filter의 추정값은 3.79 m 떨어져 있고 끝까지 3.88 m이며 1.4 m 아래로 돌아오지 못합니다.
+무작위 particle을 5% 섞으면 0.43 m였다가 끝에는 0.24 m입니다.
+
+</details>
 
 ## 만들기
 
@@ -75,7 +89,7 @@ python3 phases/08-mobile-robots/02-particle-filter-localisation/code/figure.py
 
 ## 실제 도구로 보기
 
-Nav2의 AMCL은 2D 레이저 스캔으로 알려진 지도 위에서 로봇의 위치를 추정합니다. 구름의 퍼짐을 이 레슨과 비교해 보세요.
+Nav2의 AMCL은 레이저 스캔으로 알려진 지도 위의 로봇을 찾습니다.
 
 출처: Nav2 `nav2_amcl` README, github.com/ros-navigation/navigation2, 2026년 11월 9일에 열어 확인했습니다.
 
@@ -85,6 +99,6 @@ Nav2의 AMCL은 2D 레이저 스캔으로 알려진 지도 위에서 로봇의 �
 
 ## 연습 문제
 
-1. `n_eff`(아직 쓸모 있는 particle의 수)를 그리고 N/2 아래일 때만 resampling하세요.
-2. 가장 큰 값 빼기를 없애고 weight가 underflow하는 step을 찾으세요.
-3. landmark를 한 직선 위에 놓고 어느 방향이 모호하게 남는지 보세요.
+1. 추측의 개수를 바꾸고 무리가 얼마나 빨리 안정되는지 보세요.
+2. 무작위 추측을 끄고 로봇을 다시 옮겨 보세요.
+3. 기둥을 모두 한 직선 위에 놓고 어느 방향이 모호하게 남는지 보세요.

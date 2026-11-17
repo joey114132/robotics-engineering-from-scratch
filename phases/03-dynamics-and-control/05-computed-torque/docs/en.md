@@ -21,37 +21,41 @@ Computed torque works out from the arm's equations the torque these effects dema
 
 ## The Problem
 
-A joint-by-joint PD controller makes a robot arm follow a slow motion well. Four times faster, the arm lags and wobbles, because inertia and coupling torques now dominate.
+A simple controller makes a robot arm follow a slow motion well. Make the same motion four times faster, and the arm lags and wobbles.
 
 ## The Concept
 
-Fast motion makes an arm's links pull on each other; a good controller predicts that.
+Fast motion makes an arm's links pull on each other, and a good controller predicts that. The arm's weight and swing forces can be worked out from its equations, so the controller supplies them in advance and only fixes what is left.
 
 ![PD fails at speed](../assets/diagram-pd-blind-spot.png)
 
-*PD sees the elbow's inertia change and the Coriolis torque as surprise pushes.*
-
-For a horizontal 2-link arm `tau = M(q) qdd + h(q, qd)` (`qd`, `qdd`: speed and acceleration; `h`: Coriolis and centripetal torques; gravity left out). Computed torque picks `tau = M(q) a + h(q, qd)` with `a = qdd_d + kd ed + kp e` (planned acceleration plus PD on the errors `e`, `ed`). The model cancels the arm, so `qdd = a` and `e'' + kd e' + kp e = 0`.
+*A simple controller sees these forces as surprises.*
 
 ![Computed torque in two layers](../assets/diagram-computed-torque.png)
 
-*Inner layer: the model. Outer layer: PD on the error.*
+*Inner layer: the model. Outer layer: a simple fix.*
 
 ![Inertia and torques](../assets/fig-model-terms.png)
 
-*Left: joint-1 inertia changes about fourfold with the elbow. Right: the dynamic torques are large.*
+*The arm feels heavier with the elbow straight.*
 
 ![Tracking error](../assets/fig-tracking-error.png)
 
-*A 1 s swing, both tuned to `omega = 20`: computed torque has about 300 times less error.*
-
-Example: real `m1` is 20% larger and `m2` 20% smaller than modelled. PD peaks at 0.19 rad of error; computed torque peaks at 0.038 rad.
+*A one-second swing: far less error.*
 
 ![Wrong masses](../assets/clip-example.mp4)
 
-*Blue (PD) lags by up to 0.19 rad; green (computed torque) stays close.*
+*Even with wrong masses it still helps.*
+
+<details><summary>The math (optional)</summary>
+
+For a horizontal 2-link arm `tau = M(q) qdd + h(q, qd)`. Computed torque uses `tau = M(q) a + h(q, qd)` with `a = qdd_d + kd ed + kp e`, so `e'' + kd e' + kp e = 0`. Both controllers are tuned to `omega = 20`; with the exact model computed torque has about 300 times less error. With real `m1` 20% larger and `m2` 20% smaller than modelled, PD peaks at 0.19 rad of error, computed torque at 0.038 rad. Joint-1 inertia changes about fourfold with the elbow.
+
+</details>
 
 ## Build It
+
+Three lines: get the arm's weight table for the current elbow angle, form the wanted acceleration, and add the swing terms.
 
 ```python
 M = mass(q, model)                      # 2x2, depends on the elbow angle
@@ -59,7 +63,7 @@ a = qdd_d + 2*w*(qd_d - qd) + w*w*(q_d - q)
 tau = M @ a + coriolis(q, qd, model)    # Coriolis and centripetal terms
 ```
 
-Tests check `M` against kinetic energy, `M qdd + h` against a numeric Lagrangian, and energy conservation in free motion.
+Tests check the weight table against kinetic energy, the equations against a numeric method, and that a free-swinging arm keeps its energy.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +73,7 @@ python3 phases/03-dynamics-and-control/05-computed-torque/code/figure.py
 
 ## Use It
 
-MuJoCo's `mj_inverse` returns `qfrc_inverse`, the torque for a given `qacc`; one test compares it with `inverse_dynamics` to 1e-9. Craig, Ch. 10, covers the control law.
+MuJoCo's `mj_inverse` returns the torque for a given acceleration; one test compares it with `inverse_dynamics` to 1e-9. Craig, Ch. 10, covers the control law.
 
 Sources: [MuJoCo API reference](https://mujoco.readthedocs.io/en/stable/APIreference/APIfunctions.html), checked 2026-11-09.
 
@@ -79,6 +83,6 @@ Sources: [MuJoCo API reference](https://mujoco.readthedocs.io/en/stable/APIrefer
 
 ## Exercises
 
-1. Add gravity (03/02) to `h` and add its potential to the energy test.
-2. Scale one mass by 0.5 to 1.5 and plot the maximum error.
-3. Run at 100 Hz instead of 1 kHz; where does the error floor move?
+1. Make the model's masses 20% wrong and compare the error.
+2. Run the controller at 100 Hz instead of 1 kHz.
+3. Try one mass at half and at one and a half times.

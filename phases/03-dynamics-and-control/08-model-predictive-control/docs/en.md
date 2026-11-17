@@ -25,13 +25,11 @@ A robot's motor can only push so hard. A controller asks for more, the command i
 
 ## The Concept
 
-Real motors have limits, so plan with them instead of asking for the impossible and clipping.
+Real motors have limits, so plan with them instead of asking for the impossible and clipping. Model predictive control plans the next few pushes with the limit built in, applies only the first, measures again, and plans again.
 
 ![The receding-horizon loop](../assets/diagram-mpc-loop.png)
 
-*Every tick the plan is rebuilt from the measured state. Only its first step reaches the plant.*
-
-Stack the next `N` states as `X = Phi x0 + Gam U` (`x0` the measured state, `U` the next `N` pushes, `Phi` and `Gam` from lesson 06's model). The cost `sum x'Qx + u'Ru` plus a terminal cost becomes a quadratic in `U`, and the limit `|u| <= umax` a box on `U`. Solve it by gradient steps (small downhill moves) clipped back into the box, with Nesterov momentum.
+*Every step the plan is rebuilt from what was measured.*
 
 ![Clip or plan](../assets/diagram-mpc-clip.png)
 
@@ -39,22 +37,30 @@ Stack the next `N` states as `X = Phi x0 + Gam U` (`x0` the measured state, `U` 
 
 ![Clipped LQR vs MPC](../assets/fig-mpc-vs-clip.png)
 
-*Start 4 m away, `umax = 0.5`. The clipped gain overshoots by 1.28 m; MPC with `N = 20` (2 s ahead at `dt = 0.1`) by 0.31 m.*
+*With a weak brake, the clipped controller overshoots far more.*
 
-Same start, only the plan length changes: `N = 2` (0.2 s ahead) overshoots by 1.27 m, `N = 10` by 0.78 m, `N = 20` by 0.31 m.
+Looking further ahead helps.
 
 ![Three plan lengths](../assets/clip-example.mp4)
 
 *Plans of 2, 10 and 20 steps; amber bars show the slide past the line.*
 
+<details><summary>The math (optional)</summary>
+
+Stack the next `N` states as `X = Phi x0 + Gam U`. The cost plus a terminal cost is a bowl in `U`, and `|u| <= umax` is a box. Solve by downhill steps clipped into the box (Nesterov momentum). Start 4 m away with `umax = 0.5`: the clipped gain overshoots by 1.28 m; `N = 20` (2 s ahead at `dt = 0.1`) by 0.31 m. `N = 2` (0.2 s ahead) overshoots by 1.27 m, `N = 10` by 0.78 m.
+
+</details>
+
 ## Build It
+
+Two lines take a downhill step, clip it into the box, and add momentum.
 
 ```python
 U_new = np.clip(Y - step * (H @ Y + f), -umax, umax)   # projected gradient
 Y = U_new + (t - 1) / t_new * (U_new - U)               # momentum
 ```
 
-`prediction()` builds `Phi` and `Gam`, `plan()` solves the box-constrained problem, `simulate()` re-plans every tick. Tests check the prediction reproduces a rollout, inputs obey the bound, and MPC matches LQR with a loose bound.
+`prediction()` builds the stacked model, `plan()` solves the clipped problem, and `simulate()` plans again every step. Tests check the prediction against a real run, that the limit is obeyed, and that a loose limit matches LQR.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -64,7 +70,7 @@ python3 phases/03-dynamics-and-control/08-model-predictive-control/code/figure.p
 
 ## Use It
 
-Production MPC uses a QP solver such as OSQP; solve one tick and compare the first input with `plan()`.
+Production MPC uses a QP solver such as OSQP; solve one step with it and compare the first push with `plan()`.
 
 Sources: [OSQP documentation](https://osqp.org/docs/), checked 2026-11-10.
 
@@ -74,6 +80,6 @@ Sources: [OSQP documentation](https://osqp.org/docs/), checked 2026-11-10.
 
 ## Exercises
 
-1. Add a velocity bound; what does the box become?
-2. Find the smallest `N` whose cost is within 1% of `N = 30`.
-3. Stop the solver after 20 iterations and measure the cost rise.
+1. Change the plan length and watch the overshoot.
+2. Add a speed limit; what does the box become?
+3. Stop the solver after 20 loops and see how much the cost rises.

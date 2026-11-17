@@ -8,15 +8,13 @@
 
 A toy car must stop on a line, and nobody tells it how. Each try earns points, more when it ends nearer the line. You change its steering rule so moves from high-scoring tries become more likely.
 
-A flat bonus on every try lifts every move and hides small differences. Subtract the other tries' average and better moves rise while worse ones fall.
-
 ## Key Terms
 
-- **Reward-to-go**: the rewards from the current step to the end of the episode.
-- **Return**: the total reward of one episode.
+- **Reward-to-go**: the points collected from now until the end of the try.
+- **Return**: the total points of one try.
 - **Episode**: one try from start to finish.
-- **Policy gradient**: nudging the policy's numbers toward actions that earned above-average return.
-- **Baseline**: an average subtracted from the return to calm the estimate.
+- **Policy gradient**: nudging the policy toward moves that scored above average.
+- **Baseline**: an average subtracted from the score so good moves stand out.
 - **Variance**: how much an estimate jumps around between runs.
 
 ## The Problem
@@ -25,31 +23,33 @@ A toy car must stop on a line and nobody can show it how. You can only score eac
 
 ## The Concept
 
-When no expert exists, trial and error with a score is the only teacher a robot has.
+When no expert exists, trial and error with a score is the only teacher a robot has. The car tries random moves and nudges its steering toward the ones that scored well. If every try scores big, every move is pushed up and the real differences hide. Subtracting the other tries' average fixes that.
 
 ![REINFORCE loop](../assets/diagram-reinforce-loop.png)
 
-*Sample actions, add up rewards, weight each nudge by its return, then change `w` and `b`.*
-
-The policy is a Gaussian (a bell-shaped random choice): the car steers near `w*x + b` plus exploration noise. Multiplying each action's nudge direction (`score()`) by the return and averaging estimates the gradient of expected return.
+*Try random moves, add up the points, and nudge the steering toward what scored well.*
 
 ![Baseline](../assets/diagram-baseline-effect.png)
 
-*When every return is large, every action is pushed up and the signal hides. The baseline cuts this spread.*
+*When every score is big, every move is pushed up. A baseline keeps only the differences.*
 
 ![Curves](../assets/fig-reinforce-baseline.png)
 
-*Left: the baseline climbs steadily, raw wobbles (ten seeds, ten repeats with other random draws). Right: the baseline cuts the spread to a third.*
-
-Four tries from one start return 35.93, 34.91, 27.63 and 27.26. As is, all four are pushed up, the best only 32% harder than the worst. With the baseline the pushes become +6.0, +4.6, -5.1 and -5.6.
+*Left: learning with a baseline climbs steadily, without it wobbles. Right: the baseline makes the nudges much steadier.*
 
 ![Cars with arrows](../assets/clip-example.mp4)
 
-*Blue arrows are almost equal. Then each shows its difference from the others' average, drawn 4 times longer.*
+*Blue arrows are all about equal. After subtracting the average, green arrows push up and red arrows push down.*
+
+<details><summary>The math (optional)</summary>
+
+The policy is a Gaussian (a bell-shaped random choice): the car steers near `w*x + b` plus exploration noise. Multiplying each action's nudge direction (`score()`) by the return and averaging estimates the gradient of expected return. Four tries from one start return 35.93, 34.91, 27.63 and 27.26, so all four are pushed up, the best only 32% harder than the worst. With the baseline (the average of the other three) the pushes become +6.0, +4.6, -5.1 and -5.6. Over ten seeds the baseline cuts the spread to about a third. The task is a 1-D reach: `x' = x + 0.2*a`, with reward `3 - x'^2 - 0.01*a^2` per step. The arrows in the clip are drawn 4 times longer.
+
+</details>
 
 ## Build It
 
-The task is a 1-D reach: steering `a` moves the car from `x` to `x' = x + 0.2*a`, and each step pays `3 - x'^2 - 0.01*a^2`. Episode `i`'s baseline is the mean reward-to-go of the other episodes, so it never sees its own action.
+The car steers along a line toward a goal. The baseline for each try is the average reward-to-go of the other tries, so it never sees its own move.
 
 ```python
 G = np.array([reward_to_go(r) for _, _, r in eps])
@@ -57,7 +57,7 @@ b = (G.sum(0) - G) / (batch - 1) if baseline else np.zeros_like(G)
 g += sum(score(theta, x, a) * (G[i, t] - b[i, t]) for t, (x, a) in enumerate(zip(xs, acts)))
 ```
 
-Tests check `score()` against a finite difference.
+Tests check the nudge direction against a slow, simple calculation.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -67,7 +67,7 @@ python3 phases/13-learning-for-robots/03-policy-gradients/code/figure.py
 
 ## Use It
 
-Compare gradient variance across seeds first.
+Compare how much the nudges jump around across runs before comparing final scores.
 
 Sources: OpenAI Spinning Up, "Intro to Policy Optimization", opened 2026-11-09.
 
@@ -77,6 +77,6 @@ Sources: OpenAI Spinning Up, "Intro to Policy Optimization", opened 2026-11-09.
 
 ## Exercises
 
-1. Try `BONUS` 0 and 10.
-2. Make `SIGMA` learnable and derive its score term.
-3. Use the all-episode mean as baseline. Is it biased at `batch=2`?
+1. Try a much bigger flat bonus. How does the gap between the two methods change?
+2. Make the amount of randomness learnable too.
+3. Use the average of all tries as the baseline. Is it biased with only two tries?

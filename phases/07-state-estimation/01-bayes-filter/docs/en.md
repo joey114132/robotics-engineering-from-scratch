@@ -29,13 +29,11 @@ A robot never knows its position for sure, so it tracks how likely each place is
 
 *Predict shifts and blurs. Update reweights by the reading.*
 
-The belief is a histogram, one bar per corridor cell. Predict slides the bars by the move and blurs them: 5% short, 90% exact, 5% long. Update applies Bayes' rule, `posterior = prior * likelihood / sum`. A cell that agrees with the reading gets weight `p_hit = 0.9`, one that disagrees `0.1`, and dividing by the sum makes the total 1.
-
-With all 20 cells at 0.05 and 8 doors, "door" makes a door cell `0.05 * 0.9 = 0.045` and a wall cell `0.05 * 0.1 = 0.005`. The sum is `8 * 0.045 + 12 * 0.005 = 0.42`, so a door cell ends at 0.107 and a wall cell at 0.012.
+The belief is a row of bars, one per corridor cell, taller where the robot is likelier to be. Predict slides the bars by the move and blurs them, because wheels slip. Update raises the bars for cells that agree with the sensor reading and lowers the others, then rescales so the bars add up to one. That is Bayes' rule.
 
 ![Rover finds its cell](../assets/clip-example.mp4)
 
-*Moves slide and blur the green bars, readings (door: amber lamp) make them jump. After five moves the rover's cell holds 0.86.*
+*Moves slide and blur the green bars, readings (door: amber lamp) make them jump. The rover's cell ends up holding most of the belief.*
 
 ![Filter against dead reckoning](../assets/diagram-bayes-split.png)
 
@@ -43,11 +41,17 @@ With all 20 cells at 0.05 and 8 doors, "door" makes a door cell `0.05 * 0.9 = 0.
 
 ![Belief locks on](../assets/fig-belief-sharpening.png)
 
-*Left: probability gathers on the true cell after a few doors. Right: entropy falls from ln 20 (about 3) toward 1.*
+*Left: probability gathers on the true cell after a few doors. Right: doubt falls.*
 
 ![Doubt without the sensor](../assets/fig-dead-reckoning.png)
 
-*Left: motion-only doubt keeps rising. Right: each predict adds `0.05 + 0.05 = 0.1` cell^2 of variance (spread).*
+*Left: motion-only doubt keeps rising. Right: simulation agrees with the predicted growth.*
+
+<details><summary>The math (optional)</summary>
+
+Predict blurs by wheel slip: 5% short, 90% exact, 5% long. Update: `posterior = prior * likelihood / sum`. A cell that agrees with the reading gets weight `p_hit = 0.9`, one that disagrees `0.1`. With all 20 cells at 0.05 and 8 doors, "door" makes a door cell `0.05 * 0.9 = 0.045` and a wall cell `0.05 * 0.1 = 0.005`. The sum is `8 * 0.045 + 12 * 0.005 = 0.42`, so a door cell ends at 0.107 and a wall cell at 0.012. After five moves the rover's cell holds 0.86. Entropy falls from ln 20 (about 3) toward 1. Each predict adds `0.05 + 0.05 = 0.1` cell^2 of variance.
+
+</details>
 
 ## Build It
 
@@ -79,6 +83,6 @@ Sources: Nav2 AMCL README, https://github.com/ros-navigation/navigation2/blob/ma
 
 ## Exercises
 
-1. Set `KERNEL` to `(0.2, 0.6, 0.2)` and predict the variance after 10 steps.
-2. Use `p_hit = 0.99` and see what one bad reading does.
-3. Use a walled corridor.
+1. Change the slip chances and watch the blur.
+2. Set `p_hit` close to 1 and see what one bad reading does.
+3. Use a corridor with walls instead of a ring.

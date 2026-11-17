@@ -160,7 +160,7 @@ def _chain(n=4, **kw):
 # ---------- the bar ----------
 
 def test_corpus_runs_unchanged(corpus):
-    assert len(corpus) == 162
+    assert len(corpus) == 174
 
 
 def test_text_stays_readable_at_phone_width(corpus):

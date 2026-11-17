@@ -20,33 +20,37 @@ A pose graph joins each stop to the next with a spring, the measured move. Recog
 
 ## The Problem
 
-Picture a robot driving a 5 m square. Odometry says it ended 1.4 m from the start; a scan match (08/05) says the last scan matches the first. Fixing only the last pose leaves the rest bent.
+Picture a robot driving around a square. Wheel counts say it ended 1.4 m from the start, but a scan match says the last scan matches the first. Fixing only the last position leaves the rest of the trip bent.
 
 ## The Concept
 
-A real robot that returns to a known place can fix its whole map at once, not one point.
+A robot that returns to a known place can fix its whole map at once, not one point.
+
+Think of the trip as a chain of positions joined by springs. Each spring is a measured move. Recognising the start adds one more spring from the end back to the beginning.
 
 ![Springs](../assets/diagram-posegraph-springs.png)
 
-*Odometry steps are springs; the loop closure adds one more.*
+*Moves are springs. The loop adds one more.*
 
-An edge from pose `i` to `j` carries a measurement `z`, the pose of `j` seen from `i`. Its residual is `between(x_i, x_j) - z`, with the heading difference wrapped into one turn. Dividing each residual by its noise makes trusted springs stiffer. The cost is the sum of squared residuals.
-
-Poses sit one per metre, 0 to 20; 5, 10, 15, 20 are corners. Odometry ends 1.42 m away with rms error 0.70 m. A true closure moves poses 5, 10, 15 and 20 by 0.20, 0.59, 1.03 and 1.41 m, and rms error falls to 0.09 m. A false closure raises it to 1.88 m.
+All positions then shift together to stretch every spring as little as possible. The correction spreads along the whole trip.
 
 ![Closures](../assets/clip-example.mp4)
 
-*Blue (false closure) ends 3.6 m from the start; green (true) closes the square.*
+*Blue, a false match, bends the map. Green, a true match, closes the square.*
 
 ![Pipeline](../assets/diagram-posegraph-pipeline.png)
 
-*Closure in, poses re-solved.*
-
-Sliding or turning the whole map changes no residual, so pose 0 is held fixed.
+*One new spring, then everything is re-solved.*
 
 ![Before and after](../assets/fig-posegraph-loop.png)
 
-*Left: drift opens the loop; solving closes it. Right: error shrinks.*
+*Drift opens the loop. Solving closes it.*
+
+<details><summary>The math (optional)</summary>
+
+A pose is `(x, y, heading)`. An edge from pose `i` to `j` carries a measurement `z`; its residual (how stretched the spring is) is `between(x_i, x_j) - z`, with the heading difference wrapped into one turn. Each residual is divided by its noise, so trusted springs are stiffer, and the cost is the sum of squared residuals. Gauss-Newton repeats the step that most reduces it. Sliding or turning the whole map changes no residual, so pose 0 is held fixed. Poses sit one per metre, 0 to 20; 5, 10, 15, 20 are corners. Odometry ends 1.42 m away with rms error 0.70 m. A true closure moves poses 5, 10, 15 and 20 by 0.20, 0.59, 1.03 and 1.41 m, and rms error falls to 0.09 m. A false closure raises it to 1.88 m and ends 3.6 m from the start.
+
+</details>
 
 ## Build It
 
@@ -73,7 +77,7 @@ python3 phases/08-mobile-robots/06-pose-graph-and-loop-closure/code/main.py
 
 ## Use It
 
-Build this graph in g2o and compare poses with `solve()`.
+Build this graph in g2o and compare positions with `solve()`.
 
 Sources: Kümmerle et al., g2o: A General Framework for Graph Optimization (ICRA 2011), http://ais.informatik.uni-freiburg.de/publications/papers/kuemmerle11icra.pdf (abstract read, 2026-11-10).
 
@@ -83,6 +87,6 @@ Sources: Kümmerle et al., g2o: A General Framework for Graph Optimization (ICRA
 
 ## Exercises
 
-1. Remove the heading bias; does the closure still help?
-2. Make the closure 10 times less certain; watch the error.
-3. Add a second closure between poses 5 and 15.
+1. Remove the heading error and see whether the closure still helps.
+2. Make the closure measurement less certain and watch the error.
+3. Add a second closure halfway round the square.

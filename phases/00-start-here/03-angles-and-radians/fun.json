@@ -1,0 +1,14 @@
+{
+  "en": {
+    "hook": "A quarter turn is 90 to a person and 1.57 to a computer. Tell the computer the wrong one and your arm does something surprising.",
+    "mission": "Run `cd code && python3 -c \"import math; from main import *; print(math.cos(90), math.cos(deg_to_rad(90)))\"`. Guess both numbers before you run it.",
+    "clip": "A bench arm turns one joint through a quarter turn, from the first amber bar to the second. The angle comes from the lesson's `deg_to_rad(90)`, about 1.57 radians, and the motion starts and stops smoothly."
+  },
+  "ko": {
+    "hook": "사분의 일 바퀴는 사람에게는 90이고 컴퓨터에게는 1.57입니다. 컴퓨터에게 엉뚱한 쪽을 알려 주면 팔이 놀라운 일을 합니다.",
+    "mission": "`cd code && python3 -c \"import math; from main import *; print(math.cos(90), math.cos(deg_to_rad(90)))\"`를 실행하기 전에 두 숫자를 예측해 보세요.",
+    "clip": "bench arm의 관절 하나가 첫 번째 호박색 막대에서 두 번째 막대까지 사분의 일 바퀴를 돕니다. 각도는 이 레슨의 `deg_to_rad(90)`, 약 1.57 라디안이고 움직임은 부드럽게 시작하고 멈춥니다."
+  },
+  "toy": null,
+  "three": "angle-arc-3d"
+}

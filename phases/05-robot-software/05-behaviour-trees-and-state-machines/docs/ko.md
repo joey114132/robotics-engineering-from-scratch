@@ -8,8 +8,6 @@
 
 팔이 상자를 가져와요. 잡기에 실패하면 시작점으로 돌아가지 않고 그 자리에서 다시 시도해야 해요. behaviour tree는 팔에게 그 기억을 줘요.
 
-모든 단계는 success, failure, running 중 하나로 답하고 Sequence는 아직 running인 단계를 기억해요.
-
 ## 핵심 용어
 
 - **Behaviour tree**: 작업을 단계의 tree로 적어 두고 매 주기 tick하는 방식입니다.
@@ -21,7 +19,7 @@
 
 ## 문제
 
-팔은 상자에 닿고 잡고 옮기고 놓아야 합니다. 이것을 중첩된 if로 쓰면 잡기에 실패한 뒤 코드가 팔이 이미 상자에 닿았는지 잊어서 다시 그리로 가거나 재시도를 건너뜁니다.
+팔이 상자에 닿고 잡고 옮깁니다. 중첩된 if로 쓰면 잡기에 실패한 뒤 코드가 팔이 이미 상자에 닿았는지 잊어서 다시 그리로 갑니다.
 
 ## 개념
 
@@ -31,22 +29,30 @@
 
 *잡기가 Retry 아래에 있어서 잡기 실패가 작업을 끝내지 않습니다.*
 
+매 주기 tree를 tick하면 각 단계가 success, failure, running 중 하나로 답합니다. Sequence는 처음 실패에서 멈추고 Fallback은 처음 성공에서 멈추며 둘 다 running이라고 답한 단계에서 이어 갑니다.
+
 ![부모가 각 답으로 하는 일](../assets/diagram-status-rules.png)
 
-*Sequence는 처음 실패에서 멈추고 Fallback은 처음 성공에서 멈춥니다. 둘 다 running이라고 답한 자식에서 이어 갑니다.*
+*부모가 각 답으로 하는 일입니다.*
 
-Fallback이 통 A를 시도하고 그다음 통 B를 시도합니다. 통 A가 가득 차 있어서 tick 1에서 `A has room` 확인이 실패하고 `go B`로 넘어가며 `go B`는 running이라고 답합니다.
-tick 2는 A를 다시 묻지 않고 `go B`에서 이어 가고 tick 3에서 성공합니다.
+Fallback이 통 A를 시도하고 그다음 통 B를 시도합니다. 통 A가 가득 차 있어서 통 B로 넘어가며 통 B는 running이라고 답합니다. 다음 tick은 A를 다시 묻지 않고 통 B에서 이어 갑니다.
 
 ![가득 찬 통을 건너뛰는 팔](../assets/clip-example.mp4)
 
-*tick 1에서 가득 찬 통에 빨간 테두리가 번쩍입니다. 그다음 팔이 상자를 통 B로 옮깁니다.*
+*가득 찬 통에 빨간 테두리가 번쩍입니다. 그다음 팔이 상자를 통 B로 옮깁니다.*
 
 ![어느 노드가 어느 주기에 tick되는가](../assets/fig-fetch-ticks.png)
 
 *잡기가 두 번 실패하고 Retry는 running이라고 보고합니다. 닿기가 성공하면 다시 tick되지 않습니다.*
 
-state machine에서는 모든 상태가 자기 출구를 적어야 해서 재시도를 더하려면 실패할 수 있는 모든 상태를 고쳐야 합니다. tree에서는 재시도가 자식 하나를 감싼 노드 하나입니다.
+state machine에서는 실패할 수 있는 모든 상태에 재시도를 더해야 합니다. tree에서는 자식 하나를 감싼 노드 하나면 됩니다.
+
+<details><summary>The math (optional)</summary>
+
+통 예시에서 tick 1은 `A has room` 확인이 실패하고 `go B`로 넘어가며 `go B`는 running이라고 답합니다. tick 2는 `go B`에서 이어 가고 tick 3에서 성공합니다.
+`Retry`는 `n`번 시도할 때까지 failure를 `running`으로 바꿉니다.
+
+</details>
 
 ## 만들기
 
@@ -59,7 +65,7 @@ def tick(self, log):
             return self.done(log, s)
 ```
 
-`Sequence`와 `Fallback`은 이 걷기를 공유하고 어느 답에서 멈추느냐만 다릅니다. `Retry`는 `n`번 시도할 때까지 failure를 `running`으로 바꿉니다.
+`Sequence`와 `Fallback`은 이 걷기를 공유하고 어느 답에서 멈추느냐만 다릅니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +75,7 @@ python3 phases/05-robot-software/05-behaviour-trees-and-state-machines/code/main
 
 ## 실제 도구로 보기
 
-BehaviorTree.CPP와 `py_trees`는 같은 답을 쓰고 blackboard(공유 데이터)를 더합니다. 같은 스크립트 leaf에서 내 tree가 같은 tick 로그를 내는지 확인하세요.
+BehaviorTree.CPP와 `py_trees`는 같은 답을 쓰고 공유 데이터를 더합니다.
 
 ## 결과물
 

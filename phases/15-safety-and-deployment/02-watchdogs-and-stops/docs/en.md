@@ -13,9 +13,9 @@ The arm keeps moving during that timeout, and braking needs distance too. Cuttin
 ## Key Terms
 
 - **Watchdog**: a monitor that orders a stop when expected messages stop arriving.
-- **Heartbeat**: the regular "still here" message from the program that commands the joint.
-- **Timeout `T`**: how long silence is tolerated before the watchdog trips.
-- **Deceleration `a`**: how fast the speed drops while braking, in rad/s^2.
+- **Heartbeat**: a regular "still here" message from the program that commands the joint.
+- **Timeout `T`**: how long silence is tolerated before the watchdog acts.
+- **Deceleration `a`**: how fast the speed drops while braking.
 - **Hard stop**: a block that ends the joint's travel.
 - **Jitter**: how much message arrival times wobble.
 
@@ -25,35 +25,37 @@ Your control program crashes while the arm is moving, and the arm keeps its last
 
 ## The Concept
 
-Software crashes, so a real robot must stop on its own when its software goes quiet.
+Software crashes, so a real robot must stop on its own when its software goes quiet. The arm keeps moving during the timeout, then needs more distance to brake. Both together must fit in the room left before the hard stop. A long timeout is dangerous, and a very short one stops the arm for no reason.
 
 ![Watchdog flow](../assets/diagram-watchdog-flow.png)
 
 *A quiet heartbeat past the timeout triggers a stop.*
 
-Braking at constant `a` from speed `v` covers `v^2 / (2a)`. Before that, the joint moves for the whole timeout `T`.
-
 ![Stop budget](../assets/diagram-stop-budget.png)
 
-*Timeout travel plus braking travel must fit in the room left.*
-
-Example: the joint is at 1.0 rad moving at 2 rad/s and the stop is at 1.5 rad, so the room is 0.5 rad. Braking at 8 rad/s^2 needs 2^2 / (2 * 8) = 0.25 rad, leaving 0.25 rad for the timeout: T <= 0.25 / 2 = 0.125 s. A 0.05 s timeout stops at 1.30 rad in simulation. A 0.2 s timeout travels 0.4 rad first and hits the stop.
+*Distance during the timeout plus braking distance must fit in the room left.*
 
 ![Two timeouts](../assets/clip-example.mp4)
 
-*Green trips after 0.05 s and halts short. Blue waits 0.2 s and hits the stop.*
+*Green trips quickly and stops short. Blue waits too long and hits the stop.*
 
 ![Cut vs ramp](../assets/fig-cut-vs-ramp.png)
 
-*Motor off: the joint coasts through the limit. A ramped stop ends short.*
+*Switching the motor off lets the joint coast through the limit. A steady brake stops it short.*
 
 ![Timeout budget](../assets/fig-timeout-budget.png)
 
-*Each 10 ms of timeout adds 0.02 rad.*
+*A longer timeout means more overshoot, in a straight line.*
 
-A timeout also has a lower bound: it must exceed the heartbeat period plus jitter, or one late message stops the joint for no reason.
+<details><summary>The math (optional)</summary>
+
+Braking at constant deceleration `a` from speed `v` covers `v^2 / (2a)`. The timeout must satisfy `v T + v^2 / (2a) <= room`, so `max_timeout = (room - v^2/(2a)) / v`. Example: the joint is at 1.0 rad moving at 2 rad/s and the stop is at 1.5 rad, so the room is 0.5 rad. Braking at 8 rad/s^2 needs 2^2 / (2 * 8) = 0.25 rad, leaving 0.25 rad for the timeout: T <= 0.25 / 2 = 0.125 s. A 0.05 s timeout stops at 1.30 rad in simulation. A 0.2 s timeout travels 0.4 rad first and hits the stop. Each 10 ms of timeout adds 0.02 rad. A timeout must also exceed the heartbeat period plus jitter, or one late message stops the joint.
+
+</details>
 
 ## Build It
+
+Two small functions give the numbers:
 
 ```python
 def stop_distance(v, a):
@@ -63,7 +65,7 @@ def max_timeout(room, v, a):
     return (room - stop_distance(v, a)) / v   # raises if this is <= 0
 ```
 
-`simulate()` runs a joint holding 2 rad/s with a 1.5 rad limit, kills the command program at 0.5 s, and applies `"cut"` (zero torque) or `"ramp"` (brake at 8 rad/s^2).
+`simulate()` kills the command program at 0.5 s, then either cuts the torque (`"cut"`) or brakes steadily (`"ramp"`).
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -81,6 +83,6 @@ Put a real drive's documented brake values into `max_timeout`.
 
 ## Exercises
 
-1. Double the speed to 4 rad/s. Does 0.5 rad of room still work?
-2. Lower the deceleration until `max_timeout` raises. What does that mean?
-3. Add 5 ms of heartbeat jitter. What timeout avoids false trips?
+1. Double the speed. Does the same room still work?
+2. Lower the braking until `max_timeout` raises an error. What does that mean?
+3. Add heartbeat jitter. What timeout avoids false stops?

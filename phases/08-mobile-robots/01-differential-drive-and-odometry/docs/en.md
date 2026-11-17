@@ -21,33 +21,37 @@ A robot with a wrong wheel size does the same. Its notebook shares the wrong val
 
 ## The Problem
 
-Picture a robot drawing a 2 m square. Odometry says it is back at the start; a tape measure says 18 cm off. The wheels turned as commanded, so the config's wheel radius or track width is wrong.
+Picture a robot driving around a square. Its record says it came back to the start, but a tape measure shows 18 cm. The wheels did what they were told, so two settings must be wrong: wheel size and wheel gap.
 
 ## The Concept
 
-A real robot with wrong wheel numbers trusts a wrong position, and every plan built on it is off.
+A robot that trusts a wrong position makes every later plan wrong too.
+
+It works out how far it moved by counting how much each wheel turned. Equal turns mean a straight line. If one wheel turns faster, the robot curves toward the slower side.
 
 ![Wheel speeds to pose](../assets/diagram-wheels-to-pose.png)
 
-*Speeds add up to the pose (position and heading).*
-
-`wl` and `wr` are the wheel spin speeds in rad/s. A wheel's edge moves `r` times its spin, so forward speed is the average of the two edges, `v = r (wr + wl) / 2`. The turn rate `w` (heading change per second) is their difference over `b`, `w = r (wr - wl) / b`.
-
-With `r = 0.05 m`, `b = 0.30 m` and wheels at 10 and 14 rad/s, `v = 0.6 m/s` and `w = 0.67 rad/s`. The robot circles left with radius `v / w = 0.9 m`.
+*Wheel speeds in, forward speed and turn out.*
 
 ![Two rovers](../assets/clip-example.mp4)
 
-*Blue: 10 and 10. Green: 10 and 14.*
+*Blue drives straight. Green curves left because its right wheel turns faster.*
+
+Now make the settings slightly wrong. The robot still believes its own record, so the loop closes on paper. In reality every turn is a little too small, so the four sides no longer cancel.
 
 ![One hidden gap](../assets/diagram-two-errors.png)
 
-*Same wrong `r` and `b`, so the loop closes.*
+*The record and the plan share the same mistake, so nothing looks wrong.*
 
 ![Odometry drift](../assets/fig-odometry-drift.png)
 
-*Gray: odometry's belief. Orange: real.*
+*Gray is what the robot believes. Orange is where it really went.*
 
-Say the real `b` is 2% larger. Each turn is `a = 88.2°`, not 90°, so the sides no longer cancel and the robot ends 0.18 m from the start. The gap is `L |1 + e^(ia) + e^(2ia) + e^(3ia)|` (tested), where `L` is a side and `e^(ia)` an arrow turned by `a`.
+<details><summary>The math (optional)</summary>
+
+`r` is the wheel radius and `b` the distance between the wheels. Forward speed is `v = r (wr + wl) / 2` and turn rate is `w = r (wr - wl) / b`. With `r = 0.05 m`, `b = 0.30 m` and wheels at 10 and 14 rad/s, `v = 0.6 m/s`, `w = 0.67 rad/s` and the circle has radius `v / w = 0.9 m`. If the real `b` is 2% larger, each turn is 88.2° instead of 90° and the robot ends 0.18 m from the start. The gap is `L |1 + e^(ia) + e^(2ia) + e^(3ia)|` (tested), where `L` is a side and `a` the turn angle.
+
+</details>
 
 ## Build It
 
@@ -62,7 +66,7 @@ def dead_reckon(wl, wr, dt, r, b, pose0=(0.0, 0.0, 0.0)):
     th = pose0[2] + np.cumsum(dth) - dth / 2
 ```
 
-`square_wheels()` plans the square; `closure_error()` replays it with other `r` and `b`.
+`square_wheels()` plans the square. `closure_error()` replays it with other settings.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -72,7 +76,7 @@ python3 phases/08-mobile-robots/01-differential-drive-and-odometry/code/main.py
 
 ## Use It
 
-ROS 2's diff_drive_controller needs `wheel_separation` and `wheel_radius`. Its docs say a wrong separation misbehaves in curves.
+ROS 2's diff_drive_controller asks for the wheel spacing and the wheel size. Its docs say a wrong spacing misbehaves in curves.
 
 Sources: control.ros.org, diff_drive_controller user doc (jazzy), opened 2026-11-09.
 
@@ -82,6 +86,6 @@ Sources: control.ros.org, diff_drive_controller user doc (jazzy), opened 2026-11
 
 ## Exercises
 
-1. Give the wheels different radii; show that a line bends.
-2. Drive clockwise; show the gap mirrors the counter-clockwise one.
-3. Add 1% wheel slip on turns; find which error it looks like.
+1. Make the wheels slightly different sizes; watch a line bend.
+2. Drive the square the other way round and see which way the gap points.
+3. Pretend a wheel slips; guess which setting it looks like.

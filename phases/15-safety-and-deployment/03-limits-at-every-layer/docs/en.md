@@ -8,7 +8,7 @@
 
 A bench arm takes orders through three layers: the planner draws the path, the controller pushes the motor, and the drive is the motor's own electronics. Each has a speed limit.
 
-If the planner allows twice the drive's speed, the plan runs ahead of the real arm. Nothing reports it, because the drive just trims the speed. The slowest limit wins.
+If the planner allows twice the drive's speed, the plan runs ahead of the real arm and nothing reports it. The slowest limit wins.
 
 ## Key Terms
 
@@ -25,23 +25,19 @@ You raise the speed limit in the planning software to 3 rad/s, but the arm still
 
 ## The Concept
 
-A robot has several layers that each set limits, so a mismatch hides until something goes wrong.
+A robot has several layers that each set limits, so a mismatch hides until something goes wrong. Each layer should be a little looser than the next. If an early layer allows more than a later one, the later one quietly wins. A startup check can compare every pair before the robot moves.
 
 ![Nested limits](../assets/diagram-limits-nested.png)
 
-*Speed limits grow: 1.0, 1.5, 2.0. Later layers are safety nets that never fire in normal use.*
-
-The rule: for each quantity, walk from planner to drive. A limit must not allow more than the next layer's. If it does, the later layer wins.
+*Healthy: each layer is a little looser than the next.*
 
 ![Silent mismatch](../assets/diagram-limits-silent.png)
 
-*The planner asks for 3.0, the drive allows 1.5. A startup check compares every pair before the first move.*
-
-Example: ask for 2.0 rad with position limits planner 2.2, controller 1.8 and drive 2.0 (the `MISMATCHED` values). The controller clamps the target to 1.8, so the joint stops at 1.80 rad. `effective(MISMATCHED, "pos")` returns `(1.8, 'controller')`.
+*The planner asks for a lot, the drive allows less, and nothing says so.*
 
 ![Arm stops short](../assets/clip-example.mp4)
 
-*The dark ghost is where the planner thinks the joint is. Blue stops 0.2 rad short. On green all limits allow 2.0.*
+*The dark ghost is where the planner thinks the joint is. Blue stops short with no warning. Green's limits agree.*
 
 ![Limit stack](../assets/fig-limit-stack.png)
 
@@ -49,11 +45,17 @@ Example: ask for 2.0 rad with position limits planner 2.2, controller 1.8 and dr
 
 ![Limit lag](../assets/fig-limit-lag.png)
 
-*Aligned: the joint trails by 0.12 rad. Mismatched: the planner finishes at 0.47 s while the joint is 0.82 rad behind.*
+*With matching limits the joint keeps up. With mismatched limits it falls far behind the plan.*
+
+<details><summary>The math (optional)</summary>
+
+Healthy speed limits are 1.0, 1.5 and 2.0. In the mismatched case the planner and controller allow 3.0 but the drive only 1.5, so `effective(L, 'vel')` returns `(1.5, 'drive')`. For position, limits planner 2.2, controller 1.8 and drive 2.0 (the `MISMATCHED` values): a request for 2.0 rad is clamped by the controller to 1.8, so the joint stops at 1.80 rad and `effective(MISMATCHED, "pos")` returns `(1.8, 'controller')`, 0.2 rad short. With aligned limits the joint trails by 0.12 rad. With mismatched limits the planner finishes at 0.47 s while the joint is still 0.82 rad behind.
+
+</details>
 
 ## Build It
 
-Each layer is a small dict, `None` meaning no limit. The check skips `None` and compares neighbours.
+Each layer is a small table of limits, `None` meaning no limit. The check compares neighbours.
 
 ```python
 for (a, x), (b, y) in zip(set_, set_[1:]):
@@ -61,7 +63,7 @@ for (a, x), (b, y) in zip(set_, set_[1:]):
         out.append((q, a, b, x, y, f"{a}.{q} = {x} is looser than {b}.{q} = {y}: {b} wins silently"))
 ```
 
-`require_nested()` raises once with every message. `effective()` returns the limit the joint really feels and its layer. `simulate()` runs the three clamps around a PD loop.
+`require_nested()` reports every mismatch at once. `effective()` returns the limit the joint really feels and its layer.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -71,7 +73,7 @@ python3 phases/15-safety-and-deployment/03-limits-at-every-layer/code/main.py
 
 ## Use It
 
-Real stacks keep limits in a URDF, a controller config and the drive's parameters. Load all three into one table at startup.
+Real stacks keep limits in a URDF file, a controller config and the drive's own settings. Load all three into one table at startup.
 
 ## Ship It
 
@@ -79,6 +81,6 @@ Real stacks keep limits in a URDF, a controller config and the drive's parameter
 
 ## Exercises
 
-1. Extend the check to the planner's torque limit.
+1. Add the planner's torque limit to the check.
 2. Add an acceleration limit to every layer.
 3. Why does the check allow equal limits?

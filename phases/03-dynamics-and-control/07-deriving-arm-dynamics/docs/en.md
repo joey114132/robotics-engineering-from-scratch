@@ -21,35 +21,39 @@ Differentiating the summed kinetic energy gives the inertia matrix and the coupl
 
 ## The Problem
 
-You bolt a heavier tool on the arm, and the formulas `M(q)` and `h(q, qd)` of lesson 03/05 no longer match. Mistype one sign and the controller cancels the wrong arm.
+You bolt a heavier tool onto the arm, and the formulas your controller uses for the arm's weight and swing forces no longer match. One mistyped sign and the controller cancels the wrong arm.
 
 ## The Concept
 
-A controller is only as good as its arm model, so you must be able to rebuild it.
+A controller is only as good as its arm model, so you must be able to rebuild it. Two independent ways give the same answer. One writes down the arm's energy of motion and differentiates it. The other adds up forces link by link.
 
 ![Two roads, one torque](../assets/diagram-two-roads.png)
 
-*Two independent derivations; a disagreement means a bug.*
-
-The kinetic energy of a horizontal arm is `T = 1/2 qd' M(q) qd`. Expanded, `T = 1/2 (M11 qd1^2 + 2 M12 qd1 qd2 + M22 qd2^2)`: `M12` needs both joints moving. The Lagrange equation `tau = d/dt(dT/dqd) - dT/dq` gives `tau = M qdd + h`.
-
-Take the lesson's arm (1 and 1.5 kg) at `q = (0.3, 1.0)` and 1 rad/s. Joint 1 alone gives `T = 0.437`, so `M11 = 2T = 0.873`; joint 2 alone gives `T = 0.0925`, so `M22 = 0.185`; both give `T = 0.836`, and the extra `0.307` is `M12`.
+*Two roads to one torque. If they disagree, one has a bug.*
 
 ![Energy bars](../assets/clip-example.mp4)
 
-*The stack is each joint's energy alone, the amber bar both together; the gap is `M12`.*
+*Each joint's energy alone, and both together. The gap is the tug.*
 
 ![Torque term sources](../assets/diagram-energy-parts.png)
 
-*`M` changes with the elbow angle.*
+*The tugging exists because the weight changes with the elbow.*
 
-In free motion `h` cancels the energy change `1/2 qd' Mdot qd` from changing inertia. The other road, Newton-Euler, adds up forces link by link.
+A free-swinging arm with no friction must keep its energy, a sharp test for a wrong sign.
 
 ![M and wrong-sign energy](../assets/fig-inertia-and-energy.png)
 
-*Left: inertia against elbow angle. Right: a flipped sign makes energy wander by tenths of a joule.*
+*Right: a flipped sign makes the energy wander.*
+
+<details><summary>The math (optional)</summary>
+
+`T = 1/2 qd' M(q) qd` expands to `1/2 (M11 qd1^2 + 2 M12 qd1 qd2 + M22 qd2^2)`; the Lagrange equation `tau = d/dt(dT/dqd) - dT/dq` gives `tau = M qdd + h`. For the lesson's arm (1 and 1.5 kg) at `q = (0.3, 1.0)` and 1 rad/s: joint 1 alone gives `T = 0.437`, `M11 = 0.873`; joint 2 alone `T = 0.0925`, `M22 = 0.185`; both `T = 0.836`, so `M12 = 0.307`. The wrong-sign energy wanders by tenths of a joule.
+
+</details>
 
 ## Build It
+
+Three lines measure the weight table from the energy with unit speeds, then form the torque.
 
 ```python
 off = T(e0 + e1) - T(e0) - T(e1)          # unit velocities
@@ -57,7 +61,7 @@ M = [[2*T(e0), off], [off, 2*T(e1)]]
 tau = M @ qdd + dMdt @ qd - dTdq          # dMdt, dTdq by central differences
 ```
 
-`kinetic()` builds `T`; `lagrange_tau()` and `newton_euler()` are the two roads. Tests check `M` is symmetric positive definite, the roads agree at 20 random states, and `energy_drift()` fails on a flipped sign.
+`kinetic()` builds the energy; `lagrange_tau()` and `newton_euler()` are the two roads. Tests check the roads agree at 20 random states and a flipped sign fails the energy test.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -67,7 +71,7 @@ python3 phases/03-dynamics-and-control/07-deriving-arm-dynamics/code/figure.py
 
 ## Use It
 
-MuJoCo computes the same `M` with `mj_fullM`; compare with `mass()`. Craig, Ch. 6.
+MuJoCo computes the same table with `mj_fullM`; compare with `mass()`. Craig, Ch. 6.
 
 Sources: [MuJoCo API reference](https://mujoco.readthedocs.io/en/stable/APIreference/APIfunctions.html), checked 2026-11-10.
 
@@ -77,6 +81,6 @@ Sources: [MuJoCo API reference](https://mujoco.readthedocs.io/en/stable/APIrefer
 
 ## Exercises
 
-1. Add the potential energy `V` of 03/02 to `lagrange_tau`.
-2. Double link 2's mass; which entry of `M` moves most?
-3. Add a tip point mass to link 2.
+1. Make link 2 twice as heavy and see which table entry moves most.
+2. Flip one sign and watch the energy test fail.
+3. Add a small weight at the tip of link 2.

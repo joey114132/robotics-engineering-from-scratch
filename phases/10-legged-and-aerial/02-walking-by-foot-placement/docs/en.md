@@ -21,33 +21,37 @@ A walking model picks each spot from the body's position and speed.
 
 ## The Problem
 
-Picture a walking robot asked for 0.6 m/s with a plausible fixed step. It speeds up each step until its body is far ahead of its feet: the steps were a little short.
+Picture a walking robot told to walk at a steady speed with a plausible fixed step. It speeds up every step until its body is far ahead of its feet. The steps were a little short.
 
 ## The Concept
 
-A real walker has no brakes, only feet, so foot placement is how it speeds up or slows down.
+A real walker has no brakes, only feet, so where a foot lands is how it speeds up or slows down.
+
+At the end of each step the robot looks at where its body is and how fast it moves, then picks the next foot spot so the next step ends exactly at the target speed. This is called deadbeat.
 
 ![Loop](../assets/diagram-foot-placement-loop.png)
 
-*Each stance end: read `x` and `v`, pick the next foot.*
+*At each step: read, pick the next foot.*
 
-Stance lasts `T` and the next foot sits at `p`. Let `u = x - p` be how far the body is ahead of that foot at touchdown. Lesson 01's `lipm_state` gives the speed at the end of the stance: `v' = (u/Tc) sinh(T/Tc) + v cosh(T/Tc)`. Setting `v' = v_target` and solving for `u` gives the foot, `p = x - u`. That is one-step deadbeat.
-
-Start at `v = 0.3 m/s`, target 0.6 m/s. Speeds after each step (m/s): deadbeat 0.31, 0.60, 0.60 (the first foot was set in advance). Steps 1.5 times too long give 0.31, 0.42, 0.22, 0.67, -0.34 (negative: backward).
+A foot placed well ahead leaves the body behind it, and gravity slows the body. A foot placed too close lets the body pass over it, and gravity speeds it up. Steps that are too long make the speed swing and even reverse.
 
 ![Two walkers](../assets/clip-example.mp4)
 
-*Blue (steps 1.5 times deadbeat) barely advances; green walks at 0.6 m/s.*
+*Blue's steps are too long and it barely advances. Green walks steadily.*
 
 ![Outcomes](../assets/diagram-step-length-outcomes.png)
 
-*Steps scaled by 0.6: speed runs away. By 1.5: speed swings and reverses.*
-
-In steady walking the deadbeat step is `2 Tc v tanh(T/2Tc)`: 0.21 m for `T = 0.4 s`, `h = 0.9 m`, `v = 0.6 m/s`.
+*Too short: speed runs away. Too long: speed swings.*
 
 ![Centre of mass](../assets/fig-com-over-steps.png)
 
-*Deadbeat locks 0.6 m/s from step 2; 60% steps reach 5 m/s by step six.*
+*The right steps lock the speed from the second step.*
+
+<details><summary>The math (optional)</summary>
+
+Stance lasts `T` and the next foot sits at `p`. Let `u = x - p` be how far the body is ahead of that foot at touchdown. Lesson 01's model gives the speed at the end of the stance: `v' = (u/Tc) sinh(T/Tc) + v cosh(T/Tc)`. Setting `v' = v_target` and solving for `u` gives the foot, `p = x - u`. Start at 0.3 m/s with target 0.6 m/s. Deadbeat speeds after each step (m/s): 0.31, 0.60, 0.60 (the first foot was set in advance). Steps 1.5 times too long give 0.31, 0.42, 0.22, 0.67, -0.34. Steps scaled by 0.6 reach 5 m/s by step six. In steady walking the deadbeat step is `2 Tc v tanh(T/2Tc)`: 0.21 m for `T = 0.4 s`, `h = 0.9 m`, `v = 0.6 m/s`.
+
+</details>
 
 ## Build It
 
@@ -58,7 +62,7 @@ def next_foot(x, v, v_target, T, h):
     return x - u
 ```
 
-`walk()` chains stances; `step_scale` multiplies the step length so you can break it.
+`walk()` chains steps. `step_scale` multiplies the step length so you can break it.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -68,7 +72,7 @@ python3 phases/10-legged-and-aerial/02-walking-by-foot-placement/code/main.py
 
 ## Use It
 
-The last test checks the first stance against SciPy's integrator. Real controllers clamp the foot to reachable positions.
+The last test checks the first step against SciPy's integrator.
 
 ## Ship It
 
@@ -76,6 +80,6 @@ The last test checks the first stance against SciPy's integrator. Real controlle
 
 ## Exercises
 
-1. Clamp the step length to 0.15 m; find the fastest speed the walker holds.
-2. Change `T` to 0.6 s; recompute the steady step.
-3. Add 20 mm of error to the measured `x`; see how far the speed misses.
+1. Make the steps longer or shorter and watch the speed.
+2. Limit the step length and find the fastest speed the walker can hold.
+3. Add a small error to the measured body position and see how far the speed misses.

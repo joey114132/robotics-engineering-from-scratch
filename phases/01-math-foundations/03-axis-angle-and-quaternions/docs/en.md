@@ -6,9 +6,7 @@
 
 ## In Plain Words
 
-A robot wrist is told to turn a tiny bit left. Turning almost a full circle right reaches the same direction, so the destination does not choose the route.
-
-A quaternion names an orientation, but q and its opposite, -q, name the same one. Slerp, a smooth turn between two orientations, flips the sign when needed to keep the turn short.
+A robot wrist is told to turn a tiny bit left. Turning almost a full circle right reaches the same direction. A quaternion names an orientation, but q and its opposite, -q, name the same one, so a smooth turn between two orientations flips the sign when needed to keep the turn short.
 
 ## Key Terms
 
@@ -21,35 +19,41 @@ A quaternion names an orientation, but q and its opposite, -q, name the same one
 
 ## The Problem
 
-A robot wrist told to correct a 0.1 rad error spun almost a full turn the long way round. The target quaternion arrived with the opposite sign, naming the same orientation, and the interpolator trusted it.
+A robot wrist, told to correct a tiny error, spins almost a full turn the long way round. The target arrived with a flipped sign and the code trusted it.
 
 ## The Concept
 
-A sign slip in a smooth turn makes the wrist take the long way.
-
-A unit axis `k` and an angle `t` give a rotation matrix by Rodrigues' formula, `R = I + sin(t) K + (1 - cos(t)) K^2`, where `K` turns a vector `v` into `k x v`. A unit quaternion packs the same turn into four numbers, `(cos(t/2), sin(t/2) k)`.
-
-A turn of 0.1 about z gives `q = (0.9988, 0, 0, 0.0500)`. Adding a full turn, `t = 0.1 + 2pi`, leaves the wrist where it was but flips both signs: `-q = (-0.9988, 0, 0, -0.0500)`.
+Robots glide smoothly between orientations all the time, and one sign slip makes the wrist take the long way.
 
 ![Two wrists, one pose](../assets/clip-example.mp4)
 
-*Blue turns 0.1, green 0.1 + 2pi; both end in the same pose. Needles show half angles 0.05 and pi + 0.05.*
+*Same final pose. Green turned one extra full turn.*
+
+A quaternion is four numbers that name an orientation, and every orientation has two of them, one the negative of the other.
 
 ![q and -q](../assets/diagram-double-cover.png)
 
-*Opposite points on a four-dimensional sphere give one rotation matrix.*
+*Two opposite points on the sphere mean the same turn.*
 
-The dot product of `q0 = (1, 0, 0, 0)` and `-q` is -0.9988: negative, the far side, so slerp flips it.
+The fix: check whether the target is on the far side, and if so flip its sign before gliding.
 
 ![Slerp sign check](../assets/diagram-slerp-sign-fix.png)
 
-*If `dot(q0, q1)` is negative, negate `q1` first: same rotation, short arc.*
+*If the check says far, flip the sign, and the short way is taken.*
 
 ![Swept angle](../assets/fig-slerp-long-way.png)
 
-*Same start and target. Without the fix the wrist sweeps 354.3 degrees, with it 5.7 (0.1 rad).*
+*Without the fix the wrist sweeps almost a full turn. With it, a small one.*
+
+<details><summary>The math (optional)</summary>
+
+A turn of angle `t` about axis `k` is the quaternion `(cos(t/2), sin(t/2) k)`. A turn of 0.1 about z gives `q = (0.9988, 0, 0, 0.0500)`; adding a full turn (`t = 0.1 + 2pi`) gives `-q = (-0.9988, 0, 0, -0.0500)`. The dot product of `q0 = (1, 0, 0, 0)` and `-q` is -0.9988: negative means far, so flip. Without the fix the wrist sweeps 354.3 degrees; with it 5.7 (0.1 rad). The clip's needles show half angles 0.05 and pi + 0.05.
+
+</details>
 
 ## Build It
+
+`rodrigues` turns an axis and an angle into a rotation matrix. `slerp` glides between two orientations, and its `fix` option flips the sign when the dot product is negative.
 
 ```python
 def rodrigues(axis, angle):
@@ -65,8 +69,6 @@ def slerp(q0, q1, t, fix=True):
     return (np.sin((1 - t) * om) * q0 + np.sin(t * om) * q1) / np.sin(om)
 ```
 
-More helpers are in `code/main.py`.
-
 ```bash
 cd robotics-engineering-from-scratch
 python3 -m pytest phases/01-math-foundations/03-axis-angle-and-quaternions -q
@@ -74,7 +76,7 @@ python3 -m pytest phases/01-math-foundations/03-axis-angle-and-quaternions -q
 
 ## Use It
 
-SciPy's `Rotation.from_quat` and `Slerp` do this. SciPy stores quaternions scalar-last, `(x, y, z, w)`; the last test checks that against this lesson's `(w, x, y, z)`.
+SciPy's `Rotation.from_quat` and `Slerp` do this. SciPy writes the plain number last and this lesson writes it first, so check the order when you cross a library boundary.
 
 Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2 (Euler parameters; section number not verified).
 
@@ -84,6 +86,6 @@ Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2 (Euler parameters; se
 
 ## Exercises
 
-1. Show `quat_mul(q, q_inv)` is the identity, with `q_inv = (w, -x, -y, -z)`.
-2. Find where `dot` crosses zero from a start of 0 rad.
-3. Compare `2*arccos(|dot|)` with the path angle.
+1. Run `slerp` with `fix=False` and watch the long way.
+2. Negate a quaternion and check that it gives the same rotation matrix.
+3. Find the target angle where the sign check first flips.

@@ -21,35 +21,45 @@ pose graph는 각 자리를 다음 자리와 스프링으로 잇는데 이 스�
 
 ## 문제
 
-로봇이 5 m 정사각형을 돈다고 상상해 보세요. odometry로는 출발점에서 1.4 m 떨어져 끝났지만 스캔 정합(08/05)은 마지막 스캔이 첫 스캔과 같다고 알려 줍니다. 마지막 pose만 덮어쓰면 이전 pose는 모두 휘어 있습니다.
+로봇이 사각형을 따라 달렸다고 상상해 보세요. 바퀴 기록으로는 출발점에서 1.4 m 떨어져 끝났지만 스캔 정합은 마지막 스캔이 첫 스캔과 같다고 알려 줍니다. 마지막 위치만 고치면 여정의 나머지는 여전히 휘어 있습니다.
 
 ## 개념
 
-아는 곳으로 돌아온 실제 로봇은 점 하나가 아니라 지도 전체를 한 번에 고칠 수 있습니다.
+아는 곳으로 돌아온 로봇은 점 하나가 아니라 지도 전체를 한 번에 고칠 수 있습니다.
 
-![pose와 스프링](../assets/diagram-posegraph-springs.png)
+여정을 스프링으로 이은 위치의 사슬로 생각해 보세요. 스프링 하나가 측정한 이동 하나입니다. 출발점을 알아보면 끝에서 처음으로 가는 스프링이 하나 더 생깁니다.
 
-*odometry 한 걸음이 스프링이고 루프 폐쇄가 스프링 하나를 더합니다.*
+![스프링](../assets/diagram-posegraph-springs.png)
 
-pose `i`에서 `j`로 가는 edge는 `i`에서 본 `j`의 pose인 측정 `z`를 가집니다. 잔차는 `between(x_i, x_j) - z`이고 heading 차이는 한 바퀴 안으로 wrap합니다.
-잔차를 각자의 노이즈로 나누면 믿을 만한 스프링이 더 뻣뻣해집니다. cost는 잔차 제곱의 합입니다.
+*이동은 스프링이고 루프가 스프링 하나를 더합니다.*
 
-pose는 0부터 20까지 1 m마다 하나씩 있고 5, 10, 15, 20이 모서리입니다. odometry는 1.42 m 떨어져 끝나고 rms 오차는 0.70 m입니다.
-맞는 폐쇄는 pose 5, 10, 15, 20을 각각 0.20, 0.59, 1.03, 1.41 m 옮기고 rms 오차는 0.09 m로 줄어듭니다. 틀린 폐쇄는 오차를 1.88 m로 키웁니다.
+그러면 모든 위치가 함께 움직여서 스프링이 되도록 덜 늘어나게 합니다. 보정이 여정 전체로 퍼집니다.
 
-![틀린 폐쇄와 맞는 폐쇄](../assets/clip-example.mp4)
+![폐쇄들](../assets/clip-example.mp4)
 
-*파랑(틀린 폐쇄)은 출발점에서 3.6 m 떨어져 끝나고 초록(맞는 폐쇄)은 정사각형을 닫습니다.*
+*틀린 매칭인 파랑은 지도를 휘게 하고 맞는 매칭인 초록은 사각형을 닫습니다.*
 
-![보정 과정](../assets/diagram-posegraph-pipeline.png)
+![과정](../assets/diagram-posegraph-pipeline.png)
 
-*폐쇄 edge 하나가 들어오면 모든 pose를 다시 풉니다.*
+*스프링 하나가 들어오면 모든 것을 다시 풉니다.*
 
+![전후](../assets/fig-posegraph-loop.png)
+
+*drift가 루프를 열고 풀면 닫힙니다.*
+
+<details><summary>The math (optional)</summary>
+
+pose는 `(x, y, heading)`입니다.
+pose `i`에서 `j`로 가는 edge는 측정 `z`를 가지고 잔차(스프링이 늘어난 정도)는 `between(x_i, x_j) - z`이며 heading 차이는 한 바퀴 안으로 wrap합니다.
+잔차를 각자의 노이즈로 나누면 믿을 만한 스프링이 더 뻣뻣해지고 cost는 잔차 제곱의 합입니다.
+Gauss-Newton은 cost를 가장 많이 줄이는 걸음을 반복합니다.
 지도 전체를 밀거나 돌려도 잔차가 변하지 않으므로 pose 0을 고정합니다.
+pose는 0부터 20까지 1 m마다 하나씩 있고 5, 10, 15, 20이 모서리입니다.
+odometry는 1.42 m 떨어져 끝나고 rms 오차는 0.70 m입니다.
+맞는 폐쇄는 pose 5, 10, 15, 20을 각각 0.20, 0.59, 1.03, 1.41 m 옮기고 rms 오차는 0.09 m로 줄어듭니다.
+틀린 폐쇄는 오차를 1.88 m로 키우고 출발점에서 3.6 m 떨어져 끝납니다.
 
-![루프 폐쇄 전후의 궤적](../assets/fig-posegraph-loop.png)
-
-*왼쪽은 odometry가 열린 채 drift하고 푼 궤적이 정사각형에 겹치는 모습입니다. 오른쪽은 오차가 루프 전체에서 줄어드는 모습입니다.*
+</details>
 
 ## 만들기
 
@@ -66,7 +76,7 @@ J = jacobian(X, edges, free=range(1, len(X)))   # numeric, pose 0 held fixed
 dx = np.linalg.lstsq(J, -residuals(X, edges), rcond=None)[0]
 ```
 
-테스트는 cost가 오르지 않는지, pose 0이 움직이지 않는지, 틀린 폐쇄가 지도를 더 나쁘게 만드는지 확인합니다.
+테스트는 cost가 오르지 않는지, pose 0이 움직이지 않는지, 틀린 폐쇄가 해로운지 확인합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -76,17 +86,17 @@ python3 phases/08-mobile-robots/06-pose-graph-and-loop-closure/code/main.py
 
 ## 실제 도구로 보기
 
-g2o는 SLAM을 pose와 제약의 그래프로 보고 풉니다. 같은 그래프를 그쪽에 만들어 `solve()`와 pose를 비교해 보세요.
+같은 그래프를 g2o에 만들어 `solve()`와 위치를 비교해 보세요.
 
 출처는 Kümmerle 외, g2o: A General Framework for Graph Optimization (ICRA 2011)입니다(http://ais.informatik.uni-freiburg.de/publications/papers/kuemmerle11icra.pdf).
 2026년 11월 10일에 요약만 읽었습니다.
 
 ## 결과물
 
-`outputs/skill-pose-graph-check.md`는 pose graph 풀이의 빠진 anchor, 잘못된 가중치, 거짓 폐쇄를 점검합니다.
+`outputs/skill-pose-graph-check.md`는 pose graph 풀이의 빠진 anchor와 거짓 폐쇄를 점검합니다.
 
 ## 연습 문제
 
-1. heading bias를 없애도 폐쇄가 여전히 도움이 되는지 보세요.
-2. 폐쇄의 확신을 10배 낮추고 오차를 보세요.
-3. pose 5와 15 사이에 폐쇄를 하나 더 넣고 비교하세요.
+1. heading 오차를 없애도 폐쇄가 여전히 도움이 되는지 보세요.
+2. 폐쇄 측정의 확신을 낮추고 오차를 보세요.
+3. 사각형 중간쯤에 폐쇄를 하나 더 넣어 보세요.

@@ -19,7 +19,7 @@ A car has an IMU (a motion sensor) and a camera on separate computers. A filter 
 
 ## The Problem
 
-A car's tracked position jumps ahead and back. The camera computer's clock runs 30 ms ahead, so a camera sample taken first gets a later stamp than an IMU sample taken after it. And a failed run cannot be traced unless each step logged its state.
+A car's tracked position jumps, yet every sensor reading is correct: the two computers' clocks disagree. And a failed run is hard to trace unless each step logged its state.
 
 ## The Concept
 
@@ -27,25 +27,31 @@ A robot understands its sensors only if every reading is placed at the moment it
 
 ![Four timestamps](../assets/diagram-offset-exchange.png)
 
-*The offset is half of `t1 - t0` plus `t2 - t3`.*
+*One computer asks the other for its time and notes when it asked and when the answer came back.*
 
-The client sends a request at `t0` and gets the reply at `t3`. The server receives at `t1` and replies at `t2`, on its own clock. If the server clock is 50 ms ahead and each trip takes 20 ms, `t1 - t0` is 70 ms and `t2 - t3` is 30 ms. Their average is 50 ms, because trip time is added once and subtracted once. The error is at most half the round trip, so trust the smallest.
+Half of the round trip is the one-way travel time, so the notes reveal how far the clocks differ. Trust the try with the shortest round trip.
 
 ![Offset estimate and order errors](../assets/fig-time-sync.png)
 
-*Left: the best of 8 exchanges beats one. Right: sensors 10 ms apart swap order if the offset exceeds 10 ms.*
+*Left: the best of several tries beats a single one. Right: sensors close in time swap order once the clock offset is big enough.*
 
-A trace has one JSON line per step with the state before (`pre`) and after (`post`). The reader names the first failure: `not_executed`, `no_motion` (state unchanged) or `wrong_motion`.
+A trace logs the state before and after each step. A reader checks each step against its intent and names the first one that went wrong.
 
 ![Trace reader](../assets/diagram-trace-reader.png)
 
 *The reader checks intents in order and stops at the first mismatch.*
 
-If step 2 leaves `pre` and `post` identical, `first_mismatch()` returns step 2, `no_motion`, and never looks at step 3.
+If step 2 changes nothing, the reader names step 2 and never looks at step 3.
 
 ![Arm skips target two](../assets/clip-example.mp4)
 
 *The arm misses the middle target. The reader turns the first green, the second red, then stops.*
+
+<details><summary>The math (optional)</summary>
+
+The client sends a request at `t0` and gets the reply at `t3`. The server receives at `t1` and replies at `t2`. The offset is `((t1 - t0) + (t2 - t3)) / 2`. If the server clock is 50 ms ahead and each trip takes 20 ms, `t1 - t0` is 70 ms and `t2 - t3` is 30 ms, so the average is 50 ms. With 30 ms out and 10 ms back the estimate is off by 10 ms, half the difference of the delays. The error is at most half the round trip, so the shortest one is the most trustworthy. A camera clock 30 ms ahead can give a camera sample taken first a later stamp than an IMU sample taken after it. The figure uses the best of 8 tries and sensors 10 ms apart. The reader reports `not_executed`, `no_motion` or `wrong_motion`.
+
+</details>
 
 ## Build It
 
@@ -73,6 +79,6 @@ Sources: RFC 5905 (https://datatracker.ietf.org/doc/html/rfc5905) and ROS 2 desi
 
 ## Exercises
 
-1. Flag a step whose `pre` differs from the previous `post`.
-2. Add a server processing time and show `estimate()` ignores it.
-3. Fit a drift rate from offsets a minute apart.
+1. Give the camera clock a bigger offset and count the order errors.
+2. Make the forward and return delays different and see the error.
+3. Break one step of a trace and see what the reader says.

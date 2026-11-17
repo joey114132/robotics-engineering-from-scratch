@@ -6,9 +6,9 @@
 
 ## 쉽게 말하면
 
-learned policy는 카메라가 본 것으로 팔을 얼마나 밀지 고르는 프로그램이에요. 카메라 화면이 멈추면 팔은 마지막 화면에 따라 계속 움직이다가 안전 한계를 넘어 밀어 버려요.
+learned policy는 카메라가 본 것으로 팔을 얼마나 밀지 고르는 프로그램이에요. 카메라 화면이 멈추면 팔은 마지막 화면에 따라 움직이다가 안전 한계를 넘어 밀어 버려요.
 
-wrapper는 정책과 모터 사이에 끼우는 평범한 코드예요. 화면이 낡았다는 것을 알아채고 미는 힘을 없애서 팔이 서서히 미끄러져 멈추게 해요. 너무 큰 힘도 잘라 내요.
+wrapper는 정책과 모터 사이에 끼우는 평범한 코드예요. 화면이 낡았다는 것을 알아채고 미는 힘을 없애요. 너무 큰 힘도 잘라 내요.
 
 ## 핵심 용어
 
@@ -25,7 +25,8 @@ wrapper는 정책과 모터 사이에 끼우는 평범한 코드예요. 화면�
 
 ## 개념
 
-학습된 모델은 강력하지만 예측하기 어려워서 실제 로봇은 동작을 증명할 수 있는 코드로 감쌉니다.
+학습된 모델은 강력하지만 예측하기 어려워서 실제 로봇은 동작을 증명할 수 있는 코드로 감쌉니다. wrapper에는 단순한 규칙이 세 개 있습니다. 화면이 너무 오래됐으면 아무 힘도 주지 않습니다. 안전한 최댓값보다 세게 밀지 않습니다.
+미는 힘을 너무 빨리 바꾸지 않습니다. 규칙마다 몇 번 작동했는지 셉니다.
 
 ![정책 시스템](../assets/diagram-policy-system.png)
 
@@ -33,22 +34,28 @@ wrapper는 정책과 모터 사이에 끼우는 평범한 코드예요. 화면�
 
 ![고장 둘](../assets/diagram-policy-broken.png)
 
-*spike는 clip과 변화율 제한으로 막습니다. 3 step보다 오래된 화면은 hold 명령(토크 0)이 됩니다.*
-
-규칙은 세 개입니다. 화면이 3 step보다 오래되면 토크 0으로 hold합니다(1 step은 0.02초). 토크는 3 Nm로 clip하고 step당 변화는 최대 0.5 Nm로 제한합니다. step 30에서 spike 때문에 정책이 39.9 Nm를 요구합니다.
-clip하면 3 Nm인데 직전 토크가 0.31 Nm였으므로 변화율 제한이 0.81 Nm까지만 허용합니다. wrapper가 없으면 관절은 39.9 Nm를 그대로 받습니다.
+*spike는 잘리고 느려집니다. 낡은 화면은 힘을 주지 않는 hold가 됩니다.*
 
 ![팔 둘](../assets/clip-example.mp4)
 
-*그 충격으로 파란 팔은 빨간 막대(1.3 rad의 limit)를 0.056 rad 지나칩니다. 넘은 부분은 4배로 크게 그렸습니다. wrapper를 두른 초록 팔은 거의 영향을 받지 않습니다.*
+*갑작스러운 충격이 파란 팔을 빨간 한계 막대 너머로 던집니다. wrapper를 두른 초록 팔은 거의 영향을 받지 않습니다.*
 
 ![성공](../assets/fig-policy-result.png)
 
-*깨끗한 실행에서 wrapper는 처음 토크가 올라가는 구간만 늦춥니다.*
+*깨끗한 실행에서 wrapper는 거의 아무것도 바꾸지 않습니다.*
 
 ![고장](../assets/fig-policy-faults.png)
 
-*spike에서는 최대 토크가 wrapper 없이 약 40 Nm, 있으면 3 Nm이고 관절 최대각은 1.36 rad 대 1.01 rad입니다. 관측 유실에서는 1.47 rad 대 1.01 rad입니다. 한계는 1.3 rad입니다.*
+*wrapper가 있으면 spike나 화면 유실 뒤에도 관절이 한계 아래에 머뭅니다. 없으면 한계를 넘습니다.*
+
+<details><summary>The math (optional)</summary>
+
+규칙은 이렇습니다. 화면이 3 step보다 오래되면 토크 0으로 hold하고(1 step은 0.02초) 토크는 3 Nm로 clip하고 step당 변화는 최대 0.5 Nm로 제한합니다.
+step 30에서 spike 때문에 정책이 39.9 Nm를 요구합니다. clip하면 3 Nm인데 직전 토크가 0.31 Nm였으므로 변화율 제한이 0.81 Nm까지만 허용합니다. wrapper가 없으면 관절은 39.9 Nm를 그대로 받습니다.
+spike에서는 최대 토크가 wrapper 없이 약 40 Nm, 있으면 3 Nm이고 관절 최대각은 1.36 rad 대 1.01 rad입니다. 관측 유실에서는 1.47 rad 대 1.01 rad입니다. 한계는 1.3 rad입니다.
+충격으로 파란 팔은 한계를 0.056 rad 지나칩니다(4배로 크게 그렸습니다). 깨끗한 실행은 clip과 hold가 0회이고 spike 실험은 clip 1회, 관측 유실 실험은 hold 23 step입니다.
+
+</details>
 
 ## 만들기
 
@@ -60,7 +67,7 @@ c = np.clip(raw, -self.umax, self.umax)
 r = self.u + np.clip(c - self.u, -self.du, self.du)
 ```
 
-규칙마다 action을 몇 번 바꿨는지 셉니다. spike 실험은 clip 1회, 관측 유실 실험은 hold 23 step이고 깨끗한 실행은 둘 다 0회입니다.
+규칙마다 action을 몇 번 바꿨는지 셉니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -70,7 +77,7 @@ python3 phases/16-capstones/03-learned-policy-with-safety-wrapper/code/main.py
 
 ## 실제 도구로 보기
 
-ros2_control은 hardware interface의 joint limit을 처리하고 `ros2_control_node`의 `enforce_command_limits`가 이를 전역으로 정합니다. 시작 로그를 여기의 규칙 세 개와 비교해 보세요.
+ros2_control은 hardware interface의 joint limit을 처리합니다. 시작 로그를 여기의 규칙 세 개와 비교해 보세요.
 
 출처: [ros2_control joint limiting](https://control.ros.org/rolling/doc/ros2_control/hardware_interface/doc/joint_limiting.html), 2026년 11월 9일 확인.
 
@@ -80,6 +87,6 @@ ros2_control은 hardware interface의 joint limit을 처리하고 `ros2_control_
 
 ## 연습 문제
 
-1. 관측 유실 실험이 1.3 rad를 넘을 때까지 `max_age`를 올려 보세요.
+1. 허용하는 화면 나이를 올려서 화면 유실 실험이 한계를 넘는 때를 찾으세요.
 2. 네 번째 규칙으로 속도 제한을 넣으세요.
-3. 40개 대신 5개 episode로 학습시키세요.
+3. 더 적은 episode로 학습시키고 무엇이 바뀌는지 보세요.

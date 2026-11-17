@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A point on the floor is written as...", "options": ["one number", "a pair of numbers counted from a corner", "a color"], "answer": 1, "explanation": "Across and up, counted from the origin, name the place."},
+  {"id": 2, "stage": "check", "question": "What is the origin?", "options": ["The corner all counting starts from", "The farthest point", "The longest distance"], "answer": 0, "explanation": "The origin is written (0, 0)."},
+  {"id": 3, "stage": "check", "question": "Across 3 and up 4. What is the straight-line distance?", "options": ["7", "5", "12"], "answer": 1, "explanation": "math.hypot(3, 4) is 5, not 3 + 4."},
+  {"id": 4, "stage": "check", "question": "You count both points from a new origin. What happens to the distance between them?", "options": ["It doubles", "It changes by the shift", "It stays the same"], "answer": 2, "explanation": "Moving the origin changes the numbers but not the gap."},
+  {"id": 5, "stage": "post", "question": "The route A (0, 0), B (2, 0), C (2, 1.5). How long is the drive from A to B to C?", "options": ["2.5 m", "3.5 m", "1.5 m"], "answer": 1, "explanation": "A to B is 2.0 m and B to C is 1.5 m."},
+  {"id": 6, "stage": "post", "question": "Why is going straight from A to C shorter than going via B?", "options": ["The straight line is the long side of the triangle", "Because B is far away", "Because the rover is faster"], "answer": 0, "explanation": "The long side of a triangle is shorter than the other two sides together: 2.5 m against 3.5 m."}
+]

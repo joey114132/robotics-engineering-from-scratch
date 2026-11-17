@@ -19,7 +19,7 @@ A camera sees a cup in front of a wall. The cup's rim and a spot on the wall lie
 
 ## The Problem
 
-A camera sees a cup at pixel (520, 240), yet the gripper closes a few centimetres to the side. The depth came from the wall behind the rim.
+A camera sees a cup, yet the gripper closes a few centimetres to the side. The depth came from the wall behind the rim.
 
 ## The Concept
 
@@ -27,17 +27,13 @@ To grab what it sees, a robot must turn each pixel into a 3D point, and that nee
 
 ![Project to a pixel, unproject with depth](../assets/diagram-pinhole-pipeline.png)
 
-*Projection (left) divides by `z` and loses depth. Going back (right) needs a depth.*
+*Projection turns a 3D point into a pixel and loses the depth.*
 
-The camera frame has `x` right, `y` down and `z` forward, so `u = fx*x/z + cx` and `v = fy*y/z + cy`.
-
-A pixel error `du` moves the point sideways by `z*du/fx`, more the farther away it is. A depth error `dz` slides it along the ray, sideways by `dz*(u-cx)/fx`: nothing at the centre pixel, more at the edge.
-
-Take pixel `(520, 240)`, `fx = 600`, `cx = 320`. At the rim's depth, 1.00 m, the point is 0.33 m right of the centre line. At the wall's depth, 1.15 m, it is 0.38 m: 5 cm off.
+A pixel is only a line of sight. Every point along that line lands on the same pixel, so the distance decides which point you mean. Use the wall's distance for a pixel on the cup's rim and the point slides along the line. The line leans away from the image centre, so sliding also moves the point sideways. The error is zero at the centre and bigger toward the edges.
 
 ![Two cups, depth too large](../assets/clip-example.mp4)
 
-*Same 0.15 m mistake for both cups. The edge cup's ball also slides 5 cm sideways.*
+*Same distance mistake for both cups. The edge cup's ball also slides sideways.*
 
 ![Two ways to read the wrong depth](../assets/diagram-pinhole-failure.png)
 
@@ -45,7 +41,13 @@ Take pixel `(520, 240)`, `fx = 600`, `cx = 320`. At the rim's depth, 1.00 m, the
 
 ![Error against distance and offset](../assets/fig-pinhole-error.png)
 
-*Left: 0.5 px and 1% depth errors grow with distance. Right: a 0.15 m depth error costs more at the edge.*
+*Left: errors grow with distance. Right: the same depth mistake costs more sideways error toward the edge.*
+
+<details><summary>The math (optional)</summary>
+
+The camera frame has `x` right, `y` down and `z` forward, so `u = fx*x/z + cx` and `v = fy*y/z + cy`. A pixel error `du` moves the point sideways by `z*du/fx`. A depth error `dz` slides it along the ray, sideways by `dz*(u-cx)/fx`. Take pixel `(520, 240)`, `fx = 600`, `cx = 320`. At the rim's depth, 1.00 m, the point is 0.33 m right of the centre line. At the wall's depth, 1.15 m, it is 0.38 m: 5 cm off. The figure uses 0.5 px and 1% depth errors, and a 0.15 m depth mistake.
+
+</details>
 
 ## Build It
 
@@ -66,7 +68,7 @@ python3 -m pytest phases/06-perception-and-calibration/01-pinhole-camera -q
 
 ## Use It
 
-Compare `project` with `cv2.projectPoints` on the same points.
+Compare `project` with `cv2.projectPoints`.
 
 Sources: the [OpenCV calibration tutorial](https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html) (an older version) uses `cv2.projectPoints` for reprojection error.
 
@@ -78,4 +80,4 @@ Sources: the [OpenCV calibration tutorial](https://opencv24-python-tutorials.rea
 
 1. Add a lens distortion term.
 2. Sample depth at the median of a 5x5 window and find where it still fails.
-3. Give the error budget in millimetres for a target at 2 m with `fx = 600`.
+3. Estimate the sideways error at 2 m.

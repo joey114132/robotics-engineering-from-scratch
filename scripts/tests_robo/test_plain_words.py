@@ -97,12 +97,22 @@ def test_heading_in_code_is_not_a_section(lesson):
     assert any("missing" in e for e in checks.check_doc(lesson, "en"))
 
 
-def test_english_body_cap_is_440_and_excludes_key_terms(lesson):
+def test_english_body_cap_is_380_and_excludes_key_terms_and_math_fold(lesson):
     edit(lesson, "en", "- **Link**: a rigid bar.", "- **Link**: " + "bar " * 24)
-    edit(lesson, "en", "## The Concept", "extra " * 380 + "\n\n## The Concept")
-    assert not any("prose words" in e for e in checks.check_doc(lesson, "en"))
+    edit(lesson, "en", "## The Concept", "extra " * 320 + "\n\n## The Concept")
+    fold = "<details><summary>The math (optional)</summary>\n\n" + "x " * 150 + "\n\n</details>\n\n"
+    edit(lesson, "en", "## Build It", fold + "## Build It")
+    edit(lesson, "ko", "## 만들기", fold + "## 만들기")
+    assert not any("prose words" in e or "fold" in e for e in checks.check_doc(lesson, "en") + checks.check_doc(lesson, "ko"))
     edit(lesson, "en", "## The Concept", "extra " * 60 + "\n\n## The Concept")
-    assert any("prose words, limit 440" in e for e in checks.check_doc(lesson, "en"))
+    assert any("prose words, limit 380" in e for e in checks.check_doc(lesson, "en"))
+
+
+def test_math_fold_cap_and_ko_mirror(lesson):
+    fold = "<details><summary>The math (optional)</summary>\n\n" + "x " * 170 + "\n\n</details>\n\n"
+    edit(lesson, "en", "## Build It", fold + "## Build It")
+    assert any("math folds, limit 160" in e for e in checks.check_doc(lesson, "en"))
+    assert any("folds differ" in e for e in checks.check_doc(lesson, "ko"))
 
 
 @pytest.mark.parametrize("lang", BASE)

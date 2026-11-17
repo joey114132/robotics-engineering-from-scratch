@@ -21,48 +21,46 @@
 
 ## 문제
 
-로봇에 달린 카메라가 roll, pitch, yaw를 보고합니다. 바로 아래로 기울어지면 roll과 yaw가 갑자기 180도 튀거나 제어기가 엄청나게 빠른 관절 속도를 요구합니다.
-
-센서는 멀쩡하고 문제는 각도 형식에 있습니다.
+로봇에 달린 카메라가 roll, pitch, yaw 세 각도를 보고합니다. 바로 아래로 기울어지는 순간 숫자 둘이 갑자기 튀거나 제어기가 관절에 말도 안 되게 빠른 속도를 요구합니다.
 
 ## 개념
 
-많은 로봇 센서가 자세를 각도 세 개로 알려 주는데 한 자세 근처에서는 그 세 숫자가 의미를 잃습니다.
-
-Euler 각도는 정해진 순서의 회전 세 번으로 자세를 나타냅니다. 수직 z축을 도는 yaw, 옆 y축을 도는 pitch, 앞 x축을 도는 roll입니다. `R = Rz(yaw) Ry(pitch) Rx(roll)`에서는 roll이 먼저 작용합니다.
+많은 로봇 센서가 자세를 각도 세 개로 알려 주는데 한 자세 근처에서는 그 세 숫자가 의미를 잃습니다. 카메라가 고리 세 개 안에 있다고 해 보세요. 바로 아래를 보면 고리 두 개가 한 줄로 서서 같은 선을 축으로 화면을 돌립니다.
 
 ![고리가 방향 하나를 잃습니다](../assets/diagram-gimbal-rings.png)
 
-*pitch가 90도이면(gimbal lock) roll 고리가 yaw 고리와 나란해집니다.*
-
-이때 두 고리는 같은 수직선을 축으로 돌고 roll `+a`는 yaw `-a`와 같습니다. `yaw - roll`만 의미가 있고 돌릴 수 있는 방향 하나를 잃습니다.
+*바로 아래를 보면 roll 고리가 yaw 고리와 나란해져서 돌릴 수 있는 방향 하나를 잃습니다.*
 
 ![고리 장치 두 개, 한 자세](../assets/clip-example.mp4)
 
-*왼쪽은 roll 고리를 +1.2 rad, 오른쪽은 yaw 고리를 -1.2 rad 돌립니다. 주황색 fin이 같은 방향을 가리키며 끝납니다.*
+*고리 설정은 두 가지인데 화면은 똑같습니다.*
 
-`R`에서 각도를 다시 읽으면 pitch는 -90도에서 90도 사이로만 나옵니다. 그래서 90도를 넘으면 읽는 쪽이 roll과 yaw가 180도 떨어진 두 번째 표기(`other_spelling()`)로 바꿉니다.
+각도를 다시 읽는 코드는 두 설정 중 하나를 골라야 하고 카메라가 그 자세를 지날 때 설정이 바뀝니다. 그래서 카메라는 매끄럽게 움직이는데 숫자는 튑니다.
 
 ![매끄러운 회전, 점프](../assets/diagram-angle-jump.png)
 
-*도구는 매끄럽게 움직이는데 roll과 yaw는 180도 뒤집힙니다.*
-
-Euler rate에는 3x3 행렬 `E`가 필요하고 `det E = cos(pitch)`입니다. 90도에서는 이 값이 0이라서 어떤 회전은 Euler rate로 만들 수 없습니다.
+*카메라는 매끄럽게 움직이는데 roll과 yaw는 뒤집힙니다.*
 
 ![점프와 rate 폭주](../assets/fig-gimbal-lock.png)
 
-*왼쪽은 pitch를 60도에서 120도까지 돌린 결과입니다. 오른쪽은 yaw 0에서 world-x 축으로 1 rad/s 회전할 때 Euler rate가 1 / cos(pitch)처럼 커지는 모습입니다.*
+*바로 아래 근처에서는 필요한 고리 속도가 치솟습니다.*
+
+<details><summary>The math (optional)</summary>
+
+pitch가 90도이면 roll `+a`는 yaw `-a`와 같아서 `yaw - roll`만 의미가 있습니다. 각도를 다시 읽으면 pitch는 -90도에서 90도 사이로만 나오므로 90도를 넘으면 roll과 yaw가 180도 떨어진 두 번째 표기로 바뀝니다.
+rate 행렬의 determinant는 `cos(pitch)`이고 90도에서 0입니다. 그림은 pitch를 60도에서 120도까지 돌린 것이고 yaw 0에서 1 rad/s 회전할 때 rate가 1 / cos(pitch)처럼 커집니다.
+영상은 roll 고리를 +1.2 rad, yaw 고리를 -1.2 rad 돌립니다. `locked=True`는 lock에서 1e-9 이내일 때 나옵니다.
+
+</details>
 
 ## 만들기
+
+`euler_to_R`은 각도 세 개로 회전을 만듭니다. `R_to_euler()`는 각도를 다시 읽고 lock 근처에서 `locked=True`를 돌려주며 `euler_rates()`는 거기서 실행을 거부합니다.
 
 ```python
 def euler_to_R(roll, pitch, yaw):
     return _rot(2, yaw) @ _rot(1, pitch) @ _rot(0, roll)
 ```
-
-`R_to_euler()`는 pitch를 `-R[2, 0]`에서 읽습니다. lock에서 1e-9 이내이면 `locked=True`를 돌려주고 roll을 0으로 둡니다. +90도에서는 `yaw - roll`만 정해지기 때문입니다.
-
-`euler_rates()`는 gimbal lock에서 예외를 냅니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -72,7 +70,7 @@ python3 phases/01-math-foundations/05-euler-angles-and-gimbal-lock/code/main.py
 
 ## 실제 도구로 보기
 
-`R_to_euler()`를 SciPy의 `Rotation.as_euler("ZYX")`와 비교하세요. SciPy는 gimbal lock에서 경고를 내므로 각도가 아니라 회전을 비교합니다.
+`R_to_euler()`를 SciPy의 `Rotation.as_euler("ZYX")`와 비교하세요. SciPy는 lock에서 경고를 내므로 각도가 아니라 회전을 비교합니다.
 
 ## 결과물
 
@@ -80,6 +78,6 @@ python3 phases/01-math-foundations/05-euler-angles-and-gimbal-lock/code/main.py
 
 ## 연습 문제
 
-1. pitch 90도에서 같은 `R`을 주는 다른 `(roll, yaw)` 쌍을 찾으세요.
-2. yaw 0, pitch 89.9도에서 world-x 축으로 1 rad/s 회전할 때 가장 큰 Euler rate를 구하세요.
-3. 점프 구간에서 각도에 건 low-pass filter와 `R`에 건 slerp를 비교하세요.
+1. 카메라를 89도로 기울였다가 90도로 기울이고 출력을 보세요.
+2. pitch 90도에서 같은 회전을 주는 roll과 yaw의 다른 쌍을 찾으세요.
+3. 각도에 거는 평활 필터와 회전 사이를 매끄럽게 잇는 방법을 비교하세요.

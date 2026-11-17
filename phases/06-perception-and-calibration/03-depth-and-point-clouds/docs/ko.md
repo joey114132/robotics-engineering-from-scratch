@@ -31,16 +31,12 @@ depth 카메라가 상자가 놓인 테이블을 내려다봐요. 팔은 블록�
 
 *픽셀이 점이 되고 voxel이 점을 줄이고 RANSAC이 평면을 돌려줍니다.*
 
-레슨 01처럼 각 픽셀을 역투영합니다. voxel grid는 정육면체마다 평균 점 하나만 남깁니다. 최소제곱은 거리를 제곱하므로 테이블보다 0.2 m 가까운 상자가 평면을 세게 끌어당깁니다.
-
-RANSAC은 무작위 세 점을 뽑고 inlier를 세어 가장 좋은 평면을 남깁니다. 세 점이 모두 테이블 위에 있어야 그 회차가 쓸모 있고 확률은 테이블 비율 `w`에 대해 `w^3`입니다. 성공 확률 `p`에는 `N = log(1 - p) / log(1 - w^3)`회가 필요합니다.
-`w = 0.88`, `p = 0.99`이면 5회이므로 150회는 값싼 여유입니다.
-
-임계값 1.2 cm에서 상자 점 둘과 테이블 점 하나는 19,200개 중 1,142개만 잡고 평면을 30도 기울입니다. 테이블 점 셋은 16,836개를 잡습니다(0.3도 어긋남).
+depth 이미지는 3D 점의 구름이 됩니다. voxel grid는 작은 정육면체마다 평균 점 하나만 남기므로 점군은 줄고 테이블은 남습니다. 단순한 최적 평면은 테이블보다 가까운 상자처럼 멀리 떨어진 점에 세게 끌려갑니다.
+RANSAC은 대신 무작위 세 점으로 평면을 만들고 가까운 점을 세어 가장 좋은 것을 남깁니다. 여러 회차를 돌립니다.
 
 ![RANSAC 세 회차](../assets/clip-example.mp4)
 
-*주황 공이 뽑힌 점이고 초록 점이 1.2 cm 안에 듭니다. 마지막 회차만 테이블을 찾습니다.*
+*주황 공이 뽑힌 점이고 초록 점이 평면 가까이에 듭니다. 마지막 회차만 테이블을 찾습니다.*
 
 ![RANSAC 한 회차](../assets/diagram-cloud-ransac.png)
 
@@ -48,7 +44,15 @@ RANSAC은 무작위 세 점을 뽑고 inlier를 세어 가장 좋은 평면을 �
 
 ![최소제곱과 RANSAC](../assets/fig-cloud-ransac.png)
 
-*왼쪽은 최소제곱이 상자 쪽으로 기울고 RANSAC이 테이블을 따르는 모습입니다. 오른쪽은 평면에서 벗어난 점입니다.*
+*왼쪽은 최적 평면이 상자 쪽으로 기울고 RANSAC이 테이블을 따르는 모습입니다. 오른쪽은 평면에서 벗어난 점입니다.*
+
+<details><summary>The math (optional)</summary>
+
+최소제곱은 거리를 제곱하므로 테이블보다 0.2 m 가까운 상자가 평면을 세게 끌어당깁니다. 세 점이 모두 테이블 위에 있어야 회차가 쓸모 있고 확률은 테이블 비율 `w`에 대해 `w^3`입니다.
+성공 확률 `p`에는 `N = log(1 - p) / log(1 - w^3)`회가 필요합니다. `w = 0.88`, `p = 0.99`이면 5회이므로 150회는 값싼 여유이고 inlier가 절반(`w = 0.5`)이면 35회가 필요합니다.
+임계값 1.2 cm에서 상자 점 둘과 테이블 점 하나는 19,200개 중 1,142개만 잡고 평면을 30도 기울입니다. 테이블 점 셋은 16,836개를 잡습니다(0.3도 어긋남).
+
+</details>
 
 ## 만들기
 
@@ -68,7 +72,7 @@ python3 -m pytest phases/06-perception-and-calibration/03-depth-and-point-clouds
 
 ## 실제 도구로 보기
 
-Open3D에는 `PointCloud.voxel_down_sample(voxel_size)`와 `PointCloud.segment_plane(distance_threshold, ransac_n, num_iterations)`가 있습니다.
+Open3D에는 `voxel_down_sample`과 `segment_plane`이 있습니다.
 
 출처: [Open3D point cloud tutorial](https://www.open3d.org/docs/release/tutorial/geometry/pointcloud.html), 두 함수를 확인했습니다.
 
@@ -78,6 +82,6 @@ Open3D에는 `PointCloud.voxel_down_sample(voxel_size)`와 `PointCloud.segment_p
 
 ## 연습 문제
 
-1. RANSAC이 150회에서 실패할 때까지 엉뚱한 픽셀 비율(`flyers`)을 올리세요.
-2. `ransac_iters`로 inlier가 60%일 때의 반복 횟수를 고르세요.
+1. 엉뚱한 픽셀을 더 늘리고 RANSAC이 실패하는 것을 보세요.
+2. `ransac_iters`로 inlier가 60%일 때의 회차 수를 고르세요.
 3. 상자 윗면을 두 번째 평면으로 fit하세요.

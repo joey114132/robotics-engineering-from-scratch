@@ -21,35 +21,41 @@ The first turn changes what the second turn acts on. A pose is orientation plus 
 
 ## The Problem
 
-A camera sees a cup at (0.2, 0, 0.5) in its own frame, and the arm needs the spot in its base frame. Multiply the transforms in the wrong order and the arm reaches for a point that does not exist.
+A camera on a mast sees a cup, and the arm needs the cup's position from its own base. You combine the camera's pose and the cup's pose in the wrong order, and the arm reaches for a point that is not there.
 
 ## The Concept
 
 A robot must know where each part is and which way it faces.
 
-A rotation matrix `R` turns without stretching or mirroring: its columns are perpendicular, one unit long, with determinant (a mirror check) +1. A transform `T` stacks `R` and a position `p` into one 4x4 matrix, a pose in SE(3). It turns a point by `R`, then shifts it by `p`; in `A @ B` the right matrix acts first.
-
 ![A transform and its inverse](../assets/diagram-transform-chain.png)
 
-*`T_base_cam` maps camera coordinates to base coordinates.*
+*One pose tells you how to go from the camera's view to the base's view.*
 
-A drone's pose is a quarter turn about z plus a shift `p = (1, 2, 0)`. Turn then shift: the nose mark (1, 0, 0) lands at (1, 3, 0). Shift then turn: the mark lands at (-2, 2, 0).
+A pose is a turn plus a shift, and the order matters: turning then shifting lands somewhere different from shifting then turning.
 
 ![Two drones, opposite orders](../assets/clip-example.mp4)
 
-*Green turns, then moves. Blue moves first, so the turn swings it around the origin.*
+*Green turns first, then moves. Blue moves first, so its turn swings it around the origin.*
 
 ![Two turn orders](../assets/diagram-rotation-order.png)
 
-*Roll about x then spin about z, or the reverse: the nose (1, 0, 0) ends at (0, 1, 0) or (0, 0, 1).*
+*The same two turns in a different order point the nose in different directions.*
 
-The inverse is `[R^T, -R^T p]`, where `R^T` swaps `R`'s rows and columns. It lets drift show up as `T^-1 T` missing the identity.
+Rounding errors slowly bend a rotation, so long programs repair it from time to time.
 
 ![Float32 drift with and without repair](../assets/fig-rotation-drift.png)
 
-*20,000 small float32 rotations let drift grow. `reorthonormalize` every 100 steps keeps it at rounding level.*
+*Without the repair the error keeps growing. With it the error stays tiny.*
+
+<details><summary>The math (optional)</summary>
+
+A rotation matrix `R` has perpendicular unit-length columns and determinant +1. A pose `T` stacks `R` and a position `p` into one 4x4 matrix: it turns a point by `R`, then shifts it by `p`, and in `A @ B` the right matrix acts first. The inverse is `[R^T, -R^T p]`. A quarter turn about z plus `p = (1, 2, 0)`: turn then shift sends (1, 0, 0) to (1, 3, 0); shift then turn sends it to (-2, 2, 0). 20,000 small float32 rotations drift; `reorthonormalize` every 100 steps keeps the error at rounding level.
+
+</details>
 
 ## Build It
+
+Three small helpers check that a matrix is a true rotation, undo a pose, and repair a drifting rotation.
 
 ```python
 def is_rotation(R, tol=1e-9):
@@ -64,7 +70,7 @@ def reorthonormalize(R):
     return U @ np.diag([1, 1, np.linalg.det(U @ Vt)]) @ Vt
 ```
 
-Helpers: see `code/main.py`.
+The other helpers are in `code/main.py`.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -83,6 +89,6 @@ Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 2.
 
 ## Exercises
 
-1. Compose `rot_x(a)` and `rot_z(b)` both ways and print the tip difference.
-2. Find how many float64 steps pass before `is_rotation` fails.
-3. Write `compose(Ts)` to multiply a list of transforms.
+1. Turn a point 90 degrees about z, then shift it, and swap the order. See how the answers differ.
+2. Multiply many tiny turns together and watch `is_rotation` fail.
+3. Write `compose` that multiplies a list of poses.

@@ -21,33 +21,37 @@ Testing the whole stretch catches the hit. So does pretending the post is wider,
 
 ## The Problem
 
-Picture a robot arm whose planner reports a collision-free path, yet it hits a thin post. Every checked pose was free; the post is thinner than the move between checks.
+Picture a robot arm whose planner says the path is safe, yet the arm hits a thin post. Every pose that was checked was free. The post was thinner than the gap between two checks.
 
 ## The Concept
 
-A real robot hits whatever its checker skips, so check spacing must match the thinnest obstacle.
+A robot hits whatever its checker skips, so how often you check must match the thinnest obstacle.
+
+A checker tests the path at spots along the route. If the spots are farther apart than the post is wide, they can all land beside it, and the robot hits the post between two spots.
 
 ![Tunnelling](../assets/diagram-tunnel.png)
 
 *A wide step lets samples land on both sides.*
 
-Seen from above, a post is a circle of radius `r`. A segment hits it when its point closest to the centre is inside. That point is the centre's projection, clamped to the ends, so this test is exact. A swept check tests only points at most `s` apart.
-
 ![Step sizes](../assets/fig-tunnelling.png)
 
-*Coarse steps miss, fine steps catch.*
+*Coarse steps miss. Fine steps catch.*
+
+Two fixes: check the whole stretch between spots exactly, or pretend the post is a bit wider. The second is cheap but sometimes says blocked when the way is clear.
 
 ![Step rule](../assets/diagram-step-rule.png)
 
-*A step of at most `2r` catches centre crossings; padding by `s/2` catches all.*
-
-A chord through the centre is `2r` long, so a step of at most `2r` puts a sample on it, but a grazing segment can slip through. Growing the circle by `s/2` never misses, at the price of false alarms.
-
-Take `r = 0.25`, a peg every `0.5 = 2r`, and a segment passing 0.2 from the centre. Two pegs sit 0.25 either side of the closest point, each 0.32 from the centre, so the plain check says free while `seg_hits` says hit. Padding by `s/2 = 0.25` catches both.
+*Small steps catch centre hits. Padding catches all.*
 
 ![Two cars](../assets/clip-example.mp4)
 
-*Blue's pegs stay white; it clips the post. Green's turn red; it stops.*
+*Blue's pegs stay white and it clips the post. Green's turn red and it stops.*
+
+<details><summary>The math (optional)</summary>
+
+Seen from above, a post is a circle of radius `r`. A segment hits it when its point closest to the centre is inside; that point is the centre's projection onto the segment, clamped to the ends, so this test is exact. A swept check tests only points at most `s` apart. A chord through the centre is `2r` long, so a step of at most `2r` puts a sample on it, but a grazing segment can slip through. Growing the circle by `s/2` never misses a hit, at the price of false alarms. Example: `r = 0.25`, a peg every `0.5 = 2r`, a segment passing 0.2 from the centre. Two pegs sit 0.25 either side of the closest point, each 0.32 from the centre, so the plain check says free while the exact test says hit. Padding by `s/2 = 0.25` catches both.
+
+</details>
 
 ## Build It
 
@@ -66,7 +70,7 @@ python3 phases/09-motion-planning/03-collision-checking/code/main.py
 
 ## Use It
 
-SciPy's `minimize_scalar` finds the closest point numerically; a test compares it.
+SciPy's `minimize_scalar` finds the closest point numerically, and a test compares it.
 
 Sources: [Motion planning, Wikipedia](https://en.wikipedia.org/wiki/Motion_planning) (opened 2026-11-09).
 
@@ -76,6 +80,6 @@ Sources: [Motion planning, Wikipedia](https://en.wikipedia.org/wiki/Motion_plann
 
 ## Exercises
 
-1. Find the smallest `step` with under 5% false alarms when padded.
-2. Pad by the exact worst-case gap `length / (2n)`; compare false alarms.
-3. Add a circle robot's radius to `r`.
+1. Make the post thinner and see when the plain check starts to miss.
+2. Make the step smaller and watch the false alarms.
+3. Make the robot a circle and add its size to the post.

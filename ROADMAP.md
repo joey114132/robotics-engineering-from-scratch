@@ -2,7 +2,7 @@
 
 Scope: general robotics, not one robot and not one company's stack. Manipulators, wheeled and legged robots, aerial vehicles, perception, planning, learning, fleets and safety.
 
-Status: all 17 phases are written, 81 lessons, each with code, tests, English and Korean docs, quizzes and a Ship It artifact.
+Status: all 17 phases are written, 87 lessons, each with code, tests, English and Korean docs, quizzes and a Ship It artifact.
 
 ## Sourcing rule
 
@@ -12,14 +12,20 @@ Status: all 17 phases are written, 81 lessons, each with code, tests, English an
 
 ## Lessons
 
-### Phase 00: setup and tooling
+### Phase 00: start here
 
 | Lesson | What you will learn |
 |---|---|
-| [01 Python Env and numpy](phases/00-setup-and-tooling/01-python-env-and-numpy/docs/en.md) · [한국어](phases/00-setup-and-tooling/01-python-env-and-numpy/docs/ko.md) | See how a wrong unit or array shape quietly gives a wrong answer, and how to catch it. |
-| [02 MuJoCo Hello World](phases/00-setup-and-tooling/02-mujoco-hello-world/docs/en.md) · [한국어](phases/00-setup-and-tooling/02-mujoco-hello-world/docs/ko.md) | Learn how a simulator moves things in tiny time steps, why a wrong step adds energy out of nowhere, and the one-line fix. |
-| [03 Reading a URDF](phases/00-setup-and-tooling/03-reading-a-urdf/docs/en.md) · [한국어](phases/00-setup-and-tooling/03-reading-a-urdf/docs/ko.md) | Learn to read a robot's description file, and why each joint's offset is measured from the part before it. |
-| [04 ROS 2 in One Page](phases/00-setup-and-tooling/04-ros2-in-one-page/docs/en.md) · [한국어](phases/00-setup-and-tooling/04-ros2-in-one-page/docs/ko.md) | Learn how robot programs pass data to each other, and why a longer waiting line can make a robot react late. |
+| [01 What Is a Robot](phases/00-start-here/01-what-is-a-robot/docs/en.md) · [한국어](phases/00-start-here/01-what-is-a-robot/docs/ko.md) | Learn that a robot is a machine that keeps repeating three steps: sense, think, act. |
+| [02 Points as Numbers](phases/00-start-here/02-points-as-numbers/docs/en.md) · [한국어](phases/00-start-here/02-points-as-numbers/docs/ko.md) | Learn that a place is just a pair of numbers counted from a corner, and how to measure the distance between two places. |
+| [03 Angles and Radians](phases/00-start-here/03-angles-and-radians/docs/en.md) · [한국어](phases/00-start-here/03-angles-and-radians/docs/ko.md) | Learn that an angle can be counted in degrees or radians, and that code always wants radians. |
+| [04 Joints and Links](phases/00-start-here/04-joints-and-links/docs/en.md) · [한국어](phases/00-start-here/04-joints-and-links/docs/ko.md) | Learn how a joint angle and a link length tell you where an arm's hand is. |
+| [05 Turning a Point](phases/00-start-here/05-turning-a-point/docs/en.md) · [한국어](phases/00-start-here/05-turning-a-point/docs/ko.md) | Learn how to turn a point around the origin by an angle, first with plain math, then with a small table of numbers. |
+| [06 Time Steps](phases/00-start-here/06-time-steps/docs/en.md) · [한국어](phases/00-start-here/06-time-steps/docs/ko.md) | Learn how a computer moves things by repeating tiny steps, and why smaller steps follow real motion better. |
+| [07 Python Env and numpy](phases/00-start-here/07-python-env-and-numpy/docs/en.md) · [한국어](phases/00-start-here/07-python-env-and-numpy/docs/ko.md) | See how a wrong unit or array shape quietly gives a wrong answer, and how to catch it. |
+| [08 MuJoCo Hello World](phases/00-start-here/08-mujoco-hello-world/docs/en.md) · [한국어](phases/00-start-here/08-mujoco-hello-world/docs/ko.md) | Learn how a simulator moves things in tiny time steps, why a wrong step adds energy out of nowhere, and the one-line fix. |
+| [09 Reading a URDF](phases/00-start-here/09-reading-a-urdf/docs/en.md) · [한국어](phases/00-start-here/09-reading-a-urdf/docs/ko.md) | Learn to read a robot's description file, and why each joint's offset is measured from the part before it. |
+| [10 ROS 2 in One Page](phases/00-start-here/10-ros2-in-one-page/docs/en.md) · [한국어](phases/00-start-here/10-ros2-in-one-page/docs/ko.md) | Learn how robot programs pass data to each other, and why a longer waiting line can make a robot react late. |
 
 ### Phase 01: math foundations
 

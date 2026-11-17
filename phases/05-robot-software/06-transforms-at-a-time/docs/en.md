@@ -19,7 +19,7 @@ A rover turns while its laser scans a straight wall. The rover turned a little b
 
 ## The Problem
 
-A rover turns while its laser scans a straight wall for half a second. Using the newest pose for every point bends the wall, more the faster the rover turns.
+A rover's laser scans a straight wall while the rover turns. Using the newest pose for every point bends the wall, more the faster it turns.
 
 ## The Concept
 
@@ -29,23 +29,27 @@ A robot must know where its body was at the instant of each measurement.
 
 *The newest pose fits only the last point. The pose at the stamp keeps the wall straight.*
 
-A transform tree (01/04) answers "where is frame B in frame A". With time it asks "where was B in A at time t".
+A transform tree says where one part of the robot is as seen from another. Add time and it says where it was at that instant. Poses arrive at separate moments, so the buffer answers in three ways. Between two stored poses it blends them. A little past the newest it may guess, within a limit. Anything else is an error.
 
 ![Three answers for one lookup](../assets/diagram-lookup-rules.png)
 
-*Between samples: interpolate. Slightly past the newest: extrapolate within a limit. Else: error.*
+*Between samples: blend. Slightly past the newest: guess within a limit. Else: error.*
 
-Position is a lerp (straight-line blend). Orientation uses the slerp from 01/03, a blend of two rotations along the shortest arc. The limit is 0 s by default. Refusing is a feature: a guess past the newest sample hides a late message.
-
-Poses at 0 s and 1 s are 1.2 m and 1 rad apart. A lookup at 0.5 s answers 0.6 m and 0.5 rad. At 1.5 s it raises `LookupError`: 0.500 s past the newest sample, and the limit is 0.
+Refusing is a feature: guessing would hide a late message.
 
 ![Interpolated answer and a refusal](../assets/clip-example.mp4)
 
-*Grey ghosts are stored poses. Amber answers 0.5 s. The red cross, 1.5 s, is refused.*
+*Grey ghosts are stored poses. Amber is a moment between them. The red cross is too new and is refused.*
 
 ![Smeared and stamped scans](../assets/fig-scan-smear.png)
 
-*Left: a wall scanned for 0.5 s while turning 1 rad/s. Right: the newest-pose error grows with turn rate. The stamped error stays at zero.*
+*Right: the newest-pose error grows with the turn rate, while the stamped error stays at zero.*
+
+<details><summary>The math (optional)</summary>
+
+Position is a lerp (straight-line blend). Orientation uses the slerp from 01/03, a blend of two rotations along the shortest arc. The guess limit is 0 s by default. Poses at 0 s and 1 s are 1.2 m and 1 rad apart. A lookup at 0.5 s answers 0.6 m and 0.5 rad. At 1.5 s it raises `LookupError`: 0.500 s past the newest sample, and the limit is 0. The wall is scanned for 0.5 s while turning 1 rad/s.
+
+</details>
 
 ## Build It
 
@@ -73,6 +77,6 @@ ROS 2's tf2 buffers raise an extrapolation exception for the same reason.
 
 ## Exercises
 
-1. Set `max_extrapolation = 0.1` and find the largest turn rate where the guess stays under 1 cm.
-2. Feed samples at 10 Hz and 100 Hz and compare the midpoint error.
-3. Compose lookups from two buffers at one stamp.
+1. Raise `max_extrapolation` a little and see when the guess stays good.
+2. Feed poses slower and compare the midpoint error.
+3. Compose two buffers at one stamp.

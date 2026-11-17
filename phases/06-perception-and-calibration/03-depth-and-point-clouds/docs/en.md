@@ -29,15 +29,11 @@ A robot needs the table's exact tilt to place things level, and a few bad points
 
 *Pixels become points, voxels thin them, RANSAC returns the plane.*
 
-Unproject each pixel as in lesson 01. A voxel grid keeps one averaged point per cube. Least squares squares each distance, so a box 0.2 m closer than the table pulls the plane hard.
-
-RANSAC picks three random points, counts the inliers and keeps the best plane. A round helps only if all three picks lie on the table, chance `w^3` for table share `w`. Success chance `p` takes `N = log(1 - p) / log(1 - w^3)` rounds: `w = 0.88`, `p = 0.99` give 5, so 150 is a cheap margin.
-
-With a 1.2 cm threshold, two box points and one table point catch only 1,142 of 19,200 points and tilt the plane 30 degrees. Three table points catch 16,836 (0.3 degrees off).
+A depth image turns into a cloud of 3D points. A voxel grid keeps one averaged point per small cube, so the cloud shrinks and the table stays. A plain best-fit plane gets pulled hard by far-off points, like a box closer than the table. RANSAC instead tries planes through three random points, counts the points near each, and keeps the best. It runs many rounds.
 
 ![Three RANSAC rounds](../assets/clip-example.mp4)
 
-*Amber balls are the picks, green points lie within 1.2 cm. Only the last round finds the table.*
+*Amber balls are the picks, green points are near the plane. Only the last round finds the table.*
 
 ![One RANSAC round](../assets/diagram-cloud-ransac.png)
 
@@ -45,7 +41,13 @@ With a 1.2 cm threshold, two box points and one table point catch only 1,142 of 
 
 ![Least squares against RANSAC](../assets/fig-cloud-ransac.png)
 
-*Left: least squares tilts toward the box, RANSAC follows the table. Right: points off the plane.*
+*Left: the best-fit plane tilts toward the box, RANSAC follows the table. Right: points off the plane.*
+
+<details><summary>The math (optional)</summary>
+
+Least squares squares each distance, so a box 0.2 m closer than the table pulls the plane hard. A round helps only if all three picks lie on the table: chance `w^3` for a table share `w`. Success chance `p` takes `N = log(1 - p) / log(1 - w^3)` rounds: `w = 0.88`, `p = 0.99` give 5, so 150 is a cheap margin, and half the points as inliers (`w = 0.5`) needs 35. With a 1.2 cm threshold, two box points and one table point catch only 1,142 of 19,200 points and tilt the plane 30 degrees. Three table points catch 16,836 (0.3 degrees off).
+
+</details>
 
 ## Build It
 
@@ -65,16 +67,16 @@ python3 -m pytest phases/06-perception-and-calibration/03-depth-and-point-clouds
 
 ## Use It
 
-Open3D has `PointCloud.voxel_down_sample(voxel_size)` and `PointCloud.segment_plane(distance_threshold, ransac_n, num_iterations)`.
+Open3D has `voxel_down_sample` and `segment_plane`.
 
 Sources: [Open3D point cloud tutorial](https://www.open3d.org/docs/release/tutorial/geometry/pointcloud.html), checked for both functions.
 
 ## Ship It
 
-`outputs/skill-plane-fit-check.md` checks how far stray points move a plane fit.
+`outputs/skill-plane-fit-check.md` checks how far stray points move a plane.
 
 ## Exercises
 
-1. Raise the stray-pixel rate (`flyers`) until 150 iterations fail.
-2. Use `ransac_iters` to choose the iteration count for 60% inliers.
+1. Add more stray pixels and watch RANSAC fail.
+2. Use `ransac_iters` to choose the number of rounds for 60% inliers.
 3. Fit the box top as a second plane.

@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-A camera is bolted to a robot arm's hand. The arm must know where the camera sits on the hand, called X. Move the arm and compare how the hand moved with how the camera saw it. If every motion spins about one axis, sliding the camera along it changes nothing, so use different axes.
+A camera is bolted to a robot arm's hand. The arm must know where the camera sits on the hand, called X. Move the arm and compare how the hand moved with how the camera saw it. Use motions about different axes.
 
 ## Key Terms
 
@@ -19,23 +19,23 @@ A camera is bolted to a robot arm's hand. The arm must know where the camera sit
 
 ## The Problem
 
-A camera on a robot's hand sees a cup 0.4 m ahead, yet the gripper misses it. The camera's mounting `X` is unknown, and motions about one axis hide it.
+A camera on a robot's hand sees a cup ahead, yet the gripper misses it. Where the camera sits on the hand is unknown.
 
 ## The Concept
 
-Without `X`, nothing the camera sees can become a place the hand reaches.
+Unless a robot knows where the camera sits on its hand, nothing the camera sees can become a place to reach.
 
 ![Why the equation is AX = XB](../assets/diagram-handeye-setup.png)
 
-*Each motion is measured twice: `A` from the joints, `B` from the camera. `X` never changes.*
+*Each motion is measured twice: from the joints and from the camera. The mounting never changes.*
 
-Each motion is a rotation `R` plus a translation `t`. Rotation: `R_A R_X = R_X R_B`, so `log(R_A) = R_X log(R_B)` (`log(R)` is axis times angle). An SVD gives `R_X`. Translation: `(R_A - I) t_X = R_X t_B - t_A`, linear in `t_X`.
+Move the arm and compare how the hand moved, from the joint angles, with how the world seemed to move in the camera. The fixed mounting links the two, which lets you solve for it.
 
-At spread 0 every axis is `z`, so `R_A z = z`, `R_A - I` sends `z` to zero, and shifting `t_X` along `z` breaks no equation. With noise, 12 motions give 121 mm and 136 degrees of error at spread 0 and 4.9 mm and 1.3 degrees at 15.
+This needs rotations about more than one axis. With one axis, a camera slid along it sees the same thing, so its position can never be found.
 
 ![Arm spinning, two cameras](../assets/clip-example.mp4)
 
-*The arm spins about its upright axis. A camera 0.1 m higher (ghost) sees the same motion.*
+*The arm spins about its upright axis. A camera higher up (ghost) sees the same motion.*
 
 ![Rotation first, then translation](../assets/diagram-handeye-solve.png)
 
@@ -43,7 +43,13 @@ At spread 0 every axis is `z`, so `R_A z = z`, `R_A - I` sends `z` to zero, and 
 
 ![Error against axis spread](../assets/fig-handeye-spread.png)
 
-*Median of 60 noisy runs. Left: one axis is useless. Right: the axes' second-to-first singular value ratio (near zero when parallel) warns before the robot moves.*
+*Error against how different the axes are. One axis is useless, and the spread warns you before the robot moves.*
+
+<details><summary>The math (optional)</summary>
+
+Write the hand motion as `A`, the camera motion as `B` and the unknown mounting as `X`, so `A X = X B`. Each motion is a rotation `R` plus a translation `t`. Rotation: `log(R_A) = R_X log(R_B)` (`log(R)` is axis times angle), and an SVD gives `R_X`. Translation: `(R_A - I) t_X = R_X t_B - t_A`. At spread 0 every axis is `z`, so `R_A z = z`, `R_A - I` sends `z` to zero and shifting `t_X` along `z` breaks no equation. With noise, 12 motions give 121 mm and 136 degrees of error at spread 0 and 4.9 mm and 1.3 degrees at 15 (median of 60 runs). The warning is the axes' second-to-first singular value ratio. The cup is 0.4 m ahead.
+
+</details>
 
 ## Build It
 
@@ -53,7 +59,7 @@ R = U @ np.diag([1, 1, np.linalg.det(U @ Vt)]) @ Vt
 t = np.linalg.lstsq(M, y, rcond=None)[0]       # M stacks (R_A - I), y stacks R_X t_B - t_A
 ```
 
-`make_motions()` builds `A`, then `B = X^-1 A X` plus noise. `solve_hand_eye()` also returns the singular values.
+`make_motions()` builds hand motions and matching camera motions plus noise. `solve_hand_eye()` also returns the singular values.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -74,4 +80,4 @@ Sources: [OpenCV calibration module](https://docs.opencv.org/5.0/main_modules/ca
 
 1. Add noise only to translations.
 2. Replace the SVD with an average of rotations.
-3. Plot error against motion count at 60 degrees of spread.
+3. Plot error against the number of motions.

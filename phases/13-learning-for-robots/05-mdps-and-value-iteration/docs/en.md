@@ -12,44 +12,46 @@ An MDP lists each move's outcomes and chances. Value iteration scores a move by 
 
 ## Key Terms
 
-- **MDP**: Markov decision process. States, actions, transition chances and rewards.
-- **Value `V(s)`**: the expected reward-to-go from state s, assuming the best actions afterwards.
-- **Backup**: recomputing one state's value from its actions' rewards and next values.
-- **Sweep**: one backup of every state.
-- **Discount (gamma)**: a factor below one that shrinks later rewards, since sooner is better.
-- **Greedy policy**: in each state, take the action with the best score.
+- **MDP**: a list of squares, moves, the chances of each outcome, and rewards.
+- **Value `V(s)`**: how much reward you can expect from a square if you play the best moves afterwards.
+- **Backup**: recomputing one square's value from its moves and their outcomes.
+- **Sweep**: one backup of every square.
+- **Discount (gamma)**: a number below one that makes later rewards count a little less.
+- **Greedy policy**: at each square, take the move with the best score.
 
 ## The Problem
 
-A rover on a slippery floor sometimes slides into a pit. You want its best move in every square, as a yardstick for learned policies. On a small world you can compute the exact best.
+A rover on a slippery floor sometimes slides into a pit. You want its best move in every square, as a yardstick for learned policies.
 
 ## The Concept
 
-A planning robot must weigh a sure small gain against a risky shortcut, and this does it with numbers.
+A planning robot must weigh a sure small gain against a risky shortcut, and this does it with numbers. Give every square a value, how good it is to stand there. Update each square from its neighbours again and again. Good news spreads out from the goal and bad news from the pit, until every square knows its best move.
 
 ![One backup](../assets/diagram-bellman-backup.png)
 
-*A backup scores each action by its reward now plus gamma times the value of its outcomes, and keeps the best.*
-
-States are tiles and actions are moves. `P(s' | s, a)` is the chance of reaching tile s' from s by move a. Gamma is 0.9 here.
+*A backup scores each move by its reward now plus the value of where it may lead, and keeps the best.*
 
 ![Sweep loop](../assets/diagram-value-iteration-loop.png)
 
-*Start at zero, back up every state, repeat.*
+*Start with all zeros, update every square, repeat.*
 
 ![Value ripple](../assets/fig-value-ripple.png)
 
-*Top: value spreads from the goal with every sweep. Bottom: the gap to the final values shrinks at least as fast as gamma to the k (k is the sweep number).*
-
-Take the tile just right of the pit. After the first sweep, moving left scores -0.8 (chance 0.8 of the pit's -1) and moving right 0. After 29 sweeps right scores 0.64, up or down 0.43, left -0.68, so the arrow points right.
+*Top: value spreads out from the goal, and the pit pushes paths away. Bottom: the gap to the final answer shrinks quickly.*
 
 ![Rover and scores](../assets/clip-example.mp4)
 
-*Arrows show each move's score, blue above zero, red below.*
+*Arrows show each move's score: blue is good, red is bad. The best one turns green and the rover takes it.*
+
+<details><summary>The math (optional)</summary>
+
+`P(s' | s, a)` is the chance of reaching square s' from s by move a. Gamma is 0.9 here, so one sweep shrinks the worst-case error by a factor 0.9. Moves slip sideways with chance 0.2; the goal pays 1 and the pit -1. Next to the pit, after the first sweep moving left scores -0.8 (chance 0.8 of the pit's -1) and moving right 0. After 29 sweeps right scores 0.64, up or down 0.43, left -0.68, so the arrow points right. For `0 < gamma < 1`, the kth change is at most `gamma**(k - 1)` times the first, so the sweep count is bounded. Tests check all 256 policies of a tiny grid.
+
+</details>
 
 ## Build It
 
-Moves slip sideways with chance 0.2; the goal pays 1 and the pit -1.
+Each sweep scores every move in every square, then keeps the best.
 
 ```python
 def backup(model, V, gamma):
@@ -59,7 +61,7 @@ V = backup(model, V, gamma).max(0)            # one sweep
 pi = backup(model, V, gamma).argmax(0)        # greedy policy
 ```
 
-Tests check contraction (each sweep shrinks the gap), the sweep bound and all 256 policies of a tiny grid. The kth change is at most `gamma**(k - 1)` times the first.
+Tests check that sweeps shrink the error as promised.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +71,7 @@ python3 phases/13-learning-for-robots/05-mdps-and-value-iteration/code/figure.py
 
 ## Use It
 
-It needs the whole model, so it fails when the dynamics are unknown.
+It needs the full list of chances, so it fails when you do not know how the world behaves.
 
 Sources: Sutton and Barto, *Reinforcement Learning: An Introduction*, section 4.4, opened 2026-11-10.
 
@@ -79,6 +81,6 @@ Sources: Sutton and Barto, *Reinforcement Learning: An Introduction*, section 4.
 
 ## Exercises
 
-1. Raise `slip` from 0.2 to 0.5. Where does the policy first avoid the pit?
-2. Set `gamma` to 0.5 and compare the sweep count with the bound.
-3. Compare 13/03's policy gradient with `V`.
+1. Make the floor more slippery. When does the policy start to avoid the pit?
+2. Lower gamma to 0.5 and count the sweeps.
+3. Compare the policy-gradient result from 13/03 with `V`.

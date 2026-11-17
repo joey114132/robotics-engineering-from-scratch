@@ -6,9 +6,7 @@
 
 ## In Plain Words
 
-Steer a toy car to a stop line. P presses harder the farther it is from the line, D brakes harder the faster it moves, and I adds push the longer it stays short, beating a steady headwind.
-
-With the throttle fully down, I keeps counting though it cannot add push, and the stored push shoves the car past the line. Anti-windup stops that.
+Steer a toy car to a stop line. P pushes harder the farther it is, D brakes harder the faster it moves, and I adds push the longer it stays short, beating a steady headwind. With the throttle fully down, I keeps counting and shoves the car past the line. Anti-windup stops that.
 
 ## Key Terms
 
@@ -21,41 +19,47 @@ With the throttle fully down, I keeps counting though it cannot add push, and th
 
 ## The Problem
 
-A robot joint oscillated, so someone raised `kp` (push per unit of error) and `kd` (brake per unit of speed). Now it buzzes: the joint, the motor's torque limit and the control period each cap the gains.
+A robot joint shook, so someone turned up the push and brake gains. Now it buzzes. The gains look like free knobs, but the joint, the motor and the control rate all limit them.
 
 ## The Concept
 
-Most robot joints use PID control, so know what each part does and where it fails.
+Most robot joints use PID control, so know what each part does and where it fails. P pushes in proportion to the error, D brakes in proportion to the speed, and I adds up the error over time.
 
 ![Three terms, one limit](../assets/diagram-pid-structure.png)
 
-*Three terms add up and the motor clips the sum at `umax`.*
+*Three parts add up; the motor clips the sum.*
 
 ![P, P+D and P+I+D](../assets/fig-pid-terms.png)
 
-*A load steps in at 5 s. P+D settles `load / kp` below the target; only I brings it back.*
+*A steady load: only I brings the joint back.*
 
 ![Two toy cars hold a line while a steady push arrives](../assets/clip-example.mp4)
 
-*A steady push of 20 arrives. With `kp = 100`, blue (P+D) stays `20 / 100 = 0.2` short; green (P+I+D) is pushed back, then returns.*
+*A steady push: blue (P and D) stays short, green (with I) returns.*
 
-Windup: I keeps adding up error at saturation and shrinks only after the error changes sign, so the car overshoots.
+But I keeps adding even when the motor is at its limit, then overshoots to pay the debt back: windup.
 
 ![Windup](../assets/diagram-windup.png)
 
-*Conditional integration (the clamp) stops adding while saturated and the error would push deeper.*
+*The fix stops adding at the limit.*
 
 ![Clamped windup](../assets/fig-windup.png)
 
-*Orange: no clamp; it overshoots by about 1.5 rad.*
-
-A second limit: the loop is stable only while its eigenvalues stay below 1 in size, and `kd` above about `2J/dt` breaks that.
+*Orange has no fix and overshoots.*
 
 ![Raised gains](../assets/fig-raised-gains.png)
 
-*Left: the torque command after raising gains. Right: the largest eigenvalue passes 1 near `kd = 2J/dt`.*
+*Too-high gains flip the command each step.*
+
+<details><summary>The math (optional)</summary>
+
+A steady load leaves an offset `load / kp` under P+D. With `kp = 100` and a push of 20 the offset is `20 / 100 = 0.2`; the load steps in at 5 s. Windup overshoots by about 1.5 rad without the clamp. The loop is stable only while the eigenvalues of its 2x2 update matrix stay below 1 in size; `kd` above about `2J/dt` breaks that (Craig 9.7).
+
+</details>
 
 ## Build It
+
+Four lines are the whole controller.
 
 ```python
 raw = kp * e + I - kd * v
@@ -65,7 +69,7 @@ if u == raw or e * raw < 0:      # conditional integration
 v += dt / J * (u - b * v - load)
 ```
 
-`simulate()` runs this loop; `spectral_radius()` gives the stability test. Tests check the offset `load / kp` and windup against the clamp.
+`simulate()` runs the loop and `spectral_radius()` gives the stability check.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,7 +79,7 @@ python3 phases/03-dynamics-and-control/04-pid-and-tuning/code/figure.py
 
 ## Use It
 
-ROS 2 `control_toolbox` offers `none`, `back_calculation` and `conditional_integration` anti-windup, chosen per joint via `gains.<dof_names>.antiwindup_strategy`. Compare with this lesson's clamp (Craig 9.7).
+ROS 2 `control_toolbox` offers `none`, `back_calculation` and `conditional_integration` anti-windup, chosen per joint via `gains.<dof_names>.antiwindup_strategy`. Compare with the clamp here.
 
 Sources: [control_toolbox docs](https://control.ros.org/master/doc/control_toolbox/doc/index.html), [PID controller user doc](https://control.ros.org/rolling/doc/ros2_controllers/pid_controller/doc/userdoc.html), checked 2026-11-09.
 
@@ -85,6 +89,6 @@ Sources: [control_toolbox docs](https://control.ros.org/master/doc/control_toolb
 
 ## Exercises
 
-1. Try back-calculation instead and compare the overshoot.
-2. Put the derivative on the error.
-3. Find the largest `kp` keeping the spectral radius below 1 at `kd = 20`.
+1. Remove the clamp and watch the overshoot.
+2. Raise `kd` until the command flips each step.
+3. Try back-calculation instead of the clamp.

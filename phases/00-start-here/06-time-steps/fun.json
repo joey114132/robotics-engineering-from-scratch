@@ -1,0 +1,14 @@
+{
+  "en": {
+    "hook": "A computer never sees a smooth fall. It only sees a list of small jumps, and the size of the jump decides how wrong it is.",
+    "mission": "Run `cd code && python3 main.py`. Then try a step of 0.001 in `positions(9.81, 1.0, 0.001)` and guess how close it gets to 4.905 before you run it.",
+    "clip": "Two toy cars speed up in the same way for two simulated seconds. Blue is computed with 0.5 s steps, so it only moves when a step ends, and it ends past the amber line. Green uses 0.05 s steps and ends close to the line. Both come from the lesson's `positions()`."
+  },
+  "ko": {
+    "hook": "컴퓨터는 매끄러운 낙하를 보지 못하고 작은 점프의 목록만 봅니다. 점프의 크기가 얼마나 틀리는지를 정합니다.",
+    "mission": "`cd code && python3 main.py`를 실행하세요. 이어서 `positions(9.81, 1.0, 0.001)`로 스텝을 0.001로 줄이고 4.905에 얼마나 가까워질지 먼저 예측한 뒤 실행하세요.",
+    "clip": "장난감 자동차 두 대가 시뮬레이션 2초 동안 똑같이 속도를 올립니다. 파랑은 0.5초 스텝으로 계산해서 스텝이 끝날 때만 움직이고 주황색 선을 넘어서 끝납니다. 초록은 0.05초 스텝이라 선 가까이에서 끝납니다. 둘 다 이 레슨의 `positions()`로 구했습니다."
+  },
+  "toy": null,
+  "three": "time-step-ball-3d"
+}

@@ -8,48 +8,54 @@
 
 로버가 미끄러운 바닥을 달리는데 다섯 번에 한 번쯤은 옆으로 미끄러져요. 구덩이 옆의 지름길이 돌아가는 길보다 나쁠 수 있어요.
 
-MDP는 행동마다 가능한 결과와 그 확률을 적어 둔 거예요. value iteration은 행동의 점수를 지금 받는 reward에 가게 될 곳의 value를 더해서 정해요. 모든 칸을 한 번 훑는 것이 sweep이에요. sweep을 반복하면 칸마다 가장 좋은 행동이 정해져요.
+MDP는 행동마다 가능한 결과와 그 확률을 적어 둔 거예요. value iteration은 행동의 점수를 지금 받는 reward에 가게 될 곳의 value를 더해서 정하고 칸마다 가장 좋은 행동이 정해질 때까지 반복해요.
 
 ## 핵심 용어
 
-- **MDP**: Markov decision process입니다. 상태와 행동과 전이 확률과 reward로 이루어집니다.
-- **Value `V(s)`**: 상태 s에서 이후에 최선의 행동을 고른다고 할 때 기대되는 reward-to-go입니다.
-- **Backup**: 한 상태의 value를 행동들의 reward와 다음 value로 다시 계산하는 일입니다.
-- **Sweep**: 모든 상태를 한 번씩 backup하는 것입니다.
-- **Discount (gamma)**: 나중 reward를 줄이는 1보다 작은 배율입니다. 빠를수록 좋기 때문입니다.
-- **Greedy policy**: 각 상태에서 점수가 가장 높은 행동을 고르는 policy입니다.
+- **MDP**: 칸과 행동과 각 결과의 확률과 reward를 적어 둔 목록입니다.
+- **Value `V(s)`**: 이후에 최선의 행동을 고른다고 할 때 그 칸에서 기대되는 reward입니다.
+- **Backup**: 한 칸의 value를 행동들과 그 결과로 다시 계산하는 일입니다.
+- **Sweep**: 모든 칸을 한 번씩 backup하는 것입니다.
+- **Discount (gamma)**: 나중 reward를 조금 덜 쳐 주는 1보다 작은 수입니다.
+- **Greedy policy**: 각 칸에서 점수가 가장 높은 행동을 고르는 policy입니다.
 
 ## 문제
 
-미끄러운 바닥의 로버는 가끔 옆으로 미끄러져 구덩이에 빠집니다. 칸마다 최선의 움직임을 알고 싶고 학습된 policy와 비교할 기준도 필요합니다. 작은 세계에서는 정확한 최선을 계산할 수 있습니다.
+미끄러운 바닥의 로버는 가끔 옆으로 미끄러져 구덩이에 빠집니다. 칸마다 최선의 움직임을 알고 싶고 학습된 policy와 비교할 기준도 필요합니다.
 
 ## 개념
 
-계획하는 로봇은 확실한 작은 이득과 위험한 지름길을 저울질해야 하는데 이 방법은 그것을 숫자로 합니다.
+계획하는 로봇은 확실한 작은 이득과 위험한 지름길을 저울질해야 하는데 이 방법은 그것을 숫자로 합니다. 모든 칸에 value, 곧 거기 서 있는 것이 얼마나 좋은지를 줍니다. 각 칸을 이웃에서 거듭 갱신합니다.
+목표의 좋은 소식과 구덩이의 나쁜 소식이 퍼져서 모든 칸이 자기의 최선의 행동을 알게 됩니다.
 
 ![backup 한 번](../assets/diagram-bellman-backup.png)
 
-*backup은 행동마다 지금의 reward에 결과 상태들의 value와 gamma를 곱한 값을 더해 점수를 내고 가장 높은 점수를 남깁니다.*
-
-상태는 칸이고 행동은 이동입니다. `P(s' | s, a)`는 칸 s에서 행동 a로 칸 s'에 닿을 확률입니다. gamma는 여기서 0.9입니다.
+*backup은 행동마다 지금의 reward에 가게 될 곳의 value를 더해 점수를 내고 가장 높은 점수를 남깁니다.*
 
 ![sweep 고리](../assets/diagram-value-iteration-loop.png)
 
-*0에서 시작해 모든 상태를 backup하고 반복합니다.*
+*모두 0에서 시작해 모든 칸을 갱신하고 반복합니다.*
 
 ![value 퍼짐](../assets/fig-value-ripple.png)
 
-*위쪽은 sweep마다 value가 목표에서 퍼지고 구덩이가 경로를 밀어내는 모습입니다. 아래쪽은 최종 값과의 차이가 gamma의 k제곱 이상으로 빨리 줄어드는 모습입니다(k는 sweep 횟수).*
-
-구덩이 바로 오른쪽 칸을 봅시다. 첫 sweep이 끝난 뒤 왼쪽으로 가면 점수는 -0.8(확률 0.8로 구덩이의 -1)이고 오른쪽으로 가면 0입니다. sweep 29번 뒤에는 오른쪽이 0.64, 위나 아래가 0.43, 왼쪽이 -0.68이라서 화살표는 오른쪽을 가리킵니다.
+*위쪽은 value가 목표에서 퍼지고 구덩이가 경로를 밀어내는 모습입니다. 아래쪽은 최종 답과의 차이가 빠르게 줄어드는 모습입니다.*
 
 ![로버와 점수](../assets/clip-example.mp4)
 
-*화살표는 각 이동의 점수이고 0보다 높으면 파랑 낮으면 빨강입니다.*
+*화살표는 각 이동의 점수이고 파랑은 좋고 빨강은 나쁩니다. 가장 좋은 화살표가 초록이 되면 로버가 그쪽으로 갑니다.*
+
+<details><summary>The math (optional)</summary>
+
+`P(s' | s, a)`는 칸 s에서 행동 a로 칸 s'에 닿을 확률입니다. gamma는 여기서 0.9이므로 sweep 한 번이 최악의 오차를 0.9배로 줄입니다. 이동은 확률 0.2로 옆으로 미끄러지고 목표는 +1, 구덩이는 -1을 줍니다.
+구덩이 바로 오른쪽 칸에서 첫 sweep 뒤 왼쪽으로 가면 점수는 -0.8(확률 0.8로 구덩이의 -1)이고 오른쪽으로 가면 0입니다.
+sweep 29번 뒤에는 오른쪽이 0.64, 위나 아래가 0.43, 왼쪽이 -0.68이라서 화살표는 오른쪽을 가리킵니다.
+`0 < gamma < 1`에서 k번째 변화량은 첫 변화량의 `gamma**(k - 1)`배 이하이므로 sweep 횟수에는 상한이 있습니다. 테스트는 작은 격자의 policy 256개를 모두 확인합니다.
+
+</details>
 
 ## 만들기
 
-이동은 확률 0.2로 옆으로 미끄러집니다. 목표에 들어가면 +1, 구덩이에 들어가면 -1을 받습니다.
+sweep마다 모든 칸의 모든 행동에 점수를 매기고 가장 좋은 것을 남깁니다.
 
 ```python
 def backup(model, V, gamma):
@@ -59,7 +65,7 @@ V = backup(model, V, gamma).max(0)            # one sweep
 pi = backup(model, V, gamma).argmax(0)        # greedy policy
 ```
 
-테스트는 contraction(sweep마다 차이가 줄어드는 성질), sweep 상한, 작은 격자의 policy 256개를 확인합니다. k번째 변화량은 첫 변화량의 `gamma**(k - 1)`배 이하입니다.
+테스트는 sweep이 약속대로 오차를 줄이는지 확인합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +75,7 @@ python3 phases/13-learning-for-robots/05-mdps-and-value-iteration/code/figure.py
 
 ## 실제 도구로 보기
 
-이 반복은 모델 전체가 필요해서 동역학을 모르는 로봇에는 쓸 수 없습니다.
+이 방법은 모든 확률 목록이 필요해서 세계가 어떻게 움직이는지 모르면 쓸 수 없습니다.
 
 출처: Sutton과 Barto, *Reinforcement Learning: An Introduction* 4.4절을 2026년 11월 10일에 열어 봤습니다.
 
@@ -79,6 +85,6 @@ python3 phases/13-learning-for-robots/05-mdps-and-value-iteration/code/figure.py
 
 ## 연습 문제
 
-1. `slip`을 0.2에서 0.5로 올리세요. policy는 어디서 처음 구덩이를 피하나요?
-2. `gamma`를 0.5로 놓고 sweep 횟수를 상한과 비교하세요.
-3. 13/03의 policy gradient를 시작 칸의 `V`와 비교하세요.
+1. 바닥을 더 미끄럽게 만드세요. policy는 언제부터 구덩이를 피하나요?
+2. gamma를 0.5로 낮추고 sweep 횟수를 세세요.
+3. 13/03의 policy gradient 결과를 `V`와 비교하세요.

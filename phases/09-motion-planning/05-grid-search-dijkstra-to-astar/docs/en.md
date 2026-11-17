@@ -21,31 +21,39 @@ A guess that never exceeds the true steps keeps the shortest walk available. An 
 
 ## The Problem
 
-Picture a delivery robot crossing a grid map. Swap its planner's search and the path changes by 10 steps, or the run takes ten times as many. Only writing the search shows why.
+Picture a delivery robot crossing a grid map. Swap the search method and the route changes by 10 steps, or the run takes ten times as many steps. Writing the search yourself shows why.
 
 ## The Concept
 
-A real robot must plan fast and well; the heuristic trades one for the other.
+A real robot must plan fast and well, and the guess is the knob that trades one for the other.
+
+Dijkstra explores squares in order of how cheap they were to reach, so it spreads everywhere. A* (A-star) adds a guess of how far is left, so it leans toward the goal.
 
 ![Priority](../assets/diagram-astar-priority.png)
 
-*Same loop; only the priority differs.*
+*Same loop, one extra term.*
 
-Dijkstra expands cells in order of `g`, the cost from the start. A* uses `f = g + w * h`, where `w` scales the guess `h`: `w = 0` is Dijkstra, `w = 1` is A*, `w > 1` exaggerates. With up, down, left and right moves the Manhattan distance never overestimates, so A* returns Dijkstra's cost. A move changes it by at most 1 while `g` grows by 1, so `f` never falls.
+If the guess is never too big, A* still finds the best route and skips many squares. If it exaggerates, it rushes toward the goal but may take a longer way.
 
 ![Promise](../assets/diagram-astar-promise.png)
 
-*An admissible `h` keeps A* optimal; with `w > 1` the path may cost up to `w` times the best.*
+*A guess that never exaggerates keeps the best route.*
 
 ![Expansions](../assets/fig-astar-expansions.png)
 
-*Weight 4 expands fewer cells but costs more; cost jumps from 26 to 36 between weights 2 and 3.*
+*A bigger weight expands fewer squares but costs more.*
 
-Trap map: a top gap dead-ends. With `w = 1` the search expands 115 cells and finds the 26-step low walk. With `w = 4` it dives into the top gap and reaches the flag after 95 cells, 36 steps.
+On the trap map a top gap dead-ends, and the exaggerating search dives into it.
 
 ![Two rovers](../assets/clip-example.mp4)
 
-*Blue (`w = 4`) walks farther, so green (`w = 1`) wins.*
+*Blue exaggerates and walks farther, so green wins.*
+
+<details><summary>The math (optional)</summary>
+
+Dijkstra expands cells in order of `g`, the cost from the start. A* uses `f = g + w * h`, where `w` scales the guess `h`: `w = 0` is Dijkstra, `w = 1` is A*, `w > 1` exaggerates. With up, down, left and right moves the Manhattan distance (cells across plus cells down) never overestimates, so A* returns Dijkstra's cost; a move changes it by at most 1 while `g` grows by 1, so `f` never falls. With `w > 1` the path costs at most `w` times the best. Trap map: `w = 1` expands 115 cells and finds the 26-step low walk; `w = 4` dives into the top gap and reaches the flag after 95 cells with a 36-step walk (cost jumps from 26 to 36 between weights 2 and 3). On the demo's random 40 by 40 map, Dijkstra expands 1202 cells and A* 152 for the same cost 78.
+
+</details>
 
 ## Build It
 
@@ -62,7 +70,7 @@ while heap:
             heapq.heappush(heap, (g[n] + w * manhattan(n, goal), -g[n], n))
 ```
 
-On the demo's random 40 by 40 map, Dijkstra expands 1202 cells and A* 152 for the same cost 78.
+The only difference between the two searches is the priority given to each square.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -72,7 +80,7 @@ python3 phases/09-motion-planning/05-grid-search-dijkstra-to-astar/code/main.py
 
 ## Use It
 
-Run one grid with `w = 0` and `w = 1`; compare cost and cells.
+Run one grid with the guess off and on, and compare the cost and the squares expanded.
 
 Sources: A* search algorithm, Wikipedia, https://en.wikipedia.org/wiki/A*_search_algorithm (opened 2026-11-10).
 
@@ -82,6 +90,6 @@ Sources: A* search algorithm, Wikipedia, https://en.wikipedia.org/wiki/A*_search
 
 ## Exercises
 
-1. Allow diagonal moves; find an admissible heuristic.
-2. Break the tie on `g` the other way; count the extra cells.
-3. Find the smallest `w` giving cost 36 on the trap map.
+1. Turn the guess off and on and compare how many squares are expanded.
+2. Make the guess bigger and watch the route get longer.
+3. Allow diagonal moves and think about which guess is still safe.

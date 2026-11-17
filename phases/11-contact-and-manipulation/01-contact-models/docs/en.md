@@ -21,35 +21,41 @@ Friction has a cap: at most `mu` times the force pressing the eraser into the bo
 
 ## The Problem
 
-Picture a gripper holding a part. Tilt the wrist a few degrees and the part slides out, though flatter it would have stayed. A simulator needs the same stick-or-slip switch.
+Picture a robot hand holding a part. Tilt the wrist a few degrees and the part slides out, though held flatter it would have stayed.
 
 ## The Concept
 
-A real gripper drops a part when friction runs out, so you need the angle where that happens.
+A gripper drops a part when friction runs out, so you need to know the angle where that happens.
 
-With tilt `theta`, mass `m` and gravity `g`, gravity presses the block into the plane with `fn = m g cos(theta)` and pulls it down the slope with `m g sin(theta)`. Staying put needs friction `ft = m g sin(theta)`, so `ft / fn = tan(theta)`; the cone allows up to `mu`.
+Place an eraser on a book and tilt it. Friction holds the eraser until the slope gets too steep, then it slides. Friction can only push back up to a limit, set by how hard the surfaces press together and how grippy they are.
 
 ![Layers](../assets/diagram-penalty-layers.png)
 
-*Penetration gives the normal force, which caps friction. A sideways spring holds the contact until the cap.*
-
-Take `mu = 0.5`. A 25 degree ramp needs 0.47 and holds. A 35 degree ramp needs 0.70 and slides, with net pull `m g (sin(theta) - mu cos(theta))`, about 1.6 m/s².
+*A simulated block sinks a hair, which sets how hard friction can hold.*
 
 ![Tilting plank](../assets/clip-example.mp4)
 
-*The block holds until the plank passes the marker at 26.6 degrees, then slides.*
+*The block holds until the plank passes the marker, then slides.*
 
 ![Stick or slip](../assets/diagram-stick-slip.png)
 
-*Does the needed friction fit inside the cone?*
+*Does the friction needed fit inside the cone?*
 
 ![Cone](../assets/fig-stick-slip.png)
 
-*Left: sticking blocks end inside the cone; the sliding block rides its edge. Right: acceleration is zero until tan(theta) passes mu.*
+*Sticking blocks stay inside the cone. The sliding block rides its edge.*
+
+A heavier block slides at the same angle.
+
+<details><summary>The math (optional)</summary>
+
+With tilt `theta`, mass `m` and gravity `g`, gravity presses the block into the plane with `fn = m g cos(theta)` and pulls it down the slope with `m g sin(theta)`. Staying put needs friction `ft = m g sin(theta)`, so `ft / fn = tan(theta)`; the friction cone allows up to `mu`. With `mu = 0.5` the block slides beyond about 26.6 degrees: a 25 degree ramp needs 0.47 and holds, a 35 degree ramp needs 0.70 and slides with acceleration `g (sin(theta) - mu cos(theta))`, about 1.6 m/s². Mass cancels, so doubling it changes nothing.
+
+</details>
 
 ## Build It
 
-Normal force is a spring-damper on penetration that never pulls. Friction is a sideways spring to an anchor, clipped at `mu * fn`; clipping drags the anchor.
+A spring-damper pushes back on penetration. Friction is a sideways spring clipped at `mu * fn`.
 
 ```python
 fn = max(K * pen - C * nv, 0.0)
@@ -59,7 +65,7 @@ if abs(ft) > mu * fn:
     anchor = s + ft / KT
 ```
 
-Assumptions: point block, one contact, planar slope, fixed spring constants, semi-implicit Euler at 0.1 ms.
+Assumptions: point block, one contact, planar slope, fixed spring constants, small time step (0.1 ms).
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +75,7 @@ python3 phases/11-contact-and-manipulation/01-contact-models/code/main.py
 
 ## Use It
 
-MuJoCo uses the same two ideas: a soft normal force and a friction cone. Build the same block there; compare its sliding angle with `arctan(mu)`.
+MuJoCo uses the same two ideas. Build the same block there and compare sliding angles.
 
 Sources: MuJoCo documentation, Computation chapter (opened 2026-11-09).
 
@@ -79,6 +85,6 @@ Sources: MuJoCo documentation, Computation chapter (opened 2026-11-09).
 
 ## Exercises
 
-1. Raise `K` 10 times; the sticking angle should stay, the settling time change.
-2. Use different static and sliding `mu`; find where the block starts and keeps moving.
-3. Add a horizontal push; find where the block slides up.
+1. Tilt the plank a little at a time and find where the block starts to slide.
+2. Make the surface more or less grippy and watch the angle move.
+3. Add a sideways push and see when the block slides up.

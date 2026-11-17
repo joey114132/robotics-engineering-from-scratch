@@ -13,11 +13,11 @@ A chunk is the next few steps copied from one demonstration, so the rover commit
 ## Key Terms
 
 - **Multimodal**: having several different correct answers, called modes.
-- **Mean policy**: a policy that predicts the average action of nearby demonstrations.
-- **Action chunk**: a short run of the next `H` actions, chosen together.
+- **Mean policy**: a policy that predicts the average of nearby demonstrations.
+- **Action chunk**: the next few actions, chosen together.
 - **Sampler**: picks one demonstration at random instead of averaging.
-- **Jitter**: the step-to-step change in action. High jitter looks like wobble.
-- **Gaussian kernel**: a weight that is larger for demonstration states nearer the current one.
+- **Jitter**: how much the action changes from step to step. High jitter looks like wobble.
+- **Gaussian kernel**: a weight that is larger for demonstrations closer to where the robot is now.
 
 ## The Problem
 
@@ -25,31 +25,33 @@ To get a rover past a pillar, half your demonstrations go above it and half belo
 
 ## The Concept
 
-People solve one task in different ways, and a robot copying them must still pick one.
+People solve one task in different ways, and a robot copying them must still pick one. Picking one demonstration avoids the bad average, but picking again every step can flip sides and wobble. So the robot picks a short chunk of the next few moves and follows it.
 
 ![Average or commit](../assets/diagram-average-or-commit.png)
 
-*Both answers are right at the start, but their mean is wrong.*
-
-For "up" and "down" demos a regression predicts "straight": at the start they steer +0.054 and -0.054 sideways, so the mean is 0. A sampler copies one demonstration instead, so both modes survive. Picking afresh each step can switch sides, so it returns a whole chunk of the next `H` actions.
+*Both answers are right at the start, but their average is wrong.*
 
 ![Chunk overlap](../assets/diagram-chunk-overlap.png)
 
-*A new chunk starts before the old one ends. Overlapping steps blend from old to new.*
+*A new chunk starts before the old one ends, and the overlap blends from old to new.*
 
 ![Chunk fan](../assets/fig-chunk-fan.png)
 
-*Left: the mean policy goes straight through. Middle: 40 sampled rollouts split both ways. Right: from H = 2 on, jitter falls under half.*
-
-In 50 runs, one-step sampling clears the pillar 98% of the time with jitter 0.034 per step. Chunks of 8 steps, a new one every 4, clear it 100% with jitter 0.011.
+*Left: the average goes straight through the pillar. Middle: sampling splits both ways round. Right: longer chunks wobble less.*
 
 ![Steps vs chunks](../assets/clip-example.mp4)
 
 *Blue picks a demonstration every step and wobbles. Green follows chunks and glides.*
 
+<details><summary>The math (optional)</summary>
+
+At the start the two demonstrations steer +0.054 and -0.054 sideways, so the mean is 0. Over 50 runs, one-step sampling clears the pillar 98% of the time with jitter 0.034 per step. Chunks of 8 steps, a new one every 4, clear it 100% with jitter 0.011. With chunks of 2 or more, jitter falls under half and all 60 rollouts clear the disc. Each demonstration's weight comes from a Gaussian kernel on how close it passes. Without a `prefix` that matches the old chunk, the blend can head at the disc. If the split is 5 to 1, the sampler goes over about five times in six.
+
+</details>
+
 ## Build It
 
-`mean_policy` weights nearby demonstration actions with a Gaussian kernel. `sample_chunk` picks one demonstration the same way and returns its next `H` actions.
+`mean_policy` averages nearby demonstrations. `sample_chunk` picks one demonstration instead and returns its next few actions.
 
 ```python
 j = ((P[:, :-1] - x) ** 2).sum(2).argmin(1)            # nearest state in each demo
@@ -67,7 +69,7 @@ python3 phases/13-learning-for-robots/06-multimodal-demos-and-action-chunks/code
 
 ## Use It
 
-Real policies use a network that outputs a chunk. A longer chunk reacts more slowly.
+Real policies use a neural network that outputs a whole chunk. A longer chunk reacts more slowly.
 
 Sources (abstracts, 2026-11-10): Zhao et al., arXiv:2304.13705; Chi et al., arXiv:2303.04137.
 
@@ -77,6 +79,6 @@ Sources (abstracts, 2026-11-10): Zhao et al., arXiv:2304.13705; Chi et al., arXi
 
 ## Exercises
 
-1. Make the split 5 to 1. What does the mean policy do?
-2. Set `SIGMA_A` large and count rollouts hitting the disc.
-3. Add action noise. At what chunk length does jitter stop falling?
+1. Make the demonstrations split 5 to 1. What does the average do?
+2. Make the choice very loose and count rollouts that hit the pillar.
+3. Add noise to the actions. At which chunk length does the wobble stop falling?

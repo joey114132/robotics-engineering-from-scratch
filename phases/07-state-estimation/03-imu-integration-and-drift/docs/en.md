@@ -19,7 +19,7 @@ A robot sits still, but its gyro reads a tiny turn that is not there. Adding the
 
 ## The Problem
 
-A robot stands still, yet after 20 seconds its estimate says it turned 11 degrees and moved 10 m. Its IMU has a gyro bias of 0.01 rad/s and an accelerometer bias of 0.05 m/s^2.
+A robot stands still, yet its estimate says it turned and drifted away. Its sensors have tiny steady errors, and the robot adds them up as if they were real.
 
 ## The Concept
 
@@ -27,27 +27,33 @@ A robot that navigates by its IMU alone slowly goes blind, and gravity makes it 
 
 ![Drift orders](../assets/diagram-drift-orders.png)
 
-*A gyro is added up once, an accelerometer twice, each adding a power of `t`.*
+*Each time you add readings up, the error grows faster.*
 
-A constant gyro bias `b` gives an angle error of `b t`. A constant accelerometer bias `a` gives a velocity error `a t` and a position error `a t^2 / 2`.
+A tiny steady gyro error, added up once, gives an angle error that grows in a straight line. An accelerometer's error is added up twice, so the position error bends upward.
 
 ![Noisy runs](../assets/fig-imu-drift.png)
 
-*Fifteen noisy runs follow `b t` and `a t^2 / 2`.*
+*Fifteen noisy runs follow the predicted growth.*
 
 ![Gravity leak](../assets/diagram-gravity-leak.png)
 
 *A tilt error makes the robot subtract gravity wrongly; the leftover looks like acceleration.*
 
+A wrong tilt makes the robot subtract gravity the wrong way, so a bit of gravity is left over and looks like a real push. Adding that up twice makes the position error grow even faster than the accelerometer's own.
+
 ![Cubic overtakes quadratic](../assets/fig-gravity-leak.png)
 
-*The cubic (gyro bias) passes the quadratic (accelerometer bias) after about 1.5 s.*
-
-A gyro bias `b` tilts the estimate by `b t`, so gravity leaves a fake `g sin(b t)`, about `g b t`. Adding that up twice gives `g b t^3 / 6`. With `b = 0.01 rad/s`, after 10 s the tilt is off by `0.1 rad` and the fake push is `9.81 * sin(0.1) = 0.98 m/s^2`. Position error: about `9.81 * 0.01 * 10^3 / 6 = 16 m`, against `0.05 * 10^2 / 2 = 2.5 m` from the accelerometer bias.
+*The gyro's fast curve passes the accelerometer's slower one.*
 
 ![Still robot slides](../assets/clip-example.mp4)
 
-*The green robot stays put while the amber copy slides. Tilt drawn 5 times larger, 1 m as 0.1 m.*
+*The green robot stays put while the amber copy slides. The tilt is exaggerated.*
+
+<details><summary>The math (optional)</summary>
+
+A gyro bias `b` gives an angle error `b t`. An accelerometer bias `a` gives a velocity error `a t` and a position error `a t^2 / 2`. The tilt error `b t` leaves a fake `g sin(b t)`, about `g b t`, and adding that up twice gives `g b t^3 / 6`. With `b = 0.01 rad/s` and `a = 0.05 m/s^2`, after 20 s the robot has turned 11 degrees and moved 10 m. After 10 s the tilt is off by `0.1 rad` and the fake push is `9.81 * sin(0.1) = 0.98 m/s^2`. Position error: about `9.81 * 0.01 * 10^3 / 6 = 16 m`, against `0.05 * 10^2 / 2 = 2.5 m` from the accelerometer bias. The cubic passes the quadratic after about 1.5 s. The clip draws tilt 5 times larger and 1 m as 0.1 m.
+
+</details>
 
 ## Build It
 
@@ -68,7 +74,7 @@ python3 -m pytest phases/07-state-estimation/03-imu-integration-and-drift -q
 
 ## Use It
 
-`imu_filter_madgwick` in `imu_tools` fuses gyro and accelerometer readings. Feed it a still recording and check the angle stops drifting.
+`imu_filter_madgwick` in `imu_tools` fuses gyro and accelerometer readings.
 
 Sources: imu_tools README, https://github.com/CCNYRoboticsLab/imu_tools (2026-11-09).
 
@@ -78,6 +84,6 @@ Sources: imu_tools README, https://github.com/CCNYRoboticsLab/imu_tools (2026-11
 
 ## Exercises
 
-1. Find when the angle error reaches 1 degree at `b = 0.01 rad/s`.
-2. Double `dt`.
-3. Freeze tilt at its 5 s value and find the position error.
+1. Change the gyro bias and see how fast the angle error grows.
+2. Double the time step and check the 10 s angle error.
+3. Freeze the tilt at its 5 s value and watch the position error.

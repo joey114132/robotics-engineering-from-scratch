@@ -27,34 +27,46 @@
 
 실제 조립 로봇은 완벽하게 정렬할 수 없으므로 부품을 넣으려면 조금 비켜 줘야 합니다.
 
+딱딱한 손목은 자기 위치를 고집하므로 작은 어긋남이 큰 옆힘이 됩니다. 그 힘이 peg를 벽에 누르고 벽의 마찰이 peg를 붙듭니다. 이것이 jam입니다.
+
 ![jam의 연쇄](../assets/diagram-jam-chain.png)
 
-*딱딱한 손목은 작은 offset을 큰 옆힘으로 바꾸고 마찰이 커져 두 접촉이 peg를 붙들게 됩니다.*
+*딱딱한 손목은 큰 옆힘을 만들고 마찰이 peg를 붙듭니다.*
+
+옆으로 비켜 주는 손목을 compliance라고 합니다. 옆힘이 작게 유지되고 peg는 곧게 서서 미끄러져 내려갑니다.
 
 ![비켜 주기](../assets/diagram-comply.png)
 
-*부드러운 손목은 작은 옆힘만 만들므로 peg가 미끄러져 내려가고 기울기가 줄어듭니다.*
-
-peg의 끝점은 한쪽 벽에, peg의 옆면은 구멍 모서리에 닿으므로 끝점 깊이 하나만으로 자세가 정해집니다.
-1 mm 어긋남과 5 N 밀기에서 기울어진 peg의 윗부분은 구멍 중심에서 약 2.1 mm 벗어나 있는데 도구는 1 mm에 붙들고 있으므로 손목이 약 1.1 mm 늘어납니다.
-그래서 1e5 N/m는 옆으로 112 N이 되고 1e3 N/m는 1.1 N이 되어 peg가 미끄러져 들어갑니다.
-34.6 mm에서 두 마찰 cone 안의 힘이 손목의 밀기와 비틀기를 상쇄하므로 딱딱한 쪽 peg는 고정됩니다.
+*부드러운 손목은 작은 옆힘을 만들고 peg가 미끄러져 내려갑니다.*
 
 ![손목 두 개](../assets/clip-example.mp4)
 
-*빨간 화살표는 손목이 peg를 옆으로 미는 힘입니다. 파란 peg는 34.6 mm에서 멈추고 초록 peg는 들어갑니다.*
+*파랑은 중간에서 jam되고 초록은 들어갑니다.*
 
 ![jam 지도](../assets/fig-jam-map.png)
 
-*주황색이 jam입니다. 딱딱한 손목은 약 0.7 mm 어긋남부터 jam되고 약 2.5e3 N/m보다 부드러운 손목은 그림의 모든 offset에서 삽입됩니다.*
+*딱딱한 손목은 jam되고 부드러운 손목은 삽입됩니다.*
 
 ![접촉력](../assets/fig-contact-forces.png)
 
-*부드러운 손목은 끝점 힘을 미는 힘 근처에 둡니다. 딱딱한 손목은 처음에 수십 N을 주고 옆힘의 부호가 바뀌는 곳에서 jam됩니다.*
+*딱딱한 손목은 큰 옆힘으로 시작합니다.*
+
+마찰이 없으면 peg는 jam되지 않습니다.
+
+<details><summary>The math (optional)</summary>
+
+강성 `kx`는 손목이 옆으로 1 m 늘어났을 때 드는 옆힘이므로 끝점의 옆힘은 대략 `kx`에 어긋남을 곱한 값입니다.
+1 mm 어긋남과 5 N 밀기에서 기울어진 peg의 윗부분은 구멍 중심에서 약 2.1 mm 벗어나 있는데 도구는 1 mm에 붙들고 있으므로 손목이 약 1.1 mm 늘어납니다.
+그래서 1e5 N/m는 옆으로 112 N이 되고 1e3 N/m는 1.1 N이 되어 peg가 미끄러져 들어갑니다.
+34.6 mm 깊이에서 두 마찰 cone 안의 힘이 손목의 밀기와 비틀기를 상쇄할 수 있으므로 딱딱한 쪽 peg는 고정됩니다.
+jam은 손목 wrench의 음수가 cone 모서리 wrench 네 개 중 세 개의 음이 아닌 조합일 때입니다.
+딱딱한 손목은 약 0.7 mm 어긋남부터 jam되고 약 2.5e3 N/m보다 부드러운 손목은 그림의 모든 offset에서 삽입됩니다.
+
+</details>
 
 ## 만들기
 
-깊이마다 손목 wrench(`wr`)와 cone 모서리 wrench 네 개가 나옵니다. `-wr`이 그중 세 개의 음이 아닌 조합이면 jam입니다.
+코드는 깊이마다 jam인지 검사합니다.
 
 ```python
 A = edges[list(idx)].T
@@ -62,7 +74,7 @@ if abs(np.linalg.det(A)) > 1e-12 and (np.linalg.solve(A, -wr) >= -1e-9).all():
     return True
 ```
 
-가정은 폭이 0인 peg, chamfer 없는 날카로운 구멍, 준정적 운동, 끝점과 입구 모서리 두 곳의 접촉이고 손목은 옆 방향 spring(`kx`)과 비틀림 spring과 일정한 미는 힘에 쿨롱 `mu`입니다.
+가정은 폭이 0인 peg, 날카로운 구멍, 느린 운동, 끝점과 입구 모서리 두 곳의 접촉입니다. wedge가 되기 전에 모서리에 얹히는 과정은 다루지 않습니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -72,7 +84,7 @@ python3 phases/11-contact-and-manipulation/04-compliance-in-assembly/code/main.p
 
 ## 실제 도구로 보기
 
-실제 셀은 remote center compliance 장치나 소프트웨어 compliance를 씁니다. 여러분 손목의 옆 방향 강성을 clearance와 `mu`에 대한 jam 지도와 비교합니다.
+실제 셀은 remote center compliance 장치나 소프트웨어 compliance를 씁니다. 여러분 손목의 강성을 jam 지도와 비교합니다.
 
 출처: Wikipedia "Remote center compliance"(2026년 11월 9일 열람). 어긋난 peg는 옆힘을 받아 멈추고 compliant 장치는 이를 바로잡습니다.
 
@@ -82,6 +94,6 @@ python3 phases/11-contact-and-manipulation/04-compliance-in-assembly/code/main.p
 
 ## 연습 문제
 
-1. `e = 1 mm`에서 여전히 삽입되는 가장 큰 `kx`를 찾으세요.
-2. `mu`를 0.1에서 0.6까지 올리며 jam 경계가 어떻게 움직이는지 그리세요.
-3. wedge를 더 얕은 깊이에서 시작해 chamfer를 흉내 내세요.
+1. 1 mm 어긋남을 여전히 넣을 수 있는 가장 뻣뻣한 손목을 찾으세요.
+2. 표면을 더 잘 붙게 만들고 jam 경계가 어디로 움직이는지 보세요.
+3. 구멍 모서리를 비스듬히 깎고 도움이 되는지 보세요.

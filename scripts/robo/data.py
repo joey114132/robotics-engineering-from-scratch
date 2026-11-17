@@ -6,7 +6,7 @@ from functools import cached_property
 from pathlib import Path
 
 DEFAULT_ROOT = Path(__file__).resolve().parents[2]
-PHASE_KO = {"setup-and-tooling": "설치와 도구", "math-foundations": "수학 기초", "manipulator-kinematics": "매니퓰레이터 기구학",
+PHASE_KO = {"start-here": "시작하기", "math-foundations": "수학 기초", "manipulator-kinematics": "매니퓰레이터 기구학",
             "dynamics-and-control": "동역학과 제어", "actuators-and-sensors": "액추에이터와 센서", "robot-software": "로봇 소프트웨어",
             "perception-and-calibration": "인식과 캘리브레이션", "state-estimation": "상태 추정", "mobile-robots": "이동 로봇",
             "motion-planning": "모션 플래닝", "legged-and-aerial": "보행 로봇과 비행 로봇", "contact-and-manipulation": "접촉과 조작",

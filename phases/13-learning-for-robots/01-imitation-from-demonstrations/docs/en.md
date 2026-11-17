@@ -8,16 +8,16 @@
 
 A small rover must drive around a pillar to a goal, and nobody has written its rules. You drive it a few times and record, at each spot, which way you steered.
 
-The rover then looks up the nearest recorded spots and steers as you did. One straight-line rule would average left and right into straight ahead, and the rover would hit the pillar.
+The rover then looks up the nearest recorded spots and steers as you did.
 
 ## Key Terms
 
-- **Imitation learning**: teaching a robot by fitting a function to examples of an expert's behaviour.
-- **Observation**: what the robot senses. Here it is its position `x` on a plane.
-- **Action**: what the robot does at that moment. Here it is a velocity.
-- **Policy**: the function that maps an observation to an action.
-- **Least squares**: a curve fit that makes squared errors smallest. Here it gives one straight rule.
-- **Nearest neighbours**: a fit that copies the actions of the closest recorded examples.
+- **Imitation learning**: teaching a robot by showing it examples of an expert doing the task.
+- **Observation**: what the robot senses. Here it is its spot on the floor.
+- **Action**: what the robot does next. Here it is a driving direction.
+- **Policy**: the rule that turns an observation into an action.
+- **Least squares**: a fit that draws one straight rule through all the examples.
+- **Nearest neighbours**: a fit that copies the actions of the closest examples.
 
 ## The Problem
 
@@ -25,31 +25,33 @@ You want a toy rover to drive around a pillar from any starting spot. Writing ru
 
 ## The Concept
 
-Robots meet situations no one wrote rules for, and a person can often just show the right move.
+Robots meet situations no one wrote rules for, and a person can often just show the right move. We save each spot the expert drove through with the move they made, then fit a rule to those pairs. One straight rule averages "go left" and "go right" into "go straight" and hits the pillar. Copying the closest examples works much better.
 
 ![Pipeline](../assets/diagram-imitation-pipeline.png)
 
-*An expert drives, you store each observation with its action, and a regression (a curve fit) turns the pairs into a policy.*
-
-This is supervised learning: every example comes with its right answer, the expert's action. The expert heads for the goal and swerves round the pillar's keep-out disc.
+*An expert drives, we save what they did, and a fit turns the saved pairs into a policy.*
 
 ![Two fits](../assets/diagram-imitation-fits.png)
 
-*Least squares averages "go left" and "go right" into "go straight". Nearest neighbours copy the closest recorded actions.*
+*One straight rule goes straight at the pillar. Copying the closest examples goes around it.*
 
 ![Success](../assets/fig-imitation-success.png)
 
-*Left: nearest neighbours reach expert success after about a dozen demonstrations, while least squares gets worse. Right: a rollout is one test drive.*
-
-Over 60 random starts, 3-nearest-neighbours (average the 3 closest recorded actions) succeeds from 13% of starts with one demonstration, 92% with three and 100% with ten.
+*Left: copying the closest examples gets as good as the expert after about a dozen demonstrations, the straight rule gets worse. Right: one test drive.*
 
 ![One vs ten](../assets/clip-example.mp4)
 
-*The blue rover learned from one line, has nothing to copy beside the pillar and hits it. The green rover learned from ten lines and goes around.*
+*Blue learned from one demonstration and hits the pillar. Green learned from ten and goes around.*
+
+<details><summary>The math (optional)</summary>
+
+A policy maps the rover's position `x` to a velocity. Least squares fits one straight rule. 3-nearest-neighbours averages the 3 closest recorded actions. Over 60 random starts it succeeds from 13% of starts with one demonstration, 92% with three and 100% with ten. A drive counts as a success only if it never enters the obstacle and ends within 0.1 m of the goal.
+
+</details>
 
 ## Build It
 
-The expert adds a swirl term near the obstacle, a sideways push around it.
+The expert adds a sideways push near the obstacle. The code stores the examples and fits both policies.
 
 ```python
 X, A = collect(rng, n_demos)        # stacked (position, velocity) pairs
@@ -57,7 +59,7 @@ policy = fit_knn(X, A, k=3)         # mean action of the 3 closest demo states
 W = np.linalg.lstsq(feats, A)[0]    # or one linear rule, fit_linear
 ```
 
-`success()` counts a rollout only if it never enters the obstacle and ends within 0.1 m of the goal.
+`success()` checks that a drive never touches the pillar and ends near the goal.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -67,7 +69,7 @@ python3 phases/13-learning-for-robots/01-imitation-from-demonstrations/code/figu
 
 ## Use It
 
-The test cross-checks the neighbour search against `scipy.spatial.cKDTree`. Production code replaces both fits with a neural network.
+A test checks our neighbour search against SciPy's `cKDTree`. Real robots replace both fits with a neural network.
 
 Sources: Ross, Gordon and Bagnell, arXiv:1011.0686 (opened 2026-11-09).
 
@@ -77,6 +79,6 @@ Sources: Ross, Gordon and Bagnell, arXiv:1011.0686 (opened 2026-11-09).
 
 ## Exercises
 
-1. Add a second obstacle. How many demonstrations does 3-NN need for 95% success?
-2. Replace `k=3` by `k=1` and `k=15` and explain the change.
-3. Give the observation a velocity term. Does least squares still fail?
+1. Add a second pillar. How many demonstrations do you need now?
+2. Change how many neighbours are averaged. What happens?
+3. Give the observation a speed too. Does the straight rule still fail?

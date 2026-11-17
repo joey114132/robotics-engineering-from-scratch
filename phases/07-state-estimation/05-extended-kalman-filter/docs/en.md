@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-A robot measures how far a post is and in which direction. An extended Kalman filter swaps the curved motion for a straight-line rule at its current estimate. The rule holds only near the truth: far off, the filter still reports small uncertainty while its error grows.
+A robot measures how far a post is. An extended Kalman filter swaps the curved motion for a straight-line rule at its current estimate. The rule holds only near the truth: far off, the filter still reports small uncertainty while its error grows.
 
 ## Key Terms
 
@@ -19,7 +19,7 @@ A robot measures how far a post is and in which direction. An extended Kalman fi
 
 ## The Problem
 
-A robot drives in a curve and tracks itself with one post as a landmark. Its heading guess starts 1 rad off, and the filter drifts away while reporting a small covariance. Heading sits inside every `cos` and `sin`, so `x' = F x` has no constant `F`.
+A robot drives in a curve and tracks itself with one post as a landmark. Its heading guess starts off, and the filter drifts away while reporting small uncertainty.
 
 ## The Concept
 
@@ -27,23 +27,29 @@ A robot that is confidently wrong is more dangerous than one that is unsure.
 
 ![One EKF cycle](../assets/diagram-ekf-loop.png)
 
-*Both Jacobians are evaluated at the current estimate.*
+*The straight-line rule is rebuilt at the current estimate each cycle.*
 
-The state is `[x, y, heading]`; the robot moves along a curve `f(x, u)` with speed `v` and turn rate `w`. `F` is the Jacobian of the motion, `H` that of the landmark's range and bearing `h(x)`. Covariance is predicted by `P = F P F^T + Q`. Bearing differences are wrapped.
+A Kalman filter needs straight-line motion, but a turning robot moves in curves. The extended filter swaps the curve for its straight-line approximation at the current estimate and rebuilds it every cycle. That works while the estimate is close to the truth.
 
 ![Bad linearisation feeds itself](../assets/diagram-ekf-spiral.png)
 
-*A wrong heading gives a wrong Jacobian, a wrong correction, a wronger heading. One reading cannot tell position error from heading error.*
+*A wrong heading gives a wrong rule, a wrong correction, a wronger heading.*
 
-NEES, `e^T P^-1 e`, averages the state size, 3, over runs.
+NEES checks whether the filter's claimed doubt matches its real error. It should average the state size.
 
 ![NEES against heading error](../assets/fig-ekf-run.png)
 
-*Left: the EKF follows the truth, dead reckoning bends away. Right: NEES stays near 3 with four landmarks, and grows from about 4 to several hundred with one.*
+*Left: the EKF follows the truth. Right: with four landmarks the score stays healthy, with one it explodes as the starting error grows.*
 
 ![One post, four posts](../assets/clip-example.mp4)
 
-*Both start 1 rad off in heading. One post (blue): NEES averages 100.5 over 30 runs, the estimate ends 2.8 m off and its 2 sigma disc stays small. Four (green): 2.7. 1 m is drawn as 0.5 m.*
+*Both start with the heading wrong. With one post (blue) the estimate ends far off while its uncertainty disc stays small. With four (green) it stays on the robot.*
+
+<details><summary>The math (optional)</summary>
+
+The state is `[x, y, heading]`; the robot moves along a curve `f(x, u)` with speed `v` and turn rate `w`. `F` is the Jacobian of the motion, `H` that of the landmark's range and bearing `h(x)`. Covariance is predicted by `P = F P F^T + Q`. Bearing differences are wrapped. NEES is `e^T P^-1 e` and averages the state size, 3. With a heading guess 1 rad off and one landmark, NEES averages 100.5 over 30 runs and the estimate ends 2.8 m off. With four it averages 2.7. In the figure NEES stays near 3 with four landmarks and grows from about 4 to several hundred with one. Tests check NEES near 3 over 150 seeds, and over 20 times larger with one landmark and a 1.5 rad heading error. 1 m is drawn as 0.5 m.
+
+</details>
 
 ## Build It
 
@@ -59,7 +65,7 @@ y = z - h(x, lm); y[1] = wrap(y[1])
 x = x + K @ y
 ```
 
-Tests compare both Jacobians with finite differences, check NEES near 3 over 150 seeds, and over 20 times larger with one landmark and a 1.5 rad heading error.
+Tests compare both Jacobians with finite differences.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -80,5 +86,5 @@ Sources: robot_localization state estimation nodes, https://docs.ros.org/en/melo
 ## Exercises
 
 1. Drop the minus sign in `jac_f` and watch NEES.
-2. Add a second landmark and find the smallest diverging heading error.
+2. Add a second landmark and watch how the failure changes.
 3. Inflate `Q` by 4 and compare NEES.

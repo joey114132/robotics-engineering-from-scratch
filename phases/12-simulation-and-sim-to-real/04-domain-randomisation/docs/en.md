@@ -12,12 +12,12 @@ Domain randomisation tunes the gains across many different simulated arms. A nar
 
 ## Key Terms
 
-- **Domain randomisation**: tuning a controller across many simulated plants with randomly scaled parameters.
-- **Nominal plant**: the simulated arm with unscaled, average parameters.
-- **PD controller**: pushes by `kp` per unit of error and brakes by `kd` per unit of speed.
-- **Gains**: the numbers `kp` and `kd` that set how hard the controller pushes and brakes.
-- **Width (`w`)**: how far each parameter may be scaled, as a fraction.
-- **Settling**: staying within a small band around the target.
+- **Domain randomisation**: tuning a controller across many simulated robots whose numbers are randomly changed.
+- **Nominal plant**: the simulated arm with the plain, average numbers.
+- **PD controller**: pushes toward the target by how far off it is, and brakes by how fast it moves.
+- **Gains**: the two numbers that set how hard the controller pushes and brakes.
+- **Width (`w`)**: how far each number may be changed, as a fraction.
+- **Settling**: staying close to the target.
 
 ## The Problem
 
@@ -25,38 +25,40 @@ Your controller works on the simulated arm and fails on the real one, which is a
 
 ## The Concept
 
-No two real robots are identical, so tuning on one perfect copy is a gamble.
+No two real robots are identical, so tuning on one perfect copy is a gamble. Instead we tune on many simulated arms whose weight, friction and delay are randomly changed. Too narrow a range misses real differences. Too wide gives slow, cautious gains.
 
 ![Test loop](../assets/diagram-dr-loop.png)
 
-*Scale every parameter by `1 +- w`, run the same controller on each plant and count successes.*
-
-A PD controller with a torque limit and sensor delay steps a joint by 1 rad. It succeeds if it settles within 0.05 rad by 0.8 s and peaks below 1.05 rad. A failure costs 2 s. `tune()` keeps the `kp`, `kd` pair with the lowest mean cost.
+*Change every number a little, run the same controller on each arm, and count how many succeed.*
 
 ![Widths](../assets/diagram-dr-widths.png)
 
-*Narrow gives brittle gains, matched gives reliable fast ones, much wider is slow and over-cautious.*
+*Too narrow is brittle, the right width is reliable and fast, too wide is slow and over-cautious.*
 
 ![Width sweep](../assets/fig-dr-width.png)
 
-*Left: nominal-tuned gains drop to 57% success at width 0.3, gains tuned across 0.3 reach 99%. Right: tuning across 0.6 costs 0.586 s against 0.532 s, about 10% slower.*
-
-Width 0.3 turns inertia 0.05 into anything from 0.035 to 0.065. Over 12 such arms, nominal-tuned gains leave 6 failing. Gains tuned across 0.3 settle all 12 in 0.52 s on average. Gains tuned across 0.6 settle all 12 but need 0.59 s.
+*Left: gains tuned on the average arm often fail on real arms, gains tuned on many arms rarely do. Right: tuning wider than needed costs speed.*
 
 ![Same 12 arms](../assets/clip-example.mp4)
 
-*Lamps light as arms settle. At 0.5 s, 6 green arms are lit, no blue.*
+*Lamps light as arms settle. The green set, tuned on the right width, settles first.*
+
+<details><summary>The math (optional)</summary>
+
+Each number is scaled by `1 +- w`. A PD controller with a torque limit and sensor delay steps a joint by 1 rad. It succeeds if it settles within 0.05 rad by 0.8 s and peaks below 1.05 rad. A failure costs 2 s. `tune()` keeps the `kp`, `kd` pair with the lowest mean cost. At width 0.3 inertia 0.05 becomes anything from 0.035 to 0.065. Over 12 such arms, nominal-tuned gains (`kp` 4.5, `kd` 0.70) leave 6 failing and drop to 57% success. Gains tuned across 0.3 (`kp` 7.7, `kd` 1.35) reach 99% and settle in 0.52 s on average. Gains tuned across 0.6 (`kp` 4.5, `kd` 0.88) settle all 12 but need 0.59 s, about 10% slower.
+
+</details>
 
 ## Build It
 
-`simulate()` integrates many plants at once with RK4. `tune()` simulates every gain pair on the same random plants and keeps the lowest mean cost.
+`simulate()` runs many arms at once. `tune()` tries every pair of gains on the same random arms and keeps the best.
 
 ```python
 def sample(width, n, rng):
     return {k: v * (1 + width * rng.uniform(-1, 1, n)) for k, v in NOM.items()}
 ```
 
-Width 0 returns the nominal plant. Tests check that a plant simulated alone matches the same plant in a batch.
+Width 0 gives the average arm. Tests check that an arm simulated alone matches the same arm in a batch.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -66,7 +68,7 @@ python3 phases/12-simulation-and-sim-to-real/04-domain-randomisation/code/main.p
 
 ## Use It
 
-In MuJoCo 3.11.0, `dof_damping`, `dof_frictionloss` and `body_mass` can be scaled before each episode, e.g. `model.body_mass[1] *= 0.8`.
+In MuJoCo you can scale an arm's mass, damping and friction before each run.
 
 Sources: MuJoCo 3.11.0 Python bindings (2026-11-09).
 
@@ -76,6 +78,6 @@ Sources: MuJoCo 3.11.0 Python bindings (2026-11-09).
 
 ## Exercises
 
-1. Randomise only the delay. Which parameter matters most?
+1. Randomise only the delay. Which number matters most?
 2. Lower the real width to 0.15. What tuning width is best?
-3. Score the worst plant instead of the mean.
+3. Score the worst arm instead of the average.

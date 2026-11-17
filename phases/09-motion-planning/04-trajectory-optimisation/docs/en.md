@@ -21,31 +21,37 @@ The route settles where pull and push balance. Small moves lower the cost, a sco
 
 ## The Problem
 
-Picture an arm following a path that avoids every obstacle but zigzags, wasting time. Straightening it by hand pushes it into an obstacle.
+Picture a robot arm following a path that avoids every obstacle but zigzags, wasting time and shaking the arm. Straightening it by hand pushes it back into an obstacle.
 
 ## The Concept
 
-A real robot saves time and wear on a smooth path, so we score smoothness.
+A real robot saves time and wear on a smooth path.
+
+Think of the path as a rubber band pinned at both ends. It pulls each point toward its neighbours, and an obstacle pushes nearby points away.
 
 ![Cost loop](../assets/diagram-cost-loop.png)
 
-*Fixed ends; smoothness and obstacle penalty give one gradient.*
+*Smoothness and obstacles each push every point.*
 
-Smoothness cost is half the sum of squared steps between neighbours. Its gradient is `2 x_i - x_{i-1} - x_{i+1}`, so stepping against it pulls a point toward the line through its neighbours. The obstacle penalty is `w (r + margin - d)^2` when a waypoint is closer than `r + margin` to a centre, else zero (`w` = 8 is the weight). Stepping against its gradient pushes the point out. Steps of size `lr` = 0.04 are repeated.
+The path settles where pull and push balance, reached by moving points a little at a time. Too big a move overshoots.
 
 ![Two forces](../assets/diagram-two-forces.png)
 
-*Pull and push balance at rest; too large a step overshoots. Only waypoints are checked; a segment between two can still clip the obstacle.*
-
-One waypoint between pins at (0, 0) and (10, 0), a cup of radius 1 at (5, 0), `margin = 0.4`. It starts at (5, 0.2), inside the cup: smoothness pulls down with 0.4, the cup pushes up with 19.2. After 8 steps it rests at (5, 1.24), both forces 2.49, 0.24 outside the cup.
+*Pull and push balance at rest.*
 
 ![Pull and push](../assets/clip-example.mp4)
 
-*Red arrows: pull, push.*
+*Red arrows: pull and push. The push starts huge and shrinks.*
 
 ![Before and after](../assets/fig-before-after.png)
 
-*Left: start runs through both obstacles, result bends around. Right: cost falls.*
+*Before: through both obstacles. After: around them.*
+
+<details><summary>The math (optional)</summary>
+
+Smoothness cost is half the sum of squared steps between neighbours; its gradient at a waypoint is `2 x_i - x_{i-1} - x_{i+1}`, so stepping against it pulls the point toward the line through its neighbours. The obstacle penalty is `w (r + margin - d)^2` when a waypoint is closer than `r + margin` to a centre, else zero (`w` = 8). Steps of size `lr` = 0.04 repeat; too large a step makes the cost rise. Example: a waypoint between pins at (0, 0) and (10, 0), a cup of radius 1 at (5, 0), `margin = 0.4`, starts at (5, 0.2). Smoothness pulls down with 0.4, the cup pushes up with 19.2. After 8 steps it rests at (5, 1.24), both forces 2.49, 0.24 outside the cup. Only waypoints are penalised, so a segment between two can still clip an obstacle. With no obstacles the path becomes an evenly spaced straight line.
+
+</details>
 
 ## Build It
 
@@ -55,7 +61,7 @@ g[1:-1] -= 2 * wo * np.maximum(0, r + margin - d) * v / d
 X -= lr * g
 ```
 
-Endpoints get zero gradient, so they never move; a test checks the gradient against finite differences.
+Endpoints get zero gradient, so they never move. A test checks the gradient against finite differences.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -65,7 +71,7 @@ python3 phases/09-motion-planning/04-trajectory-optimisation/code/main.py
 
 ## Use It
 
-SciPy's `minimize` with `method="L-BFGS-B"` takes the same cost and gradient. A test checks it reaches a cost no worse than 4000 plain steps.
+SciPy's L-BFGS-B minimiser takes the same cost and gradient. A test checks it reaches a cost no worse than 4000 plain steps.
 
 Sources: [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf) (opened 2026-11-09).
 
@@ -75,6 +81,6 @@ Sources: [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/ic
 
 ## Exercises
 
-1. Raise `margin` to 0.8; report how the closest approach changes.
-2. Check segments with lesson 03's exact test; report the smallest clearance.
-3. Use `scipy.optimize.minimize`; compare iterations with plain descent.
+1. Move the obstacle closer to the path and watch the path bend away.
+2. Make the step bigger until the score gets worse.
+3. Check the segments between points for a hidden hit.

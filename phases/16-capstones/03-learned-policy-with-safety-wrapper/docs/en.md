@@ -12,7 +12,7 @@ A wrapper is plain code between the policy and the motor. It notices an old pict
 
 ## Key Terms
 
-- **Learned policy**: a trained model that maps what the robot sees to an action.
+- **Learned policy**: a trained model that turns what the robot sees into an action.
 - **Safety wrapper**: plain code between the policy and the motor that limits every command.
 - **Clip**: cut a value so it stays inside a range.
 - **Rate limit**: a cap on how much a command may change per step.
@@ -25,7 +25,7 @@ A trained model picks how hard an arm pushes. It passes every test, then one wil
 
 ## The Concept
 
-Learned models are powerful but unpredictable, so real robots wrap them in code whose behaviour you can prove.
+Learned models are powerful but unpredictable, so real robots wrap them in code whose behaviour you can prove. The wrapper has three simple rules. If the picture is too old, push with nothing. Never push harder than a safe maximum. Never change the push too fast. Each rule counts how often it fires.
 
 ![Policy system](../assets/diagram-policy-system.png)
 
@@ -33,25 +33,29 @@ Learned models are powerful but unpredictable, so real robots wrap them in code 
 
 ![Two faults](../assets/diagram-policy-broken.png)
 
-*A spike is clipped and rate limited. A picture older than 3 steps becomes a hold (zero torque).*
-
-Three rules: hold zero torque if the picture is over 3 steps old (a step is 0.02 s), clip torque to 3 Nm, and change it by at most 0.5 Nm per step. At step 30 a spike makes the policy ask for 39.9 Nm. Clipping gives 3 Nm, but the torque was 0.31 Nm, so the rate limit allows only 0.81 Nm. Unwrapped, the joint takes all 39.9 Nm.
+*A spike is clipped and slowed. An old picture becomes a hold with no push.*
 
 ![Two arms](../assets/clip-example.mp4)
 
-*The kick sends blue 0.056 rad past the red bar (the 1.3 rad limit, drawn 4 times larger). Green hardly notices.*
+*A sudden kick throws blue past the red limit bar. The wrapped green arm hardly notices.*
 
 ![Success](../assets/fig-policy-result.png)
 
-*On a clean run the wrapper only slows the first torque ramp.*
+*On a clean run the wrapper barely changes anything.*
 
 ![Faults](../assets/fig-policy-faults.png)
 
-*Spike: peak torque about 40 Nm without the wrapper, 3 Nm with it, joint peak 1.36 rad against 1.01. Lost observation: 1.47 against 1.01. The limit is 1.3 rad.*
+*With the wrapper the joint stays under the limit after a spike or a lost picture. Without it, it overshoots.*
+
+<details><summary>The math (optional)</summary>
+
+Rules: hold zero torque if the picture is over 3 steps old (a step is 0.02 s), clip torque to 3 Nm, and change it by at most 0.5 Nm per step. At step 30 a spike makes the policy ask for 39.9 Nm. Clipping gives 3 Nm, but the torque was 0.31 Nm, so the rate limit allows only 0.81 Nm. Unwrapped, the joint takes all 39.9 Nm. Spike: peak torque about 40 Nm without the wrapper, 3 Nm with it, joint peak 1.36 rad against 1.01. Lost observation: 1.47 against 1.01. The limit is 1.3 rad. The kick sends blue 0.056 rad past the limit (drawn 4 times larger). A clean run shows no clip and no hold, the spike run 1 clip, the lost-observation run 23 hold steps.
+
+</details>
 
 ## Build It
 
-The code runs the three rules in that order.
+The code runs the three rules in order.
 
 ```python
 if age > self.max_age: raw = 0.0
@@ -59,7 +63,7 @@ c = np.clip(raw, -self.umax, self.umax)
 r = self.u + np.clip(c - self.u, -self.du, self.du)
 ```
 
-Each rule counts how often it changed the action: the spike run shows 1 clip, the lost-observation run 23 hold steps, a clean run neither.
+Each rule counts how often it changed the action.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -79,6 +83,6 @@ Sources: [ros2_control joint limiting](https://control.ros.org/rolling/doc/ros2_
 
 ## Exercises
 
-1. Raise `max_age` until the lost-observation run crosses 1.3 rad.
+1. Raise the allowed age until the lost-picture run crosses the limit.
 2. Add a speed limit as a fourth rule.
-3. Train on 5 episodes instead of 40.
+3. Train on fewer episodes and see what changes.

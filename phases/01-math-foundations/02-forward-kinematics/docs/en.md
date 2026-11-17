@@ -6,9 +6,7 @@
 
 ## In Plain Words
 
-A desk arm has a motor at the shoulder and another at the elbow. The shoulder swings the whole arm; the elbow swings only the forearm and hand.
-
-Forward kinematics follows the turns from base to hand. Each link points in a direction that adds up every joint angle before it. Step along each link by its length, add the steps, and you know where the tip lands.
+A desk arm has motors at the shoulder and the elbow. Forward kinematics follows the turns from base to hand: step along each link in the direction all earlier joint angles give it, add the steps, and you know where the tip lands.
 
 ## Key Terms
 
@@ -21,35 +19,39 @@ Forward kinematics follows the turns from base to hand. Each link points in a di
 
 ## The Problem
 
-You want the gripper at (0.5, 0.3), but the motors only know joint angles. Inverse kinematics (angles for a wanted tip) and Jacobians (tip speed from joint speed) build on it, so an FK bug looks like a controller bug.
+You tell a robot arm to put its gripper at one spot, but its motors only know joint angles. Before the arm can reach anything, your code must work out where the hand ends up for a given set of angles.
 
 ## The Concept
 
-To reach anything, a robot first has to know where its own hand is.
-
-Each joint contributes `Rz(q)`, a turn about the joint, and each link contributes `Tx(l)`, a slide along itself. The tip pose is their ordered product.
+To reach anything, a robot first has to know where its own hand is. Start at the base, turn by each joint's angle and step along each link.
 
 ![Turn, then step](../assets/diagram-fk-walk.png)
 
 *Turn, step, turn, step, from base to tip.*
 
-Take links 1 and 0.5 long: turn the shoulder a right angle up, then the elbow a right angle back. Link 1 ends at (0, 1), link 2 adds (0.5, 0), so the tip lands at (0.5, 1). Forgetting the shoulder's turn gives (0, 0.5).
-
 ![An arm turns its shoulder, then its elbow](../assets/clip-example.mp4)
 
-*Shoulder up, then elbow forward. The red ball forgets the shoulder's turn.*
+*Shoulder up, then elbow forward. The red ball forgot the shoulder's turn and is in the wrong place.*
 
-The tip is farthest from the base when the arm is straight and closest when it folds back, exactly `max(0, 2*longest - sum)`.
+The hand is farthest from the base when the arm is straight, and closest when it folds back on itself.
 
 ![When can the tip return to the base](../assets/diagram-reach-bounds.png)
 
-*A link longer than all the others together leaves a hole in the workspace.*
+*If one link is longer than all the others together, the hand can never come back to the base.*
 
 ![Workspace samples](../assets/fig-workspace.png)
 
-*3,000 random poses per arm. Left: links [1, 1] cover a full disc. Right: links [3, 1] never come closer than 2 m.*
+*Dots are places the hand can reach. The left arm covers a full disc, the right arm leaves a hole in the middle.*
+
+<details><summary>The math (optional)</summary>
+
+The example target is the gripper at (0.5, 0.3). Each joint adds a turn `Rz(q)` and each link a slide `Tx(l)`; the tip pose is their ordered product. Links 1 and 0.5 long, shoulder a right angle up, elbow a right angle back: the tip is at (0.5, 1), and forgetting the shoulder's turn gives (0, 0.5). The closest reach is exactly `max(0, 2*longest - sum)`. The plot uses 3,000 random poses per arm: links [1, 1] cover a disc, links [3, 1] never come closer than 2 m. A test checks both routines agree to 1e-12.
+
+</details>
 
 ## Build It
+
+One function adds up the headings of all links, and the other multiplies a turn and a slide for each link. A test checks that both agree on random poses.
 
 ```python
 def fk_planar(lengths, angles):
@@ -63,8 +65,6 @@ def fk_chain(angles, lengths):
     return T
 ```
 
-A test requires both to agree to 1e-12 on random poses.
-
 ```bash
 cd robotics-engineering-from-scratch
 python3 -m pytest phases/01-math-foundations/02-forward-kinematics -q
@@ -72,9 +72,9 @@ python3 -m pytest phases/01-math-foundations/02-forward-kinematics -q
 
 ## Use It
 
-Real arms use Denavit-Hartenberg parameters (a standard link table) or URDF joint origins. Check which frame each `<origin>` is in.
+Real arms describe their links with Denavit-Hartenberg tables or URDF files.
 
-Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 3 (manipulator kinematics).
+Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 3.
 
 ## Ship It
 
@@ -82,6 +82,6 @@ Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 3 (manipulator kinemati
 
 ## Exercises
 
-1. Make joint 2 rotate about `y` and see why the planar test fails.
-2. Plot minimum reach against link-length ratio.
-3. Find a pose of links [1, 1] where the tip returns to the base.
+1. Change a link length and see where the hand goes.
+2. Fold the elbow all the way back and find the closest the hand gets.
+3. Try links [1, 1] and find a pose where the hand returns to the base.

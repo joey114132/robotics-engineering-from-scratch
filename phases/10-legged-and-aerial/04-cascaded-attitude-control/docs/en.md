@@ -21,33 +21,37 @@ Cascaded attitude control adds a memory. While the drone is not level, the memor
 
 ## The Problem
 
-Picture a hovering drone pushed by a gust for a second. A simple controller holds a constant tilt for the whole gust, so the drone drifts. Raising `kp` shrinks the tilt but demands more torque.
+Picture a hovering drone pushed by a gust for a second. A simple controller leans and stays leaning for the whole gust, so the drone drifts. Pushing harder per degree shrinks the lean but costs more torque.
 
 ## The Concept
 
 A real drone fights wind all day, so it must resist the push and still stay level.
 
+A simple controller pushes back in proportion to the tilt, so it must stay tilted to push as hard as the gust. Add a memory: while the drone is not level, the memory keeps adding push until it matches the gust. Then the drone is level and still resisting.
+
 ![PD](../assets/diagram-single-pd.png)
 
-*Gust torque `d` leaves the error at `d / kp`.*
-
-The outer loop turns angle error `e` into a turn-rate command `omega_ref = k_theta * e`; the inner loop turns rate error into torque. With P inside, `tau = k_w (k_theta e - omega)`: exactly PD with `kp = k_w k_theta` and `kd = k_w`.
+*Plain control: the lean stays.*
 
 ![Cascade](../assets/diagram-cascade.png)
 
-*Add an integral (gain `k_i`) of the rate error; it stops growing only at zero error, so it ends equal to the gust.*
-
-Stable needs every root of `I s^3 + k_w s^2 + (k_w k_theta + k_i) s + k_i k_theta = 0` to have a negative real part.
-
-With `I = 0.004`, `kp = 0.9`, `kd = 0.084`, `k_i = 0.5`, a 0.1 Nm gust holds the PD loop at `0.1 / 0.9 = 0.11 rad` (6.4 degrees). The cascade bumps to about 4 degrees, then pushes back 0.1 Nm at 0.5 degrees by 0.5 s.
+*Two loops, angle outside and turning speed inside, plus a memory.*
 
 ![Push back](../assets/clip-example.mp4)
 
-*Amber: push back. Red: gust. Both push back 0.1 Nm; only blue (PD) stays tilted.*
+*Both push back equally, but only green is level.*
+
+When the gust stops, the memory still holds the push, so the drone swings a little the other way. A real controller limits the memory so it cannot grow without bound (windup).
 
 ![Gust response](../assets/fig-gust-response.png)
 
-*PD sits at 6.4 degrees. The cascade peaks near 4 degrees, returns near zero, then swings the other way when the gust stops.*
+*Plain control stays tilted. The memory returns to level.*
+
+<details><summary>The math (optional)</summary>
+
+The outer loop turns angle error `e` into a turn-rate command `omega_ref = k_theta * e`; the inner loop turns rate error into torque. With P inside, `tau = k_w (k_theta e - omega)`: exactly PD with `kp = k_w k_theta` and `kd = k_w`. A steady gust torque `d` leaves plain PD with error `d / kp`. The integral (gain `k_i`) of the rate error stops growing only at zero error, so it ends equal to the gust. Stable needs every root of `I s^3 + k_w s^2 + (k_w k_theta + k_i) s + k_i k_theta = 0` to have a negative real part. With `I = 0.004`, `kp = 0.9`, `kd = 0.084`, `k_i = 0.5`, a 0.1 Nm gust holds the PD loop at 0.11 rad (6.4 degrees). The cascade peaks near 4 degrees and pushes back 0.1 Nm at 0.5 degrees by 0.5 s. Setting `k_i = 0` gives plain PD again.
+
+</details>
 
 ## Build It
 
@@ -61,7 +65,7 @@ def cascade(k_theta, k_w, k_i):
     return ctrl
 ```
 
-With `k_i = 0` this is a P-P cascade and equals `pd(kp, kd)`.
+With `k_i = 0` this is a P-P cascade and equals plain PD.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -71,7 +75,7 @@ python3 phases/10-legged-and-aerial/04-cascaded-attitude-control/code/main.py
 
 ## Use It
 
-The last test checks `cascade_poles()` against SciPy's `TransferFunction`.
+The last test checks the controller's stability against SciPy's transfer-function tool.
 
 ## Ship It
 
@@ -79,6 +83,6 @@ The last test checks `cascade_poles()` against SciPy's `TransferFunction`.
 
 ## Exercises
 
-1. Raise `k_i` to 2; compare the post-gust swing with `k_i = 0.5`.
-2. Clamp torque at 0.15 Nm; watch the integral.
-3. Show that `k_w = 0.02` with `k_i = 2` is unstable.
+1. Make the memory stronger and watch the swing after the gust grow.
+2. Limit the torque and watch what the memory does.
+3. Weaken the inner loop, keep a strong memory, and see it go unstable.

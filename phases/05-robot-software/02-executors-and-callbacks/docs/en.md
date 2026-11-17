@@ -19,7 +19,7 @@ A toy car drives only while a heartbeat timer keeps ticking. If a tick is late, 
 
 ## The Problem
 
-A toy car stops suddenly. Its timer sends a heartbeat 100 times a second, but a callback doing 60 ms of image work makes it stutter, and a watchdog stops the car though the CPU is mostly idle.
+A toy car stops suddenly. Its heartbeat timer stutters while another job does a long stretch of image work, and a watchdog stops the car though the processor is mostly idle.
 
 ## The Concept
 
@@ -29,21 +29,27 @@ A robot runs many jobs at once, and one slow job can starve the safety-critical 
 
 *The timer waits for the whole slow callback.*
 
-A mutually exclusive group never runs two of its callbacks at once, which protects shared data. Callbacks of different groups may run in parallel.
+An executor decides which ready job runs next and on which worker. A mutually exclusive group never runs two of its jobs at once, which protects data they share. Jobs in different groups may run in parallel, if a second worker is free.
 
 ![Threads and groups](../assets/diagram-callback-groups.png)
 
-*A second thread helps only if the two callbacks sit in different groups.*
+*A second worker helps only if the two jobs sit in different groups.*
 
-The slow callback starts at 0 ms and holds its thread for 60 ms. The timer is ready at 1 ms, so with one thread, or two threads and one group, it waits 59 ms. In separate groups it starts at once.
+The fix needs a second worker and the slow job in its own group.
 
 ![Two cars, two threads each](../assets/clip-example.mp4)
 
-*Each roof lamp is a thread. Blue shares one group, so its second lamp stays dark and the car stops. Green never stops.*
+*Each roof lamp is a worker. Blue shares one group, so its second lamp stays dark and the car stops. Green never stops.*
 
 ![Timeline of both setups](../assets/fig-executor-timeline.png)
 
-*One thread: the timer starts up to 59 ms late. Two threads, separate groups: never.*
+*With one worker the timer starts very late. With two workers and separate groups it never does.*
+
+<details><summary>The math (optional)</summary>
+
+The timer sends a heartbeat 100 times a second and the subscription callback does 60 ms of image work. The slow callback starts at 0 ms and holds its thread for 60 ms. The timer is ready at 1 ms, so with one thread, or two threads and one group, it waits 59 ms. In separate groups it starts at once. The model is first come, first served, but ROS 2 takes ready work in turns, so read its "Scheduling semantics" before comparing numbers.
+
+</details>
 
 ## Build It
 
@@ -52,7 +58,7 @@ busy = {g for _, g in running if g is not None}
 job = next((j for j in pending if j[3] is None or j[3] not in busy), None)
 ```
 
-`simulate()` advances time in 1 ms steps. Each step releases timer callbacks, frees finished jobs, and gives each free thread the oldest pending job whose group is idle. The model is first come, first served. ROS 2 takes ready work in turns, so read its "Scheduling semantics" before comparing numbers.
+`simulate()` advances time in 1 ms steps and gives each free thread the oldest waiting job whose group is idle.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -62,7 +68,7 @@ python3 phases/05-robot-software/02-executors-and-callbacks/code/main.py
 
 ## Use It
 
-ROS 2 groups are mutually exclusive or reentrant (may overlap). Callbacks without a group share one default group, so give the slow callback its own before adding threads.
+Callbacks without a group share one default group, so give the slow callback its own before adding threads.
 
 Sources: ROS 2 Jazzy, "Executors" (https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Executors.html), read 2026-11-09.
 
@@ -72,6 +78,6 @@ Sources: ROS 2 Jazzy, "Executors" (https://docs.ros.org/en/jazzy/Concepts/Interm
 
 ## Exercises
 
-1. Add a reentrant group (`None`) with two slow jobs and show they overlap.
+1. Put both callbacks in one group, then in two groups, and watch the timer.
 2. Drop missed timer ticks instead of queueing them.
-3. Split the slow callback into six 10 ms chunks and report the timer's worst wait.
+3. Split the slow callback into six 10 ms chunks and watch the timer.

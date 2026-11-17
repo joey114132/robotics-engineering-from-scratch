@@ -1,0 +1,8 @@
+[
+  {"id": 1, "stage": "pre", "question": "A full turn is how many degrees?", "options": ["90", "360", "6.28"], "answer": 1, "explanation": "A full turn is 360 degrees."},
+  {"id": 2, "stage": "check", "question": "A full turn is about how many radians?", "options": ["3.14", "6.28", "360"], "answer": 1, "explanation": "A full turn is 2 pi, about 6.28 radians."},
+  {"id": 3, "stage": "check", "question": "Which unit does code like math.cos expect?", "options": ["Degrees", "Radians", "Turns"], "answer": 1, "explanation": "math.cos and numpy trig functions take radians."},
+  {"id": 4, "stage": "check", "question": "About how many radians is 90 degrees?", "options": ["1.57", "0.9", "9.0"], "answer": 0, "explanation": "90 degrees is a quarter turn, which is 1.57 radians."},
+  {"id": 5, "stage": "post", "question": "What does wrap_turn do to 450 degrees?", "options": ["Makes it 90 degrees, the same direction", "Makes it 360 degrees", "Gives an error"], "answer": 0, "explanation": "Taking away one full turn leaves 90 degrees."},
+  {"id": 6, "stage": "post", "question": "You call math.cos(90) by mistake. What happens?", "options": ["It treats 90 as radians and gives a wrong answer without an error", "It stops with an error", "It converts to degrees for you"], "answer": 0, "explanation": "The function reads 90 as radians, so the program runs and the answer is wrong."}
+]

@@ -6,9 +6,7 @@
 
 ## In Plain Words
 
-A camera on a mast reports a cup's position measured from the camera. The arm needs it from its own base, and the camera faces away, so the raw numbers mislead.
-
-A transform tree stores how each frame (x, y, z directions attached to a part) sits in its parent. To convert the cup's position, multiply the transforms along the chain.
+A camera on a mast reports a cup's position from its own view, but the arm needs it from its base. A transform tree stores how each part (frame) sits in its parent; multiply the transforms along the chain to convert.
 
 ## Key Terms
 
@@ -21,35 +19,39 @@ A transform tree stores how each frame (x, y, z directions attached to a part) s
 
 ## The Problem
 
-A camera sees a cup, and the arm needs its position from its own base. Someone writes `T_cam_cup @ T_base_cam`, or inverts the wrong matrix, because the names carry no direction. Both are valid poses in the wrong place.
+A camera sees a cup, and the arm needs the cup's position from its own base. Someone multiplies the transforms in the wrong order, or inverts the wrong one, and the answer is a valid-looking spot in the wrong place.
 
 ## The Concept
 
-Each part of a robot sees the world from its own spot, so every reading must be converted.
-
-`T_to_from` converts coordinates from `from` into `to`. In a product the inner names cancel: `T_a_b @ T_b_c = T_a_c`.
+Each part of a robot sees the world from its own spot, so every reading must be converted. The habit that prevents mistakes is to name every transform with both ends, `T_to_from`: it converts from the second frame into the first, and neighbouring names cancel like fractions.
 
 ![A tree with one parent per frame](../assets/diagram-tf-tree.png)
 
-*Each arrow stores `T_parent_child`. The camera and the hand both hang off the base.*
+*Each arrow is one transform. The camera and the hand both hang off the base.*
 
-To get the cup as the hand sees it, climb from both frames to a shared ancestor, then go down one side with an inverse.
+To see the cup from the hand, climb from the hand and from the cup up to a shared parent, then come down one side.
 
 ![Lookup climbs to the common ancestor](../assets/diagram-tf-lookup.png)
 
-*To get `T_tool_cup`, climb to `base`, then use `inv(T_base_tool) @ T_base_cup`.*
-
-The camera sits at (0.5, 0, 0.4) in the base frame, turned around, and sees the cup at (0.2, 0, 0.5), so in the base frame the cup is at (0.3, 0, 0.9). A hand at (0.3, 0, 0.7) sees it at (0, 0, 0.2).
+*Climb both frames up to the base, then come down.*
 
 ![One cup measured from the camera, the base and the hand](../assets/clip-example.mp4)
 
-*Dark blue arrow from the camera, green from the base, amber from the hand.*
+*Three views of the same cup.*
 
 ![Cost of a wrong product](../assets/fig-wrong-order-error.png)
 
-*Here a swapped product is off by up to 0.4 m, a stray inverse by up to 1.3 m.*
+*A swapped order or a stray inverse can put the cup far off.*
+
+<details><summary>The math (optional)</summary>
+
+In `T_a_b @ T_b_c = T_a_c` the inner names cancel. The camera sits at (0.5, 0, 0.4) in the base frame, turned around, and sees the cup at (0.2, 0, 0.5), so in the base frame the cup is at (0.3, 0, 0.9). A hand at (0.3, 0, 0.7) sees it at (0, 0, 0.2). A swapped product is off by up to 0.4 m, a stray inverse by up to 1.3 m.
+
+</details>
 
 ## Build It
+
+`add()` refuses a second parent or a loop. `lookup()` climbs from both frames to the first shared parent and multiplies the transforms on the way.
 
 ```python
 def lookup(self, to, frm):
@@ -60,8 +62,6 @@ def lookup(self, to, frm):
     return invert_T(self._to_ancestor(to, common)) @ self._to_ancestor(frm, common)
 ```
 
-`add()` rejects a second parent and any cycle. `_to_ancestor()` multiplies stored transforms on the way up.
-
 ```bash
 cd robotics-engineering-from-scratch
 python3 -m pytest phases/01-math-foundations/04-frames-and-transform-trees -q
@@ -69,7 +69,7 @@ python3 -m pytest phases/01-math-foundations/04-frames-and-transform-trees -q
 
 ## Use It
 
-ROS 2 `tf2` keeps the same structure, and `lookup_transform(target, source, time)` takes the target first. Compare it with `TFTree.lookup`.
+ROS 2's `tf2` keeps the same tree, and its `lookup_transform` takes the target first. Compare it with `TFTree.lookup`.
 
 Sources: signature checked in `tf2_ros/buffer.py` of the local ROS 2 Jazzy install.
 
@@ -79,6 +79,6 @@ Sources: signature checked in `tf2_ros/buffer.py` of the local ROS 2 Jazzy insta
 
 ## Exercises
 
-1. Add a `static_cam_cup` frame under `cam` and check the chain still cancels.
-2. Make `lookup` return the frames it visited.
-3. Say what interpolation `lookup` needs if edges carry a `time`.
+1. Add a new frame under the camera and check the chain still works.
+2. Make `lookup` list the frames it passes.
+3. Try to add a second parent and read the error.

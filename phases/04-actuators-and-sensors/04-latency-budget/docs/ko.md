@@ -19,37 +19,41 @@ bench 팔이 몇 ms 전에 잰 각도를 보고 손을 목표 쪽으로 끌어�
 
 ## 문제
 
-관절이 bench에서는 `kd = 30`으로 매끄러운데 같은 gain으로 실제 controller에 올리면 떨기 시작합니다. 명령이 drive에 닿는 데 이제 몇 ms가 걸리기 때문입니다.
+관절이 bench에서는 매끄럽습니다. 같은 설정으로 실제 controller에 올리면 떨기 시작합니다. 달라진 것은 명령이 drive에 닿는 데 이제 몇 ms가 걸린다는 것뿐입니다.
 
 ## 개념
 
 실제 로봇의 loop에는 센서에서 모터까지 지연이 있고 그 지연이 쓸 수 있는 controller의 세기를 제한합니다.
 
-지연은 더해집니다(ms). 센서 0.5, 필터 2, bus 1, 계산 0.5, drive 1에 더해서 붙들려 있던 명령이 반 주기 묵었으므로 0.5가 더 붙습니다. 합계는 5.5 ms입니다.
-
 ![지연 예산](../assets/diagram-latency-budget.png)
 
-*단계마다 지연이 붙습니다.*
+*센서에서 모터까지 단계마다 지연이 조금씩 붙습니다.*
 
-관성 `J`에 건 PD loop에서 crossover `wc`는 `J^2 wc^4 = kd^2 wc^2 + kp^2`의 해이고 phase margin은 `PM = atan(kd*wc/kp)`입니다.
-지연 `T`는 파동을 `wc*T`만큼 더 돌려 놓으므로 margin은 `PM - wc*T`로 줄어듭니다. delay margin은 `PM / wc`입니다.
+작은 지연이 쌓입니다. 낡은 정보로 세게 보정하는 controller는 목표를 지나치고 다음의 늦은 보정은 더 크게 지나칩니다. loop가 견딜 수 있는 지연의 크기가 delay margin입니다.
 
 ![지연이 margin을 소모한다](../assets/diagram-delay-margin.png)
 
-*지연이 margin을 깎습니다.*
+*지연이 loop의 안전 여유를 깎습니다.*
 
-`kd`를 키운다고 항상 안전하지는 않습니다. `kd`는 `wc`를 거의 비례해서 올리지만 `PM`은 4분의 1바퀴 근처에서 멈춥니다.
-
-`J = 0.05`, `kp = 100`, 5.5 ms를 넣어 봅니다. `kd = 2`이면 `wc = 54.4`이고 `PM = 0.827` rad이며 margin은 15.2 ms이고 지연은 그것의 0.36배여서 팔이 가라앉습니다.
-`kd = 30`이면 `wc = 600`이고 margin은 2.6 ms이며 지연이 그것의 2.1배여서 흔들림이 커집니다.
+제동을 키운다고 항상 안전하지는 않습니다. 어느 지점부터는 loop가 더 빨리 반응해서 같은 지연이 한 번 흔들리는 시간을 더 많이 망칩니다. 제동이 너무 작아도 실패합니다.
 
 ![같은 지연, 다른 kd](../assets/clip-example.mp4)
 
-*초록(kd = 2)은 가라앉고 파랑(kd = 30)은 stop에 부딪힐 때까지 더 크게 흔들립니다.*
+*같은 지연입니다. 초록은 가라앉고 파랑은 stop에 부딪힐 때까지 더 크게 흔들립니다.*
 
 ![kd에 따른 margin](../assets/fig-latency-margin.png)
 
-*왼쪽은 5.5 ms가 약 14보다 큰 kd와 아주 작은 kd를 막는 모습입니다. 오른쪽은 margin의 0.6배에서는 가라앉고 1.5배에서는 커지는 모습입니다.*
+*왼쪽은 이 지연에서 아주 센 제동과 아주 약한 제동이 모두 실패하는 모습입니다. 오른쪽은 margin의 0.6배에서는 가라앉고 1.5배에서는 커지는 모습입니다.*
+
+<details><summary>The math (optional)</summary>
+
+지연은 더해집니다(ms). 센서 0.5, 필터 2, bus 1, 계산 0.5, drive 1에 더해서 붙들려 있던 명령이 반 주기 묵었으므로 0.5가 더 붙고 합계는 5.5 ms입니다.
+관성 `J`에 건 PD loop에서 crossover `wc`는 `J^2 wc^4 = kd^2 wc^2 + kp^2`의 해이고 phase margin은 `PM = atan(kd*wc/kp)`입니다.
+지연 `T`는 margin을 `PM - wc*T`로 줄이므로 delay margin은 `PM / wc`입니다.
+`J = 0.05`, `kp = 100`일 때 `kd = 2`이면 `wc = 54.4`, `PM = 0.827` rad, margin 15.2 ms이고 지연은 그것의 0.36배여서 팔이 가라앉습니다.
+`kd = 30`이면 `wc = 600`, margin 2.6 ms이고 지연은 2.1배여서 흔들림이 커집니다. 5.5 ms는 약 14보다 큰 `kd`를 막습니다.
+
+</details>
 
 ## 만들기
 
@@ -65,7 +69,7 @@ def delay_margin(kp, kd, J):
     return phase_margin(kp, kd, J) / crossover(kp, kd, J)
 ```
 
-`simulate()`는 지연이 있는 loop를 돌립니다. 테스트는 `wc`를 수치로 확인하고 delay margin의 0.6배는 안정이고 1.5배는 불안정함을 확인합니다.
+`simulate()`는 지연이 있는 loop를 돌립니다. 테스트는 delay margin의 0.6배는 안정이고 1.5배는 불안정함을 확인합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -75,7 +79,7 @@ python3 phases/04-actuators-and-sensors/04-latency-budget/code/figure.py
 
 ## 실제 도구로 보기
 
-delay margin은 Bode plot(주파수에 따른 loop 응답)의 phase margin을 crossover로 나눈 값입니다.
+delay margin은 Bode plot(주파수에 따른 loop 응답)에서 읽은 phase margin을 crossover로 나눈 값입니다.
 
 ## 결과물
 
@@ -83,6 +87,6 @@ delay margin은 Bode plot(주파수에 따른 loop 응답)의 phase margin을 cr
 
 ## 연습 문제
 
-1. 1차 필터를 넣고 margin을 수치로 다시 계산하세요.
-2. `kp`를 두 배로 할 때 delay margin을 구하세요.
-3. 필터 지연을 1 ms로 줄이고 새 최대 `kd`를 보고하세요.
+1. 전체 지연을 바꾸고 안전한 가장 큰 `kd`가 어떻게 움직이는지 보세요.
+2. 1차 필터를 넣고 margin이 줄어드는 것을 보세요.
+3. 필터 지연을 줄이고 무엇이 달라지는지 보세요.

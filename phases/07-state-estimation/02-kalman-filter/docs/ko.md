@@ -6,7 +6,7 @@
 
 ## 쉽게 말하면
 
-자동차의 위치 센서는 보고할 때마다 몇 미터씩 틀려요. 자동차의 속도도 대충 알아서 다음 위치를 예측할 수 있어요.
+자동차의 위치 센서는 보고할 때마다 몇 미터씩 틀려요. 자동차의 속도도 대충 알아요.
 
 센서가 아주 시끄러우면 추정을 센서 쪽으로 조금만 옮기고 예측이 더 불안하면 많이 옮겨요.
 
@@ -31,26 +31,29 @@
 
 *모델로 predict하고 센서 값으로 correct합니다.*
 
-state `x`는 `[position, velocity]`이고 2 m의 불확실성은 `P = 4`입니다.
-
-Predict: `x = F x`, `P = F P F^T + Q`(`F`는 한 걸음의 움직임)입니다.
-
-센서 값 `z = H x + noise`는 위치만 봅니다. Correct: `x = x + K (z - H x)`. 가장 좋은 `K = P H^T (H P H^T + R)^-1`은 불확실성을 가장 적게 남기고 `P`는 Joseph 형태로 갱신합니다.
-
-위치만 보면 `K = P / (P + R)`입니다. 0에서 시작해 `P = 4`이고 센서 값이 3 m일 때 `R = 4`이면 `K = 0.5`여서 추정은 1.5 m 움직이고 `P`는 2로 떨어집니다.
-잡음이 6 m인 센서는 `R = 36`이므로 `K = 4 / 40 = 0.1`이고 0.3 m만 움직입니다.
+Kalman filter는 가장 좋은 추측과 그것이 얼마나 불확실한지를 함께 지닙니다. 한 주기마다 로봇이 어디 있어야 하는지 예측하며 불확실성을 더합니다. 그다음 추측을 센서 값 쪽으로 gain만큼 옮깁니다. 아주 시끄러운 센서는 gain이 작아서 필터가 대부분 모델을 따릅니다.
+모델이 불안하면 gain이 커서 센서를 따릅니다. 보정할 때마다 필터는 덜 불확실해집니다.
 
 ![같은 센서 값, 두 도로](../assets/clip-example.mp4)
 
-*파란 도로는 시끄러운 센서(6 m)여서 핀이 거의 움직이지 않습니다. 초록 도로는 핀이 절반쯤 움직입니다.*
+*파란 도로는 시끄러운 센서여서 핀이 거의 움직이지 않습니다. 초록 도로는 핀이 절반쯤 움직입니다.*
 
 ![gain은 신뢰 다이얼](../assets/diagram-kalman-trust.png)
 
-*센서가 시끄러우면 K가 작고 모델이 불안하면 K가 큽니다.*
+*센서가 시끄러우면 gain이 작고 모델이 불안하면 gain이 큽니다.*
 
 ![추정과 측정 오차](../assets/fig-kalman-band.png)
 
-*왼쪽은 추정이 2-sigma 띠 안에 있는 모습입니다. 오른쪽은 4000번 실행에서 오차가 2.0 m가 아니라 1.0 m 근처에 자리 잡는 모습입니다.*
+*왼쪽은 추정이 불확실성 띠 안에 머무는 모습입니다. 오른쪽은 여러 번 실행에서 오차가 원래 오차의 절반 근처에 자리 잡는 모습입니다.*
+
+<details><summary>The math (optional)</summary>
+
+state `x`는 `[position, velocity]`이고 2 m의 불확실성은 `P = 4`입니다. Predict: `x = F x`, `P = F P F^T + Q`(`F`는 한 걸음의 움직임)입니다. 센서 값 `z = H x + noise`는 위치만 봅니다.
+Correct: `x = x + K (z - H x)`이고 가장 좋은 `K = P H^T (H P H^T + R)^-1`이며 `P`는 Joseph 형태로 갱신합니다. 위치만 보면 `K = P / (P + R)`입니다.
+0에서 시작해 `P = 4`이고 센서 값이 3 m일 때 `R = 4`이면 `K = 0.5`여서 추정은 1.5 m 움직이고 `P`는 2로 떨어집니다. 잡음이 6 m인 센서는 `R = 36`이므로 `K = 4 / 40 = 0.1`이고 0.3 m만 움직입니다.
+4000번 실행에서 오차는 2.0 m가 아니라 1.0 m 근처에 자리 잡고 오차의 95%가 2 sigma 안에 듭니다.
+
+</details>
 
 ## 만들기
 
@@ -64,7 +67,7 @@ x = x + K @ (z[None, :] - H @ x)     # update
 P = (np.eye(2) - K @ H) @ P
 ```
 
-테스트는 다른 `K`가 Joseph trace를 키우는지, 4000번 실행이 `P`와 맞는지, 오차의 95%가 2 sigma 안에 드는지 확인합니다.
+테스트는 다른 gain이 불확실성을 더 적게 남기지 못하는지, 오차의 95%가 2 sigma 안에 드는지 확인합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -73,7 +76,7 @@ python3 -m pytest phases/07-state-estimation/02-kalman-filter -q
 
 ## 실제 도구로 보기
 
-ROS의 `robot_localization`은 확장 Kalman filter인 `ekf_localization_node`를 제공합니다. SciPy의 `solve_discrete_are`는 자리 잡은 `P`를 줍니다.
+ROS의 `robot_localization`은 확장 Kalman filter인 `ekf_localization_node`를 제공합니다.
 
 출처: robot_localization state estimation nodes, https://docs.ros.org/en/melodic/api/robot_localization/html/state_estimation_nodes.html (2026년 11월 9일 확인).
 
@@ -83,6 +86,6 @@ ROS의 `robot_localization`은 확장 Kalman filter인 `ekf_localization_node`�
 
 ## 연습 문제
 
-1. `R_STD`를 두 배로 하고 자리 잡은 `sqrt(P)`를 예측하세요.
-2. `R`을 열 배 너무 작게 두고 2-sigma 적중률을 확인하세요.
-3. `SA`를 0으로 두고 `K`가 줄어드는 것을 보세요.
+1. 센서 잡음을 두 배로 하고 자리 잡은 불확실성이 오를지 내릴지 예측하세요.
+2. 필터가 센서를 실제보다 열 배 좋다고 믿게 해 보세요.
+3. 움직임 잡음을 0으로 두고 gain이 줄어드는 것을 보세요.

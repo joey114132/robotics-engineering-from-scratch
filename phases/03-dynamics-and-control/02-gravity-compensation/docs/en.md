@@ -21,40 +21,44 @@ If the guess is too low the hand sags; too high, it rises. The position controll
 
 ## The Problem
 
-You soften a robot arm so a person can push it, by lowering the position gain `kp`. The arm now sags below its commanded pose, or floats above it.
+You soften a robot arm so a person can push it, by lowering the position gain `kp`. Now the arm sags below the pose you commanded, or floats above it.
 
 ## The Concept
 
-A robot arm must hold up its own weight, and a wrong guess shows up as sag.
+A robot arm must hold up its own weight, and a wrong guess shows up as sag. The controller adds a guess of the weight in advance, and whatever the guess misses is left to the position spring. A soft spring covers it poorly.
 
 ![Residual over kp](../assets/diagram-sag-flow.png)
 
-*The gap between `ff` (model) and `tau_g` (gravity) is the residual.*
-
-At rest the torques balance: `kp * (q_des - q) + ff = tau_g(q)`, so `kp` times the angle error acts like a spring. Rearranged, the sag `q - q_des` is `(ff - tau_g) / kp` to first order (small errors).
+*The gap between guess and real weight is left to the spring.*
 
 ![Three cases](../assets/diagram-sag-cases.png)
 
-*A light model droops, an exact model holds, a heavy model floats up.*
-
-The lesson's two-link arm (2 kg, 1 kg, links 0.4 m) held straight out with `kp = 30` needs 9.81 Nm at the shoulder. A model 20% too light misses `0.2 * 9.81 = 1.96` Nm, so the spring droops `1.96 / 30 = 0.065` rad, about 3.7 degrees. A model 20% too heavy floats it up about 3.7 degrees (exact solve: 3.70 and 3.79).
+*Light guess droops, exact guess holds, heavy guess floats up.*
 
 ![Two models](../assets/clip-example.mp4)
 
-*Amber balls: where an exact model holds the fingertip. Sag drawn 6 times larger.*
+*Same soft spring: the left arm droops, the right floats.*
 
 ![Sag against kp](../assets/fig-gravity-sag.png)
 
-*Left: halving kp doubles the error. Right: a soft kp leaves the arm below the line.*
+*Halving the spring strength doubles the error.*
+
+<details><summary>The math (optional)</summary>
+
+At rest `kp * (q_des - q) + ff = tau_g(q)`, so the sag is `(ff - tau_g) / kp` to first order. The lesson's two-link arm (2 kg, 1 kg, links 0.4 m) held straight out with `kp = 30` needs 9.81 Nm at the shoulder. A model 20% too light misses 1.96 Nm and droops `1.96 / 30 = 0.065` rad, about 3.7 degrees; 20% too heavy floats it up about 3.7 degrees (exact solve: 3.70 and 3.79). The clip draws sag 6 times larger.
+
+</details>
 
 ## Build It
+
+The code computes the gravity torque of a two-link arm.
 
 ```python
 t2 = m2*lc2*g*np.cos(q1+q2)
 t1 = (m1*lc1 + m2*l1)*g*np.cos(q1) + t2
 ```
 
-`steady_state()` solves the balance and raises if no equilibrium exists (`kp` below the gravity gradient, how fast gravity torque grows). `sag()` returns `q - q_des`.
+`steady_state()` finds where the arm settles and complains if no balance exists, and `sag()` returns the difference from the commanded angle.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -64,7 +68,7 @@ python3 phases/03-dynamics-and-control/02-gravity-compensation/code/figure.py
 
 ## Use It
 
-Real arms take `tau_g` from a rigid-body model such as MuJoCo's bias force at zero velocity. CAD inertias are often wrong, so measure sag at two poses and fit a scale.
+Real arms get the weight torque from a physics model, for example MuJoCo's bias force at zero velocity. Model weights are often wrong, so measure the sag at two poses and fit a correction.
 
 ## Ship It
 
@@ -72,6 +76,6 @@ Real arms take `tau_g` from a rigid-body model such as MuJoCo's bias force at ze
 
 ## Exercises
 
-1. Add a third joint; is the horizontal pose still the worst case?
-2. Fit one mass scale from sag at `kp = 100` and predict the sag at `kp = 50`.
-3. Show the first-order estimate degrades near the gravity gradient.
+1. Make the model 20% too light, then too heavy, and compare the sag.
+2. Halve the spring strength and watch the sag double.
+3. Add a third joint and check the stretched pose is still the worst.

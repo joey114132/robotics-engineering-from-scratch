@@ -20,35 +20,41 @@ RRT repeats this until a branch reaches the flag. The route wanders, so straight
 
 ## The Problem
 
-Picture a robot arm that must reach a goal past an obstacle (joint angles stand in for x and y). A random planner finds a way around fast, but the path wanders and the arm would follow every detour.
+Picture a robot arm that must reach a goal past an obstacle. A random planner finds a way round quickly, but the path wanders and the arm would follow every detour.
 
 ## The Concept
 
-A real robot cannot hand-draw a detour for every new scene, so it samples one.
+A real robot cannot hand-draw a detour for every new scene, so it finds one by trying.
+
+Pick a random spot. Find the closest point of the tree grown so far and take one short step toward the spot. Keep the step only if it touches no obstacle. Repeat until a branch reaches the goal.
 
 ![RRT step](../assets/diagram-rrt-loop.png)
 
-*Sample, step toward it from the nearest node, keep the step if free.*
-
-Each sample pulls its nearest node one step of at most `step`. One sample in ten is the goal itself. When a new node can see the goal, the path is read back through the parent links.
-
-Take `step = 0.4` and a rock at (5, 5) with radius 2. Iteration 11: the sample (6.86, 6.5) pulls node (3.12, 4.07) to (3.46, 4.29), 1.70 from the centre, inside the rock; `seg_free` fails and the step is dropped. Iteration 17: the sample (2.27, 6.23) pulls the same node to (2.97, 4.44), 2.10 from the centre, clear and kept.
+*Sample, step, keep if free.*
 
 ![Two steps](../assets/clip-example.mp4)
 
-*The first step ends inside the rock and is dropped (red); the second is clear.*
+*The first step ends inside the rock and is dropped. The second is clear.*
+
+The path found this way wanders. Replace any part of it by a straight shortcut whenever the shortcut is free.
 
 ![Tree and path](../assets/fig-rrt-tree-path.png)
 
-*Left: tree and first path, 17.96. Right: after shortcutting, 14.86.*
+*Left: the tree and its first path. Right: after shortcuts.*
 
 ![Shortcutting](../assets/diagram-shortcut.png)
 
-*If the straight segment between two path points is free, drop the points between.*
+*If the straight line is free, drop the points between.*
 
 ![Lengths](../assets/fig-rrt-lengths.png)
 
-*Over 20 seeds, shortcutting shortens every path; none beats the straight line.*
+*Shortcuts shorten every path.*
+
+<details><summary>The math (optional)</summary>
+
+Each sample pulls its nearest node one step of at most `step`; one sample in ten is the goal itself. With `step = 0.4` and a rock at (5, 5) with radius 2, the sample (6.86, 6.5) in iteration 11 pulls node (3.12, 4.07) to (3.46, 4.29), 1.70 from the centre and inside the rock, so `seg_free` fails and the step is dropped. The sample (2.27, 6.23) in iteration 17 pulls the same node to (2.97, 4.44), 2.10 from the centre: kept. `seg_free` uses the closest point of the segment to each circle centre, so it catches segments with both endpoints outside. The first path is 17.96 long and 14.86 after shortcutting. Over 20 seeds shortcutting shortens every path, never below the straight line. One seed gives one tree.
+
+</details>
 
 ## Build It
 
@@ -59,7 +65,7 @@ if not seg_free(buf[i], new, obstacles):
 buf[n] = new; parent.append(i); n += 1
 ```
 
-`seg_free` finds the segment's closest point to each circle centre, so it catches segments with both ends outside. One seed, one tree.
+`seg_free` checks a whole step against every circle. The same seed gives the same tree.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -69,7 +75,7 @@ python3 phases/09-motion-planning/02-rrt/code/main.py
 
 ## Use It
 
-Past thousands of nodes, swap the nearest search for `scipy.spatial.cKDTree`; a test checks both agree.
+With thousands of nodes, swap the plain nearest search for `scipy.spatial.cKDTree`; a test checks both agree.
 
 Sources: [RRT, Wikipedia](https://en.wikipedia.org/wiki/Rapidly-exploring_random_tree) and [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf), both opened 2026-11-09.
 
@@ -79,6 +85,6 @@ Sources: [RRT, Wikipedia](https://en.wikipedia.org/wiki/Rapidly-exploring_random
 
 ## Exercises
 
-1. Set `goal_bias` to 0 and to 0.5; compare node counts over 10 seeds.
-2. Check only endpoints in `seg_free`; find an edge that cuts through a thin obstacle.
-3. Run `shortcut` twice; see if a second pass helps.
+1. Change how often the goal is sampled and watch the tree.
+2. Make an obstacle very thin and see whether a step can cut through it.
+3. Run the shortcut step twice and see whether it helps again.
