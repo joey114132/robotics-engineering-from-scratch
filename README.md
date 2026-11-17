@@ -10,6 +10,19 @@ A free, beginner-first course on how robots work. No robotics background needed:
 
 87 short lessons (about 15 minutes each) in 17 phases: robot arms, wheeled and walking robots, drones, cameras and sensors, path planning, robot learning, robot teams and safety. Full list: [ROADMAP.md](ROADMAP.md).
 
+## Questions you will be able to answer
+
+Each one is a 15-minute lesson with a small program you can run.
+
+- [Why does a robot that is standing perfectly still think it is rolling away?](phases/07-state-estimation/03-imu-integration-and-drift/docs/en.md)
+- [Why must a drone tilt before it can move sideways?](phases/10-legged-and-aerial/03-quadrotor-model/docs/en.md)
+- [How does a walking robot know early that it is about to fall, and where to step?](phases/10-legged-and-aerial/01-inverted-pendulum-and-zmp/docs/en.md)
+- [Why can a robot say it came home when it did not?](phases/08-mobile-robots/01-differential-drive-and-odometry/docs/en.md)
+- [Why does a gearbox make a heavy load feel almost weightless to the motor?](phases/04-actuators-and-sensors/01-motor-and-gearbox/docs/en.md)
+- [How does a lost robot find itself after someone picks it up and moves it?](phases/08-mobile-robots/02-particle-filter-localisation/docs/en.md)
+
+New to all of this? Start with [What Is a Robot](phases/00-start-here/01-what-is-a-robot/docs/en.md).
+
 ## Who this is for
 
 You have never studied robotics. You can write a little Python (variables, loops, functions). You remember high-school math. That is enough. Every new word is explained the first time it appears, and each lesson starts with a short story in everyday words before any math.
@@ -100,7 +113,7 @@ Forks and pull requests are welcome, from a typo to a whole new lesson. Run the 
 
 MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The Bolt mascot picture below, the 17 phase covers, the social card background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures are drawn in code, not generated.
 
-To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw` and `node scripts/readme_shots.cjs cli`.
+To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw`, `node scripts/readme_shots.cjs cli` and `node scripts/social_card.cjs`.
 
 <img src="docs/img/hero-bolt.jpg" width="360" alt="Bolt, the course mascot, waves in a toy robotics workshop while a small arm lifts a hex nut and a drone drifts past">
 
