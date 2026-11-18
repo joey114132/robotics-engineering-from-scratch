@@ -2,23 +2,23 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "A loop is stable on the bench but buzzes on the real controller with the same gains. First suspect?",
+  "question": "Your bench arm is stable on the bench rig but buzzes on the real controller with the same gains. What do you suspect first?",
   "options": [
-   "The motor torque constant",
-   "Unaccounted loop delay",
-   "Encoder resolution only"
+   "A small error in the motor torque constant",
+   "The encoder resolution being too coarse",
+   "A loop delay that was never accounted for"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "Delay removes phase margin without changing the gains."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Delay margin of a loop equals?",
+  "question": "You are checking your bench arm's loop. Which expression of PM and wc is its delay margin?",
   "options": [
-   "PM / wc",
-   "PM * wc",
-   "wc / PM"
+   "PM / wc, phase margin over crossover",
+   "wc / PM, crossover over phase margin",
+   "PM * wc, phase margin times crossover"
   ],
   "answer": 0,
   "explanation": "A delay T costs wc*T of phase, so T = PM / wc uses it all."
@@ -26,47 +26,47 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "A zero-order-hold command lags an ideal continuous one by?",
+  "question": "Your bench arm holds each command for one sample period. How far does this zero-order-hold command lag an ideal continuous one?",
   "options": [
-   "A full period",
-   "Half a period",
-   "Nothing"
+   "A full sample period every time",
+   "Nothing, since the command is exact",
+   "Half a sample period on average"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "On average the held value is half a period old."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Does a pure delay change the loop gain magnitude?",
+  "question": "A pure delay sits between your sensor and your bench arm's motor. Does it change the loop gain magnitude?",
   "options": [
-   "Yes, it lowers it",
-   "No, only the phase",
-   "Yes, it raises it"
+   "Yes, it lowers it at high frequency",
+   "Yes, it raises it near crossover",
+   "No, it only adds a phase shift"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "exp(-j*w*T) has magnitude one."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "With a fixed delay, raising kd far past its optimum does what to the delay margin?",
+  "question": "With the delay fixed, you keep raising your bench arm's kd far past its optimum. What happens to the delay margin?",
   "options": [
-   "Raises it without limit",
-   "Lowers it, because the crossover rises faster than the margin",
-   "Leaves it unchanged"
+   "Lowers it, because the crossover rises faster",
+   "Leaves it unchanged, since the delay is fixed",
+   "Raises it, since more braking is always safer"
   ],
-  "answer": 1,
+  "answer": 0,
   "explanation": "Delay margin falls roughly as 1/kd at high kd."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your budget grows by 3 ms. Best response?",
+  "question": "Your bench arm's delay budget grows by 3 ms. What is the best response?",
   "options": [
-   "Recompute the largest safe kd",
-   "Raise kp to compensate",
-   "Ignore it, 3 ms is small"
+   "Recompute the largest safe kd again",
+   "Raise kp to make up for the lost margin",
+   "Ignore it, because 3 ms is so small"
   ],
   "answer": 0,
   "explanation": "The safe kd shrinks as the loop delay grows."

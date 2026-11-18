@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "서 있는 몸이 밀렸고 발목 토크가 한계입니다. 넘어질지는 무엇이 결정합니까?", "options": ["capture point가 발 안에 있는지", "발바닥의 색", "제어 루프의 언어"], "answer": 0, "explanation": "발목은 ZMP를 발 안에서만 옮길 수 있으므로 xi가 발 밖이면 걸음이 필요합니다."},
-  {"id": 2, "stage": "check", "question": "x'' = (g/h)(x - p)의 time constant는 무엇입니까?", "options": ["sqrt(g/h)", "sqrt(h/g)", "h/g"], "answer": 1, "explanation": "exp(t/Tc)를 대입하면 1/Tc^2 = g/h입니다."},
-  {"id": 3, "stage": "check", "question": "몸의 높이가 4배가 되면 Tc는 어떻게 됩니까?", "options": ["2배", "4배", "절반"], "answer": 0, "explanation": "Tc는 sqrt(h)에 비례합니다."},
-  {"id": 4, "stage": "check", "question": "발을 capture point 위에 정확히 놓으면 몸은 어떻게 됩니까?", "options": ["계속 가속합니다", "그 점 위에서 정지합니다", "영원히 진동합니다"], "answer": 1, "explanation": "xi' = (xi - p)/Tc가 0이 되고 속도는 0으로 줄어듭니다."},
-  {"id": 5, "stage": "post", "question": "ZMP를 바르게 설명한 것은 무엇입니까?", "options": ["바닥 어디든 있을 수 있다", "지지 영역 안에 있어야 한다", "capture point와 같다"], "answer": 1, "explanation": "지면은 밀기만 하므로 힘의 작용점은 접촉 영역 안에 있어야 합니다."},
-  {"id": 6, "stage": "post", "question": "같은 밀침을 키 큰 로봇이 받으면 키 작은 로봇에 비해", "options": ["반응할 시간이 더 짧습니다", "반응할 시간이 더 깁니다", "차이가 없습니다"], "answer": 1, "explanation": "h가 클수록 Tc가 커서 발산이 느립니다."}
+  {"id": 1, "stage": "pre", "question": "작업대의 보행 로봇을 뒤에서 밀었더니 발목 토크가 한계입니다. 넘어질지는 무엇이 결정합니까?", "options": ["몸무게가 발 크기에 비해 얼마나 무거운지", "capture point가 발 안에 있는지", "질량 중심이 지금 발 바로 위에 있는지"], "answer": 1, "explanation": "발목은 ZMP를 발 안에서만 옮길 수 있으므로 xi가 발 밖이면 걸음이 필요합니다."},
+  {"id": 2, "stage": "check", "question": "보행 로봇을 x'' = (g/h)(x - p)로 모델링했습니다. time constant는 무엇입니까?", "options": ["sqrt(h/g)", "sqrt(g/h)", "sqrt(2h/g)"], "answer": 0, "explanation": "exp(t/Tc)를 대입하면 1/Tc^2 = g/h입니다."},
+  {"id": 3, "stage": "check", "question": "보행 로봇을 다시 만들어 몸의 높이가 4배가 되었습니다. Tc는 어떻게 됩니까?", "options": ["2배가 됩니다", "4배가 됩니다", "절반으로 줄어듭니다"], "answer": 0, "explanation": "Tc는 sqrt(h)에 비례합니다."},
+  {"id": 4, "stage": "check", "question": "보행 로봇이 발을 capture point 위에 정확히 내딛습니다. 몸은 어떻게 됩니까?", "options": ["같은 속도로 지나칩니다", "더 천천히 넘어집니다", "그 점 위에서 정지합니다"], "answer": 2, "explanation": "xi' = (xi - p)/Tc가 0이 되고 속도는 0으로 줄어듭니다."},
+  {"id": 5, "stage": "post", "question": "보행 로봇을 조정하다 ZMP를 확인합니다. ZMP를 바르게 설명한 것은 무엇입니까?", "options": ["capture point와 같다", "항상 몸 바로 아래에 있다", "지지 영역 안에 머물러야 한다"], "answer": 2, "explanation": "지면은 밀기만 하므로 힘의 작용점은 접촉 영역 안에 있어야 합니다."},
+  {"id": 6, "stage": "post", "question": "키 큰 보행 로봇과 키 작은 보행 로봇을 같은 힘으로 밀었습니다. 키 큰 쪽은 작은 쪽에 비해", "options": ["반응할 시간이 더 짧습니다", "중력이 같으므로 시간도 같습니다", "반응할 시간이 더 깁니다"], "answer": 2, "explanation": "h가 클수록 Tc가 커서 발산이 느립니다."}
 ]

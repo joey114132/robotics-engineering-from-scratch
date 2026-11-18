@@ -2,35 +2,35 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "You tune kp and kd by feel on a state-space model. What does LQR change?",
+  "question": "You tune your toy car's kp and kd by feel on a state-space model. What does LQR change?",
   "options": [
-   "You pick two cost weights and the gain follows",
-   "It removes the need for a model",
-   "It guarantees no saturation"
+   "It guarantees no motor saturation at any start",
+   "It removes the need for a model of the car",
+   "You pick two cost weights, the gain follows"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Q and R state the trade, and the Riccati recursion computes K."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "In LQR what does R price?",
+  "question": "In your toy car's LQR cost, what does R price?",
   "options": [
-   "Control effort",
-   "State error",
-   "Sample time"
+   "State error, the miss from the stop line",
+   "Control effort, the size of the push",
+   "Sample time, how long each tick lasts"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "The cost is x'Qx + u'Ru. R multiplies the input."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "R is made ten times larger. What happens to the first push?",
+  "question": "You make your toy car's R ten times larger. What happens to the first push?",
   "options": [
-   "It gets smaller",
-   "It gets larger",
-   "It does not change"
+   "It gets smaller, so the car pushes more gently",
+   "It stays the same, since only Q sets the first push",
+   "It gets larger, because the car must catch up"
   ],
   "answer": 0,
   "explanation": "Effort is more expensive, so the optimiser uses less of it and settles more slowly."
@@ -38,11 +38,11 @@
  {
   "id": 4,
   "stage": "check",
-  "question": "The Riccati loop stops when...",
+  "question": "You compute your toy car's gains with the Riccati loop. When does the loop stop?",
   "options": [
-   "P stops changing",
-   "K reaches 1",
-   "x reaches 0"
+   "P stops changing between repeats",
+   "The state x reaches 0 on the rollout",
+   "The gain K reaches the value 1"
   ],
   "answer": 0,
   "explanation": "A steady P is the fixed point that defines the optimal gain."
@@ -50,25 +50,25 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "For the optimal K, what is the cost of the whole run from state x0?",
+  "question": "For the optimal K, what is the cost of your toy car's whole run from state x0?",
   "options": [
-   "x0' P x0",
-   "x0' Q x0",
-   "K x0"
+   "K x0, the first push applied to the car",
+   "x0' Q x0, the error weight at the start state",
+   "x0' P x0, with P from the settled Riccati loop"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "P holds the cost-to-go of every state."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "For a specified start, the first LQR push is too large. Which is a sensible effort-reduction trial, without claiming a hard limit?",
+  "question": "Your toy car's first LQR push from a specified start is too large. Which is a sensible effort-reduction trial, without claiming a hard limit?",
   "options": [
-   "Raise R, recompute K and check the full rollout",
-   "Clip the command and hope",
-   "Lower Q to zero"
+   "Clip the first command and skip the rollout check",
+   "Set Q to zero so the cost counts only the effort",
+   "Raise R, recompute K and check the full rollout"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "R penalizes effort, not a hard limit. Test the new gain for the specified starts; hard limits need explicit constraints or separately validated saturation handling."
  }
 ]

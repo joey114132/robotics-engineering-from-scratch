@@ -2,23 +2,23 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Why is a test that only checks the controller returns a number weak for robot code?",
+  "question": "You write a test that only checks your controller returns a number. Why is that weak for robot code?",
   "options": [
-   "It is too slow",
-   "It needs hardware",
-   "It passes even when the sign is wrong and the joint runs away"
+   "It passes even with the wrong sign and a runaway joint",
+   "It takes too long to run after every change to the code",
+   "It cannot run unless the real arm is connected"
   ],
-  "answer": 2,
+  "answer": 0,
   "explanation": "The output is a number either way."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "What does a FakeClock buy you?",
+  "question": "Your controller test needs seconds to pass. What does a FakeClock buy you?",
   "options": [
-   "Faster hardware",
-   "Seconds of controller time pass instantly and repeatably",
-   "A better encoder"
+   "A more accurate model of the motor's own physics",
+   "Controller seconds that pass instantly each time",
+   "A recording of a real clock from a good run"
   ],
   "answer": 1,
   "explanation": "The test decides when time moves."
@@ -26,47 +26,47 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "Which test would catch a changed sign from a recorded trace?",
+  "question": "You suspect a change flipped your controller's sign. Which test would catch it from a recorded trace?",
   "options": [
+   "A property test on random inputs and the torque limit",
    "A replay test comparing outputs to the recording",
-   "A test that checks the file exists",
-   "A test that sleeps 1 s"
+   "A unit test that only checks the output is a number"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "The recorded inputs give a different torque through the bug."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "What does the property test assert?",
+  "question": "You write a property test for your controller. What does it assert?",
   "options": [
-   "Torque equals 5 Nm",
-   "The joint reaches the target",
-   "Torque is finite and within the limit for every random input"
+   "The joint reaches the target for every random input",
+   "Torque is finite and within limits for any input",
+   "Torque comes out the same for every random input"
   ],
-  "answer": 2,
+  "answer": 1,
   "explanation": "One rule over many inputs, NaN and huge values included."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Why should MockJoint raise on an over-limit command?",
+  "question": "Your MockJoint stands in for the arm in tests. Why should it raise on an over-limit command?",
   "options": [
-   "To speed up the run",
-   "So a bad command fails the test where it happens",
-   "To record more data"
+   "So the replay recording still keeps the bad command",
+   "So the test ends sooner and saves a lot of time",
+   "So a bad command fails the test where it happens"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "The failure points at the offending call."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "After a deliberate gain change the replay test fails. What next?",
+  "question": "You changed your controller's gains on purpose and the replay test now fails. What next?",
   "options": [
    "Check the change is intended, then re-record",
-   "Delete the test",
-   "Loosen the tolerance to pass"
+   "Widen the tolerance until the test passes",
+   "Re-record right away, without reading the diff"
   ],
   "answer": 0,
   "explanation": "A replay fails on any behaviour change, and a person decides which are real."

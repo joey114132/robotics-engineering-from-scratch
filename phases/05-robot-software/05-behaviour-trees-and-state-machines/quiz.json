@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "Why do nested ifs in one callback struggle with a retry?", "options": ["They run too fast", "They forget which step was already done between cycles", "They cannot call functions"], "answer": 1, "explanation": "Without stored progress each cycle starts from scratch or needs a pile of flags."},
-  {"id": 2, "stage": "check", "question": "A Sequence child returns failure. What does the Sequence do?", "options": ["Runs the next child", "Stops and returns failure", "Returns success"], "answer": 1, "explanation": "A Sequence needs every child to succeed, so the first failure ends it."},
-  {"id": 3, "stage": "check", "question": "A Fallback child returns failure. What does the Fallback do?", "options": ["Tries the next child", "Stops with failure", "Restarts the first child"], "answer": 0, "explanation": "A Fallback looks for one child that works, so it moves on after a failure."},
-  {"id": 4, "stage": "check", "question": "A Sequence child returns running. On the next tick the Sequence should", "options": ["restart from its first child", "resume at that child and skip the finished ones", "return failure"], "answer": 1, "explanation": "Remembering the running child keeps finished steps from repeating."},
-  {"id": 5, "stage": "post", "question": "Retry(3) wraps a grasp that fails twice, then succeeds. What does the Retry return on the first two cycles?", "options": ["failure", "running", "success"], "answer": 1, "explanation": "It turns a failure into running until its tries run out."},
-  {"id": 6, "stage": "post", "question": "Why is adding a retry easier in a tree than in a state machine?", "options": ["Trees are faster", "One node wraps one child, while a table needs edits in every state that can fail", "State machines cannot retry"], "answer": 1, "explanation": "A state machine lists the exits of each state separately."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "You write your arm's fetch task as nested ifs in one callback. Why do they struggle with a retry?",
+  "options": [
+   "They cannot read any sensor values inside a callback",
+   "They forget which step was already done between cycles",
+   "They check conditions too slowly to catch a failure in time"
+  ],
+  "answer": 1,
+  "explanation": "Without stored progress each cycle starts from scratch or needs a pile of flags."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "In your arm's fetch tree, a Sequence child returns failure. What does the Sequence do?",
+  "options": [
+   "Returns success to its own parent",
+   "Stops at once and returns failure",
+   "Skips that child and runs the next one"
+  ],
+  "answer": 1,
+  "explanation": "A Sequence needs every child to succeed, so the first failure ends it."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "In your arm's fetch tree, a Fallback child returns failure. What does the Fallback do?",
+  "options": [
+   "Returns failure to its own parent",
+   "Restarts from its first child",
+   "Tries the next child in order"
+  ],
+  "answer": 2,
+  "explanation": "A Fallback looks for one child that works, so it moves on after a failure."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "In your arm's fetch tree, a Sequence child returns running. On the next tick the Sequence should",
+  "options": [
+   "resume at that child and skip finished ones",
+   "return failure so its parent can retry later",
+   "restart from its first child to be on the safe side"
+  ],
+  "answer": 0,
+  "explanation": "Remembering the running child keeps finished steps from repeating."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Retry(3) wraps your arm's grasp, which fails twice, then succeeds. What does the Retry return on the first two cycles?",
+  "options": [
+   "failure, passed up to the parent at once",
+   "success, since the grasp works in the end",
+   "running, while it still has tries left"
+  ],
+  "answer": 2,
+  "explanation": "It turns a failure into running until its tries run out."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "You want your arm's fetch task to retry a missed grasp. Why is adding a retry easier in a tree than in a state machine?",
+  "options": [
+   "A state machine cannot repeat any state, but a tree repeats any node",
+   "One node wraps the step, but a table needs edits per failing state",
+   "Trees run each cycle faster, so a retry costs less in a tree"
+  ],
+  "answer": 1,
+  "explanation": "A state machine lists the exits of each state separately."
+ }
 ]

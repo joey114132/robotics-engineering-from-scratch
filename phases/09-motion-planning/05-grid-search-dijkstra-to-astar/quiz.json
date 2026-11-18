@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "What is the only difference between Dijkstra and A* in this lesson?",
+  "question": "Your blue Dijkstra rover and green A* rover search the same map. What is the only difference between them in this lesson?",
   "options": [
-   "A* adds a goal-distance guess to the priority",
-   "A* uses a different grid",
-   "Dijkstra ignores walls"
+   "Dijkstra ignores the walls but A* respects them",
+   "A* searches a coarser version of the same grid",
+   "A* adds a goal-distance guess to its priority"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Both expand the cell with the smallest priority."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "When does A* with Manhattan distance return the same cost as Dijkstra?",
+  "question": "Your green A* rover uses the Manhattan distance. When does it return the same cost as the blue Dijkstra rover?",
   "options": [
-   "The weight is above 1",
-   "The heuristic never overestimates the true cost",
-   "The grid is empty"
+   "The heuristic never overestimates the cost",
+   "A* has expanded more squares than Dijkstra would",
+   "The weight w is set well above 1 on a big map"
   ],
-  "answer": 1,
+  "answer": 0,
   "explanation": "Admissible heuristics keep A* optimal."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "What does Dijkstra equal in A* terms?",
+  "question": "Your blue rover runs Dijkstra and your green rover runs A*. What does Dijkstra equal in A* terms?",
   "options": [
-   "A* with w = 10",
    "A* without walls",
-   "A* with h = 0"
+   "A* with h = 0",
+   "A* with w = 10"
   ],
-  "answer": 2,
+  "answer": 1,
   "explanation": "With no guess, priority is just g."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "A weight w = 4 on the trap map does what?",
+  "question": "You give your blue rover a weight w = 4 on the trap map. What does that do?",
   "options": [
-   "Expands fewer cells but returns a longer path",
-   "Expands more cells",
-   "Finds the best path faster with no loss"
+   "Expands more cells but finds a shorter path",
+   "Expands fewer cells but finds a longer path",
+   "Finds the best path faster with no loss at all"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "The near gap looks cheap, and it costs 36 instead of 26."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "What bounds the damage of weighted A*?",
+  "question": "You raise the weight on your blue rover so it rushes toward the flag. What bounds the damage of weighted A*?",
   "options": [
-   "The grid size",
-   "The path costs at most w times the best",
-   "Nothing"
+   "The path costs at most w times the best path",
+   "Nothing, since weighted A* can be arbitrarily bad",
+   "The number of squares expanded before the goal"
   ],
-  "answer": 1,
+  "answer": 0,
   "explanation": "Scaling an admissible heuristic by w gives a bound of w."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "On an empty grid, how many cells does A* expand?",
+  "question": "Your green A* rover crosses an empty grid. How many cells does A* expand?",
   "options": [
-   "The whole grid",
-   "Half the grid",
-   "Only the cells on its final path"
+   "Only the cells along its final path",
+   "About half the grid around the start",
+   "Nearly the whole grid, like Dijkstra"
   ],
-  "answer": 2,
+  "answer": 0,
   "explanation": "Manhattan is exact there, so it never looks off-path."
  }
 ]

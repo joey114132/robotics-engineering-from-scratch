@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "점이 원점 둘레로 돌 때 그대로인 것은 무엇입니까?", "options": ["원점과의 거리", "옆으로 간 숫자", "위로 간 숫자"], "answer": 0, "explanation": "돌면 방향만 바뀝니다. 원점과의 거리는 그대로입니다."},
-  {"id": 2, "stage": "check", "question": "(1, 0)을 반시계 방향으로 4분의 1 바퀴 돌리면 어디에 놓입니까?", "options": ["(1, 0)", "(0, 1)", "(-1, 0)"], "answer": 1, "explanation": "똑바로 옆에 있던 점이 똑바로 위로 갑니다."},
-  {"id": 3, "stage": "check", "question": "rotation matrix는 무엇입니까?", "options": ["joint 목록", "경첩의 한 종류", "각도의 cos와 sin으로 만든 숫자 표"], "answer": 2, "explanation": "이 표를 점과 곱하면 점이 돕니다."},
-  {"id": 4, "stage": "check", "question": "점을 20도 돌리고 이어서 55도 돌렸습니다. 몇 도 한 번 돌린 것과 같습니까?", "options": ["35", "75", "1100"], "answer": 1, "explanation": "회전은 더해집니다. 20 + 55 = 75입니다."},
-  {"id": 5, "stage": "post", "question": "numpy에서 `table @ point`는 무엇을 합니까?", "options": ["표를 점에 더합니다", "표를 점과 곱해서 점을 돌립니다", "점을 그립니다"], "answer": 1, "explanation": "@는 numpy의 표 곱셈이고 회전 표를 점에 곱하면 점이 돕니다."},
-  {"id": 6, "stage": "post", "question": "각도가 0인 회전은 무엇을 합니까?", "options": ["점을 그 자리에 둡니다", "점을 원점으로 옮깁니다", "점을 뒤집습니다"], "answer": 0, "explanation": "cos 0은 1이고 sin 0은 0이라 점이 그대로입니다."}
+  {"id": 1, "stage": "pre", "question": "드론이 제자리에서 돌고 코앞의 marker 공이 원점 둘레로 돕니다. 그대로인 것은 무엇입니까?", "options": ["옆 숫자와 위 숫자 둘 다", "원점에서 떨어진 거리", "원점에서 바라본 방향"], "answer": 1, "explanation": "돌면 방향만 바뀝니다. 원점과의 거리는 그대로입니다."},
+  {"id": 2, "stage": "check", "question": "드론의 marker가 (1, 0)에 있습니다. 반시계 방향으로 4분의 1 바퀴 돌리면 어디에 놓입니까?", "options": ["(0, 1)", "(1, 0)", "(-1, 0)"], "answer": 0, "explanation": "똑바로 옆에 있던 점이 똑바로 위로 갑니다."},
+  {"id": 3, "stage": "check", "question": "드론의 회전을 numpy용 숫자 표로 적습니다. rotation matrix는 무엇입니까?", "options": ["joint가 쓸 수 있는 각도 목록", "각 link의 길이를 적은 표", "각도의 cos와 sin으로 만든 표"], "answer": 2, "explanation": "이 표를 점과 곱하면 점이 돕니다."},
+  {"id": 4, "stage": "check", "question": "드론이 20도 돌고 이어서 55도 돕니다. 몇 도 한 번 돌린 것과 같습니까?", "options": ["75", "1100", "35"], "answer": 0, "explanation": "회전은 더해집니다. 20 + 55 = 75입니다."},
+  {"id": 5, "stage": "post", "question": "드론 코드에 `table @ point` 줄이 있습니다. numpy에서 이 줄은 무엇을 합니까?", "options": ["표를 점의 숫자와 곱합니다", "표와 점을 한 목록에 묶습니다", "표를 점의 숫자에 더합니다"], "answer": 0, "explanation": "@는 numpy의 표 곱셈이고 회전 표를 점에 곱하면 점이 돕니다."},
+  {"id": 6, "stage": "post", "question": "드론에게 각도가 0인 회전을 시킵니다. 이 회전은 marker를 어떻게 합니까?", "options": ["점을 반대편으로 뒤집습니다", "점을 원점으로 옮겨 놓습니다", "점을 그대로 둡니다"], "answer": 2, "explanation": "cos 0은 1이고 sin 0은 0이라 점이 그대로입니다."}
 ]

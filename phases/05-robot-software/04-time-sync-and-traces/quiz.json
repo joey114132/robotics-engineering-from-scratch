@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "Camera and IMU samples come from two computers and the fused result jumps backwards, yet every sample is correct. What do you suspect?", "options": ["The two clocks disagree and reorder the samples", "The camera lens is dirty", "The IMU is too slow"], "answer": 0, "explanation": "A clock offset larger than the gap between events changes their sorted order."},
-  {"id": 2, "stage": "check", "question": "Which formula gives the server minus client offset from t0, t1, t2 and t3?", "options": ["((t1 - t0) + (t2 - t3)) / 2", "(t3 - t0) / 2", "(t1 + t2) - (t0 + t3)"], "answer": 0, "explanation": "It averages the two one-way differences, so equal delays cancel exactly."},
-  {"id": 3, "stage": "check", "question": "Forward delay is 30 ms and return delay is 10 ms. What is the offset error?", "options": ["0 ms", "10 ms", "20 ms"], "answer": 1, "explanation": "The error is half the difference of the two delays."},
-  {"id": 4, "stage": "check", "question": "Of several exchanges, which one do you trust most?", "options": ["The one with the smallest round trip", "The first one", "The one with the largest offset"], "answer": 0, "explanation": "A small round trip leaves little room for asymmetric delay."},
-  {"id": 5, "stage": "post", "question": "A trace line has pre equal to post although the intent asked for a move. What does the reader report?", "options": ["not_executed", "no_motion", "wrong_motion"], "answer": 1, "explanation": "The step ran, but the state did not change."},
-  {"id": 6, "stage": "post", "question": "A run fails at step 40, but the trace shows a wrong move at step 12. Where do you start debugging?", "options": ["Step 40", "Step 12", "The last line of the log"], "answer": 1, "explanation": "The first mismatch is the earliest point where the run stopped matching its intent."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Your car's camera and IMU run on two computers and the fused position jumps backwards, yet every sample is correct. What do you suspect?",
+  "options": [
+   "The two clocks disagree and reorder the samples",
+   "The fusion filter gain is set much too high",
+   "The IMU sample rate is lower than the camera's"
+  ],
+  "answer": 0,
+  "explanation": "A clock offset larger than the gap between events changes their sorted order."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "You sync your car's two computers with a time request. Which formula gives the server minus client offset from t0, t1, t2 and t3?",
+  "options": [
+   "(t3 - t0) / 2 + (t2 - t1) / 2",
+   "((t1 - t0) + (t2 - t3)) / 2",
+   "((t1 - t0) - (t2 - t3)) / 2"
+  ],
+  "answer": 1,
+  "explanation": "It averages the two one-way differences, so equal delays cancel exactly."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Your car's time request takes 30 ms to go out and 10 ms to come back. What is the offset error?",
+  "options": [
+   "0 ms, the delays cancel",
+   "20 ms, the full difference",
+   "10 ms of offset error"
+  ],
+  "answer": 2,
+  "explanation": "The error is half the difference of the two delays."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "You ran several time requests between your car's two computers. Which exchange do you trust most?",
+  "options": [
+   "The one with the largest measured offset",
+   "The first exchange, before the clocks drift",
+   "The exchange with the smallest round trip"
+  ],
+  "answer": 2,
+  "explanation": "A small round trip leaves little room for asymmetric delay."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "You read your car's trace. One line has pre equal to post though the intent asked for a move. What does the reader report?",
+  "options": [
+   "not_executed, the step never ran",
+   "no_motion, ran but nothing changed",
+   "wrong_motion, it moved the wrong way"
+  ],
+  "answer": 1,
+  "explanation": "The step ran, but the state did not change."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Your car's run fails at step 40, but the trace shows a wrong move at step 12. Where do you start debugging?",
+  "options": [
+   "Step 12, the first mismatch",
+   "Step 40, where the run failed",
+   "The last line, where it ended"
+  ],
+  "answer": 0,
+  "explanation": "The first mismatch is the earliest point where the run stopped matching its intent."
+ }
 ]

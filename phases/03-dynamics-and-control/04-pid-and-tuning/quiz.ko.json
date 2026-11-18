@@ -1,74 +1,74 @@
 [
-{
-"id": 1,
-"stage": "pre",
-"question": "관절이 진동해서 kp와 kd를 같이 올렸습니다. 무엇이 잘못될 수 있습니까?",
-"options": [
-"없다, gain이 클수록 감쇠가 커진다",
-"kd가 샘플링 한계를 넘으면 명령이 tick마다 부호를 뒤집는다",
-"encoder 잡음만 달라진다"
-],
-"answer": 1,
-"explanation": "tick 동안 유지되는 명령은 낡은 속도에 작용하므로 kd가 크면 덜덜 떨립니다(레슨 03/01)."
-},
-{
-"id": 2,
-"stage": "check",
-"question": "PD 제어(I 없음)에 일정한 부하 토크가 걸립니다. 정상 오차는 얼마입니까?",
-"options": [
-"load * kp",
-"load / kp",
-"0"
-],
-"answer": 1,
-"explanation": "정지 상태에서는 kp * e = load입니다."
-},
-{
-"id": 3,
-"stage": "check",
-"question": "적분 항은 무엇을 고칩니까?",
-"options": [
-"overshoot",
-"일정한 부하에서 생기는 정상 offset(남는 오차)",
-"센서 잡음"
-],
-"answer": 1,
-"explanation": "offset이 사라질 때까지 오차를 계속 더합니다."
-},
-{
-"id": 4,
-"stage": "check",
-"question": "windup은 왜 생깁니까?",
-"options": [
-"actuator가 한계에 있는 동안에도 적분기가 계속 더하기 때문이다",
-"kd가 너무 작기 때문이다",
-"loop가 너무 빠르기 때문이다"
-],
-"answer": 0,
-"explanation": "출력은 잘리지만 적분 상태는 잘리지 않습니다."
-},
-{
-"id": 5,
-"stage": "post",
-"question": "조건부 적분(conditional integration)은 언제 적분기를 멈춥니까?",
-"options": [
-"항상",
-"출력이 포화되었고 오차가 출력을 포화 쪽으로 더 밀 때",
-"오차가 0일 때"
-],
-"answer": 1,
-"explanation": "오차가 출력을 포화에서 끌어내릴 때는 계속 적분합니다."
-},
-{
-"id": 6,
-"stage": "post",
-"question": "폐루프 갱신 행렬의 가장 큰 고유값 크기가 1.3입니다. 어떻게 됩니까?",
-"options": [
-"움직임이 줄어든다",
-"움직임이 tick마다 커진다",
-"부드럽지만 느리다"
-],
-"answer": 1,
-"explanation": "크기가 1을 넘으면 커집니다."
-}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "장난감 자동차가 정지선 앞에서 떨려서 kp와 kd를 함께 올립니다. 무엇이 잘못될 수 있습니까?",
+  "options": [
+   "encoder 잡음만 더 크게 증폭되고 다른 것은 같다",
+   "아무 문제 없다, gain이 클수록 감쇠만 더 커진다",
+   "kd가 샘플링 한계를 넘으면 명령이 부호를 뒤집는다"
+  ],
+  "answer": 2,
+  "explanation": "tick 동안 유지되는 명령은 낡은 속도에 작용하므로 kd가 크면 덜덜 떨립니다(레슨 03/01)."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "장난감 자동차가 일정한 맞바람을 받으며 I 없는 PD 제어로 달립니다. 정상 오차는 얼마입니까?",
+  "options": [
+   "load / kp",
+   "load * kp",
+   "load / kp^2"
+  ],
+  "answer": 0,
+  "explanation": "정지 상태에서는 kp * e = load입니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "장난감 자동차의 컨트롤러에 적분 항을 넣습니다. 무엇을 고칩니까?",
+  "options": [
+   "속도 신호에 섞여 들어오는 센서 잡음 성분",
+   "일정한 부하 때문에 남는 정상 offset",
+   "setpoint를 빨리 바꾼 뒤의 overshoot"
+  ],
+  "answer": 1,
+  "explanation": "offset이 사라질 때까지 오차를 계속 더합니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "장난감 자동차의 모터가 한계에 있었다가 정지선을 지나쳐 굴러갑니다. windup은 왜 생깁니까?",
+  "options": [
+   "loop가 encoder 갱신보다 빨리 돌기 때문이다",
+   "actuator가 한계일 때도 적분기가 계속 더하기 때문이다",
+   "kd가 너무 작아서 관절을 제때 제동하지 못하기 때문이다"
+  ],
+  "answer": 1,
+  "explanation": "출력은 잘리지만 적분 상태는 잘리지 않습니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "장난감 자동차가 조건부 적분(conditional integration)을 씁니다. 적분기를 멈추는 때는 언제입니까?",
+  "options": [
+   "출력이 0을 넘어 양의 값으로 올라가 있는 동안 언제나",
+   "오차의 부호가 처음으로 뒤바뀌는 순간에만 잠깐",
+   "출력이 포화되고 오차가 더 깊은 포화로 밀 때"
+  ],
+  "answer": 2,
+  "explanation": "오차가 출력을 포화에서 끌어내릴 때는 계속 적분합니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "장난감 자동차의 loop를 검사하니 폐루프 갱신 행렬의 가장 큰 고유값 크기가 1.3입니다. 어떻게 됩니까?",
+  "options": [
+   "조금 넘쳤다가 부드럽게 자리를 잡는다",
+   "움직임이 줄어들지만 아주 천천히 줄어든다",
+   "움직임이 tick이 갈수록 계속 커진다"
+  ],
+  "answer": 2,
+  "explanation": "크기가 1을 넘으면 커집니다."
+ }
 ]

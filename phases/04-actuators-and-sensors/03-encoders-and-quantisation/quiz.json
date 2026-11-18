@@ -2,19 +2,19 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Why can a faster loop make slow-speed velocity noisier?",
+  "question": "Your bench joint turns slowly, and a faster control loop makes its speed reading noisier. Why?",
   "options": [
-   "The encoder loses counts",
-   "Differences cancel noise",
-   "The velocity step 2*pi/(CPR*dt) grows as dt shrinks"
+   "The encoder misses more counts at a faster rate",
+   "The speed step 2*pi/(CPR*dt) grows as dt shrinks",
+   "A faster loop adds more electrical noise per count"
   ],
-  "answer": 2,
+  "answer": 1,
   "explanation": "One count per shorter sample is a larger speed."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Smallest non-zero speed from a one-sample difference with CPR = 1000, dt = 1 ms?",
+  "question": "Your encoder has CPR = 1000 and you sample every dt = 1 ms. What is the smallest non-zero speed a one-sample difference can report?",
   "options": [
    "2*pi rad/s",
    "2*pi/1000 rad/s",
@@ -26,11 +26,11 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "A slow constant ramp is differenced. The long-run average velocity is?",
+  "question": "You turn your encoder disc slowly at a constant rate and difference the counts. What is the long-run average velocity?",
   "options": [
-   "Biased low",
-   "Correct",
-   "Always zero"
+   "Biased low, as most samples read zero",
+   "Unbiased, equal to the true speed",
+   "Zero until the speed passes a limit"
   ],
   "answer": 1,
   "explanation": "Counts add up, so only the sample-to-sample values are noisy."
@@ -38,37 +38,37 @@
  {
   "id": 4,
   "stage": "check",
-  "question": "An n-sample window velocity estimate trails an accelerating signal by?",
+  "question": "You estimate speed from a window of n samples while the disc speeds up. How far does the estimate trail the true speed?",
   "options": [
-   "n*dt",
-   "dt",
-   "n*dt/2"
+   "n*dt/2, half the window",
+   "n*dt, the full window length",
+   "dt, a single sample interval"
   ],
-  "answer": 2,
+  "answer": 0,
   "explanation": "The estimate describes the middle of the window."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Doubling the window length does what?",
+  "question": "You double the length of the window you use for the speed estimate. What happens?",
   "options": [
+   "Halves the step and keeps the same delay as it was",
    "Halves the velocity step and doubles the delay",
-   "Doubles the step and halves the delay",
-   "Changes only the delay"
+   "Halves both the velocity step and the delay"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "Step is step/n, delay is n*dt/2."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "The joint is slow most of the time and kd kicks it. Best first move?",
+  "question": "Your bench joint is slow most of the time and its kd term kicks it. What is the best first move?",
   "options": [
-   "Raise the loop rate",
-   "Use a longer window or timing between edges, and check the added delay",
-   "Remove kd entirely"
+   "Remove kd entirely and rely on the position error term alone",
+   "Raise the loop rate to catch more counts each second",
+   "Lengthen the window or time the edges, then check delay"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "Smoothing cures it, but you must budget for its delay."
  }
 ]

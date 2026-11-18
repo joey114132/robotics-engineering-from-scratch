@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Two fingers pinch a box and the box twists out. What can be missing?",
+  "question": "Your two-finger gripper pinches a box and the box twists out. What can be missing?",
   "options": [
-   "Force closure: the contacts cannot resist every load direction",
-   "More squeeze force always fixes it",
-   "A heavier box"
+   "A lighter box, because weight causes the twist",
+   "Force closure, so some loads cannot be resisted",
+   "A stronger squeeze, which always fixes it"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "Grip can fail even with strong squeeze if the contact wrenches do not span all directions."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "How many numbers does a planar wrench have?",
+  "question": "You write the load on your gripper's box as a planar wrench. How many numbers does it have?",
   "options": [
-   "Two",
-   "Three",
-   "Six"
+   "Six, as in three dimensions",
+   "Two: one push and one twist",
+   "Three: two pushes and a twist"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "fx, fy and one torque."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Two frictionless opposite contacts give how many independent wrench directions?",
+  "question": "Your gripper pinches the box with two frictionless opposite contacts. How many independent wrench directions do they give?",
   "options": [
-   "Two",
-   "Three",
-   "One"
+   "One, along the contact line",
+   "Three, as for any planar wrench",
+   "Two, one for each contact point"
   ],
-  "answer": 2,
+  "answer": 0,
   "explanation": "Both normals and torques lie on one line, so they span one direction in each sign."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "The test for force closure is?",
+  "question": "You check whether your gripper's grasp has force closure. What is the test?",
   "options": [
-   "The wrench hull contains the origin strictly inside",
-   "The contacts are on opposite sides",
-   "The squeeze force is above the weight"
+   "The contacts sit on opposite sides of the box",
+   "The wrench hull strictly contains the origin",
+   "The squeeze force is well above the weight"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "Then non-negative contact forces can balance any load."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Two jaws on a box 2 wide, mu = 0.4. Largest vertical offset that still closes?",
+  "question": "Your gripper's two jaws hold a box 2 wide with mu = 0.4. As one finger rises, at what vertical offset does epsilon first reach zero?",
   "options": [
-   "0.4",
-   "0.8",
-   "1.6"
+   "1.6, which is four times mu",
+   "0.4, which is equal to mu",
+   "0.8, which is two times mu"
   ],
-  "answer": 1,
-  "explanation": "The line joining the contacts must stay in the cone: offset / 2 <= mu."
+  "answer": 2,
+  "explanation": "At offset = 2 mu the origin reaches the hull boundary, so epsilon is zero."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "What does a very small epsilon on a closed grasp tell you?",
+  "question": "Your gripper's grasp is closed, but its epsilon is very small. What does that tell you?",
   "options": [
-   "The grasp is robust",
    "The grasp is fragile to small errors",
-   "The object is light"
+   "The grasp is robust against small errors",
+   "The contacts have very little friction"
   ],
-  "answer": 1,
+  "answer": 0,
   "explanation": "The origin is near a facet of the hull, so a small change opens the grasp."
  }
 ]

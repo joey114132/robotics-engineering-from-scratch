@@ -2,59 +2,59 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "A joint with a 100:1 gearbox behaves the same empty and loaded. Why?",
+  "question": "Your bench motor has a 100:1 gearbox and runs the same empty or carrying a heavy wheel. Why?",
   "options": [
-   "The motor is stronger at high speed",
-   "The load inertia reaches the motor divided by N squared",
-   "The encoder filters the load"
+   "The gearbox multiplies the load inertia by N at the motor",
+   "Back-EMF grows with the load and cancels the extra weight",
+   "The load inertia reaches the motor divided by N squared"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "At N = 100 the load is 10,000 times smaller on the motor side."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "How does motor torque change with speed at fixed voltage?",
+  "question": "You power a bench motor at a fixed voltage and spin it up. How does its torque change with speed?",
   "options": [
-   "It falls on a straight line to zero at the no-load speed",
-   "It rises with speed",
-   "It stays constant"
+   "It stays flat, then drops sharply above the rated speed",
+   "It falls linearly to zero at the no-load speed",
+   "It rises linearly with speed up to the rated speed"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "Back-EMF grows with speed, so current and torque fall linearly."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "A gearbox of ratio N is added. What happens at the output shaft?",
+  "question": "You bolt a gearbox of ratio N onto your bench motor. What happens at the output shaft?",
   "options": [
    "Torque / N, speed x N",
-   "Torque x N, speed x N",
-   "Torque x N, speed / N"
+   "Torque x N, speed / N",
+   "Torque x N, speed same"
   ],
-  "answer": 2,
+  "answer": 1,
   "explanation": "Power is conserved apart from losses."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Rotor inertia as felt on the output shaft of a ratio-N gearbox?",
+  "question": "You stand at the output shaft of a ratio-N gearbox. How heavy does the motor's own rotor inertia feel there?",
   "options": [
-   "J_r * N",
-   "J_r * N^2",
-   "J_r / N^2"
+   "J_r * N^2, the ratio is squared",
+   "J_r / N^2, as for the load inertia",
+   "J_r * N, scaling with the torque"
   ],
-  "answer": 1,
+  "answer": 0,
   "explanation": "Energy 0.5*J*w^2 is conserved when speed is divided by N."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Which ratio makes the drive see the load least?",
+  "question": "You hang the same heavy wheel behind a gearbox. Which ratio makes the drive see the load least?",
   "options": [
-   "N = 1",
-   "N = 10",
-   "N = 100"
+   "N = 1, no reduction at all",
+   "N = 10, only a mild reduction",
+   "N = 100, a large reduction"
   ],
   "answer": 2,
   "explanation": "The load share of the motor-side inertia falls as 1 / N^2."
@@ -62,11 +62,11 @@
  {
   "id": 6,
   "stage": "post",
-  "question": "You tuned a gearmotor empty and the load later doubles. A sound expectation for a high ratio?",
+  "question": "You tuned your bench gearmotor empty, then the wheel it carries doubles in weight. What is a sound expectation at a high ratio?",
   "options": [
-   "The motor-side response barely changes, so the load change must be sensed another way",
-   "The drive will detect it quickly",
-   "The motor will stall"
+   "The response barely moves, so sense the load elsewhere",
+   "The response lags badly, so the gains must be retuned now",
+   "The motor current jumps, so the drive can flag it"
   ],
   "answer": 0,
   "explanation": "A high ratio hides load changes from motor-side signals."

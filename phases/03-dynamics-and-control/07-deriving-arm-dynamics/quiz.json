@@ -2,59 +2,59 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Why can't you adapt M(q) from a textbook to a new arm?",
+  "question": "You bolt a heavier tool onto your bench arm. Why can't you simply adapt M(q) from a textbook?",
   "options": [
-   "You never saw where each term comes from",
-   "M is always constant",
-   "The formulas only work in simulation"
+   "The textbook M(q) only works in simulation",
+   "M(q) depends on the tool's mass distribution",
+   "The terms depend on the controller, not on the arm"
   ],
-  "answer": 0,
-  "explanation": "Rebuilding it from energy shows what to change for a new arm."
+  "answer": 1,
+  "explanation": "A new tool changes the mass distribution, so rebuild M(q) from energy to see what to change."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "For T = 1/2 qd' M qd, how do unit velocities give M?",
+  "question": "You build your bench arm's M from T = 1/2 qd' M qd. How do unit velocities give M?",
   "options": [
-   "T is exactly quadratic in qd, so T values at unit velocities are M entries",
-   "They are random samples",
-   "They give only the diagonal of gravity"
+   "Each unit velocity is one random sample, and M is their average",
+   "T is quadratic in qd, so T at unit velocities gives M",
+   "They give the gravity torque on each joint, not the inertia"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "The diagonals are 2T(e_i) and the off-diagonal is T(e0+e1) - T(e0) - T(e1)."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Why does a Coriolis term exist at all?",
+  "question": "Your bench arm's model contains a Coriolis term. Why does it exist at all?",
   "options": [
-   "M depends on the joint angles",
-   "Joints rotate",
-   "Gravity changes"
+   "Gravity changes with the pose of the arm",
+   "M depends on the joint angles of the arm",
+   "Joint friction grows with the angular speed"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "If M were constant, d/dt(M qd) would have no velocity-squared term."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Two derivations give different torques at one state. What do you conclude?",
+  "question": "Your Lagrange and Newton-Euler derivations of the bench arm give different torques at one state. What do you conclude?",
   "options": [
-   "At least one has a bug",
-   "Both are right",
-   "The arm is not rigid"
+   "Both are right, as each uses its own convention",
+   "The arm is not rigid, so the methods differ",
+   "At least one of the two derivations has a bug"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Lagrange and Newton-Euler describe the same rigid arm and must agree."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "With zero torque and no friction, what must stay constant in a horizontal-plane arm?",
+  "question": "Your bench arm swings freely in a horizontal plane with zero torque and no friction. What must stay constant?",
   "options": [
-   "Kinetic energy",
-   "Joint angles",
-   "Momentum of each link"
+   "The total kinetic energy of the arm",
+   "The momentum of each separate link",
+   "The joint angles of both links"
   ],
   "answer": 0,
   "explanation": "There is no gravity or torque to change energy."
@@ -62,11 +62,11 @@
  {
   "id": 6,
   "stage": "post",
-  "question": "Flipping the sign of h in a free-motion simulation makes kinetic energy wander. What does this tell you?",
+  "question": "In a free-swing simulation of your bench arm, flipping the sign of h makes kinetic energy wander. What does this tell you?",
   "options": [
-   "Energy conservation is a cheap test for Coriolis signs",
-   "h does not matter",
-   "RK4 is unstable"
+   "Energy conservation is a cheap check of Coriolis signs",
+   "h is only a numerical artifact that can be dropped",
+   "RK4 is always unstable for a free-swinging arm"
   ],
   "answer": 0,
   "explanation": "Correct h satisfies qd' h = 1/2 qd' Mdot qd, canceling the varying-inertia term in dT/dt during free motion. Flipping its sign breaks that cancellation; numerical integration can also cause small drift."

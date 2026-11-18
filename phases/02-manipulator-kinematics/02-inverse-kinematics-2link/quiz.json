@@ -2,11 +2,11 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "A target is 5 cm beyond the arm's full stretch. What should IK do?",
+  "question": "You slide the ball 5 cm beyond your bench arm's full stretch. What should IK do?",
   "options": [
-   "Report it as unreachable",
+   "Refuse the target and report that it is unreachable",
    "Return the angles for the nearest point and say nothing",
-   "Return nan and continue"
+   "Return nan for q2 and keep going with the move"
   ],
   "answer": 0,
   "explanation": "A refusal with the reach band is the only answer that is not a guess."
@@ -14,47 +14,47 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "How many arm configurations reach a point strictly inside the reachable band of a two-link arm?",
+  "question": "Your two-link bench arm must touch a ball strictly inside its reachable band. How many arm configurations reach it?",
   "options": [
-   "One",
-   "Two",
-   "Infinitely many"
+   "One, since the target fixes both angles",
+   "Infinitely many, since both links turn freely",
+   "Two: one with the elbow up, one with it down"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "The sign of q2 gives elbow-up and elbow-down."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "What does the law of cosines give in this lesson?",
+  "question": "You solve your bench arm's elbow with a triangle. What does the law of cosines give in this lesson?",
   "options": [
-   "cos q2 from the target distance and the link lengths",
-   "q1 directly",
-   "The joint torque"
+   "q1 directly from the target's x and y alone",
+   "cos q2 from the target distance and link lengths",
+   "The torque each joint needs to hold the target"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "The triangle has sides L1, L2 and r, so the angle at the elbow follows from them."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Which targets are reachable by a two-link arm with L1 = 0.5 and L2 = 0.4?",
+  "question": "Your two-link bench arm has L1 = 0.5 and L2 = 0.4. Which ball distances can it touch?",
   "options": [
-   "Distances from 0.1 to 0.9",
-   "Distances from 0 to 0.9",
-   "Distances from 0.4 to 0.5"
+   "Targets at a distance of 0 to 0.9, base included",
+   "Targets at a distance of 0.1 to 0.9 from the base",
+   "Targets at a distance of 0.4 to 0.5 from the base"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "The band runs from |L1 - L2| to L1 + L2."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "What is the most reliable test of an IK function?",
+  "question": "Your bench arm's IK function returns angles for many targets. What is the most reliable test of it?",
   "options": [
-   "FK of the answer returns the target, on many targets and both branches",
-   "The answer looks plausible in a plot",
-   "The answer is finite"
+   "Round trip through FK, on many targets and both elbows",
+   "No nan or inf appears in the answer for any test target",
+   "The drawn arm looks right when plotted for a few targets"
   ],
   "answer": 0,
   "explanation": "FK is exact and cheap, so the round trip leaves no room for a guess."
@@ -62,13 +62,13 @@
  {
   "id": 6,
   "stage": "post",
-  "question": "Why does the lesson clip cos q2 after a tolerance check?",
+  "question": "The ball sits at your bench arm's full stretch. Why does the lesson clip cos q2 after a tolerance check?",
   "options": [
-   "Rounding noise at full stretch must not become a false refusal",
-   "To hide unreachable targets",
-   "To pick the elbow"
+   "To choose between elbow up and elbow down for it",
+   "To hide targets that really are out of reach",
+   "Rounding noise must not become a false refusal"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Targets on the boundary can land a few ulps outside [-1, 1]."
  }
 ]

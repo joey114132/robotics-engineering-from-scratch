@@ -2,23 +2,23 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "What does column j of the Jacobian mean?",
+  "question": "You print your bench arm's Jacobian and look at column j. What does it mean?",
   "options": [
-   "The tip velocity per unit speed of joint j",
-   "The torque of joint j",
-   "The length of link j"
+   "The torque joint j needs to hold the tip still",
+   "The tip position when only joint j is bent",
+   "The tip velocity per unit speed of joint j"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Each column is the effect of one joint moving alone."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Which relation maps a tip force to joint torques in a static pose?",
+  "question": "Your bench arm holds still while a hand pushes its tip. Which relation maps that tip force to joint torques?",
   "options": [
    "tau = J^T F",
-   "tau = J F",
-   "tau = F / J"
+   "tau = J^-1 F",
+   "tau = J F"
   ],
   "answer": 0,
   "explanation": "Power balance forces the transpose."
@@ -26,23 +26,23 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "Analytic and finite-difference Jacobians disagree by 0.3 at a random pose. What is the most likely cause?",
+  "question": "On your bench arm the analytic and finite-difference Jacobians disagree by 0.3 at a random pose. Most likely cause?",
   "options": [
-   "A bug in one of them",
-   "Rounding noise",
-   "The arm is near a singularity"
+   "Rounding noise from the finite-difference step",
+   "The arm is close to a singularity at that pose",
+   "A real bug in one of the two Jacobian programs"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Rounding noise is near 1e-10 here, so 0.3 is a real error."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "A central-difference step of 1e-12 rad is used. What happens?",
+  "question": "You check your bench arm's Jacobian with a central-difference step of 1e-12 rad. What happens?",
   "options": [
    "The reference is dominated by rounding noise",
-   "It is the most accurate",
-   "Nothing changes"
+   "The curvature error grows and spoils the check",
+   "The slope gets better as the step shrinks"
   ],
   "answer": 0,
   "explanation": "The tip change is smaller than float64 can resolve reliably."
@@ -50,25 +50,25 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "A 2 kg mass hangs at the tip. How do you get the joint torques that hold it?",
+  "question": "A 2 kg mass hangs from your bench arm's tip. How do you get the joint torques that hold it?",
   "options": [
-   "J^T times the weight force at the tip",
-   "J times the weight",
-   "Divide the weight by the joint count"
+   "Split the weight force equally across the joints",
+   "J^T times the weight force acting at the tip",
+   "J times the weight force acting at the tip"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "A tip force goes to joints through J transposed."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Why is a Jacobian test at one pose not enough?",
+  "question": "Your Jacobian test passes at the one pose you tried on the bench arm. Why is that not enough?",
   "options": [
-   "A wrong sign or link order can still pass at a symmetric pose",
-   "Jacobians change with time",
-   "Poses are random"
+   "Jacobians change with time even when the arm holds still",
+   "A wrong sign or link order can pass at a symmetric pose",
+   "The finite-difference check cannot run at only one pose"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "Check many random poses, as for the DH table in lesson 1."
  }
 ]

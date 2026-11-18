@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "A 10 ms timer sometimes fires 50 ms late while the CPU is mostly idle. Likely cause?", "options": ["A long callback holds the only executor thread", "The timer period is too short for the clock", "The topic is best effort"], "answer": 0, "explanation": "One thread runs one callback at a time, so ready callbacks wait."},
-  {"id": 2, "stage": "check", "question": "Two callbacks are in one mutually exclusive group and the executor has four threads. Can they run at the same time?", "options": ["Yes, threads are free", "No, the group forbids it", "Only if one is a timer"], "answer": 1, "explanation": "A mutually exclusive group never runs two of its callbacks in parallel."},
-  {"id": 3, "stage": "check", "question": "A timer and a 60 ms callback are in separate groups on two threads. Worst timer wait?", "options": ["About 59 ms", "About 30 ms", "0 ms"], "answer": 2, "explanation": "A free thread takes the timer at once because its group is idle."},
-  {"id": 4, "stage": "check", "question": "Callbacks are created with no group argument. Which group are they in?", "options": ["Each its own group", "The node's default group", "No group"], "answer": 1, "explanation": "They are assigned to the node's default callback group."},
-  {"id": 5, "stage": "post", "question": "You add a second thread and nothing improves. First thing to check?", "options": ["Whether the callbacks share a mutually exclusive group", "The monitor refresh rate", "The message type"], "answer": 0, "explanation": "Threads only help callbacks that the groups allow to run in parallel."},
-  {"id": 6, "stage": "post", "question": "Besides a second thread, what else removes the starvation?", "options": ["Splitting the slow callback into short pieces", "Raising the timer period to 1 s", "Using bigger messages"], "answer": 0, "explanation": "Short callbacks hold the thread for less time, so the worst wait shrinks."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Your toy car's 10 ms timer sometimes fires 50 ms late and the watchdog stops it, though the CPU is mostly idle. Likely cause?",
+  "options": [
+   "A long callback holds the only executor thread",
+   "The subscription queue depth is too small",
+   "The timer period is too short for the clock"
+  ],
+  "answer": 0,
+  "explanation": "One thread runs one callback at a time, so ready callbacks wait."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Two of your toy car's callbacks sit in one mutually exclusive group and the executor has four threads. Can they run at the same time?",
+  "options": [
+   "Yes, because four threads are free",
+   "Yes, but only if one of them is a timer",
+   "No, the group never lets them overlap"
+  ],
+  "answer": 2,
+  "explanation": "A mutually exclusive group never runs two of its callbacks in parallel."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Your toy car's timer and a 60 ms image callback are in separate groups on two threads. What is the worst timer wait?",
+  "options": [
+   "0 ms, it starts right away",
+   "About 30 ms, half the callback",
+   "About 59 ms, as with one thread"
+  ],
+  "answer": 0,
+  "explanation": "A free thread takes the timer at once because its group is idle."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "You create your toy car's callbacks with no group argument. Which group are they in?",
+  "options": [
+   "Each one gets its own new group",
+   "The node's one default group",
+   "None, they run outside any group"
+  ],
+  "answer": 1,
+  "explanation": "They are assigned to the node's default callback group."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "You give your toy car's executor a second thread and nothing improves. What do you check first?",
+  "options": [
+   "Whether the topic messages use best effort QoS",
+   "Whether callbacks share a mutually exclusive group",
+   "Whether the queue depth is larger than the burst"
+  ],
+  "answer": 1,
+  "explanation": "Threads only help callbacks that the groups allow to run in parallel."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Your toy car keeps stopping because a slow callback starves its timer. Besides a second thread, what else removes the starvation?",
+  "options": [
+   "Splitting the slow callback into short pieces",
+   "Giving the slow callback a larger queue depth",
+   "Raising the timer period to 1 s to give it room"
+  ],
+  "answer": 0,
+  "explanation": "Short callbacks hold the thread for less time, so the worst wait shrinks."
+ }
 ]

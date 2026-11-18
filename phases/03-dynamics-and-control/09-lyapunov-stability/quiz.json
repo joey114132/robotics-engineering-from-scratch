@@ -2,11 +2,11 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "A system is simulated once from rest and stays still. What can you conclude about stability?",
+  "question": "You simulate your pendulum arm once from rest and it stays still. What can you conclude about stability?",
   "options": [
-   "Nothing, it may be unstable",
-   "It is stable",
-   "It is asymptotically stable"
+   "Nothing, it may be sitting on an unstable point",
+   "It is asymptotically stable, since it never moves",
+   "It is stable, since the arm stays perfectly still"
   ],
   "answer": 0,
   "explanation": "An unstable equilibrium also keeps a state that starts exactly on it."
@@ -14,23 +14,23 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "What must hold for V to be a Lyapunov function candidate?",
+  "question": "You propose a V for your pendulum arm. What must hold for V to be a Lyapunov function candidate?",
   "options": [
-   "V is zero at the goal and positive elsewhere",
-   "V equals the kinetic energy",
-   "V is constant"
+   "V is negative at the goal and zero elsewhere",
+   "V equals the kinetic energy of the swinging arm",
+   "V is zero at the goal and positive elsewhere"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "A positive-definite V is the energy-like quantity whose slope you check."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "For the PD pendulum, dV/dt equals -(c + kd) w^2. When is it never positive?",
+  "question": "For your PD pendulum arm, dV/dt equals -(c + kd) w^2. When is it never positive?",
   "options": [
-   "When c + kd >= 0",
-   "When kp > 0",
-   "When w = 1"
+   "When c + kd >= 0 at any speed w",
+   "When w = 1 so the speed term is small",
+   "When kp > 0 so the spring pulls back"
   ],
   "answer": 0,
   "explanation": "Only damping terms survive the cancellation."
@@ -38,23 +38,23 @@
  {
   "id": 4,
   "stage": "check",
-  "question": "Why does a sweep of sampled states beat one simulation?",
+  "question": "You want to trust your pendulum arm's controller. Why does a sweep of sampled states beat one simulation?",
   "options": [
+   "It is faster, since no simulation is needed",
    "It covers many starts, including corners",
-   "It is faster",
-   "It solves the equations"
+   "It solves the equations of motion exactly"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "A single start can miss where V rises. Seek the maximum vdot; a minimizer must minimize -vdot over the operating bounds."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Sampling finds no state with dV/dt > 0. What does that prove?",
+  "question": "You sample your pendulum arm's states and find none with dV/dt > 0. What does that prove?",
   "options": [
-   "No counterexample was found, not a proof",
-   "Stability is proven",
-   "The system is unstable"
+   "No counterexample found, not a proof",
+   "Stability is proven for every start",
+   "The system is unstable somewhere unsampled"
   ],
   "answer": 0,
   "explanation": "A finite sample can miss a small bad region."
@@ -62,13 +62,13 @@
  {
   "id": 6,
   "stage": "post",
-  "question": "Why can a late rate signal break a stable PD design?",
+  "question": "Your pendulum arm's rate signal arrives half a second late. Why can that break a stable PD design?",
   "options": [
-   "The controller acts on old information and adds energy",
-   "kp becomes negative",
-   "V stops being defined"
+   "kp becomes negative when the signal is late",
+   "The controller acts on old data and adds energy",
+   "V stops being defined once the delay appears"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "A rate seen late can push in phase with the motion instead of against it."
  }
 ]

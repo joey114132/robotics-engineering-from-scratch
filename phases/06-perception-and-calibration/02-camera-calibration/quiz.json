@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "Unprojected points near the image edge are centimetres off, but the datasheet focal length is used. What is the fix?", "options": ["Lower the frame rate", "Move the camera closer", "Measure fx, fy, cx, cy from a known target"], "answer": 2, "explanation": "Nominal intrinsics differ from the real ones, so measure them."},
-  {"id": 2, "stage": "check", "question": "What does one view of a flat grid give you in this method?", "options": ["A 3x3 homography", "One full 3D pose of the robot", "Lens distortion only"], "answer": 0, "explanation": "H = K [r1 r2 t] relates grid coordinates to pixels."},
-  {"id": 3, "stage": "check", "question": "Why must the views have different tilts?", "options": ["Tilts make the image brighter", "Pure shifts repeat the same constraints", "The detector needs it"], "answer": 1, "explanation": "Identical orientations add no new equations on B."},
-  {"id": 4, "stage": "check", "question": "How many equations does each view add to B?", "options": ["Two", "One", "Nine"], "answer": 0, "explanation": "h1'Bh2 = 0 and h1'Bh1 = h2'Bh2."},
-  {"id": 5, "stage": "post", "question": "With 1 px pixel noise, what happens to the linear result when you go from 3 to 10 views?", "options": ["The error vanishes", "The error doubles", "The error roughly halves"], "answer": 2, "explanation": "More constraints average the noise, but it does not vanish."},
-  {"id": 6, "stage": "post", "question": "A calibration gives cx far from the image centre and fx very different from fy. First suspicion?", "options": ["The camera is broken", "Too few or too similar views, so the fit is weak", "Nothing, it is normal"], "answer": 1, "explanation": "The linear solution amplifies noise when views are poor."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "You unproject points near your camera's image edge with the datasheet focal length, and they are centimetres off. What is the fix?",
+  "options": [
+   "Tune fx and cy by hand until the edge looks right",
+   "Re-read the datasheet focal length more carefully",
+   "Measure fx, fy, cx and cy from a known target"
+  ],
+  "answer": 2,
+  "explanation": "Nominal intrinsics differ from the real ones, so measure them."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "You photograph a flat checkerboard once. What does this one view give you in this method?",
+  "options": [
+   "A 3x3 homography for that view",
+   "Lens distortion coefficients only",
+   "One full 3D pose of the robot base"
+  ],
+  "answer": 0,
+  "explanation": "H = K [r1 r2 t] relates grid coordinates to pixels."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "You move a checkerboard in front of your camera. Why must the views have different tilts?",
+  "options": [
+   "Views that only shift repeat the same constraints",
+   "The solver needs a different board size for each view",
+   "A tilted board is easier to detect in the image"
+  ],
+  "answer": 0,
+  "explanation": "Identical orientations add no new equations on B."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Each checkerboard view you add contributes equations to B. How many does one view add?",
+  "options": [
+   "Only one equation from each view",
+   "Six equations, one per entry of B",
+   "Two equations from every view"
+  ],
+  "answer": 2,
+  "explanation": "h1'Bh2 = 0 and h1'Bh1 = h2'Bh2."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Your checkerboard corners have 1 px of noise. What happens to the linear result when you go from 3 to 10 views?",
+  "options": [
+   "The error doubles, as each view adds noise",
+   "The error drops to nearly zero in practice",
+   "The error roughly halves but does not vanish"
+  ],
+  "answer": 2,
+  "explanation": "More constraints average the noise, but it does not vanish."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Your calibration returns cx far from the image centre and fx very different from fy. What is your first suspicion?",
+  "options": [
+   "The values are normal for a wide-angle lens",
+   "Views too few or too alike, giving a weak fit",
+   "The sensor has failed and needs replacing"
+  ],
+  "answer": 1,
+  "explanation": "The linear solution amplifies noise when views are poor."
+ }
 ]

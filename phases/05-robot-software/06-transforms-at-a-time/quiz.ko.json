@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "로봇이 도는 동안 찍은 스캔이 휘어 보입니다. 가장 가능성 높은 원인은?", "options": ["모든 점을 최신 pose로 놓았다", "레이저 calibration이 틀렸다", "지도 해상도가 낮다"], "answer": 0, "explanation": "먼저 측정된 점에는 자기 시각의 pose가 필요했습니다."},
-  {"id": 2, "stage": "check", "question": "질의 시각이 저장된 두 sample 사이에 있습니다. buffer는 어떻게 합니까?", "options": ["더 가까운 sample을 쓴다", "위치는 lerp, 방향은 slerp로 interpolate한다", "오류를 낸다"], "answer": 1, "explanation": "interpolate는 아는 pose 두 개 사이의 한 순간을 묻는 질의에 답하는 방법입니다."},
-  {"id": 3, "stage": "check", "question": "질의가 최신 sample보다 0.3초 뒤이고 extrapolate 한도가 0입니다. 어떻게 됩니까?", "options": ["최신 pose를 돌려준다", "오류를 낸다", "마지막 두 sample로 추측한다"], "answer": 1, "explanation": "조용한 추측은 데이터처럼 보여서 늦게 오는 메시지를 가립니다."},
-  {"id": 4, "stage": "check", "question": "quaternion 성분을 lerp하지 않고 slerp하는 이유는?", "options": ["더 빨라서", "일정한 속도로 돌고 단위 quaternion을 유지해서", "부호를 무시해서"], "answer": 1, "explanation": "성분 lerp는 quaternion 길이를 줄이고 회전 속도를 바꿉니다."},
-  {"id": 5, "stage": "post", "question": "로봇이 더 빨리 돕니다. 최신 pose로 놓은 스캔의 번짐은?", "options": ["커진다", "작아진다", "그대로다"], "answer": 0, "explanation": "pose 오차는 각 점의 stamp와 최신 stamp 사이에 돈 양입니다."},
-  {"id": 6, "stage": "post", "question": "sample이 순서 없이 도착합니다. add()는 무엇을 해야 합니까?", "options": ["도착 순서대로 붙인다", "stamp 순으로 끼워 넣어 정렬을 유지한다", "늦은 sample을 버린다"], "answer": 1, "explanation": "정렬된 buffer여야 bisect와 interpolate가 맞습니다."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "로봇이 도는 동안 레이저로 곧은 벽을 스캔했는데 휘어 보입니다. 가장 가능성 높은 원인은?",
+  "options": [
+   "지도 격자 해상도가 벽에 비해 너무 거칠다",
+   "모든 점을 가장 최신 pose 하나로 놓았다",
+   "레이저 calibration에 쓴 벽 거리가 틀렸다"
+  ],
+  "answer": 1,
+  "explanation": "먼저 측정된 점에는 자기 시각의 pose가 필요했습니다."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "레이저 점의 시각이 저장된 로봇 pose 두 개 사이에 있습니다. buffer는 어떻게 합니까?",
+  "options": [
+   "가장 가까운 두 sample로 extrapolate한다",
+   "더 가까운 sample 하나만 쓰고 다른 하나는 모두 버린다",
+   "위치는 lerp, 방향은 slerp로 interpolate한다"
+  ],
+  "answer": 2,
+  "explanation": "interpolate는 아는 pose 두 개 사이의 한 순간을 묻는 질의에 답하는 방법입니다."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "최신 저장 pose보다 0.3초 뒤의 pose를 조회하는데 extrapolate 한도가 0입니다. 어떻게 됩니까?",
+  "options": [
+   "마지막 두 sample로 추측해 답한다",
+   "조회를 거부하고 오류를 발생시킨다",
+   "최신 pose를 그대로 답으로 쓴다"
+  ],
+  "answer": 1,
+  "explanation": "조용한 추측은 데이터처럼 보여서 늦게 오는 메시지를 가립니다."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "저장된 두 pose 사이에서 로봇의 방향을 섞습니다. quaternion 성분을 lerp하지 않고 slerp하는 이유는?",
+  "options": [
+   "회전을 먼저 Euler 각도로 바꾼 뒤에 계산해서",
+   "같은 정확도를 내는 데 필요한 sample이 더 적어서",
+   "일정한 속도로 돌고 단위 quaternion을 유지해서"
+  ],
+  "answer": 2,
+  "explanation": "성분 lerp는 quaternion 길이를 줄이고 회전 속도를 바꿉니다."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "로봇이 스캔하는 동안 더 빨리 돌고 모든 점을 최신 pose로 놓습니다. 번짐은 어떻게 됩니까?",
+  "options": [
+   "그대로다. pose가 같기 때문이다",
+   "작아진다. 점들이 서로 뭉치기 때문이다",
+   "커진다. 회전 속도와 거의 비례한다"
+  ],
+  "answer": 2,
+  "explanation": "pose 오차는 각 점의 stamp와 최신 stamp 사이에 돈 양입니다."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "로봇의 pose sample이 순서 없이 도착합니다. add()는 무엇을 해야 합니까?",
+  "options": [
+   "stamp 순으로 끼워 넣어 정렬을 유지한다",
+   "이미 낡았으므로 늦게 온 sample을 버린다",
+   "가장 싸니까 도착한 순서대로 뒤에 붙인다"
+  ],
+  "answer": 0,
+  "explanation": "정렬된 buffer여야 bisect와 interpolate가 맞습니다."
+ }
 ]

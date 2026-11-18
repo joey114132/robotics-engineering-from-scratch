@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "두 바퀴가 같은 속도로 돕니다. 로봇은 어떻게 움직입니까?", "options": ["직선으로 간다", "원을 그린다", "제자리에서 돈다"], "answer": 0, "explanation": "바퀴 가장자리 속도가 같으면 회전율이 0입니다."},
-  {"id": 2, "stage": "check", "question": "차동 구동의 회전율은 어떤 식입니까?", "options": ["r (wr - wl) / b", "r (wr + wl) / 2", "r (wr - wl) * b"], "answer": 0, "explanation": "두 바퀴 속도 차를 track width로 나눈 값이 회전율입니다."},
-  {"id": 3, "stage": "check", "question": "odometry는 사각형이 닫혔다고 하는데 실제 로봇은 출발점에서 18 cm 떨어져 끝났습니다. 가장 가능성 높은 원인은 무엇입니까?", "options": ["모델의 wheel radius나 track width가 틀렸다", "encoder가 카운트를 놓쳤다", "사각형이 너무 작았다"], "answer": 0, "explanation": "추정값은 계획과 같은 틀린 값을 쓰므로 그래도 닫힙니다."},
-  {"id": 4, "stage": "check", "question": "주행 거리는 바꾸지 않고 회전각만 바꾸는 오차는 무엇입니까?", "options": ["track width", "wheel radius", "시간 간격"], "answer": 0, "explanation": "track width는 w에만 들어가고 v에는 없습니다."},
-  {"id": 5, "stage": "post", "question": "작은 파라미터 오차에서 사각형 끝의 간격이 선형으로 커지는 이유는 무엇입니까?", "options": ["모서리마다 각도 오차가 그에 비례해 커지고 네 변이 더는 상쇄되지 않는다", "모터가 약해진다", "시간 간격이 줄어든다"], "answer": 0, "explanation": "작은 회전 오차는 각 변을 조금씩 돌려 놓으므로 벡터 합이 오차에 비례해 커집니다."},
-  {"id": 6, "stage": "post", "question": "실제 로봇의 track width는 어떻게 보정합니까?", "options": ["길이를 잰 루프를 달리고 실제 간격이 닫힐 때까지 조정한다", "제어 주기를 올린다", "바퀴를 바꾼다"], "answer": 0, "explanation": "추정값이 스스로 알 수 없는 정보를 루프의 실제 간격이 알려 줍니다."}
+  {"id": 1, "stage": "pre", "question": "로버의 두 바퀴를 같은 속도로 돌립니다. 로버는 어떻게 움직입니까?", "options": ["왼쪽으로 천천히 휘어지는 호를 그립니다", "heading 방향의 직선으로 갑니다", "중심을 축으로 제자리에서 돕니다"], "answer": 1, "explanation": "바퀴 가장자리 속도가 같으면 회전율이 0입니다."},
+  {"id": 2, "stage": "check", "question": "로버가 바퀴 속도로 어떻게 도는지 계산합니다. 차동 구동의 회전율은 어떤 식입니까?", "options": ["r (wr + wl) / 2", "r (wr - wl) / b", "r (wr - wl) * b"], "answer": 1, "explanation": "두 바퀴 속도 차를 track width로 나눈 값이 회전율입니다."},
+  {"id": 3, "stage": "check", "question": "로버의 odometry는 사각형이 닫혔다고 하는데 줄자로 재니 출발점에서 18 cm 떨어져 끝났습니다. 가장 가능성 높은 원인은?", "options": ["wheel radius나 track width가 틀렸습니다", "로봇이 사각형 경로를 너무 느린 속도로 주행했습니다", "모서리마다 encoder가 카운트를 몇 개씩 놓쳤습니다"], "answer": 0, "explanation": "추정값은 계획과 같은 틀린 값을 쓰므로 그래도 닫힙니다."},
+  {"id": 4, "stage": "check", "question": "로버의 설정 하나를 바꿨더니 주행 거리는 그대로이고 회전각만 바뀝니다. 어떤 오차입니까?", "options": ["시간 간격 설정", "wheel radius", "track width"], "answer": 2, "explanation": "track width는 w에만 들어가고 v에는 없습니다."},
+  {"id": 5, "stage": "post", "question": "로버의 파라미터를 조금 바꿨더니 사각형 끝의 간격이 커집니다. 작은 파라미터 오차에서 간격이 선형으로 커지는 이유는?", "options": ["square의 각 변을 따라 바퀴 slip이 계속 쌓입니다", "모서리마다 회전이 어긋나 네 변이 더는 상쇄되지 않습니다", "간격이 커질수록 컨트롤러가 time step을 계속 줄입니다"], "answer": 1, "explanation": "작은 회전 오차는 각 변을 조금씩 돌려 놓으므로 벡터 합이 오차에 비례해 커집니다."},
+  {"id": 6, "stage": "post", "question": "로버의 track width는 추정값일 뿐입니다. 실제 로봇에서는 어떻게 보정합니까?", "options": ["제어 빈도를 높인 뒤 같은 square를 두 번 다시 주행합니다", "새 바퀴로 바꾸고 이후로는 encoder를 그대로 믿습니다", "길이를 잰 루프를 달리고 간격이 닫힐 때까지 조정합니다"], "answer": 2, "explanation": "추정값이 스스로 알 수 없는 정보를 루프의 실제 간격이 알려 줍니다."}
 ]

@@ -2,35 +2,35 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Why does overwriting only the last pose not fix a drifted map?",
+  "question": "Your rover ends its square away from the start and you overwrite only its last pose. Why does that not fix the drifted map?",
   "options": [
-   "The last pose is always correct",
-   "Loop closure is not a measurement",
-   "All earlier poses stay bent"
+   "The last pose is locked once it has been measured",
+   "Every earlier pose along the path stays bent",
+   "A loop closure gives no usable measurement"
   ],
-  "answer": 2,
+  "answer": 1,
   "explanation": "The error accumulated along the whole path, not at one point."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "In a pose graph, what is an odometry edge?",
+  "question": "You build your rover's pose graph. What is an odometry edge in it?",
   "options": [
+   "A second robot that follows the first one",
    "A spring between two neighbouring poses",
-   "A new robot",
-   "A landmark"
+   "A landmark that two poses both stand next to"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "It says where pose j should be seen from pose i."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Why hold pose 0 fixed?",
+  "question": "You solve your rover's pose graph. Why hold pose 0 fixed?",
   "options": [
-   "To save memory",
-   "Moving or rotating the whole map changes no residual",
-   "The robot never moves"
+   "To save memory, since pose 0 never needs to be updated",
+   "Moving or turning the whole map changes no residual",
+   "Pose 0 is the only pose the scanner measured directly"
   ],
   "answer": 1,
   "explanation": "Three gauge directions are otherwise undetermined."
@@ -38,7 +38,7 @@
  {
   "id": 4,
   "stage": "check",
-  "question": "What happens to the cost between Gauss-Newton iterations here?",
+  "question": "You solve your rover's pose graph with Gauss-Newton. What happens to the cost between iterations here?",
   "options": [
    "It rises each time",
    "It stays constant",
@@ -50,11 +50,11 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "What does a wrong loop closure do?",
+  "question": "Your rover thinks it recognises the start, but the match is false. What does a wrong loop closure do?",
   "options": [
-   "Bends the map worse than no closure",
-   "Nothing",
-   "Always improves the map"
+   "Bends the map worse than having no closure",
+   "Nothing, since the solver ignores bad edges",
+   "Improves the map even if the match is false"
   ],
   "answer": 0,
   "explanation": "The solver trusts every edge, so a false one pulls the poses wrong."
@@ -62,13 +62,13 @@
  {
   "id": 6,
   "stage": "post",
-  "question": "Why does the correction reach old poses?",
+  "question": "Your rover closes the loop and several earlier poses move. Why does the correction reach those poses?",
   "options": [
-   "The map is rebuilt from scratch",
-   "Every pose is a variable re-solved together",
-   "Old poses are copied from the last one"
+   "Every free pose is a variable solved together",
+   "The map is rebuilt from scratch each time",
+   "Old poses are overwritten by the last pose"
   ],
-  "answer": 1,
+  "answer": 0,
   "explanation": "The solver changes all free poses at once."
  }
 ]

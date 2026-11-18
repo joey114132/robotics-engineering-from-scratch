@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "A joint should yield smoothly to a push. Which controller shape fits?", "options": ["Very stiff position loop", "Virtual spring-damper (impedance)", "Open-loop torque"], "answer": 1, "explanation": "Impedance sets how the joint pushes back."},
-  {"id": 2, "stage": "check", "question": "Constant external torque F, stiffness K. Steady deflection?", "options": ["F*K", "F/K", "K/F"], "answer": 1, "explanation": "At rest K*q = F."},
-  {"id": 3, "stage": "check", "question": "Damping ratio for K, J and D?", "options": ["D / (2 sqrt(K J))", "D / K", "sqrt(K / J)"], "answer": 0, "explanation": "The standard second-order form."},
-  {"id": 4, "stage": "check", "question": "zeta = 1 gives:", "options": ["Oscillation forever", "No overshoot", "Divergence"], "answer": 1, "explanation": "Critical damping returns without overshoot."},
-  {"id": 5, "stage": "post", "question": "You need at most 2 cm deflection under 20 N. Minimum K?", "options": ["10 N/m", "1000 N/m", "40 N/m"], "answer": 1, "explanation": "K = F / x = 20 / 0.02."},
-  {"id": 6, "stage": "post", "question": "After picking D, what else must you check on a host loop?", "options": ["That dt*D/J is under the sampling limit", "The screen resolution", "That K equals D"], "answer": 0, "explanation": "A held damper command chatters or diverges above the limit from lesson 03/01."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Your bench arm's elbow should yield smoothly when someone pushes the hand. Which controller shape fits?",
+  "options": [
+   "A virtual spring and damper (impedance)",
+   "A very stiff position loop with high gain",
+   "An open-loop torque command with no feedback"
+  ],
+  "answer": 0,
+  "explanation": "Impedance sets how the joint pushes back."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Someone leans on your bench arm with a constant external torque F, and the joint has stiffness K. What is the steady deflection?",
+  "options": [
+   "F/K",
+   "F/(2*K)",
+   "F*K"
+  ],
+  "answer": 0,
+  "explanation": "At rest K*q = F."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "You tune your bench arm's joint with stiffness K, inertia J and damping D. What is the damping ratio?",
+  "options": [
+   "D / (2 sqrt(K J))",
+   "D / (2 K sqrt(J))",
+   "D / (2 sqrt(K / J))"
+  ],
+  "answer": 0,
+  "explanation": "The standard second-order form."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "You set your bench arm's damping ratio to zeta = 1. What do you get?",
+  "options": [
+   "It keeps oscillating around the target",
+   "It settles without any overshoot",
+   "It diverges, growing with each swing"
+  ],
+  "answer": 1,
+  "explanation": "Critical damping returns without overshoot."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Your bench arm's hand may move at most 2 cm when someone pushes with 20 N. What is the minimum K?",
+  "options": [
+   "40 N/m",
+   "100 N/m",
+   "1000 N/m"
+  ],
+  "answer": 2,
+  "explanation": "K = F / x = 20 / 0.02. Mixing up cm and m gives values such as 10, 40 or 100."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "You picked D for your bench arm's joint on a host loop. What else must you check?",
+  "options": [
+   "That D is larger than K, so the joint cannot ring",
+   "That dt*D/J stays under the sampling limit of the loop",
+   "That the damper torque stays below the gravity torque"
+  ],
+  "answer": 1,
+  "explanation": "A held damper command chatters or diverges above the limit from lesson 03/01."
+ }
 ]

@@ -2,47 +2,47 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "팔이 거의 완전히 펴졌고 tip을 반지름 방향으로 움직이라고 명령합니다. 일반 J 역행렬은 무엇을 돌려줍니까?",
+  "question": "작업대 팔이 거의 완전히 펴졌고 tip을 바깥쪽으로 곧게 움직이라고 명령합니다. 일반 J 역행렬은 무엇을 돌려줍니까?",
   "options": [
-   "매우 큰 joint 속도",
-   "0인 joint 속도",
-   "정확히 맞는 속도"
+   "명령보다 조금 느려서 뒤처지는 joint 속도",
+   "모터 한계를 훌쩍 넘는 엄청나게 큰 joint 속도",
+   "0인 joint 속도, 방향이 사라졌기 때문"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "반지름 방향이 거의 사라져서 역행렬이 0에 가까운 수로 나눕니다."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "이 2링크 팔에서 det J는 얼마입니까?",
+  "question": "2링크 작업대 팔의 det J를 유도합니다. 얼마입니까?",
   "options": [
-   "L1 L2 sin q2",
-   "L1 + L2",
-   "L1 L2 cos q1"
+   "L1 + L2 sin q2",
+   "L1 L2 sin q1",
+   "L1 L2 sin q2"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "팔꿈치 각에만 달려 있으므로 singularity는 q2 = 0과 q2 = pi입니다."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "완전히 뻗은 자세에서 불가능한 tip 운동은 무엇입니까?",
+  "question": "작업대 팔이 완전히 뻗어 있습니다. 불가능한 tip 운동은 무엇입니까?",
   "options": [
-   "반지름 방향(팔을 따라)",
-   "옆 방향(팔에 수직)",
-   "둘 다"
+   "옆 방향, 팔에 수직으로 가는 움직임",
+   "반지름 방향과 옆 방향 둘 다",
+   "반지름 방향, 팔을 따라 가는 운동"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "그 자세에서는 두 joint 모두 tip을 옆으로만 움직입니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "damped least squares가 joint 속도에 대해 보장하는 것은 무엇입니까?",
+  "question": "작업대 팔의 모터가 속도 한계를 넘지 않도록 damped least squares를 켭니다. joint 속도에 대해 무엇이 보장됩니까?",
   "options": [
    "|qd| <= |v| / (2 lam)",
-   "|qd| = 0",
-   "|qd| = |v|"
+   "|qd| <= |v| * (2 * lam)",
+   "|qd| = |v| / (2 lam)"
   ],
   "answer": 0,
   "explanation": "각 특이값 s가 s / (s^2 + lam^2)로 바뀌고 이 값은 1 / (2 lam) 이하입니다."
@@ -50,25 +50,25 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "damping의 대가는 무엇입니까?",
+  "question": "damping 덕분에 작업대 팔이 완전히 뻗는 자리 근처에서도 차분합니다. 그 대가는 무엇입니까?",
   "options": [
-   "singularity 근처에서 tip이 명령을 따르지 못한다",
-   "팔이 불안정해진다",
-   "forward kinematics가 바뀐다"
+   "forward kinematics의 결과가 모든 pose에서 조금 어긋난다",
+   "damping 때문에 그 pose 근처에서 joint가 진동한다",
+   "singularity 근처에서 tip이 명령을 제대로 못 따라간다"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Jacobian이 rank를 잃는 곳에서는 속도 제한과 정확한 추종이 동시에 성립할 수 없습니다."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "이 팔의 manipulability가 가장 큰 곳은 어디입니까?",
+  "question": "작업대 팔의 tip이 모든 방향으로 자유롭게 움직이길 바랍니다. manipulability가 가장 큰 곳은 어디입니까?",
   "options": [
-   "팔꿈치가 직각일 때",
-   "완전히 뻗었을 때",
-   "완전히 접혔을 때"
+   "완전히 뻗어 두 link가 일직선일 때",
+   "두 link 사이 팔꿈치가 직각일 때",
+   "펴지기 직전 조금만 굽혀졌을 때"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "|det J| = L1 L2 |sin q2|는 q2 = pi / 2에서 최대입니다."
  }
 ]

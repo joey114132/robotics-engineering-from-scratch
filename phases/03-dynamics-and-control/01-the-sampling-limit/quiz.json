@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "A host loop computes a damper torque once per tick and holds it. Can that destabilise a gain that is stable in continuous time?", "options": ["No", "Yes, if dt*kd/J is large enough", "Only with a spring term"], "answer": 1, "explanation": "The damper acts on velocity that is one tick old."},
-  {"id": 2, "stage": "check", "question": "For r = dt*kd/J, the velocity factor per tick is:", "options": ["1 + r", "1 - r", "r"], "answer": 1, "explanation": "v+ = v - dt*kd*v/J."},
-  {"id": 3, "stage": "check", "question": "At which r does velocity start flipping sign every tick?", "options": ["r > 0.5", "r > 1", "r > 2"], "answer": 1, "explanation": "The factor 1 - r goes negative above 1."},
-  {"id": 4, "stage": "check", "question": "At which r does the velocity grow every tick?", "options": ["r > 1", "r > 2", "r > 4"], "answer": 1, "explanation": "|1 - r| exceeds 1 above 2."},
-  {"id": 5, "stage": "post", "question": "One kd is sent to a shoulder (J = 0.5) and a wrist (J = 0.001). Which crosses the line first?", "options": ["Shoulder", "Wrist", "Both together"], "answer": 1, "explanation": "r scales as 1/J."},
-  {"id": 6, "stage": "post", "question": "Best fix when a host-side damper chatters on a low-inertia joint?", "options": ["Raise kd", "Move the damping loop into the drive or lower kd below J/dt", "Increase the DDS queue depth"], "answer": 1, "explanation": "The limit comes from the loop rate and J, not from messaging."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Your bench arm's host loop computes a damper torque once per tick and holds it. Can that destabilise a gain that is stable in continuous time?",
+  "options": [
+   "Yes, if dt*kd/J gets large enough for one tick",
+   "Only when the loop also includes a spring term",
+   "No, a gain stable in continuous time stays stable"
+  ],
+  "answer": 0,
+  "explanation": "The damper acts on velocity that is one tick old."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Your bench arm's brake has r = dt*kd/J. The velocity factor per tick is:",
+  "options": [
+   "1 - 1 / r",
+   "1 + r",
+   "1 - r"
+  ],
+  "answer": 2,
+  "explanation": "v+ = v - dt*kd*v/J."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "You turn your bench arm's brake up. At which r does the velocity start flipping sign every tick?",
+  "options": [
+   "r > 0.5",
+   "r > 1",
+   "r > 2"
+  ],
+  "answer": 1,
+  "explanation": "The factor 1 - r goes negative above 1."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "You keep turning your bench arm's brake up. At which r does the velocity grow every tick?",
+  "options": [
+   "r > 2",
+   "r > 1",
+   "r > 2.5"
+  ],
+  "answer": 0,
+  "explanation": "|1 - r| exceeds 1 above 2."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "You send one kd to your bench arm's shoulder (J = 0.5) and wrist (J = 0.001). Which crosses the line first?",
+  "options": [
+   "The shoulder, since it carries more torque",
+   "Both together, because they share one kd",
+   "The wrist, since it has far less inertia"
+  ],
+  "answer": 2,
+  "explanation": "r scales as 1/J."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Your bench arm's low-inertia wrist chatters under a host-side damper. What is the best fix?",
+  "options": [
+   "Raise kd so each tick brakes the joint harder",
+   "Run damping in the drive, or lower kd below J/dt",
+   "Increase the DDS queue depth to cut the delay"
+  ],
+  "answer": 1,
+  "explanation": "The limit comes from the loop rate and J, not from messaging."
+ }
 ]

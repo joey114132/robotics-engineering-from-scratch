@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "You lower kp and the arm sags more. Likely cause?", "options": ["Gravity feedforward does not match true gravity", "The encoder is broken", "The DDS rate is low"], "answer": 0, "explanation": "A model residual is divided by kp, so a soft kp exposes it."},
-  {"id": 2, "stage": "check", "question": "First-order steady-state error of a PD loop with feedforward ff against true gravity tau_g?", "options": ["(ff - tau_g) / kp", "(ff - tau_g) * kp", "kd / kp"], "answer": 0, "explanation": "From kp*(q_des - q) + ff = tau_g."},
-  {"id": 3, "stage": "check", "question": "The model is lighter than the real arm. What does the arm do?", "options": ["Floats up", "Droops", "Nothing"], "answer": 1, "explanation": "Too little feedforward leaves a net downward torque."},
-  {"id": 4, "stage": "check", "question": "kp is halved with the same model error. Sag?", "options": ["Halves", "Doubles", "Unchanged"], "answer": 1, "explanation": "Sag is inversely proportional to kp."},
-  {"id": 5, "stage": "post", "question": "Where is gravity torque on joint 1 largest for a planar arm?", "options": ["Arm vertical", "Arm horizontal", "Folded"], "answer": 1, "explanation": "The moment arm is the full horizontal reach when the arm is stretched out."},
-  {"id": 6, "stage": "post", "question": "Best response to a sag that appears only at low kp?", "options": ["Raise kp back", "Measure sag at several poses and correct the model", "Add integral gain everywhere"], "answer": 1, "explanation": "Raising kp hides the model error, and integral gain adds windup and drift."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "You soften your bench arm by lowering kp and its hand sags more. Likely cause?",
+  "options": [
+   "The encoder has a constant offset from the true angle",
+   "Gravity feedforward does not match true gravity",
+   "The control loop rate is too low for this joint"
+  ],
+  "answer": 1,
+  "explanation": "A model residual is divided by kp, so a soft kp exposes it."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Your bench arm holds still under a PD loop with feedforward ff while true gravity is tau_g. What is the first-order steady-state error?",
+  "options": [
+   "(ff - tau_g) / kp",
+   "(ff - tau_g) * kp",
+   "(ff - tau_g) / kp^2"
+  ],
+  "answer": 0,
+  "explanation": "From kp*(q_des - q) + ff = tau_g."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Your gravity model of the bench arm is lighter than the real arm. What does the arm do?",
+  "options": [
+   "It droops down below the commanded angle",
+   "It floats up above the commanded angle",
+   "It holds the commanded angle exactly"
+  ],
+  "answer": 0,
+  "explanation": "Too little feedforward leaves a net downward torque."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "You halve kp on your bench arm with the same model error. What happens to the sag?",
+  "options": [
+   "It halves along with the weaker spring",
+   "It stays the same, as ff does not change",
+   "It doubles as the spring gets weaker"
+  ],
+  "answer": 2,
+  "explanation": "Sag is inversely proportional to kp."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "On your planar bench arm, in which pose is the gravity torque on joint 1 largest?",
+  "options": [
+   "Arm held out horizontal, fully stretched",
+   "Arm pointing straight up, vertical",
+   "Arm folded back with the elbow bent"
+  ],
+  "answer": 0,
+  "explanation": "The moment arm is the full horizontal reach when the arm is stretched out."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Your bench arm sags only after you lower kp. What is the best response?",
+  "options": [
+   "Add integral gain on every joint to cancel it",
+   "Raise kp back up until the sag is gone",
+   "Measure sag at several poses, fix the model"
+  ],
+  "answer": 2,
+  "explanation": "Raising kp hides the model error, and integral gain adds windup and drift."
+ }
 ]

@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "A scan taken while the robot turns looks bent. Most likely cause?", "options": ["Every point was placed with the newest pose", "The laser is miscalibrated", "The map resolution is too low"], "answer": 0, "explanation": "Points measured earlier needed the pose from their own time."},
-  {"id": 2, "stage": "check", "question": "A query falls between two stored samples. What does the buffer do?", "options": ["Takes the nearer sample", "Interpolates position with lerp and orientation with slerp", "Raises an error"], "answer": 1, "explanation": "Interpolation answers a question about one instant between two known poses."},
-  {"id": 3, "stage": "check", "question": "A query is 0.3 s newer than the newest sample and the extrapolation limit is 0. What happens?", "options": ["It returns the newest pose", "It raises an error", "It guesses from the last two samples"], "answer": 1, "explanation": "A silent guess looks like data and hides a late message."},
-  {"id": 4, "stage": "check", "question": "Why slerp the orientation instead of lerping quaternion components?", "options": ["It is faster", "It turns at a constant rate and stays a unit quaternion", "It ignores sign"], "answer": 1, "explanation": "Component lerp shortens the quaternion and changes the turn rate."},
-  {"id": 5, "stage": "post", "question": "The robot turns faster. What happens to the smear of a scan placed with the newest pose?", "options": ["It grows", "It shrinks", "It stays the same"], "answer": 0, "explanation": "The pose error is the turn between each point's stamp and the newest stamp."},
-  {"id": 6, "stage": "post", "question": "Samples arrive out of order. What must add() do?", "options": ["Append in arrival order", "Insert by stamp so lookups stay sorted", "Drop the late sample"], "answer": 1, "explanation": "A sorted buffer is what makes the bisect and the interpolation correct."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "Your robot turns while its laser scans a straight wall, and the scan looks bent. What is the most likely cause?",
+  "options": [
+   "The map resolution is too coarse for the wall",
+   "Every point was placed with the newest pose",
+   "The laser was calibrated at the wrong distance"
+  ],
+  "answer": 1,
+  "explanation": "Points measured earlier needed the pose from their own time."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Your laser point's time stamp falls between two stored robot poses. What does the buffer do?",
+  "options": [
+   "Extrapolates from the two nearest samples to make a guess",
+   "Takes the nearer sample and ignores the other one",
+   "Interpolates: lerp for position, slerp for orientation"
+  ],
+  "answer": 2,
+  "explanation": "Interpolation answers a question about one instant between two known poses."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "You look up a pose 0.3 s newer than the newest stored one, and the extrapolation limit is 0. What happens?",
+  "options": [
+   "It guesses from the last two samples",
+   "It refuses the lookup with an error",
+   "It returns the newest pose as the answer"
+  ],
+  "answer": 1,
+  "explanation": "A silent guess looks like data and hides a late message."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "You blend your robot's orientation between two stored poses. Why slerp instead of lerping quaternion components?",
+  "options": [
+   "It converts rotations to Euler angles first",
+   "It needs fewer samples for the same final accuracy",
+   "It turns at a constant rate and stays unit length"
+  ],
+  "answer": 2,
+  "explanation": "Component lerp shortens the quaternion and changes the turn rate."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Your robot turns faster while the laser scans, and you place points with the newest pose. What happens to the smear?",
+  "options": [
+   "It stays the same, as the pose is the same",
+   "It shrinks, since the points bunch together",
+   "It grows, roughly in step with the turn"
+  ],
+  "answer": 2,
+  "explanation": "The pose error is the turn between each point's stamp and the newest stamp."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Your robot's pose samples arrive out of order. What must add() do?",
+  "options": [
+   "Insert it by stamp so the buffer stays sorted",
+   "Drop the late sample as it is already stale",
+   "Append in arrival order, as that is the cheapest"
+  ],
+  "answer": 0,
+  "explanation": "A sorted buffer is what makes the bisect and the interpolation correct."
+ }
 ]

@@ -2,23 +2,23 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Why can ICP not know the right point pairs in advance?",
+  "question": "Your rover holds two laser scans of the L-shaped room. Why can ICP not know the right point pairs in advance?",
   "options": [
-   "Pairs only exist in 3D",
-   "The scans are unlabelled clouds, so it guesses nearest points",
-   "The scanner hides them"
+   "The dots have no labels, so it guesses nearest pairs",
+   "The scanner returns too few dots to form any pairs at all",
+   "Pairs are only defined once the robot has stopped moving"
   ],
-  "answer": 1,
+  "answer": 0,
   "explanation": "With no labels, nearest neighbour is the only available guess."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "What does the SVD step solve?",
+  "question": "Your rover's ICP pairs dots and then runs an SVD step. What does the SVD step solve?",
   "options": [
-   "Which points are nearest",
-   "The sensor noise",
-   "The best rotation and shift for fixed pairs"
+   "Which old dot is nearest to each new dot",
+   "The noise level of each laser beam over time",
+   "The best turn and shift for fixed pairs"
   ],
   "answer": 2,
   "explanation": "Kabsch gives the optimal rigid fit for given correspondences."
@@ -26,23 +26,23 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "Why force the last singular direction by the sign of a determinant?",
+  "question": "Your rover's ICP fits a turn and a shift. Why force the last singular direction by the sign of a determinant?",
   "options": [
-   "To forbid a mirror image",
-   "To speed up the SVD",
-   "To remove noise"
+   "To speed up the SVD by skipping a step",
+   "To average out the noise in the pairs",
+   "To rule out a mirrored fit of the points"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "An orthogonal fit may be a reflection, which is not a robot motion."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "ICP is started 100 degrees away from the right answer in this room. What is likely?",
+  "question": "You start your rover's ICP 100 degrees away from the right answer in the L-shaped room. What is likely?",
   "options": [
-   "A crash",
-   "A local minimum with a large error",
-   "Exact convergence"
+   "A crash from a singular matrix in the SVD",
+   "A local minimum with a large final error",
+   "Exact convergence after more iterations"
   ],
   "answer": 1,
   "explanation": "Nearest points are wrong partners, so the fit locks in a wrong pose."
@@ -50,23 +50,23 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "Why does a single straight wall fail?",
+  "question": "Your rover scans only one straight wall. Why does ICP fail?",
   "options": [
-   "The wall has too few points",
-   "Walls are not rigid",
-   "Every shift along the wall looks equally good"
+   "The wall has too few points to give a mean",
+   "Every shift along the wall fits equally well",
+   "Real walls bend, so a rigid fit cannot match"
   ],
-  "answer": 2,
+  "answer": 1,
   "explanation": "The fit has no information about the slide along the wall."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "What is the best way to widen ICP's success range?",
+  "question": "You want your rover's ICP to succeed from farther away. What is the best way to widen its success range?",
   "options": [
-   "Start from the odometry guess",
-   "Add more iterations only",
-   "Use fewer points"
+   "Start the fit from the wheel odometry guess",
+   "Add many more iterations from the same start",
+   "Use far fewer points so pairing gets easier"
   ],
   "answer": 0,
   "explanation": "A close start keeps nearest points as true partners."

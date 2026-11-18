@@ -2,47 +2,47 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "The arm is almost fully straight and you command a radial tip velocity. What does a plain J inverse return?",
+  "question": "Your bench arm is almost fully straight and you command the tip straight outward. What does a plain J inverse return?",
   "options": [
-   "Very large joint speeds",
-   "Zero joint speeds",
-   "Exactly the right speeds"
+   "Slightly lower joint speeds that lag the command",
+   "Very large joint speeds, far beyond the motor limits",
+   "Zero joint speeds, because the direction is lost"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "The radial direction is nearly lost, so the inverse divides by something close to zero."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "For this two-link arm, det J equals?",
+  "question": "You derive det J for your two-link bench arm. What does it equal?",
   "options": [
-   "L1 L2 sin q2",
-   "L1 + L2",
-   "L1 L2 cos q1"
+   "L1 + L2 sin q2",
+   "L1 L2 sin q1",
+   "L1 L2 sin q2"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "It depends on the elbow angle only, so singularities are q2 = 0 and q2 = pi."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "At the fully stretched pose, which tip motion is impossible?",
+  "question": "Your bench arm is fully stretched. Which tip motion is impossible?",
   "options": [
-   "Radial (along the arm)",
-   "Sideways (perpendicular to the arm)",
-   "Both"
+   "Sideways motion, across the arm",
+   "Both radial and sideways motion",
+   "Radial motion, along the arm"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Both joints then move the tip only sideways."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "What does damped least squares guarantee about joint speed?",
+  "question": "You turn on damped least squares so your bench arm's motors stay under their speed limit. What does it guarantee about joint speed?",
   "options": [
    "|qd| <= |v| / (2 lam)",
-   "|qd| = 0",
-   "|qd| = |v|"
+   "|qd| <= |v| * (2 * lam)",
+   "|qd| = |v| / (2 lam)"
   ],
   "answer": 0,
   "explanation": "Each singular value s becomes s / (s^2 + lam^2), at most 1 / (2 lam)."
@@ -50,25 +50,25 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "What is the price of damping?",
+  "question": "Damping keeps your bench arm calm near full stretch. What is the price?",
   "options": [
-   "Near a singularity the tip no longer follows the command",
-   "The arm becomes unstable",
-   "Forward kinematics changes"
+   "Forward kinematics gains a small error everywhere",
+   "Damping makes the joints oscillate near it",
+   "Near a singularity the tip lags the command"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Bounded speed and exact tracking cannot both hold where the Jacobian loses rank."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Where is manipulability largest for this arm?",
+  "question": "You want your bench arm's tip to move freely in every direction. Where is manipulability largest?",
   "options": [
-   "A right-angle elbow",
-   "Fully stretched",
-   "Fully folded"
+   "Fully stretched, with the two links in a line",
+   "An elbow bent to a right angle between links",
+   "Slightly bent, just short of full stretch"
   ],
-  "answer": 0,
+  "answer": 1,
   "explanation": "|det J| = L1 L2 |sin q2| peaks at q2 = pi / 2."
  }
 ]

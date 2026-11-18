@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "바닥의 한 점은 어떻게 적습니까?", "options": ["숫자 하나", "구석에서부터 센 숫자 한 쌍", "색깔"], "answer": 1, "explanation": "원점에서부터 가로와 세로로 센 두 숫자가 자리를 정합니다."},
-  {"id": 2, "stage": "check", "question": "원점(origin)은 무엇입니까?", "options": ["모든 세기가 시작되는 구석", "가장 먼 점", "가장 긴 거리"], "answer": 0, "explanation": "원점은 (0, 0)으로 적습니다."},
-  {"id": 3, "stage": "check", "question": "가로로 3, 세로로 4 갔습니다. 곧은 거리는 얼마입니까?", "options": ["7", "5", "12"], "answer": 1, "explanation": "math.hypot(3, 4)는 3 + 4가 아니라 5입니다."},
-  {"id": 4, "stage": "check", "question": "두 점을 새 원점에서부터 다시 셌습니다. 두 점 사이 거리는 어떻게 됩니까?", "options": ["두 배가 됩니다", "옮긴 만큼 바뀝니다", "그대로입니다"], "answer": 2, "explanation": "원점을 옮기면 숫자는 바뀌지만 두 점 사이 간격은 그대로입니다."},
-  {"id": 5, "stage": "post", "question": "경로 A (0, 0), B (2, 0), C (2, 1.5)가 있습니다. A에서 B를 거쳐 C까지 가면 몇 m입니까?", "options": ["2.5 m", "3.5 m", "1.5 m"], "answer": 1, "explanation": "A에서 B는 2.0 m이고 B에서 C는 1.5 m입니다."},
-  {"id": 6, "stage": "post", "question": "A에서 C로 곧장 가는 길이 B를 거치는 길보다 짧은 이유는 무엇입니까?", "options": ["곧은 선이 삼각형의 긴 변이어서", "B가 멀어서", "rover가 빨라서"], "answer": 0, "explanation": "삼각형의 긴 변은 나머지 두 변을 합친 것보다 짧습니다. 2.5 m와 3.5 m입니다."}
+  {"id": 1, "stage": "pre", "question": "rover가 갈 자리를 바닥에 표시합니다. 바닥의 한 점은 어떻게 적습니까?", "options": ["구석에서부터 센 숫자 두 개", "숫자 하나, 벽에서 잰 거리", "서로 같아야 하는 숫자 두 개"], "answer": 0, "explanation": "원점에서부터 가로와 세로로 센 두 숫자가 자리를 정합니다."},
+  {"id": 2, "stage": "check", "question": "rover가 갈 표시 세 개를 바닥에 붙였습니다. 이 숫자들의 원점(origin)은 무엇입니까?", "options": ["rover가 닿는 가장 먼 점", "두 점 사이의 가장 긴 간격", "세기가 시작되는 구석"], "answer": 2, "explanation": "원점은 (0, 0)으로 적습니다."},
+  {"id": 3, "stage": "check", "question": "rover가 가로로 3, 세로로 4 갔습니다. 출발점에서 곧은 거리는 얼마입니까?", "options": ["7", "5", "12"], "answer": 1, "explanation": "math.hypot(3, 4)는 3 + 4가 아니라 5입니다."},
+  {"id": 4, "stage": "check", "question": "rover의 표시 두 개를 새 원점에서부터 다시 잽니다. 둘 사이 거리는 어떻게 됩니까?", "options": ["옮긴 만큼 바뀝니다", "그대로입니다", "두 배가 됩니다"], "answer": 1, "explanation": "원점을 옮기면 숫자는 바뀌지만 두 점 사이 간격은 그대로입니다."},
+  {"id": 5, "stage": "post", "question": "rover가 A (0, 0), B (2, 0), C (2, 1.5) 순서로 달립니다. A에서 B를 거쳐 C까지 몇 m입니까?", "options": ["3.5 m, 두 구간을 더한 값", "2.5 m, A에서 C까지 곧은 선", "1.5 m, 두 번째 구간만"], "answer": 0, "explanation": "A에서 B는 2.0 m이고 B에서 C는 1.5 m입니다."},
+  {"id": 6, "stage": "post", "question": "rover가 B에 들르지 않고 A에서 C로 곧장 갈 수 있습니다. 곧장 가는 길이 B를 거치는 길보다 짧은 이유는 무엇입니까?", "options": ["B가 C보다 원점에서 더 멉니다", "곧은 선은 모서리를 가로질러 갑니다", "곧은 선에서는 rover가 덜 멈춥니다"], "answer": 1, "explanation": "삼각형의 긴 변은 나머지 두 변을 합친 것보다 짧습니다. 2.5 m와 3.5 m입니다."}
 ]

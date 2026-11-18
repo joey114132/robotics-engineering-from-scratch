@@ -2,10 +2,10 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "The command program crashes while a joint moves at constant speed. What does the joint do without a watchdog?",
+  "question": "Your command program crashes while a bench joint moves at constant speed. What does the joint do without a watchdog?",
   "options": [
-   "Stops at once",
-   "Returns home",
+   "Slows down and stops by itself",
+   "Drives back to its home position",
    "Keeps running the last command"
   ],
   "answer": 2,
@@ -14,47 +14,47 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "Stopping distance from speed v with constant deceleration a?",
+  "question": "Your bench joint moves at speed v and you brake with constant deceleration a. What is the stopping distance?",
   "options": [
-   "v / a",
    "v^2 / (2a)",
-   "v * a"
+   "v^2 / (2a^2)",
+   "v / (2a)"
   ],
-  "answer": 1,
+  "answer": 0,
   "explanation": "x = v t - a t^2 / 2 with t = v / a."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Why is cutting torque not a stop on a joint with no brake?",
+  "question": "You cut the torque on a bench joint that has no brake. Why is that not a stop?",
   "options": [
-   "Only friction slows it, so it coasts",
-   "It reverses the joint",
-   "It speeds the joint up"
+   "Zero torque locks the joint in place",
+   "Cutting torque also removes the friction",
+   "Only friction slows it, so it coasts"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "The coast distance is J v / b, many times the ramped stop."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Which timeout inequality keeps the joint inside the limit?",
+  "question": "You pick a watchdog timeout T for your bench joint. Which inequality keeps it inside the limit?",
   "options": [
-   "v T <= a",
-   "T >= v / a",
-   "v T + v^2 / (2a) <= room"
+   "v T + v^2 / (4a) <= room",
+   "v T + v^2 / (2a) <= room",
+   "v T + v^2 / (2a) <= 2 room"
   ],
-  "answer": 2,
+  "answer": 1,
   "explanation": "Travel during the timeout plus braking travel must fit in the room."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "What breaks if the timeout is shorter than the heartbeat period plus jitter?",
+  "question": "Your watchdog timeout is shorter than the heartbeat period plus jitter. What breaks?",
   "options": [
-   "The joint cannot brake",
+   "The heartbeat messages stop being sent",
    "One late message trips the watchdog falsely",
-   "The limit moves"
+   "The brake engages too softly to stop in time"
   ],
   "answer": 1,
   "explanation": "The timeout needs a lower bound as well."
@@ -62,13 +62,13 @@
  {
   "id": 6,
   "stage": "post",
-  "question": "Speed doubles with the same room and deceleration. What happens to the braking distance?",
+  "question": "Your bench joint's speed doubles with the same room and deceleration. What happens to the braking distance?",
   "options": [
-   "It quadruples",
-   "It doubles",
-   "It halves"
+   "It becomes twice as large",
+   "It becomes half as large",
+   "It becomes four times larger"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "Distance grows with v squared."
  }
 ]

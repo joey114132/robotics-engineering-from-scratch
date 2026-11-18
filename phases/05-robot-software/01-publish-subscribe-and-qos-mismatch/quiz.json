@@ -1,8 +1,74 @@
 [
-  {"id": 1, "stage": "pre", "question": "A viewer shows nothing although the camera node publishes and no error appears. What do you check first?", "options": ["The QoS profiles on both ends", "The monitor cable", "The CPU temperature"], "answer": 0, "explanation": "Incompatible QoS prevents delivery without crashing either node."},
-  {"id": 2, "stage": "check", "question": "Which pair is incompatible?", "options": ["Reliable publisher, best effort subscriber", "Best effort publisher, reliable subscriber", "Reliable publisher, reliable subscriber"], "answer": 1, "explanation": "The subscriber asks for more than the publisher offers."},
-  {"id": 3, "stage": "check", "question": "A keep-last queue of depth 3 receives 5 messages at once. How many are dropped and which ones?", "options": ["2, the oldest", "2, the newest", "5, all of them"], "answer": 0, "explanation": "Keep last holds the newest 3 and drops the oldest first."},
-  {"id": 4, "stage": "check", "question": "The callback takes one message per tick and the publisher sends two per tick. What does raising the depth do?", "options": ["Removes the drops", "Delays the drops but does not remove them", "Doubles the callback speed"], "answer": 1, "explanation": "A queue absorbs a burst but cannot fix a consumer that is slower on average."},
-  {"id": 5, "stage": "post", "question": "A durability pair is volatile publisher and transient-local subscriber. Result?", "options": ["No connection", "The subscriber gets old messages", "Connected but slower"], "answer": 0, "explanation": "The subscriber requests replay the publisher does not offer."},
-  {"id": 6, "stage": "post", "question": "Best fix for a sensor stream that must tolerate a lossy wireless link?", "options": ["Best effort on both ends with a small depth", "Reliable on both ends with a huge depth", "Keep all history"], "answer": 0, "explanation": "Best effort drops stale samples instead of retrying them, and a small depth keeps the freshest."}
+ {
+  "id": 1,
+  "stage": "pre",
+  "question": "On your bench the camera node publishes, yet the viewer shows nothing and no error appears. What do you check first?",
+  "options": [
+   "The QoS profiles on the camera and the viewer",
+   "The viewer's window size and its refresh rate",
+   "The camera exposure and white balance settings"
+  ],
+  "answer": 0,
+  "explanation": "Incompatible QoS prevents delivery without crashing either node."
+ },
+ {
+  "id": 2,
+  "stage": "check",
+  "question": "Your rover publishes its position and your bench arm subscribes to it. Which QoS pair never connects?",
+  "options": [
+   "Reliable publisher, reliable subscriber",
+   "Reliable publisher, a best effort subscriber",
+   "Best effort publisher, reliable subscriber"
+  ],
+  "answer": 2,
+  "explanation": "The subscriber asks for more than the publisher offers."
+ },
+ {
+  "id": 3,
+  "stage": "check",
+  "question": "Your arm's keep-last queue has depth 3 and 5 rover messages arrive at once. How many are dropped, and which ones?",
+  "options": [
+   "2 messages, the newest ones",
+   "5 messages, the entire burst",
+   "2 messages, the oldest ones"
+  ],
+  "answer": 2,
+  "explanation": "Keep last holds the newest 3 and drops the oldest first."
+ },
+ {
+  "id": 4,
+  "stage": "check",
+  "question": "Your arm's callback takes one rover message per tick while the rover sends two per tick. What does raising the depth do?",
+  "options": [
+   "Only delays the drops and does not remove them",
+   "Removes the drops once the depth is large enough",
+   "Doubles the callback speed along with the depth"
+  ],
+  "answer": 0,
+  "explanation": "A queue absorbs a burst but cannot fix a consumer that is slower on average."
+ },
+ {
+  "id": 5,
+  "stage": "post",
+  "question": "Your rover's publisher is volatile and your arm's subscriber is transient-local. What is the result?",
+  "options": [
+   "No connection is made, silently",
+   "Connected, and old messages replay",
+   "Connected, but with extra latency"
+  ],
+  "answer": 0,
+  "explanation": "The subscriber requests replay the publisher does not offer."
+ },
+ {
+  "id": 6,
+  "stage": "post",
+  "question": "Your rover's sensor stream crosses a lossy wireless link to the bench arm. Which setting fits best?",
+  "options": [
+   "Keep all the history on a reliable subscriber",
+   "Best effort on both ends with a small depth",
+   "Reliable on both ends with a large depth"
+  ],
+  "answer": 1,
+  "explanation": "Best effort drops stale samples instead of retrying them, and a small depth keeps the freshest."
+ }
 ]

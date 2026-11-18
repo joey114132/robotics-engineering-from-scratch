@@ -2,23 +2,23 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "A joint slams into its stop and the log shows no error. Most likely?",
+  "question": "Your bench joint slams into its hard stop and the log shows no error. What is most likely?",
   "options": [
-   "The CPU ran out of memory",
-   "The setpoint was too small",
-   "The controller acted correctly on wrong inputs or a wrong command path"
+   "The motor's gain was set too low to hold position",
+   "The controller obeyed a bad reading or command path",
+   "The CPU ran out of memory and the controller crashed"
   ],
-  "answer": 2,
+  "answer": 1,
   "explanation": "A fault in the sensor or command path leaves the controller consistent with itself."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Which fault ends with the true joint far from the target while the controller sees a calm, constant reading?",
+  "question": "On your bench joint the controller sees a calm, constant reading, yet the true joint ends far from the target. Which fault is it?",
   "options": [
-   "Delay",
-   "Stuck sensor",
-   "Saturation"
+   "A motor that saturates at its cap",
+   "A sensor stuck at a single value",
+   "A sensor reading that is delayed"
   ],
   "answer": 1,
   "explanation": "A frozen reading hides the motion, so the torque keeps pushing."
@@ -26,22 +26,22 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "A wrong-sign torque turns the PD spring into what?",
+  "question": "You flip the torque sign on your bench joint. What does the PD spring turn into?",
   "options": [
-   "A repeller that pushes the joint away from the target",
-   "A stiffer spring",
-   "A damper only"
+   "A damper that does nothing but slow the joint",
+   "A stiffer spring pulling harder toward the target",
+   "A repeller that pushes the joint off the target"
   ],
-  "answer": 0,
+  "answer": 2,
   "explanation": "The restoring force flips direction, so error grows."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Why does saturation get caught last in this lesson?",
+  "question": "You rank your bench joint's faults, and saturation is caught last. Why?",
   "options": [
-   "It produces the largest error",
-   "It hides the sensor",
+   "Its error is the largest, so the alarm waits to be sure",
+   "It hides the sensor reading, so no check can see it",
    "It only slows the response, so only a time-based check trips"
   ],
   "answer": 2,
@@ -50,23 +50,23 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "Same stuck sensor, injected after the joint settled. What happens?",
+  "question": "On your bench joint you inject the same stuck sensor after the joint has settled. What happens?",
   "options": [
-   "The joint hits the limit",
-   "Almost nothing, torque is near zero",
-   "The loop goes unstable"
+   "The loop goes unstable and the joint buzzes",
+   "The joint drifts slowly to the hard stop",
+   "Almost nothing, as torque is already near zero"
   ],
-  "answer": 1,
+  "answer": 2,
   "explanation": "The held reading equals the true one and the commanded torque is about zero."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "What should you do with the alarm thresholds measured here?",
+  "question": "You measured alarm thresholds on your bench joint. What should you do with them?",
   "options": [
-   "Re-measure them on your own plant",
-   "Copy them to every robot",
-   "Use them as certified limits"
+   "Re-measure them on your own robot's plant",
+   "Copy them to all robots with this controller",
+   "Treat them as certified, final safety limits"
   ],
   "answer": 0,
   "explanation": "They depend on this plant's inertia, gains and rates."
