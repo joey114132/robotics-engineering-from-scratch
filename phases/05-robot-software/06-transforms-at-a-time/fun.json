@@ -5,9 +5,9 @@
     "clip": "A robot turns while it drives, and its laser scans a straight wall for 0.5 s. Green points use the robot's pose at each point's own time stamp, so they land on the wall. Blue points use the newest pose for every point, so the wall bends away by about 0.5 m and some points land 1.18 m from where they should. Played seven times slower."
   },
   "ko": {
-    "hook": "지금 어디 있냐고 물으면 말해 줄게요. 조금 전에 어디 있었냐고 물으면 interpolate해서 답하고 내일은 어디 있냐고 물으면 거절합니다.",
+    "hook": "지금 어디 있는지 물으면 말해 줄게요. 조금 전에 어디 있었는지 물으면 interpolate해서 답해요. 내일은 어디 있을지 물으면 거절해요.",
     "mission": "저장된 pose 안쪽의 시각 하나와 가장 최신보다 뒤인 시각 하나를 물어서 어느 쪽이 거부되는지 확인합니다. `code/main.py`에서 샘플 두 개를 넣은 뒤 `buf.lookup(0.25)`와 `buf.lookup(1.2)`를 부르세요. 어느 쪽이 오류를 일으키고 메시지가 무엇인지 예측하세요.",
-    "clip": "로봇이 돌면서 달리고 레이저가 0.5초 동안 곧은 벽을 스캔합니다. 초록 점은 각 점의 time stamp 시각에 맞는 pose를 써서 벽 위에 놓입니다. 파란 점은 모든 점에 가장 최신 pose를 써서 벽이 약 0.5 m 휘고 어떤 점은 제자리에서 1.18 m 떨어집니다."
+    "clip": "로봇이 돌면서 달리고 레이저가 0.5초 동안 곧은 벽을 스캔합니다. 초록 점은 각 점의 time stamp 시각에 맞는 pose를 써서 벽 위에 놓입니다. 파란 점은 모든 점에 가장 최신 pose를 써서 벽이 약 0.5 m 휘고 어떤 점은 있어야 할 자리에서 1.18 m 떨어집니다."
   },
   "toy": "tf-at-a-time",
   "three": "timestamp-frames-3d"

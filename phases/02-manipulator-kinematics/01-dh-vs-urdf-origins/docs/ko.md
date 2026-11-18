@@ -6,13 +6,13 @@
 
 ## 쉽게 말하면
 
-DH 표는 작은 로봇 팔에서 link마다 앞 link에 어떻게 이어지는지 적은 표예요. 이 표를 읽는 규칙을 convention이라고 하고 두 가지가 있어요. 이동한 다음 돌리거나 돌린 다음 이동해요.
+DH 표는 작은 로봇 팔에서 link마다 앞 link에 어떻게 놓여 있는지 적은 표예요. 이 표를 읽는 규칙을 convention이라고 하는데 두 가지가 있어요. 이동한 다음 돌리는 방식과 돌린 다음 이동하는 방식이에요.
 
 팔꿈치를 편 상태에서는 두 방식이 손을 같은 자리에 둬요. 팔꿈치를 굽히면 두 손이 갈라지는데 에러 메시지는 나오지 않아요.
 
 ## 핵심 용어
 
-- **DH table**: Denavit-Hartenberg 표로 joint마다 숫자 네 개(길이 둘과 각도 둘)짜리 행 하나씩 두어 팔을 설명합니다.
+- **DH table**: Denavit-Hartenberg 표입니다. joint마다 숫자 네 개(길이 둘과 각도 둘)로 된 행이 하나씩 있어서 팔을 설명합니다.
 - **Convention**: 표를 읽는 약속입니다. 같은 숫자도 convention에 따라 다르게 읽힙니다.
 - **Twist (`alpha`)**: 다음 joint가 도는 선이 이 joint가 도는 선에 비해 얼마나 기울었는지입니다.
 - **Forward kinematics (FK)**: joint 각도로부터 손이 어디에 있는지 계산하는 것입니다.
@@ -21,11 +21,11 @@ DH 표는 작은 로봇 팔에서 link마다 앞 link에 어떻게 이어지는�
 
 ## 문제
 
-교재에 나온 로봇 팔의 DH 표(link를 설명하는 숫자 표)를 그대로 옮겼습니다. zero pose가 맞아 보여서 넘어갔습니다. 나중에 대부분의 다른 pose에서 팔이 목표를 빗나가는데 에러는 없습니다.
+교재에 나온 로봇 팔의 DH 표(link를 설명하는 숫자 표)를 그대로 옮겼습니다. zero pose가 맞아 보여서 넘어갔습니다. 나중에 다른 대부분의 pose에서 팔이 목표를 빗나가는데 에러 메시지는 없습니다.
 
 ## 개념
 
-이 표가 코드가 생각하는 손의 위치를 정합니다. 읽는 방법은 두 가지입니다. link를 따라 이동한 다음 돌리거나 돌린 다음 이동합니다. 팔꿈치를 편 상태에서는 둘이 손을 같은 자리에 두므로 실수가 숨습니다.
+코드가 생각하는 손의 위치는 이 표가 정합니다. 읽는 방법은 두 가지입니다. link를 따라 이동한 다음 돌리는 방법과 돌린 다음 이동하는 방법입니다. 팔꿈치를 편 상태에서는 둘이 손을 같은 자리에 두므로 실수가 숨습니다.
 
 ![한 팔의 세 가지 표기](../assets/diagram-three-ways.png)
 
@@ -37,7 +37,7 @@ DH 표는 작은 로봇 팔에서 link마다 앞 link에 어떻게 이어지는�
 
 ![틀린 convention과 맞는 convention](../assets/fig-wrong-convention.png)
 
-*왼쪽은 표 하나와 읽는 방법 둘입니다. 오른쪽은 팔꿈치가 굽혀질 때 오차가 나타나는 모습입니다.*
+*왼쪽은 표 하나와 읽는 방법 둘입니다. 오른쪽은 팔꿈치를 굽히면 오차가 나타나는 모습입니다.*
 
 ![어깨를 돌린 뒤 팔꿈치를 굽힘](../assets/clip-example.mp4)
 
@@ -46,8 +46,8 @@ DH 표는 작은 로봇 팔에서 link마다 앞 link에 어떻게 이어지는�
 <details><summary>The math (optional)</summary>
 
 한 행에는 숫자 네 개가 있습니다. link 길이 `a`, 비틀림 `alpha`, 이동 `d`, 관절 각도 `theta`입니다.
-Craig의 convention(3장 3.4절)은 `i`행에 `a(i-1)`과 `alpha(i-1)`을 두고 다른 convention은 `a(i)`와 `alpha(i)`를 둡니다.
-예제 팔은 0.4 m와 0.3 m이고 Craig 행은 `(0, 0, 0, 0)`과 `(0.4, 0, 0, 0)`입니다. 어깨를 0.5 rad 돌리면 두 손은 같은 자리에 있지만 팔꿈치를 0.8 rad 굽히면 0.31 m 벌어집니다.
+Craig의 convention(3장 3.4절)은 `i`행에 `a(i-1)`과 `alpha(i-1)`을 둡니다. 다른 convention은 `a(i)`와 `alpha(i)`를 둡니다.
+예제 팔은 0.4 m와 0.3 m이고 Craig 행은 `(0, 0, 0, 0)`과 `(0.4, 0, 0, 0)`입니다. 어깨를 0.5 rad 돌리면 두 손은 같은 자리에 있습니다. 팔꿈치를 0.8 rad 굽히면 0.31 m 벌어집니다.
 
 </details>
 
@@ -60,7 +60,7 @@ def dh_craig(a, alpha, d, th):    return rx(alpha) @ tr(a,0,0) @ rz(th) @ tr(0,0
 def dh_standard(a, alpha, d, th): return rz(th) @ tr(0,0,d) @ tr(a,0,0) @ rx(alpha)
 ```
 
-`craig_to_standard()`는 Craig 표를 standard 표로 바꾸고 `craig_to_urdf()`는 로봇 파일의 offset으로 바꿉니다.
+`craig_to_standard()`는 Craig 표를 standard 표로 바꿉니다. `craig_to_urdf()`는 로봇 파일의 offset으로 바꿉니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -80,4 +80,4 @@ URDF loader나 MuJoCo 모델은 offset을 읽으므로 datasheet의 DH 표를 �
 
 1. 데모에서 팔꿈치를 굽혀서 두 방식이 갈라지는 것을 보세요.
 2. 틀린 방식이 우연히 맞는 pose를 찾으세요.
-3. 실제 팔에서 잰 손 위치 두 개가 주어졌을 때 어느 읽는 방식(이동 먼저 또는 회전 먼저)이 맞는지 찾으세요.
+3. 실제 팔에서 잰 손 위치 두 개가 주어졌을 때 어느 읽기 방식(이동 먼저 또는 회전 먼저)이 맞는지 찾으세요.

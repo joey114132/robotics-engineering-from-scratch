@@ -49,7 +49,7 @@ Kalman filter는 가장 좋은 추측과 그것이 얼마나 불확실한지를 
 
 <details><summary>The math (optional)</summary>
 
-state `x`는 `[position, velocity]`이고 2 m의 불확실성은 `P = 4`입니다. Predict: `x = F x`, `P = F P F^T + Q`(`F`는 한 걸음의 움직임)입니다. 센서 값 `z = H x + noise`는 위치만 봅니다.
+state `x`는 `[position, velocity]`이고 2 m의 불확실성은 `P = 4`입니다. Predict: `x = F x`, `P = F P F^T + Q`(`F`는 한 스텝의 움직임)입니다. 센서 값 `z = H x + noise`는 위치만 봅니다.
 Correct: `x = x + K (z - H x)`이고 가장 좋은 `K = P H^T (H P H^T + R)^-1`이며 `P`는 Joseph 형태로 갱신합니다. 위치만 보면 `K = P / (P + R)`입니다.
 0에서 시작해 `P = 4`이고 센서 값이 3 m일 때 `R = 4`이면 `K = 0.5`여서 추정은 1.5 m 움직이고 `P`는 2로 떨어집니다. 잡음이 6 m인 센서는 `R = 36`이므로 `K = 4 / 40 = 0.1`이고 0.3 m만 움직입니다.
 4000번 실행에서 오차는 2.0 m가 아니라 1.0 m 근처에 자리 잡고 오차의 95%가 2 sigma 안에 듭니다.

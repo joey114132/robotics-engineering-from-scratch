@@ -5,7 +5,7 @@
     "clip": "Both arms drive their two joints around the same small circle. The dark loop is where the tip really goes, and the amber arrow shows its speed and direction. The bent green arm draws a fat loop. The nearly straight blue arm draws a thin one, because it can barely move its tip along the arm."
   },
   "ko": {
-    "hook": "표 하나, 곧 Jacobian이 제 joint 속도를 손 속도로 바꿔요. 그 transpose는 손을 미는 힘을 torque로 바꿔요. 값싼 요령이에요.",
+    "hook": "표 하나, 곧 Jacobian이 제 joint 속도를 손 속도로 바꿔요. 그 transpose는 손을 미는 힘을 torque로 바꿔요. 싸게 먹히는 요령이에요.",
     "mission": "표를 만드는 두 방법을 비교합니다. `cd code && python3 -c \"from main import *; q=np.array([.3,.8]); L=(.5,.4); print(abs(jacobian(q,L)-jacobian_fd(q,L,eps=1e-2)).max())\"`를 실행하세요. 이 숫자가 `python3 code/main.py`가 출력하는 2.8e-11보다 클지 작을지 먼저 예측해 보세요.",
     "clip": "두 팔이 두 관절을 같은 작은 원 위로 돌립니다. 검은 고리는 손끝이 실제로 지나가는 길이고 주황색 화살표는 손끝의 속도와 방향입니다. 굽힌 초록 팔은 뚱뚱한 고리를 그립니다. 거의 편 파란 팔은 팔 방향으로 손끝을 거의 못 움직여서 가는 고리를 그립니다."
   },

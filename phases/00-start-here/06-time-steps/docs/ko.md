@@ -8,7 +8,7 @@
 
 공이 떨어지는 모습을 슬로모션으로 한 장면씩 보세요. 장면마다 공은 조금 더 떨어졌고 조금 더 빨라졌어요.
 
-컴퓨터도 똑같이 움직여요. 시간을 작은 조각만큼 앞으로 넘기고 속도와 위치를 고친 뒤 되풀이해요. 조각이 작을수록 그림이 실제와 더 가깝게 남아요.
+컴퓨터도 물체를 똑같이 움직여요. 시간을 작은 조각만큼 앞으로 넘기고 속도와 위치를 고친 뒤 되풀이해요. 조각이 작을수록 그림이 실제와 더 가깝게 남아요.
 
 ## 핵심 용어
 
@@ -41,11 +41,11 @@
 
 ![장난감 자동차 둘](../assets/clip.mp4)
 
-*두 자동차는 똑같이 속도를 올립니다. 파랑은 큰 스텝으로 뛰어 주황색 선을 넘고 초록은 그 근처에서 멈춥니다.*
+*두 자동차는 똑같이 속도를 올립니다. 파랑은 큰 스텝으로 뛰어 호박색 선을 넘고 초록은 그 근처에서 멈춥니다.*
 
 <details><summary>The math (optional)</summary>
 
-스텝마다 `speed = speed + acceleration * dt`를 한 다음 `position = position + speed * dt`를 합니다. 정지 상태에서의 실제 거리는 `0.5 * acceleration * t^2`이고 중력 9.81이면 1초 뒤 4.905 m입니다.
+스텝마다 `speed = speed + acceleration * dt`를 한 다음 `position = position + speed * dt`를 합니다. 정지 상태에서 출발하면 실제 거리는 `0.5 * acceleration * t^2`이고 중력 9.81이면 1초 뒤 4.905 m입니다.
 
 `dt` = 0.5이면 컴퓨터는 7.357 m라고 답합니다. `dt` = 0.1이면 5.396 m이고 `dt` = 0.01이면 4.954 m입니다. 1초 뒤 오차는 `dt`의 약 4.9배입니다.
 
@@ -89,7 +89,7 @@ python3 phases/00-start-here/06-time-steps/code/main.py
 
 ## 실제 도구로 보기
 
-무료 물리 simulator인 MuJoCo에도 같은 손잡이가 있습니다. `timestep` 옵션이 스텝 하나의 길이를 정합니다.
+무료 물리 simulator인 MuJoCo에도 같은 조절 값이 있습니다. `timestep` 옵션이 스텝 하나의 길이를 정합니다.
 
 출처: https://mujoco.readthedocs.io/en/stable/XMLreference.html (`timestep` 옵션만).
 

@@ -5,7 +5,7 @@
     "clip": "A rover on a slippery floor: about one move in five turns sideways. First the tile heights and colours show good news spreading from the amber goal; tall and green is a good place to be, and the red tile is the pit. Then the rover follows the best move in each square, one slide takes it off its line, and it still reaches the goal. The spreading takes 29 sweeps, shown in 2 s."
   },
   "ko": {
-    "hook": "저는 목표가 어디인지 알아서 이웃에게 얼마나 좋은 곳인지 알려 주고 이웃은 또 옆으로 전해요. sweep마다 그 소식이 지도에서 더 멀리 퍼져요.",
+    "hook": "저는 목표가 어디인지 알아서 이웃에게 얼마나 좋은 곳인지 알려 줘요. 이웃은 또 옆으로 전해요. sweep마다 그 소식이 지도에서 더 멀리 퍼져요.",
     "mission": "바닥을 훨씬 더 미끄럽게 해서 시작 칸의 value가 오를지 내릴지 보세요. `code/main.py`에서 `slip=0.2`를 `0.5`로 바꿔 실행하고 출력되는 시작 value가 오를지 내릴지 짐작한 뒤 확인하세요.",
     "clip": "미끄러운 바닥 위의 로버입니다. 다섯 번 중 한 번쯤은 옆으로 미끄러집니다. 먼저 타일의 높이와 색이 주황색 목표에서 퍼져 나가는 좋은 소식을 보여 줍니다. 높고 초록색인 곳이 좋은 자리이고 빨간 타일은 구덩이입니다. 그다음 로버가 칸마다 가장 좋은 움직임을 따라가고 한 번 미끄러져 경로를 벗어나도 목표에 닿습니다. 퍼지는 데 sweep 29번이 걸리고 2초에 걸쳐 보여 줍니다."
   },

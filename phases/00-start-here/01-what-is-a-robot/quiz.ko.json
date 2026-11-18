@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "로봇을 가장 잘 설명한 것은 무엇입니까?", "options": ["처음부터 끝까지 정해진 계획 하나를 따르는 기계", "주변을 재고, 정하고, 움직이는 일을 되풀이하는 기계", "사람이 밀어 줄 때만 움직이는 기계"], "answer": 1, "explanation": "sense, think, act 고리가 1초에 여러 번 되풀이됩니다."},
-  {"id": 2, "stage": "check", "question": "고리에서 벽까지의 거리를 재는 단계는 무엇입니까?", "options": ["Sense", "Think", "Act"], "answer": 0, "explanation": "재는 일이 sense입니다. think는 정하고 act는 움직입니다."},
+  {"id": 1, "stage": "pre", "question": "로봇을 가장 잘 설명한 것은 무엇입니까?", "options": ["처음부터 끝까지 정해진 계획 하나를 따르는 기계", "주변을 재고, 정하고, 움직이는 일을 되풀이하는 기계", "사람이 밀어 줄 때만 움직이는 기계"], "answer": 1, "explanation": "sense, think, act loop가 1초에 여러 번 되풀이됩니다."},
+  {"id": 2, "stage": "check", "question": "loop에서 벽까지의 거리를 재는 단계는 무엇입니까?", "options": ["Sense", "Think", "Act"], "answer": 0, "explanation": "재는 일이 sense입니다. think는 정하고 act는 움직입니다."},
   {"id": 3, "stage": "check", "question": "이 레슨에서 자동차는 잰 거리가 어떨 때 멈춥니까?", "options": ["0.5 m보다 클 때", "0.5 m 이하일 때", "정확히 3.0 m일 때"], "answer": 1, "explanation": "거리가 0.5 m 이하가 되면 think가 속도 0을 돌려줍니다."},
-  {"id": 4, "stage": "check", "question": "벽을 더 멀리 옮겼습니다. 고리 코드에서 바꿀 것은 무엇입니까?", "options": ["없습니다. 자동차가 매번 벽을 재기 때문입니다", "고리 전체를 다시 써야 합니다", "자동차를 더 느리게 해야 합니다"], "answer": 0, "explanation": "고리는 매번 거리를 읽으므로 벽이 어디에 있든 동작합니다."},
+  {"id": 4, "stage": "check", "question": "벽을 더 멀리 옮겼습니다. loop 코드에서 바꿀 것은 무엇입니까?", "options": ["없습니다. 자동차가 매번 벽을 재기 때문입니다", "loop 전체를 다시 써야 합니다", "자동차를 더 느리게 해야 합니다"], "answer": 0, "explanation": "loop는 매번 거리를 읽으므로 벽이 어디에 있든 동작합니다."},
   {"id": 5, "stage": "post", "question": "자동차에게 1.0 m/s로 4초 동안 달리라고 했고 벽은 3.0 m에 있습니다. 어떻게 됩니까?", "options": ["제때 멈춥니다", "벽을 1.0 m 지나갑니다", "벽 0.5 m 앞에서 멈춥니다"], "answer": 1, "explanation": "4.0 m까지 가고 벽을 한 번도 보지 않습니다."},
-  {"id": 6, "stage": "post", "question": "고리는 왜 그렇게 빨리 되풀이됩니까?", "options": ["움직일 때마다 세상이 바뀌어서 잰 값이 금방 낡기 때문입니다", "배터리를 쓰려고", "모터가 요구해서"], "answer": 0, "explanation": "움직일 때마다 세상이 바뀌므로 다음 결정에는 새로 잰 값이 필요합니다."}
+  {"id": 6, "stage": "post", "question": "loop는 왜 그렇게 빨리 되풀이됩니까?", "options": ["움직일 때마다 세상이 바뀌어서 잰 값이 금방 낡기 때문입니다", "배터리를 쓰려고 하기 때문입니다", "모터가 요구하기 때문입니다"], "answer": 0, "explanation": "움직일 때마다 세상이 바뀌므로 다음 결정에는 새로 잰 값이 필요합니다."}
 ]

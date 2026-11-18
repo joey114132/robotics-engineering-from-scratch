@@ -15,7 +15,7 @@
 - **Status**: 각 단계가 내놓는 답입니다. 성공했거나 실패했거나 아직 진행 중입니다.
 - **Sequence**: 아래에 있는 단계들을 순서대로 실행하고 처음 실패에서 멈추는 단계입니다.
 - **Fallback**: 아래에 있는 단계들을 순서대로 시도하고 처음 성공에서 멈추는 단계입니다.
-- **State machine**: 이름 붙은 상태들과 로봇이 바뀌게 만드는 일마다 정해진 화살표를 담은 표입니다.
+- **State machine**: 이름 붙은 상태들과 로봇이 상태를 바꾸게 하는 사건마다 그려 둔 화살표를 담은 표입니다.
 
 ## 문제
 
@@ -65,7 +65,7 @@ def tick(self, log):
             return self.done(log, s)
 ```
 
-`Sequence`와 `Fallback`은 이 걷기를 공유하고 어느 답에서 멈추느냐만 다릅니다.
+`Sequence`와 `Fallback`은 자식을 훑는 이 코드를 공유하고 어느 답에서 멈추느냐만 다릅니다.
 
 ```bash
 cd robotics-engineering-from-scratch

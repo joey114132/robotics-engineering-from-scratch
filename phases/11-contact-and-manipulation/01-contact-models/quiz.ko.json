@@ -33,12 +33,12 @@
    "mu g cos(theta)"
   ],
   "answer": 1,
-  "explanation": "한계에 닿은 마찰력 mu fn이 당기는 힘을 거스릅니다."
+  "explanation": "한계에 이른 마찰력 mu fn이 당기는 힘에 맞섭니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "penalty 모델에서 접선 spring이 끝없이 늘어나지 않게 막는 것은 무엇입니까?",
+  "question": "penalty 모델에서 접선 스프링이 끝없이 늘어나지 않게 막는 것은 무엇입니까?",
   "options": [
    "법선 damper",
    "mu fn에서 힘을 자르고 anchor를 옮기는 것",

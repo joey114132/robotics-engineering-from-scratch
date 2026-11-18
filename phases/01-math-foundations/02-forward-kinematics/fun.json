@@ -5,9 +5,9 @@
     "clip": "Two arms get exactly the same joint angles, and each leaves an amber dot where its hand ends up. The arm with links [1, 1] fills a whole disc. The arm with links [3, 1] never gets closer than the inner grey ring, because one link is longer than the other together."
   },
   "ko": {
-    "hook": "forward kinematics는 제 팔을 따라 걷는 일이에요. 돌고 걷고 돌고 걷다가 한 번 길을 잃으면 제 손은 딴 곳에 있어요.",
-    "mission": "두 link로 손이 얼마나 가깝게, 또 멀리 갈 수 있는지 짐작하고 확인합니다. `python3 code/main.py`를 실행하세요. 두 번째 줄을 읽기 전에 link `[3.0, 1.0]`의 손끝이 가장 가까울 때와 가장 멀 때의 거리를 짐작하고 `reach_bounds`와 비교하세요.",
-    "clip": "두 팔이 정확히 같은 관절 각도를 받고 손끝이 닿은 자리마다 주황 점이 남습니다. link [1, 1] 팔은 원판 전체를 채웁니다. link [3, 1] 팔은 긴 link가 나머지보다 길어서 안쪽 회색 고리보다 가까이 오지 못합니다."
+    "hook": "forward kinematics는 제 팔을 따라 걷는 일이에요. 돌고 걷고 돌고 걷다가 한 번만 셈을 놓쳐도 제 손은 딴 곳에 가 있어요.",
+    "mission": "이 두 link로 손이 얼마나 가까이, 또 얼마나 멀리 갈 수 있는지 짐작해 보고 확인합니다. `python3 code/main.py`를 실행하세요. 두 번째 줄을 읽기 전에 link `[3.0, 1.0]`의 손끝이 가장 가까울 때와 가장 멀 때의 거리를 짐작하고 `reach_bounds`와 비교하세요.",
+    "clip": "두 팔이 정확히 같은 관절 각도를 받고 손끝이 닿은 자리마다 주황 점이 남습니다. link [1, 1] 팔은 원판 전체를 채웁니다. link [3, 1] 팔은 긴 link가 나머지를 합친 것보다 길어서 안쪽 회색 고리보다 가까이 오지 못합니다."
   },
   "toy": null,
   "three": "planar-fk-reach-3d"

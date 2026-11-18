@@ -15,7 +15,7 @@
 - **Hand-eye calibration**: 카메라가 로봇 손(gripper)의 어디에 붙어 있는지 찾는 일입니다.
 - **Rotation axis**: 회전이 도는 중심선입니다.
 - **Translation**: 돌림이 아니라 직선으로 옮기는 이동입니다.
-- **Transform (`X`)**: 카메라가 gripper에 대해 어느 쪽으로 돌려져 있고 얼마나 옮겨져 있는지입니다.
+- **Transform (`X`)**: gripper를 기준으로 카메라가 어느 쪽으로 돌아 있고 얼마나 떨어져 있는지입니다.
 - **Spread**: 움직임의 축들이 서로 얼마나 다른 쪽을 가리키는지입니다.
 
 ## 문제
@@ -32,15 +32,15 @@
 
 손의 움직임(관절 각도)과 카메라에 보인 세상의 움직임을 비교합니다.
 
-한 축이면 두 가지가 가려집니다. 카메라가 그 줄을 중심으로 어느 쪽으로 돌려져 있는지와 그 줄을 따라 어디에 있는지입니다.
+한 축이면 두 가지가 가려집니다. 카메라가 그 줄을 중심으로 얼마나 돌아 있는지와 그 줄을 따라 어디에 있는지입니다.
 
 ![팔이 도는 모습과 카메라 두 대](../assets/clip-example.mp4)
 
-*팔이 세운 축을 중심으로 돕니다. 더 높이 달린 카메라(유령)도 같은 움직임을 봅니다.*
+*팔이 수직 축을 중심으로 돕니다. 더 높이 달린 카메라(유령)도 같은 움직임을 봅니다.*
 
 ![먼저 회전, 그다음 이동](../assets/diagram-handeye-solve.png)
 
-*빨강: 축이 모두 같은 쪽을 가리키면 카메라가 그 줄을 중심으로 돌려진 정도와 그 줄을 따른 위치는 가려집니다.*
+*빨강: 축이 모두 같은 쪽을 가리키면 카메라가 그 줄을 중심으로 돌아 있는 정도와 그 줄을 따라 놓인 위치는 가려집니다.*
 
 ![축 spread에 따른 오차](../assets/fig-handeye-spread.png)
 
@@ -75,7 +75,7 @@ python3 -m pytest phases/06-perception-and-calibration/04-hand-eye-calibration -
 
 컴퓨터 비전 라이브러리 OpenCV의 `cv2.calibrateHandEye`는 다섯 가지 방법을 제공하고 자세가 3개보다 훨씬 많아야 합니다.
 
-출처: [OpenCV calibration module](https://docs.opencv.org/5.0/main_modules/calib.html)과 [OpenCV 3.4.20 calib3d reference](https://docs.opencv.org/3.4.20/d9/d0c/group__calib3d.html), 2026년 11월 9일 검색으로 찾았고 가져오기는 HTTP 403이었습니다.
+출처: [OpenCV calibration module](https://docs.opencv.org/5.0/main_modules/calib.html)과 [OpenCV 3.4.20 calib3d reference](https://docs.opencv.org/3.4.20/d9/d0c/group__calib3d.html), 2026년 11월 9일 검색으로 찾았고 페이지를 직접 가져오려 하자 HTTP 403이 돌아왔습니다.
 
 ## 결과물
 

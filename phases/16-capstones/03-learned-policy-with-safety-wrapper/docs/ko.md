@@ -1,6 +1,6 @@
 # 안전 wrapper를 두른 학습 정책
 
-> 학습된 모델 둘레에 평범한 안전 층을 두르고 로봇 팔이 한계 안에 머무는 것을 봅니다.
+> 학습된 모델을 평범한 안전 층으로 감싸고 로봇 팔이 한계 안에 머무는 것을 봅니다.
 
 **유형:** 만들기   **선수 지식:** 없음   **시간:** 약 30분
 
@@ -29,7 +29,7 @@ wrapper는 정책과 모터 사이에 끼우는 평범한 코드예요. 화면�
 
 ![정책 시스템](../assets/diagram-policy-system.png)
 
-*action은 wrapper를 지나고 wrapper는 화면의 나이도 확인합니다.*
+*action은 wrapper를 지나고 wrapper는 화면이 얼마나 오래됐는지도 확인합니다.*
 
 ![고장 둘](../assets/diagram-policy-broken.png)
 

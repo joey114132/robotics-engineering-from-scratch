@@ -5,9 +5,9 @@
     "clip": "A rover waits at the start of a 4 m path past two obstacles. The blue points begin jagged and run into the obstacles. Each frame shows more rounds of smoothing (up to 4000, on a log time axis) until the path bends gently around them. The grey ring is the safety margin, and 1 lesson unit is drawn as 0.4 m. The rover then drives the finished green path."
   },
   "ko": {
-    "hook": "부드러움은 제 경로를 곧게 당기고 장애물은 밀어냅니다. 저는 줄다리기에 끼인 고무줄이라 이길 수는 없고 균형만 맞춥니다.",
+    "hook": "부드러움은 제 경로를 곧게 당기고 장애물은 밀어내요. 저는 줄다리기에 끼인 고무줄이라 이길 수는 없고 균형만 맞춰요.",
     "mission": "장애물이 밀어내는 힘을 끄고 경로가 장애물에 얼마나 가까워지는지 보세요. `code/main.py`의 `optimise(X0, obs, iters=4000)` 호출에 `wo=0.0`을 더하고 `python3 code/main.py`를 실행하세요. 장애물이 밀어내지 않으면 closest approach가 어떻게 될지 먼저 맞혀 보세요.",
-    "clip": "탐사 로봇이 장애물 두 개를 지나는 4 m 경로의 출발점에서 기다립니다. 파란 점은 들쭉날쭉하게 시작해서 장애물 안으로 들어갑니다. 화면마다 부드럽게 다듬는 횟수가 늘어나서(최대 4000번, 로그 시간축) 경로가 장애물을 부드럽게 돌아갑니다. 회색 고리는 안전 여유이고 레슨의 1 단위를 0.4 m로 그렸습니다. 마지막에 로봇이 완성된 초록 경로를 따라 갑니다."
+    "clip": "탐사 로봇이 장애물 두 개를 지나는 4 m 경로의 출발점에서 기다립니다. 파란 점은 들쭉날쭉하게 시작해서 장애물 안으로 들어갑니다. 장면이 넘어갈 때마다 다듬는 횟수가 늘어나고(최대 4000번, 로그 시간축) 마침내 경로가 장애물을 완만하게 돌아갑니다. 회색 고리는 안전 여유이고 레슨의 1 단위를 0.4 m로 그렸습니다. 마지막에 로봇이 완성된 초록 경로를 따라 갑니다."
   },
   "toy": null,
   "three": "path-rubber-band-3d"

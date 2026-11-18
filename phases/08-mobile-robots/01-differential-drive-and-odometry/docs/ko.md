@@ -7,10 +7,10 @@
 ## 쉽게 말하면
 
 사각형으로 걷는데 모서리마다 [90도](https://mathworld.wolfram.com/RightAngle.html)보다 조금 덜 돈다고 해 보세요.
-공책에는 매번 [90도](https://mathworld.wolfram.com/RightAngle.html)로 적으면 사각형이 닫혀도 나는 출발점에 못 돌아와요.
+공책에는 매번 [90도](https://mathworld.wolfram.com/RightAngle.html)로 적으면 공책 속 사각형은 닫히는데 나는 출발점에 돌아오지 못해요.
 
 바퀴 크기가 틀린 로봇도 똑같아요.
-공책이 같은 틀린 값을 쓰니 기록상으로는 길이 닫혀요.
+공책도 같은 틀린 값을 쓰니까 기록 속 경로는 닫혀요.
 
 ## 핵심 용어
 
@@ -83,16 +83,16 @@ python3 phases/08-mobile-robots/01-differential-drive-and-odometry/code/main.py
 
 ## 실제 도구로 보기
 
-ROS 2는 로봇 소프트웨어 도구 모음이고 바퀴 달린 로봇용 완성된 드라이버가 있습니다. 이것은 바퀴 간격과 크기를 요구합니다. 문서는 간격이 틀리면 커브에서 이상하게 움직인다고 설명합니다.
+ROS 2는 로봇 소프트웨어 도구 모음인데 바퀴 달린 로봇용 드라이버가 이미 들어 있습니다. 이 드라이버는 바퀴 간격과 크기를 값으로 받습니다. 간격이 틀리면 커브에서 제대로 움직이지 않습니다.
 
 출처: control.ros.org, diff_drive_controller 사용자 문서(jazzy), 2026년 11월 9일에 열어 확인했습니다.
 
 ## 결과물
 
-`outputs/skill-odometry-calibration-check.md`는 잰 루프 어긋남을 의심되는 파라미터와 보정 주행으로 바꿔 줍니다.
+`outputs/skill-odometry-calibration-check.md`는 루프에서 잰 틈을 의심되는 설정 하나로 바꿔 줍니다.
 
 ## 연습 문제
 
 1. 두 바퀴 크기를 조금 다르게 하고 직선이 휘는 것을 보세요.
 2. 사각형을 반대 방향으로 달리고 어긋남이 어느 쪽을 가리키는지 보세요.
-3. 바퀴 하나가 조금 미끄러지게 해 보세요. 그 틈을 radius 오차와 track width 오차와 비교하세요.
+3. 바퀴 하나가 조금 미끄러지게 해 보세요. 그때 생기는 틈을 wheel radius 오차와 track width 오차가 만든 틈과 비교하세요.

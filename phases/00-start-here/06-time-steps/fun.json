@@ -5,9 +5,9 @@
     "clip": "Two toy cars speed up in the same way for two seconds. Blue is computed with big half-second jumps, so it moves only when a jump ends and finishes past the amber line. Green uses much smaller jumps and finishes close to the line."
   },
   "ko": {
-    "hook": "컴퓨터는 매끄러운 낙하를 보지 못하고 작은 점프의 목록만 봐요. 점프의 크기가 얼마나 틀리는지를 정해요.",
+    "hook": "컴퓨터는 매끄러운 낙하를 보지 못하고 작은 점프의 목록만 봐요. 점프의 크기가 얼마나 틀릴지를 정해요.",
     "mission": "time step을 줄이면 답이 참값에 가까워지는지 봅니다. `cd code && python3 main.py`를 실행하세요. 이어서 `positions(9.81, 1.0, 0.001)`로 스텝을 0.001로 줄이고 4.905에 얼마나 가까워질지 먼저 예측한 뒤 실행하세요.",
-    "clip": "장난감 자동차 두 대가 2초 동안 똑같이 속도를 올립니다. 파랑은 0.5초짜리 큰 점프로 계산해서 점프가 끝날 때만 움직이고 주황색 선을 넘어서 끝납니다. 초록은 훨씬 작은 점프를 써서 선 가까이에서 끝납니다."
+    "clip": "장난감 자동차 두 대가 2초 동안 똑같이 속도를 올립니다. 파랑은 0.5초짜리 큰 점프로 계산해서 점프가 끝날 때만 움직이고 호박색 선을 넘어서 끝납니다. 초록은 훨씬 작은 점프를 써서 선 가까이에서 끝납니다."
   },
   "toy": null,
   "three": "time-step-ball-3d"

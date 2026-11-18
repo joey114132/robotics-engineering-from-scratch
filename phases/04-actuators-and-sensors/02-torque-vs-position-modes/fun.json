@@ -5,9 +5,9 @@
     "clip": "Two robot arms get the same upward push at 0.5 s (red arrow). The blue arm, in position mode, is held almost still by its built-in spring; the green arm, in torque mode with stiffness K = 20, gives way like a soft spring. Exaggerated so it is easy to see."
   },
   "ko": {
-    "hook": "관절에게 부드러워지라고 했는데 뻣뻣한 채로 버텨요. position mode에서는 남의 설정이 정합니다.",
+    "hook": "관절에게 부드러워지라고 했는데 뻣뻣하게 버텨요. position 모드에서는 남의 설정이 정해요.",
     "mission": "부드러운 관절을 요청했을 때 누구의 설정이 이기는지 확인합니다. `cd code && python3 -c \"from main import *; print(felt_stiffness('position', 20.0, kp_in=100.0))\"`를 실행하세요. 결과를 보기 전에 관절이 20, 100, 400 중 어느 값처럼 느껴질지와 누구의 gain이 이기는지 맞혀 보세요.",
-    "clip": "로봇 팔 두 대가 0.5초에 같은 힘으로 위로 밀립니다(빨간 화살표). position mode인 파란 팔은 내장된 스프링이 거의 제자리에 붙잡고 stiffness K = 20인 torque mode의 초록 팔은 부드러운 스프링처럼 밀려납니다. 잘 보이도록 과장해서 그렸습니다."
+    "clip": "로봇 팔 두 대가 0.5초에 같은 힘으로 위로 밀립니다(빨간 화살표). position 모드인 파란 팔은 내장된 스프링이 거의 제자리에 붙잡고 있습니다. 토크 모드이고 stiffness K = 20인 초록 팔은 부드러운 스프링처럼 밀려납니다. 잘 보이도록 과장해서 그렸습니다."
   },
   "toy": null,
   "three": "torque-position-push-3d"

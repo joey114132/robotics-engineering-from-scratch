@@ -2,7 +2,7 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "같은 gain으로 bench에서는 안정적인데 실제 controller에서 떨립니다. 가장 먼저 의심할 것은 무엇입니까?",
+  "question": "같은 gain으로 bench에서는 안정적인데 실제 로봇에서는 떨립니다. 가장 먼저 의심할 것은 무엇입니까?",
   "options": [
    "모터 토크 상수",
    "계산하지 않은 loop 지연",

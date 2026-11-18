@@ -11,7 +11,7 @@
 ## 핵심 용어
 
 - **Fake clock**: 테스트가 손으로 앞으로 돌리는 시계입니다.
-- **Mock joint**: 나쁜 힘(torque), 예를 들어 실제 숫자가 아닌 힘(NaN)을 거부하는 가짜 팔입니다.
+- **Mock joint**: 잘못된 힘(torque)을 거부하는 가짜 팔입니다. 숫자가 아닌 값(NaN)으로 미는 경우가 그 예입니다.
 - **Unit test**: 가짜 시계를 돌리고 단순한 규칙 하나를 확인하는 테스트입니다.
 - **Replay test**: 녹화를 다시 넣어 출력을 믿을 수 있는 녹화와 비교하는 테스트입니다.
 - **Property test**: 규칙 하나에 무작위 입력을 많이 던지는 테스트입니다.
@@ -56,7 +56,7 @@ property 테스트는 토크가 유한하고 한계를 넘지 않는지 확인�
 
 ## 만들기
 
-`FakeClock`은 `now()`와 `advance(dt)`를 가집니다. `MockJoint`는 한계를 넘는 토크나 NaN을 받으면 예외를 냅니다. `Controller`는 update가 너무 오래 끊기면 토크 0을 냅니다. 
+`FakeClock`에는 `now()`와 `advance(dt)`가 있습니다. `MockJoint`는 한계를 넘는 토크나 NaN을 받으면 예외를 냅니다. `Controller`는 update가 너무 오래 끊기면 토크 0을 냅니다. 
 
 ```python
 def test_step_direction_test_catches_the_sign_bug():

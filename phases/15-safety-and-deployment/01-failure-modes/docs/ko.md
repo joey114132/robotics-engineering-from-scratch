@@ -6,7 +6,7 @@
 
 ## 쉽게 말하면
 
-작업대 위 로봇 팔이 목표를 향해 움직이는 중에 센서가 얼어붙었다고 해 보세요. 얼어붙은 값은 계속 팔이 빠르다고 말해요. 그래서 controller(모터를 움직이는 프로그램)는 계속 브레이크를 걸고 그 브레이크가 팔을 hard stop으로 밀어 넣어요.
+작업대 위 로봇 팔이 목표를 향해 움직이는 중에 센서가 얼어붙었다고 해 보세요. 얼어붙은 값은 계속 팔이 빠르다고 말해요. 그래서 controller(모터를 움직이는 프로그램)는 계속 브레이크를 걸고 그 브레이크가 팔을 hard stop 쪽으로 도로 밀어붙여요.
 controller는 고장 나지 않았어요. 잘못된 값을 그대로 따랐을 뿐이에요.
 
 ## 핵심 용어
@@ -38,7 +38,7 @@ controller는 고장 나지 않았어요. 잘못된 값을 그대로 따랐을 �
 
 ![결함별 응답](../assets/fig-fault-responses.png)
 
-*wrong sign과 얼어붙은 센서는 stop에서 끝납니다. 끊김은 회복하고 delay는 흔들립니다.*
+*wrong sign과 얼어붙은 센서는 stop에서 끝납니다. dropout은 회복하고 delay는 흔들립니다.*
 
 ![피해와 경고](../assets/fig-fault-ranking.png)
 
@@ -50,8 +50,8 @@ controller는 고장 나지 않았어요. 잘못된 값을 그대로 따랐을 �
 
 <details><summary>The math (optional)</summary>
 
-wrong sign은 스프링을 밀어내는 힘으로 바꿉니다. 관절은 0.460초에 stop에 부딪히고 "error grew in the last 100 ms" 검사는 0.205초에 걸려서 경고가 0.255초 먼저 나옵니다.
-검사 네 개는 모터가 미는데도 측정값이 멈춰 있음, 측정값이 튐, 오차가 100 ms 동안 커짐, 2초 뒤에도 목표에 못 감입니다. saturation은 마지막인 2초 기한 검사에만 걸립니다.
+wrong sign은 스프링이 당기는 대신 밀어내게 만듭니다. 관절은 0.460초에 stop에 부딪히고 "error grew in the last 100 ms" 검사는 0.205초에 걸려서 경고가 0.255초 먼저 나옵니다.
+검사 네 개는 모터가 미는데도 측정값이 멈춰 있는지, 측정값이 튀는지, 오차가 100 ms 동안 커지는지, 2초 뒤에도 목표에 못 갔는지를 봅니다. saturation은 마지막인 2초 기한 검사에만 걸립니다.
 관절은 `J qdd = tau - b qd`이고 2 rad(약 115도)에 hard stop이 있습니다.
 
 </details>
@@ -69,7 +69,7 @@ if fault == "wrong_sign":
     tau = -tau
 ```
 
-`metrics()`는 실제 관절을 잽니다. `alarm_time()`은 controller가 볼 수 있는 값만 씁니다. `ranked()`는 결함을 나쁜 순서로 정렬합니다.
+`metrics()`는 실제 관절을 잽니다. `alarm_time()`은 controller가 볼 수 있는 값만 씁니다. `ranked()`는 결함을 가장 나쁜 것부터 정렬합니다.
 
 ```bash
 cd robotics-engineering-from-scratch

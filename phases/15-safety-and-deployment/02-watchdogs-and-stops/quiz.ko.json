@@ -28,12 +28,12 @@
   "stage": "check",
   "question": "brake가 없는 관절에서 토크 차단이 정지가 아닌 이유는?",
   "options": [
-   "마찰만 작용해 미끄러진다",
+   "마찰만 작용해 계속 굴러간다",
    "관절이 반대로 돈다",
    "관절이 빨라진다"
   ],
   "answer": 0,
-  "explanation": "미끄러지는 거리 J v / b는 ramp 정지보다 훨씬 깁니다."
+  "explanation": "굴러가는 거리 J v / b는 ramp 정지보다 훨씬 깁니다."
  },
  {
   "id": 4,

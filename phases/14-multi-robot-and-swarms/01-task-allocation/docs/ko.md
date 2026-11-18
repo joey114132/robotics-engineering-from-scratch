@@ -24,12 +24,12 @@ task allocation은 모든 자동차와 패드 사이의 거리를 비교해요. 
 
 ## 개념
 
-일을 하나씩 나눠 주면 로봇 무리는 배터리와 시간을 낭비하므로 무리로 함께 계획해야 합니다. greedy 로봇은 가장 가까운 빈 일을 가져가서 나중 로봇이 긴 길을 가게 만들 수 있습니다.
+일을 하나씩 따로 나눠 주면 배터리와 시간이 낭비되므로 로봇은 한 팀으로 함께 계획해야 합니다. greedy 로봇은 가장 가까운 빈 일을 가져가서 나중 로봇이 긴 길을 가게 만들 수 있습니다.
 Hungarian 방법은 모든 거리를 함께 보고 앞의 짝을 되돌려서 전체를 가장 작게 만듭니다.
 
 ![greedy 함정](../assets/diagram-greedy-trap.png)
 
-*앞에서 싸게 고른 선택이 뒤의 비싼 선택을 강요합니다. 4번 자동차가 5번 자동차에게 하나뿐인 가까운 패드를 가져갑니다.*
+*앞에서 싸게 고른 선택이 뒤의 비싼 선택을 강요합니다. 4번 자동차가 5번 자동차 근처의 하나뿐인 패드를 먼저 차지합니다.*
 
 ![최적 배정의 아이디어](../assets/diagram-optimal-idea.png)
 
@@ -41,7 +41,7 @@ Hungarian 방법은 모든 거리를 함께 보고 앞의 짝을 되돌려서 �
 
 ![비용 차이](../assets/fig-cost-gap.png)
 
-*로봇이 많을수록 최적보다 greedy 배정이 더 드는 비용이 커집니다.*
+*로봇이 많을수록 greedy 배정이 최적 배정보다 더 쓰는 비용이 커집니다.*
 
 ![자동차 다섯 대](../assets/clip-example.mp4)
 
@@ -82,7 +82,7 @@ python3 phases/14-multi-robot-and-swarms/01-task-allocation/code/figure.py
 
 ## 실제 도구로 보기
 
-파이썬 수학 라이브러리인 SciPy의 `scipy.optimize.linear_sum_assignment`가 같은 문제를 풀고 테스트가 총비용이 같은지 확인합니다.
+파이썬 수학 라이브러리인 SciPy에 `scipy.optimize.linear_sum_assignment`가 있어서 같은 문제를 풉니다. 테스트는 두 방법의 총비용이 같은지 확인합니다.
 
 출처: SciPy 문서의 `linear_sum_assignment`(2026년 11월 9일 확인).
 
@@ -92,6 +92,6 @@ python3 phases/14-multi-robot-and-swarms/01-task-allocation/code/figure.py
 
 ## 연습 문제
 
-1. 일이 로봇보다 많은 경우에는 모든 일까지의 거리가 0인 가짜 로봇을 더해 보세요.
+1. 일이 로봇보다 많으면 어떤 일까지든 거리가 0인 가짜 로봇을 더해 보세요.
 2. 직선 거리 대신 격자 경로를 따라 거리를 재세요.
 3. greedy 배정이 로봇과 패드의 짝 중 가장 싼 하나부터 고르게 바꾸세요.

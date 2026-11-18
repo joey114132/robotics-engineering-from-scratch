@@ -14,7 +14,7 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "spring 표면에서 적분 힘 제어 v = ki (fd - f)의 정착 시정수는 무엇입니까?",
+  "question": "spring 표면에서 적분 힘 제어 v = ki (fd - f)의 정착 time constant는 무엇입니까?",
   "options": [
    "1 / (ke ki)",
    "ke ki",
@@ -33,7 +33,7 @@
    "차이가 없습니다"
   ],
   "answer": 1,
-  "explanation": "루프 이득이 ke ki이므로 단단한 표면일수록 시정수가 짧습니다."
+  "explanation": "루프 gain이 ke ki이므로 단단한 표면일수록 time constant가 짧습니다."
  },
  {
   "id": 4,
@@ -69,6 +69,6 @@
    "목표 힘이 너무 작습니다"
   ],
   "answer": 0,
-  "explanation": "루프 이득은 ke에 비례하므로 단단한 표면이 먼저 불안정해집니다."
+  "explanation": "루프 gain은 ke에 비례하므로 단단한 표면이 먼저 불안정해집니다."
  }
 ]

@@ -15,7 +15,7 @@
 - **Callback**: 메시지가 도착하거나 timer가 울릴 때 ROS 2가 실행하는 함수입니다.
 - **Thread**: 프로그램 안의 일꾼 하나입니다. 한 번에 한 가지 일만 합니다.
 - **Executor**: 준비된 callback 중 무엇을 어느 thread에서 실행할지 정하는 ROS 2의 부분입니다.
-- **Callback group**: 함께 실행되는 방식에 대한 규칙 하나를 공유하는 callback 묶음입니다. 예를 들면 동시에 실행하지 않는 규칙입니다.
+- **Callback group**: 함께 실행되는 방식을 정하는 규칙 하나를 공유하는 callback 묶음입니다. 예를 들면 서로 동시에 실행하지 않는다는 규칙입니다.
 - **Starvation**: 다른 callback이 thread를 쥐고 있어서 어떤 callback이 너무 오래 기다리는 일입니다.
 - **Watchdog**: heartbeat가 늦으면 로봇을 세우는 감시 장치입니다.
 
@@ -25,7 +25,7 @@
 
 ## 개념
 
-로봇은 많은 callback을 동시에 돌리고 느린 callback 하나가 안전과 관련된 callback을 굶길 수 있습니다.
+로봇은 많은 callback을 동시에 돌리고 느린 callback 하나가 안전에 직결된 callback을 굶길 수 있습니다.
 
 ![스레드 하나와 느린 callback 하나](../assets/diagram-executor-starve.png)
 
@@ -38,7 +38,7 @@ executor는 준비된 callback 중 무엇을 어느 thread에서 실행할지 �
 
 *두 callback이 서로 다른 group에 있을 때만 두 번째 thread가 도움이 됩니다.*
 
-그래서 해결에는 thread 하나 더와 느린 callback만의 group이 함께 필요합니다.
+그래서 고치려면 thread를 하나 더 두고 느린 callback을 자기만의 group에 넣어야 합니다.
 
 ![자동차 두 대와 각 thread 두 개](../assets/clip-example.mp4)
 

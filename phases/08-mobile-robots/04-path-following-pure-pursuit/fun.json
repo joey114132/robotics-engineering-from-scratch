@@ -5,9 +5,9 @@
     "clip": "Three cars follow the same L-shaped path, each aiming at a point a different distance ahead: 0.4 m (blue), 1.5 m (green) and 4.0 m (red). The amber balls are the points they aim at, and the dots show where each car has been. The short aim weaves, the middle one follows the path, and the long one cuts the corner. The three runs are drawn side by side, not on one road."
   },
   "ko": {
-    "hook": "너무 가까이 겨냥하면 겁먹은 국수처럼 휘청대고 너무 멀리 겨냥하면 코너를 가로지릅니다. 둘 다 숫자 하나에서 나옵니다.",
+    "hook": "너무 가까이 겨냥하면 겁먹은 국수처럼 휘청대고 너무 멀리 겨냥하면 코너를 가로질러요. 둘 다 숫자 하나에서 나와요.",
     "mission": "두 극단 사이의 lookahead를 써 보고 코너를 얼마나 자를지 맞혀 보세요. `code/main.py`에서 `(0.4, 1.5, 4.0)`의 `4.0`을 `2.5`로 바꾸고 `python3 code/main.py`를 실행하세요. 코너 절단이 0.41 m와 1.37 m 사이 어디쯤일지 먼저 맞혀 보세요.",
-    "clip": "자동차 세 대가 같은 L자 경로를 따라가는데 각자 앞쪽 다른 거리의 점을 겨냥합니다. 거리는 0.4 m(파랑), 1.5 m(초록), 4.0 m(빨강)입니다. 주황 공은 겨냥하는 점이고 점들은 차가 지나간 자리입니다. 짧게 겨냥하면 흔들리고 중간은 경로를 따라가며 길게 겨냥하면 코너를 자릅니다. 세 번의 주행은 한 도로가 아니라 나란히 그렸습니다."
+    "clip": "자동차 세 대가 같은 L자 경로를 따라가는데 각자 앞쪽 다른 거리의 점을 겨냥합니다. 거리는 0.4 m(파랑), 1.5 m(초록), 4.0 m(빨강)입니다. 주황 공은 겨냥하는 점이고 점은 각 차가 지나온 자리입니다. 짧게 겨냥하면 흔들리고 중간은 경로를 따라가며 길게 겨냥하면 코너를 자릅니다. 세 번의 주행은 한 도로 위가 아니라 나란히 놓고 그렸습니다."
   },
   "toy": null,
   "three": "pure-pursuit-3d"

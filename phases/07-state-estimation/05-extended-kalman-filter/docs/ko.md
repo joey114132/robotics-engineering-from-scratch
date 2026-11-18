@@ -17,7 +17,7 @@
 - **Heading**: 로봇이 바라보는 방향입니다.
 - **Jacobian (`F`, `H`)**: 기울기 표(matrix)입니다. 로봇의 위치와 방향이 조금 변할 때 필터의 예측이 얼마나 변하는지 알려 줍니다.
 - **Landmark**: 로봇이 재는 위치를 아는 기둥입니다.
-- **NEES**: 필터의 불확실성이 실제 오차와 맞는지 보는 점수입니다. 정직한 필터는 여기서 추적하는 값마다 하나씩 해서 약 3을 받습니다.
+- **NEES**: 필터의 불확실성이 실제 오차와 맞는지 보는 점수입니다. 정직한 필터는 추적하는 값의 개수만큼, 여기서는 약 3을 받습니다.
 
 ## 문제
 
@@ -50,7 +50,7 @@ NEES는 필터가 주장하는 불확실성이 실제 오차와 맞는지 확인
 <details><summary>The math (optional)</summary>
 
 state는 `[x, y, heading]`이고 로봇은 속도 `v`와 회전율 `w`로 곡선 `f(x, u)`를 따라 움직입니다. `F`는 움직임의 Jacobian이고 `H`는 landmark의 range와 bearing `h(x)`의 Jacobian입니다.
-covariance는 `P = F P F^T + Q`로 predict합니다. bearing 차이는 감쌉니다. NEES `e^T P^-1 e`는 평균이 상태 크기인 3입니다(위치 둘, 방향 하나).
+covariance는 `P = F P F^T + Q`로 predict합니다. bearing 차이는 wrap합니다. NEES `e^T P^-1 e`의 평균은 상태 크기인 3입니다(위치 둘, 방향 하나).
 heading 추측이 1 rad 틀리고 landmark가 하나이면 30번 실행에서 NEES 평균이 100.5이고 추정이 2.8 m 어긋난 채 끝납니다. 넷이면 2.7입니다. 그림에서 NEES는 landmark 네 개에서 3 근처에 머물고 하나일 때는 약 4에서 수백으로 커집니다.
 테스트는 150개 seed에서 NEES가 3 근처인지, landmark 하나와 1.5 rad heading 오차에서 20배 넘게 커지는지 확인합니다. 1 m는 0.5 m로 그렸습니다.
 
@@ -86,7 +86,7 @@ python3 phases/07-state-estimation/05-extended-kalman-filter/code/main.py
 
 ## 결과물
 
-`outputs/skill-ekf-consistency-check.md`는 EKF에서 과신을 점검합니다.
+`outputs/skill-ekf-consistency-check.md`는 EKF의 과신을 점검합니다.
 
 ## 연습 문제
 

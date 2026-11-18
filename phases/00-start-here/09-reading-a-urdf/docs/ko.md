@@ -13,9 +13,9 @@
 ## 핵심 용어
 
 - **Link**: 로봇의 단단한 부품 하나입니다. 예를 들어 윗팔입니다.
-- **Joint**: 두 link 사이의 경첩으로 한쪽이 다른 쪽에 대해 돌게 해 줍니다.
+- **Joint**: 두 link 사이의 경첩으로 한쪽이 다른 쪽을 기준으로 돌 수 있게 해 줍니다.
 - **URDF**: 로봇을 joint로 이어진 link로 설명하는 텍스트 파일입니다.
-- **Frame**: 링크나 방 같은 어떤 대상에 붙은 x, y, z축의 묶음입니다.
+- **Frame**: link나 방 같은 어떤 대상에 붙은 x, y, z축의 묶음입니다.
 - **Joint offset (`<origin>`)**: joint가 앞 부품에서 얼마나 떨어져 있고 얼마나 돌아가 있는지를 그 부품 자신의 방향으로 적은 값입니다.
 - **Transform**: 회전 하나와 이동 하나를 담은 4x4 숫자 표입니다.
 
@@ -47,9 +47,9 @@ offset은 바로 앞 부품 자신의 방향으로 잽니다. 방에 고정된 �
 
 <details><summary>The math (optional)</summary>
 
-joint의 `<origin>`은 부모에서 자식으로 가는 transform으로 위치 `xyz`와 회전 `rpy`(x축 roll, y축 pitch, z축 yaw)입니다.
-예에서는 모든 joint 각도가 0이고 어깨 origin이 z축 방향으로 0.1 m 올리고 z축 둘레로 90도 돌리며 elbow와 wrist offset은 `0.3 0 0`과 `0.2 0 0`입니다.
-방의 방향으로 더하면 (0.5, 0, 0.1)이 나오고 제대로 돌리면 손은 (0, 0.5, 0.1)에 있어서 틀린 답과 0.71 m 떨어져 있습니다.
+joint의 `<origin>`은 부모에서 자식으로 가는 transform이고 위치 `xyz`와 회전 `rpy`(x축 roll, y축 pitch, z축 yaw)로 이루어집니다.
+예에서는 모든 joint 각도가 0입니다. 어깨 origin은 z축 방향으로 0.1 m 올라가고 z축 둘레로 90도 돌아가 있으며 elbow와 wrist offset은 `0.3 0 0`과 `0.2 0 0`입니다.
+방의 방향으로 더하면 (0.5, 0, 0.1)이 나옵니다. 제대로 돌리면 손은 (0, 0.5, 0.1)에 있고 틀린 답과 0.71 m 떨어져 있습니다.
 
 </details>
 
@@ -76,7 +76,7 @@ python3 -m pytest phases/00-start-here/09-reading-a-urdf -q
 
 ## 실제 도구로 보기
 
-ROS 2는 작은 프로그램들로 이루어진 로봇 소프트웨어이고 그 안의 `robot_state_publisher`는 파일과 joint 값을 모든 부품의 자리로 바꿔 줍니다. 그 결과를 `link_positions()`와 비교해 보세요.
+작은 프로그램이 모여 이루어진 로봇 소프트웨어인 ROS 2에는 `robot_state_publisher`가 있습니다. 이것은 파일과 joint 값을 모든 부품의 자리로 바꿔 줍니다. 그 결과를 `link_positions()`와 비교해 보세요.
 
 출처: https://wiki.ros.org/urdf/XML/joint, https://github.com/ros/robot_state_publisher
 

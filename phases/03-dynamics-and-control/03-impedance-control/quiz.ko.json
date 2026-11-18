@@ -5,11 +5,11 @@
 "question": "관절이 밀림에 부드럽게 양보해야 합니다. 어떤 컨트롤러 형태가 맞습니까?",
 "options": [
 "매우 뻣뻣한 position loop",
-"가상 스프링-damper(임피던스)",
+"가상 spring-damper(임피던스)",
 "open-loop 토크"
 ],
 "answer": 1,
-"explanation": "임피던스는 관절이 어떻게 밀어낼지를 정합니다."
+"explanation": "임피던스는 관절이 어떻게 되밀지를 정합니다."
 },
 {
 "id": 2,
@@ -26,7 +26,7 @@
 {
 "id": 3,
 "stage": "check",
-"question": "K, J, D에서 damping ratio는 무엇입니까?",
+"question": "K, J, D로 나타낸 damping ratio는 무엇입니까?",
 "options": [
 "D / (2 sqrt(K J))",
 "D / K",
@@ -69,6 +69,6 @@
 "K가 D와 같은지"
 ],
 "answer": 0,
-"explanation": "붙잡힌 damper 명령은 레슨 03/01의 한계를 넘으면 떨거나 발산합니다."
+"explanation": "tick 동안 유지되는 damper 명령은 레슨 03/01의 한계를 넘으면 떨리거나 발산합니다."
 }
 ]

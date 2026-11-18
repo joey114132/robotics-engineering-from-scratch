@@ -5,9 +5,9 @@
     "clip": "The same small correction is sent to two wrists, but the target arrives with its sign flipped. The blue wrist ignores the flip and swings the long way, 354.3 degrees. The green wrist fixes the sign first and turns only 5.7 degrees. The amber dots trace the fingertip, and the see-through gripper is the target."
   },
   "ko": {
-    "hook": "모든 회전은 플러스와 마이너스 두 가지로 쓸 수 있어요. 잘못 고르면 제 손목은 한 바퀴를 돌아서 가요.",
-    "mission": "목표의 부호를 뒤집으면 손목이 얼마나 도는지 봅니다. `code/main.py`에서 `quat_from_axis_angle([0, 0, 1], 0.1)` 앞의 마이너스를 지우세요. 두 swept 각도를 예측한 다음 `python3 code/main.py`를 실행하세요.",
-    "clip": "같은 작은 보정 명령이 손목 두 개에 가지만 목표는 부호가 뒤집힌 채 도착합니다. 파란 손목은 뒤집힘을 무시하고 먼 길로 354.3도를 돕니다. 초록 손목은 부호를 먼저 고쳐서 5.7도만 돕니다. 주황 점은 손가락 끝의 경로이고 투명한 gripper는 목표 자세입니다."
+    "hook": "모든 회전은 플러스와 마이너스 두 가지로 쓸 수 있어요. 잘못 고르면 제 손목은 먼 길로 돌아가요.",
+    "mission": "목표의 부호를 뒤집으면 손목이 얼마나 도는지 봅니다. `code/main.py`에서 `quat_from_axis_angle([0, 0, 1], 0.1)` 앞의 마이너스를 지우세요. 손목이 쓸고 지나가는 각도 두 개를 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "같은 작은 보정 명령을 손목 두 개에 보내는데 목표는 부호가 뒤집힌 채 도착합니다. 파란 손목은 뒤집힘을 무시하고 먼 길로 354.3도를 돕니다. 초록 손목은 부호를 먼저 고쳐서 5.7도만 돕니다. 주황 점은 손가락 끝의 경로이고 투명한 gripper는 목표 자세입니다."
   },
   "toy": null,
   "three": "slerp-long-way-3d"

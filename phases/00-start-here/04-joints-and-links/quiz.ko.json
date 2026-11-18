@@ -1,5 +1,5 @@
 [
-  {"id": 1, "stage": "pre", "question": "로봇 팔에서 link는 무엇입니까?", "options": ["돌아가는 경첩", "관절 두 개 사이의 단단한 막대", "팔의 끝"], "answer": 1, "explanation": "link는 휘지 않는 막대입니다. 돌아가는 경첩은 joint입니다."},
+  {"id": 1, "stage": "pre", "question": "로봇 팔에서 link는 무엇입니까?", "options": ["돌아가는 경첩", "joint 두 개 사이의 단단한 막대", "팔의 끝"], "answer": 1, "explanation": "link는 휘지 않는 막대입니다. 돌아가는 경첩은 joint입니다."},
   {"id": 2, "stage": "check", "question": "길이 0.4인 link가 똑바로 위를 향합니다. 끝은 옆으로 얼마나 갔습니까?", "options": ["0.4", "0", "0.2"], "answer": 1, "explanation": "똑바로 위면 옆으로는 가지 않습니다. 0.4 전부가 위쪽입니다."},
   {"id": 3, "stage": "check", "question": "두 번째 joint의 각도는 무엇을 기준으로 잽니까?", "options": ["바닥", "첫 번째 link", "손"], "answer": 1, "explanation": "각 joint의 각도는 바로 앞 link를 기준으로 잽니다."},
   {"id": 4, "stage": "check", "question": "joint가 돌면 link의 길이는 어떻게 됩니까?", "options": ["그대로입니다", "길어집니다", "짧아집니다"], "answer": 0, "explanation": "link는 단단해서 방향만 바뀝니다."},

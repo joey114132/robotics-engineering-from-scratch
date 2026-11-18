@@ -5,7 +5,7 @@
     "clip": "Two identical drones get different commands. The blue one gets 10% more thrust and only climbs. The green one gets a small twist at hover thrust: it tilts first and moves sideways only after it has tilted. The drones are drawn 1.6 times larger, and the white balls mark the start."
   },
   "ko": {
-    "hook": "오른쪽으로 가라고 하면 저는 먼저 바닥을 봅니다. 옆으로 못 미니 기울이고 추력이 밀어 주길 기다려요.",
+    "hook": "오른쪽으로 가라고 하면 저는 먼저 바닥을 쳐다봐요. 옆으로는 못 미니까 몸을 기울이고 추력이 일하게 둬요.",
     "mission": "비틀림을 더 세게 주고 드론이 얼마나 기울고 옆으로 가는지 맞혀 보세요. `code/main.py`의 `hover_thrust(m), 0.002`에서 토크 `0.002`를 `0.004`로 바꾸고 `python3 code/main.py`를 실행하세요. 1초 뒤 기울기와 옆 이동을 맞힌 뒤 14.3도, 0.204 m와 비교하세요.",
     "clip": "똑같은 드론 둘에 서로 다른 명령을 줍니다. 파란 쪽은 추력을 10% 올리면 위로만 올라갑니다. 초록 쪽은 호버 추력에 작은 비틀림을 주면 먼저 기울고 기운 뒤에야 옆으로 움직입니다. 흰 공은 출발 위치입니다."
   },

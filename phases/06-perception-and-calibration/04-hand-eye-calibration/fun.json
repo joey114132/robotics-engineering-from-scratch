@@ -5,9 +5,9 @@
     "clip": "A camera is bolted to the gripper at an unknown spot X, and the arm must reach a target ball on a post that the camera sees. The blue arm was calibrated with motions that all turn about one axis (spread 0 degrees), so its X is wrong and the gripper ends about 0.22 m from the ball. The green arm used a 60 degree spread and ends within 2 mm."
   },
   "ko": {
-    "hook": "회전축 하나만 계속 돌려 놓고 calibration이라고 할 수 있을까요? 수학은 계속 두 번째 축을 요구합니다.",
+    "hook": "회전축 하나만 계속 돌려 놓고 calibration이라고 할 수 있을까요? 수학은 계속 두 번째 축을 요구해요.",
     "mission": "축이 몇 도만 다른 움직임을 써 보고 몇 도부터 도움이 되기 시작하는지 확인합니다. `code/main.py`에서 spread `(0.0, 15.0, 60.0)`을 `(0.0, 2.0, 5.0)`으로 바꾸고 `python3 code/main.py`를 실행하세요. 먼저 5 deg에서의 회전 오차를 예측하세요.",
-    "clip": "카메라가 gripper에 알 수 없는 자리 X로 고정되어 있고 팔은 카메라가 보는 기둥 위의 목표 공에 닿아야 합니다. 파란 팔은 모두 한 축으로만 도는 움직임(spread 0도)으로 calibration해서 X가 틀리고 gripper는 공에서 약 0.22 m 떨어진 곳에 닿습니다. 초록 팔은 spread 60도를 써서 2 mm 안에 닿습니다."
+    "clip": "카메라가 gripper의 알 수 없는 자리 X에 고정되어 있고 팔은 카메라가 보는 기둥 위의 목표 공에 닿아야 합니다. 파란 팔은 모두 한 축으로만 도는 움직임(spread 0도)으로 calibration해서 X가 틀리고 gripper는 공에서 약 0.22 m 떨어진 곳에 닿습니다. 초록 팔은 spread 60도를 써서 2 mm 안에 닿습니다."
   },
   "toy": null,
   "three": "handeye-twist-3d"

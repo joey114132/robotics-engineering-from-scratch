@@ -5,7 +5,7 @@
     "clip": "A rover scanned an L-shaped room (grey dots). A second scan of the same room (amber dots) is placed turned by 0.6 rad and shifted by 0.36 m, and the blue rover carries it. Each round, every amber dot is paired with its nearest grey dot and the amber scan is moved to close the gaps. After about a dozen rounds the amber dots sit on the grey ones and the rover lands on its true spot (green disc). Each round lasts five frames."
   },
   "ko": {
-    "hook": "방 하나를 찍은 스캔 두 장에 이름표는 없어요. 점마다 가장 가까운 점과 짝짓고 옮기기를 더 나아지지 않거나 갇힐 때까지 되풀이해요.",
+    "hook": "방 하나를 찍은 스캔 두 장에 이름표는 없어요. 점마다 가장 가까운 점과 짝짓고 옮기는 일을 더 나아지지 않거나 갇힐 때까지 되풀이해요.",
     "mission": "두 번째 스캔을 점점 더 돌려 놓고 어디서부터 맞지 않는지 보세요. `code/main.py`의 데모 반복문에서 시작 회전을 1.0, 1.2, 1.4 rad으로 바꿔 보세요. 어느 값부터 final rms(남는 간격의 전형적인 크기)가 0.1 m를 넘는지 찾으세요.",
     "clip": "로버가 L자 방을 스캔했습니다(회색 점). 같은 방의 두 번째 스캔(주황 점)은 0.6 rad 돌고 0.36 m 어긋난 채 놓였고 파란 로버가 이것을 들고 있습니다. 한 번 돌 때마다 주황 점을 가장 가까운 회색 점과 짝짓고 간격이 줄도록 주황 스캔을 옮깁니다. 열 번 남짓 돌면 주황 점이 회색 점 위에 놓이고 로버가 실제 자리(초록 원판)에 도착합니다. 한 번 도는 데 5프레임이 걸립니다."
   },

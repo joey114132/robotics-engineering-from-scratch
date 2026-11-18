@@ -4,5 +4,5 @@
   {"id": 3, "stage": "check", "question": "시점마다 기울기가 달라야 하는 이유는 무엇입니까?", "options": ["기울이면 영상이 밝아진다", "옆으로 밀기만 하면 같은 제약이 반복된다", "검출기가 요구한다"], "answer": 1, "explanation": "같은 방향의 시점은 B에 새 식을 더하지 못합니다."},
   {"id": 4, "stage": "check", "question": "시점 하나는 B에 식을 몇 개 더합니까?", "options": ["두 개", "한 개", "아홉 개"], "answer": 0, "explanation": "h1'Bh2 = 0과 h1'Bh1 = h2'Bh2입니다."},
   {"id": 5, "stage": "post", "question": "pixel 잡음이 1 px일 때 시점을 3장에서 10장으로 늘리면 선형 해는 어떻게 됩니까?", "options": ["오차가 사라진다", "오차가 두 배가 된다", "오차가 대략 절반이 된다"], "answer": 2, "explanation": "제약이 늘어 잡음이 평균화되지만 사라지지는 않습니다."},
-  {"id": 6, "stage": "post", "question": "캘리브레이션 결과에서 cx가 영상 중심에서 멀고 fx와 fy가 크게 다릅니다. 첫 의심은 무엇입니까?", "options": ["카메라 고장", "시점이 적거나 비슷해서 해가 약하다", "정상이다"], "answer": 1, "explanation": "시점이 나쁘면 선형 해가 잡음을 키웁니다."}
+  {"id": 6, "stage": "post", "question": "calibration 결과에서 cx가 영상 중심에서 멀고 fx와 fy가 크게 다릅니다. 첫 의심은 무엇입니까?", "options": ["카메라 고장", "시점이 적거나 비슷해서 해가 약하다", "정상이다"], "answer": 1, "explanation": "시점이 나쁘면 선형 해가 잡음을 키웁니다."}
 ]

@@ -5,9 +5,9 @@
     "clip": "Two rovers drive the same loop around a room with a box in the middle and draw a map from laser scans. The green rover knows exactly where it stood for each scan, so its map squares (amber) land on the real walls. The blue rover's heading guess gets a little worse every step (0.003 rad), so the same scans smear into doubled, slanted walls."
   },
   "ko": {
-    "hook": "길을 잃은 채 지도를 그리면 벽이 두 겹으로 생기고 옆에 유령 방까지 나옵니다. 저는 인테리어 솜씨가 형편없습니다.",
+    "hook": "길을 잃은 채 지도를 그리면 벽이 두 겹으로 생기고 옆에 유령 방까지 나와요. 저는 인테리어 솜씨가 형편없어요.",
     "mission": "방향 오차를 더 작게 하고 지도가 얼마나 좋아지는지 맞혀 보세요. `code/main.py`에서 `(0.0, 0.001, 0.003)`(step마다 더해지는 heading 오차, 단위 rad)의 `0.001`을 `0.0005`로 바꾸고 `python3 code/main.py`를 실행하세요. 출력되는 정밀도는 벽이라고 표시한 칸 중 진짜 벽의 비율(오차 없음 0.89, 0.003에서 0.41)이니 0.0005가 어디에 놓일지 먼저 맞혀 보세요.",
-    "clip": "두 로버가 가운데 상자가 있는 방을 같은 경로로 돌며 레이저 스캔으로 지도를 그립니다. 초록 로버는 매 스캔마다 자기가 어디에 있었는지 정확히 알아서 지도 칸(주황)이 실제 벽 위에 놓입니다. 파란 로버는 heading 추측이 step마다 조금씩(0.003 rad) 나빠져서 같은 스캔이 겹치고 기운 벽으로 번집니다."
+    "clip": "두 로버가 가운데 상자가 있는 방을 같은 경로로 돌며 레이저 스캔으로 지도를 그립니다. 초록 로버는 매 스캔마다 자기가 어디에 있었는지 정확히 알아서 지도 칸(주황)이 실제 벽 위에 놓입니다. 파란 로버는 heading 추측이 step마다 조금씩(0.003 rad) 나빠져서 같은 스캔이 번져서 두 겹으로 기운 벽이 됩니다."
   },
   "toy": null,
   "three": "occupancy-room-3d"

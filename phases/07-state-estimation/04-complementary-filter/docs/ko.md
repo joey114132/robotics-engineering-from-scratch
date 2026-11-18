@@ -30,7 +30,7 @@ complementary filter는 빠른 변화는 gyro에서 가져오고 느린 평균�
 
 *빠른 변화는 gyro에서, 느린 평균은 가속도계에서 가져옵니다.*
 
-complementary filter는 각 센서가 잘하는 일을 맡깁니다. 빠른 변화는 gyro를 믿고 오래 걸린 평균은 가속도계를 믿습니다. time constant라는 설정 하나가 가속도계가 넘겨받기 전까지 gyro를 얼마나 오래 믿을지 정합니다.
+complementary filter는 각 센서가 잘하는 일을 맡깁니다. 빠른 변화는 gyro를 믿고 오랜 시간의 평균은 가속도계를 믿습니다. time constant라는 설정 하나가 가속도계가 넘겨받기 전까지 gyro를 얼마나 오래 믿을지 정합니다.
 
 ![추정과 crossover](../assets/fig-tilt-estimates.png)
 
@@ -84,7 +84,7 @@ python3 -m pytest phases/07-state-estimation/04-complementary-filter -q
 
 ## 실제 도구로 보기
 
-IMU 데이터용 로봇 소프트웨어 패키지 `imu_tools`의 `imu_complementary_filter`는 gyro와 가속도계와 선택적으로 자기 센서 값을 합칩니다.
+IMU 데이터용 로봇 소프트웨어 패키지 `imu_tools`의 `imu_complementary_filter`는 gyro와 가속도계 값을 합치고 원하면 자기 센서 값도 더합니다.
 
 출처: imu_tools README, https://raw.githubusercontent.com/CCNYRoboticsLab/imu_tools/humble/README.md (2026년 11월 9일 확인).
 

@@ -5,9 +5,9 @@
     "clip": "Two arms run the same control loop and start slightly off target; only the delay differs. At 0.6 times the delay margin the green arm settles. At 1.5 times it, the blue arm swings wider each time. Exaggerated so it is easy to see."
   },
   "ko": {
-    "hook": "센서에서 모터까지 걸리는 1 ms마다 제 delay margin이 깎여요. 제 margin은 아주 작습니다.",
-    "mission": "더 센 제동이 지연에 대한 여유를 더 주는지 확인합니다. `code/main.py`에서 `KD`를 `2.0`에서 `4.0`으로 두 배로 올리세요. delay margin(ms)이 두 배가 될지 그대로일지 줄어들지 예측한 다음 `python3 code/main.py`를 실행하세요.",
-    "clip": "팔 두 대가 같은 제어 loop를 돌리고 목표에서 조금 벗어난 채 출발하며 지연만 다릅니다. delay margin의 0.6배에서는 초록 팔이 가라앉습니다. 1.5배에서는 파란 팔이 갈 때마다 더 크게 흔들립니다. 잘 보이도록 과장해서 그렸습니다."
+    "hook": "센서에서 모터까지 걸리는 1 ms마다 제 delay margin이 깎여요. 제 margin은 아주 작아요.",
+    "mission": "더 센 제동이 지연을 견딜 여유를 더 주는지 확인합니다. `code/main.py`에서 `KD`를 `2.0`에서 `4.0`으로 두 배로 올리세요. delay margin(ms)이 두 배가 될지 그대로일지 줄어들지 예측한 다음 `python3 code/main.py`를 실행하세요.",
+    "clip": "팔 두 대가 같은 제어 loop를 돌리며 목표에서 조금 벗어난 채 출발합니다. 다른 것은 지연뿐입니다. delay margin의 0.6배에서는 초록 팔이 가라앉습니다. 1.5배에서는 파란 팔이 갈 때마다 더 크게 흔들립니다. 잘 보이도록 과장해서 그렸습니다."
   },
   "toy": "latency-ring",
   "three": "latency-budget-bars-3d"

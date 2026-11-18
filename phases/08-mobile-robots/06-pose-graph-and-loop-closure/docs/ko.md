@@ -9,11 +9,11 @@
 로버가 사각형을 도는데 바퀴 오차 때문에 기록한 경로가 출발점에서 떨어져 끝나요. 마지막 자리만 옮기면 그 앞의 자리들은 여전히 틀려요.
 
 pose graph는 각 자리를 다음 자리와 스프링으로 잇는데 이 스프링이 측정한 이동이에요. 출발점을 알아보면 스프링이 하나 더 생겨요.
-그러면 모든 pose가 함께 움직여서 스프링이 되도록 덜 늘어나요. 잘못 알아보면 틀린 스프링이 생겨서 지도가 휘어요.
+그러면 모든 pose가 함께 움직여서 모든 스프링이 최대한 덜 늘어나요. 잘못 알아보면 틀린 스프링이 생겨서 지도가 휘어요.
 
 ## 핵심 용어
 
-- **Pose graph**: pose(위치와 그 위치에서 보는 방향)의 사슬을 스프링처럼 작동하는 측정으로 이은 것입니다.
+- **Pose graph**: pose(위치와 그 위치에서 바라보는 방향)를 스프링처럼 작동하는 측정으로 이어 놓은 사슬입니다.
 - **Loop closure**: 이미 지난 곳을 알아보는 일입니다. 스프링이 하나 더 생깁니다.
 - **Residual**: 스프링이 얼마나 늘어났는지입니다. 추정에서 측정값을 뺀 값입니다.
 
@@ -27,13 +27,13 @@ pose graph는 각 자리를 다음 자리와 스프링으로 잇는데 이 스�
 
 아는 곳으로 돌아온 로봇은 점 하나가 아니라 지도 전체를 한 번에 고칠 수 있습니다.
 
-여정을 스프링으로 이은 위치의 사슬로 생각해 보세요. 스프링 하나가 측정한 이동 하나입니다. 출발점을 알아보면 끝에서 처음으로 가는 스프링이 하나 더 생깁니다.
+여정을 스프링으로 이은 위치의 사슬로 생각해 보세요. 스프링 하나는 측정한 이동 하나에 해당합니다. 출발점을 알아보면 끝에서 처음으로 가는 스프링이 하나 더 생깁니다.
 
 ![스프링](../assets/diagram-posegraph-springs.png)
 
 *이동은 스프링이고 루프가 스프링 하나를 더합니다.*
 
-그러면 모든 위치가 함께 움직여서 스프링이 되도록 덜 늘어나게 합니다. 보정이 여정 전체로 퍼집니다.
+그러면 모든 위치가 함께 움직여서 모든 스프링이 최대한 덜 늘어나게 됩니다. 보정이 여정 전체로 퍼집니다.
 
 ![폐쇄들](../assets/clip-example.mp4)
 
@@ -45,13 +45,15 @@ pose graph는 각 자리를 다음 자리와 스프링으로 잇는데 이 스�
 
 ![전후](../assets/fig-posegraph-loop.png)
 
-*drift가 루프를 열고 풀면 닫힙니다.*
+*drift가 루프를 열어 놓고 풀면 루프가 닫힙니다.*
 
 <details><summary>The math (optional)</summary>
 
 pose는 `(x, y, heading)`입니다.
-pose `i`에서 `j`로 가는 edge는 측정 `z`를 가지고 잔차(스프링이 늘어난 정도)는 `between(x_i, x_j) - z`이며 heading 차이는 한 바퀴 안으로 wrap합니다.
-잔차를 각자의 노이즈로 나누면 믿을 만한 스프링이 더 뻣뻣해지고 cost는 잔차 제곱의 합입니다.
+pose `i`에서 `j`로 가는 edge에는 측정 `z`가 붙어 있습니다.
+잔차(스프링이 늘어난 정도)는 `between(x_i, x_j) - z`이고 heading 차이는 한 바퀴 안으로 wrap합니다.
+잔차를 각자의 노이즈로 나누므로 믿을 만한 스프링이 더 뻣뻣해집니다.
+cost는 잔차 제곱의 합입니다.
 Gauss-Newton은 cost를 가장 많이 줄이는 걸음을 반복합니다.
 지도 전체를 밀거나 돌려도 잔차가 변하지 않으므로 pose 0을 고정합니다.
 pose는 0부터 20까지 1 m마다 하나씩 있고 5, 10, 15, 20이 모서리입니다.
@@ -76,7 +78,7 @@ J = jacobian(X, edges, free=range(1, len(X)))   # numeric, pose 0 held fixed
 dx = np.linalg.lstsq(J, -residuals(X, edges), rcond=None)[0]
 ```
 
-테스트는 전체 늘어남이 오르지 않는지, 첫 pose가 움직이지 않는지(고정된 anchor), 틀린 폐쇄가 해로운지 확인합니다.
+테스트는 스프링이 늘어난 총량이 오르지 않는지, 첫 pose(고정된 anchor)가 그대로인지, 틀린 폐쇄가 해로운지 확인합니다.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -86,7 +88,7 @@ python3 phases/08-mobile-robots/06-pose-graph-and-loop-closure/code/main.py
 
 ## 실제 도구로 보기
 
-같은 그래프를 그래프 최적화 라이브러리인 g2o에 만들어 `solve()`와 위치를 비교해 보세요.
+이 그래프를 그래프 최적화 라이브러리 g2o에서 만들어 `solve()`의 결과와 위치를 비교해 보세요.
 
 출처는 Kümmerle 외, g2o: A General Framework for Graph Optimization (ICRA 2011)입니다(http://ais.informatik.uni-freiburg.de/publications/papers/kuemmerle11icra.pdf).
 2026년 11월 10일에 요약만 읽었습니다.

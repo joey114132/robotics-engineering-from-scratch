@@ -21,7 +21,7 @@
    "L1 L2 cos q1"
   ],
   "answer": 0,
-  "explanation": "elbow 각에만 달려 있으므로 singularity는 q2 = 0과 q2 = pi입니다."
+  "explanation": "팔꿈치 각에만 달려 있으므로 singularity는 q2 = 0과 q2 = pi입니다."
  },
  {
   "id": 3,
@@ -64,7 +64,7 @@
   "stage": "post",
   "question": "이 팔의 manipulability가 가장 큰 곳은 어디입니까?",
   "options": [
-   "elbow가 직각일 때",
+   "팔꿈치가 직각일 때",
    "완전히 뻗었을 때",
    "완전히 접혔을 때"
   ],
