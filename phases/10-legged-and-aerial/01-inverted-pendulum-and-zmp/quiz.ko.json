@@ -1,8 +1,8 @@
 [
-  {"id": 1, "stage": "pre", "question": "작업대의 보행 로봇을 뒤에서 밀었더니 발목 토크가 한계입니다. 넘어질지는 무엇이 결정합니까?", "options": ["몸무게가 발 크기에 비해 얼마나 무거운지", "capture point가 발 안에 있는지", "질량 중심이 지금 발 바로 위에 있는지"], "answer": 1, "explanation": "발목은 ZMP를 발 안에서만 옮길 수 있으므로 xi가 발 밖이면 걸음이 필요합니다."},
-  {"id": 2, "stage": "check", "question": "보행 로봇을 x'' = (g/h)(x - p)로 모델링했습니다. time constant는 무엇입니까?", "options": ["sqrt(h/g)", "sqrt(g/h)", "sqrt(2h/g)"], "answer": 0, "explanation": "exp(t/Tc)를 대입하면 1/Tc^2 = g/h입니다."},
-  {"id": 3, "stage": "check", "question": "보행 로봇을 다시 만들어 몸의 높이가 4배가 되었습니다. Tc는 어떻게 됩니까?", "options": ["2배가 됩니다", "4배가 됩니다", "절반으로 줄어듭니다"], "answer": 0, "explanation": "Tc는 sqrt(h)에 비례합니다."},
-  {"id": 4, "stage": "check", "question": "보행 로봇이 발을 capture point 위에 정확히 내딛습니다. 몸은 어떻게 됩니까?", "options": ["같은 속도로 지나칩니다", "더 천천히 넘어집니다", "그 점 위에서 정지합니다"], "answer": 2, "explanation": "xi' = (xi - p)/Tc가 0이 되고 속도는 0으로 줄어듭니다."},
-  {"id": 5, "stage": "post", "question": "보행 로봇을 조정하다 ZMP를 확인합니다. ZMP를 바르게 설명한 것은 무엇입니까?", "options": ["capture point와 같다", "항상 몸 바로 아래에 있다", "지지 영역 안에 머물러야 한다"], "answer": 2, "explanation": "지면은 밀기만 하므로 힘의 작용점은 접촉 영역 안에 있어야 합니다."},
-  {"id": 6, "stage": "post", "question": "키 큰 보행 로봇과 키 작은 보행 로봇을 같은 힘으로 밀었습니다. 키 큰 쪽은 작은 쪽에 비해", "options": ["반응할 시간이 더 짧습니다", "중력이 같으므로 시간도 같습니다", "반응할 시간이 더 깁니다"], "answer": 2, "explanation": "h가 클수록 Tc가 커서 발산이 느립니다."}
+  {"id": 1, "stage": "pre", "question": "보행 로봇이 뒤에서 밀렸는데 발목 토크가 이미 한계입니다. 넘어질지는 무엇이 결정합니까?", "options": ["몸무게가 발 크기에 비해 얼마나 무거운지", "capture point가 발 안에 있는지", "질량 중심이 발 바로 위에 있는지"], "answer": 1, "explanation": "발목은 ZMP를 발 안에서만 옮길 수 있습니다. capture point가 발 밖에 있으면 발목으로는 막을 수 없어서 걸음이 필요합니다."},
+  {"id": 2, "stage": "check", "question": "x'' = (g/h)(x - p)로 모델링한 로봇의 time constant는 무엇입니까?", "options": ["sqrt(h/g)", "sqrt(g/h)", "sqrt(2h/g)"], "answer": 0, "explanation": "해를 exp(t/Tc)로 놓고 대입하면 1/Tc^2 = g/h가 되므로 Tc는 sqrt(h/g)입니다."},
+  {"id": 3, "stage": "check", "question": "몸 높이를 4배로 키우면 Tc는 어떻게 됩니까?", "options": ["2배가 됩니다", "4배가 됩니다", "절반으로 줄어듭니다"], "answer": 0, "explanation": "Tc는 sqrt(h)에 비례하므로 높이가 4배가 되면 Tc는 2배만 커집니다."},
+  {"id": 4, "stage": "check", "question": "capture point에 정확히 발을 내디디면 몸은 어떻게 됩니까?", "options": ["같은 속도로 지나칩니다", "더 천천히 넘어집니다", "그 점 위에서 정지합니다"], "answer": 2, "explanation": "발을 capture point에 놓으면 그 점이 더 움직이지 않습니다. 그래서 몸은 그 점을 향해 속도를 줄이다가 바로 위에서 멈춥니다."},
+  {"id": 5, "stage": "post", "question": "ZMP를 바르게 설명한 것은 무엇입니까?", "options": ["capture point와 항상 같습니다", "몸의 질량 중심 바로 아래에 놓입니다", "지면에 닿은 발 안에 머물러야 합니다"], "answer": 2, "explanation": "지면은 밀기만 할 수 있으므로 미는 힘의 작용점은 발 안에 있어야 합니다. 그래서 발목만으로는 센 밀침을 막지 못합니다."},
+  {"id": 6, "stage": "post", "question": "키 큰 보행 로봇과 키 작은 보행 로봇이 같은 힘으로 밀렸습니다. 키 큰 쪽은 작은 쪽에 비해 반응할 시간이 어떻게 다릅니까?", "options": ["반응할 시간이 더 짧습니다", "중력이 같으므로 시간도 같습니다", "반응할 시간이 더 깁니다"], "answer": 2, "explanation": "h가 클수록 Tc가 커서 몸이 기우는 속도가 천천히 커집니다. 그래서 키 큰 로봇은 반응할 시간이 더 많습니다."}
 ]

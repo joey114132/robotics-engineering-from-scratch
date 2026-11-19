@@ -9,66 +9,66 @@
    "A loop delay that was never accounted for"
   ],
   "answer": 2,
-  "explanation": "Delay removes phase margin without changing the gains."
+  "explanation": "Delay removes phase margin without changing the gains, so the same gains can start to buzz once the real controller adds its delay."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You are checking your bench arm's loop. Which expression of PM and wc is its delay margin?",
+  "question": "You are checking a loop. Which expression in PM and wc gives its delay margin?",
   "options": [
    "PM / wc, phase margin over crossover",
    "wc / PM, crossover over phase margin",
    "PM * wc, phase margin times crossover"
   ],
   "answer": 0,
-  "explanation": "A delay T costs wc*T of phase, so T = PM / wc uses it all."
+  "explanation": "A delay T costs wc*T of phase, so the delay that uses up the whole phase margin PM is T = PM / wc."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your bench arm holds each command for one sample period. How far does this zero-order-hold command lag an ideal continuous one?",
+  "question": "Your bench arm holds each command for one sample period. How far does this held command lag an ideal continuous one?",
   "options": [
    "A full sample period every time",
    "Nothing, since the command is exact",
    "Half a sample period on average"
   ],
   "answer": 2,
-  "explanation": "On average the held value is half a period old."
+  "explanation": "A command held for one period is on average half a period old, so it lags the ideal continuous command by half a period."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "A pure delay sits between your sensor and your bench arm's motor. Does it change the loop gain magnitude?",
+  "question": "A time delay sits between the sensor and the motor. Does it change the loop gain magnitude?",
   "options": [
    "Yes, it lowers it at high frequency",
    "Yes, it raises it near crossover",
    "No, it only adds a phase shift"
   ],
   "answer": 2,
-  "explanation": "exp(-j*w*T) has magnitude one."
+  "explanation": "A delay only shifts the signal later without scaling it, so the gain size stays the same and only the phase is pushed back."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "With the delay fixed, you keep raising your bench arm's kd far past its optimum. What happens to the delay margin?",
+  "question": "With the delay fixed, you keep raising kd far past its optimum. What happens to the delay margin?",
   "options": [
    "Lowers it, because the crossover rises faster",
    "Leaves it unchanged, since the delay is fixed",
    "Raises it, since more braking is always safer"
   ],
   "answer": 0,
-  "explanation": "Delay margin falls roughly as 1/kd at high kd."
+  "explanation": "A larger kd raises the crossover, so the same delay takes a bigger share of each swing. Delay margin falls roughly as 1/kd at high kd."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your bench arm's delay budget grows by 3 ms. What is the best response?",
+  "question": "A loop's delay budget grows by 3 ms. What is the best response?",
   "options": [
    "Recompute the largest safe kd again",
    "Raise kp to make up for the lost margin",
    "Ignore it, because 3 ms is so small"
   ],
   "answer": 0,
-  "explanation": "The safe kd shrinks as the loop delay grows."
+  "explanation": "The safe kd shrinks as the loop delay grows, so the largest safe kd has to be recomputed with the new delay."
  }
 ]

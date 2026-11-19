@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "작업대 팔의 Jacobian을 출력해 j번째 열을 봅니다. 무엇을 뜻합니까?",
+  "question": "책상 위 로봇 팔의 Jacobian을 출력해 j번째 열을 봅니다. 무엇을 뜻합니까?",
   "options": [
-   "joint j가 tip을 가만히 붙들 때 드는 토크",
+   "joint j가 tip을 가만히 붙들 때 드는 torque",
    "joint j만 구부러졌을 때 나타나는 tip 위치",
    "joint j가 단위 속도로 움직일 때의 tip 속도"
   ],
   "answer": 2,
-  "explanation": "각 열은 joint 하나만 움직일 때의 효과입니다."
+  "explanation": "j번째 열은 joint j만 단위 속도로 움직일 때 tip이 어떻게 움직이는지 보여 줍니다. 그래서 위치도 torque도 아닌 tip 속도입니다."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "작업대 팔이 가만히 있는데 손이 tip을 밉니다. 이 tip 힘을 joint 토크로 바꾸는 관계는 무엇입니까?",
+  "question": "팔이 가만히 있는데 사람이 tip을 밉니다. 이 tip 힘을 joint torque로 바꾸는 관계는 무엇입니까?",
   "options": [
    "tau = J^T F",
    "tau = J^-1 F",
    "tau = J F"
   ],
   "answer": 0,
-  "explanation": "일률 균형이 transpose를 요구합니다."
+  "explanation": "tip의 일률과 joint의 일률이 같아야 하는데 이는 tau = J^T F일 때만 성립합니다. 그래서 tip 힘은 J의 transpose를 거쳐 torque가 됩니다."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "작업대 팔에서 해석적 Jacobian과 유한 차분 Jacobian이 무작위 pose에서 0.3만큼 다릅니다. 가장 가능성이 높은 원인은 무엇입니까?",
+  "question": "해석적 Jacobian과 유한 차분 Jacobian이 무작위 pose에서 0.3만큼 다릅니다. 가장 가능성이 높은 원인은 무엇입니까?",
   "options": [
-   "유한 차분 step에서 나온 작은 반올림 잡음",
-   "팔이 그 pose에서 singularity 근처여서",
-   "둘 중 한 쪽 Jacobian 구현에 든 bug"
+   "유한 차분 step이 만드는 반올림 잡음",
+   "pose가 singularity 근처인 것",
+   "두 Jacobian 중 한쪽 구현의 실제 bug"
   ],
   "answer": 2,
-  "explanation": "여기서 반올림 잡음은 1e-10 근처이므로 0.3은 진짜 오차입니다."
+  "explanation": "여기서 유한 차분의 반올림 잡음은 1e-10 정도입니다. 0.3은 잡음일 수 없으므로 두 구현 중 하나에 실제 bug가 있다는 뜻입니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "작업대 팔의 Jacobian을 중앙 차분 step 1e-12 rad로 검사합니다. 어떻게 됩니까?",
+  "question": "Jacobian을 중앙 차분 step 1e-12 rad로 검사합니다. 어떻게 됩니까?",
   "options": [
-   "기준값이 반올림 잡음에 거의 묻혀 버린다",
-   "곡률 오차가 커져서 기울기가 많이 틀어진다",
-   "step이 작을수록 기울기가 정확해진다"
+   "오차가 대부분 반올림 잡음에서 나옵니다",
+   "곡률 오차가 커져 기울기가 틀어집니다",
+   "step이 작을수록 기울기가 정확해집니다"
   ],
   "answer": 0,
-  "explanation": "tip 변화가 float64가 안정적으로 구분할 수 있는 크기보다 작습니다."
+  "explanation": "step이 1e-12 rad이면 tip의 위치 차이가 너무 작아서 그 차이에 섞인 반올림 오차가 곡률 오차보다 커집니다. 그래서 step을 더 줄여도 나아지지 않습니다."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "작업대 팔의 tip에 2 kg 질량이 매달려 있습니다. 이것을 받치는 joint 토크는 어떻게 구합니까?",
+  "question": "팔의 tip에 2 kg 질량이 매달려 있습니다. 이것을 받치는 joint torque는 어떻게 구합니까?",
   "options": [
-   "무게를 joint들에 똑같이 나눈다",
-   "tip의 무게 힘에 J^T를 곱한다",
-   "tip에 걸리는 무게 힘에 J를 곱한다"
+   "무게를 모든 joint에 똑같이 나누어 줍니다",
+   "tip에 걸리는 무게 F에 J^T를 곱합니다",
+   "tip에 걸리는 무게 F에 J를 곱합니다"
   ],
   "answer": 1,
-  "explanation": "tip 힘은 J의 transpose를 거쳐 joint로 갑니다."
+  "explanation": "무게는 tip을 아래로 당기는 힘이고 tip 힘은 J의 transpose를 거쳐 joint torque가 됩니다. 그래서 무게 F에 J^T를 곱합니다."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "작업대 팔의 Jacobian 테스트가 시험해 본 pose 한 곳에서 통과했습니다. 그것으로 부족한 이유는 무엇입니까?",
+  "question": "Jacobian 테스트가 시험해 본 pose 한 곳에서 통과했습니다. 한 곳만으로는 왜 부족합니까?",
   "options": [
-   "가만히 있는 팔에서도 Jacobian은 시간에 따라 변한다",
-   "부호나 link 순서가 틀려도 대칭 pose에서 통과한다",
-   "유한 차분 검사는 pose 한 곳에서는 돌릴 수가 없다"
+   "가만히 있는 팔에서도 Jacobian은 시간에 따라 계속 변하기 때문입니다",
+   "부호나 link 순서가 틀려도 대칭 pose에서는 통과하기 때문입니다",
+   "유한 차분 검사는 pose 한 곳에서는 돌릴 수 없기 때문입니다"
   ],
   "answer": 1,
-  "explanation": "레슨 1의 DH 표처럼 무작위 pose 여러 곳을 검사해야 합니다."
+  "explanation": "부호나 link 순서가 틀려도 대칭 pose에서는 맞게 나올 수 있어서 한 곳만으로는 증명이 안 됩니다. 레슨 02/01의 DH 표처럼 무작위 pose 여러 곳을 검사해야 합니다."
  }
 ]

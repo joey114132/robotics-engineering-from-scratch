@@ -9,66 +9,66 @@
    "No, a gain stable in continuous time stays stable"
   ],
   "answer": 0,
-  "explanation": "The damper acts on velocity that is one tick old."
+  "explanation": "The damper works from the velocity at the start of the tick and holds that force for the whole tick, so a large dt*kd/J lets it push the arm back past zero."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your bench arm's brake has r = dt*kd/J. The velocity factor per tick is:",
+  "question": "With r = dt*kd/J, what is the velocity multiplied by on each tick?",
   "options": [
    "1 - 1 / r",
    "1 + r",
    "1 - r"
   ],
   "answer": 2,
-  "explanation": "v+ = v - dt*kd*v/J."
+  "explanation": "Each tick the brake removes r times the velocity, so v+ = v - r * v = v * (1 - r)."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You turn your bench arm's brake up. At which r does the velocity start flipping sign every tick?",
+  "question": "As the brake goes up, above which r does the velocity start flipping sign every tick?",
   "options": [
    "r > 0.5",
    "r > 1",
    "r > 2"
   ],
   "answer": 1,
-  "explanation": "The factor 1 - r goes negative above 1."
+  "explanation": "The factor 1 - r turns negative as soon as r passes 1, so the velocity changes sign on every tick."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You keep turning your bench arm's brake up. At which r does the velocity grow every tick?",
+  "question": "Turn the brake up further. Above which r does the velocity grow on every tick?",
   "options": [
    "r > 2",
    "r > 1",
    "r > 2.5"
   ],
   "answer": 0,
-  "explanation": "|1 - r| exceeds 1 above 2."
+  "explanation": "Once r is above 2, the factor 1 - r is larger than 1 in size, so each tick leaves the arm moving faster than before."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "You send one kd to your bench arm's shoulder (J = 0.5) and wrist (J = 0.001). Which crosses the line first?",
+  "question": "The same kd goes to a shoulder (J = 0.5) and a wrist (J = 0.001). Which one starts to chatter first?",
   "options": [
    "The shoulder, since it carries more torque",
    "Both together, because they share one kd",
    "The wrist, since it has far less inertia"
   ],
   "answer": 2,
-  "explanation": "r scales as 1/J."
+  "explanation": "Since r = dt*kd/J, less inertia gives a bigger r for the same kd, so the wrist passes r = 1 long before the shoulder."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your bench arm's low-inertia wrist chatters under a host-side damper. What is the best fix?",
+  "question": "A low-inertia wrist chatters when a host loop runs the damper. What is the best fix?",
   "options": [
    "Raise kd so each tick brakes the joint harder",
    "Run damping in the drive, or lower kd below J/dt",
-   "Increase the DDS queue depth to cut the delay"
+   "Make the message queue deeper to cut the delay"
   ],
   "answer": 1,
-  "explanation": "The limit comes from the loop rate and J, not from messaging."
+  "explanation": "Chatter starts when r = dt * kd / J passes 1, so lower kd below J/dt or let the much faster drive loop do the damping. A bigger kd only raises r."
  }
 ]

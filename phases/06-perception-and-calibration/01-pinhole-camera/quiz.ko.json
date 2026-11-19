@@ -2,26 +2,26 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "카메라로 컵의 pixel과 depth에서 목표를 만들었는데 팔이 옆으로 몇 cm 어긋납니다. 가장 의심스러운 입력은 무엇입니까?",
+  "question": "카메라가 읽은 컵의 pixel과 depth로 목표를 만들었는데 팔이 옆으로 몇 cm 어긋납니다. 가장 의심스러운 입력은 무엇입니까?",
   "options": [
    "카메라 스트림의 frame rate 값",
-   "영상 파일에 기록된 이미지 너비 값",
+   "영상 파일 헤더에 기록된 이미지의 너비 값",
    "그 pixel에서 읽어 온 depth 값"
   ],
   "answer": 2,
-  "explanation": "틀린 depth는 점을 ray를 따라 밀어냅니다."
+  "explanation": "틀린 depth는 점을 ray를 따라 밀어내는데 이미지 중심에서 벗어난 pixel에서는 그 밀림이 옆으로도 나타납니다."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "컵 위의 점이 옆 위치 x는 그대로인 채 카메라에서의 depth z가 두 배가 됩니다. principal point에서 그 pixel까지의 거리는 어떻게 됩니까?",
+  "question": "컵 위의 점이 옆 위치 x는 그대로이고 카메라와의 거리 depth z만 두 배가 됩니다. principal point에서 그 pixel까지의 거리는 어떻게 됩니까?",
   "options": [
-   "두 배가 된다. 점이 두 배 멀어졌기 때문이다",
-   "절반이 된다. 깊이 z가 분모에 있기 때문이다",
-   "그대로다. principal point가 고정이다"
+   "두 배가 됩니다. 점이 두 배 멀어졌기 때문입니다",
+   "절반이 됩니다. depth z가 분모에 있기 때문입니다",
+   "그대로입니다. principal point는 고정입니다"
   ],
   "answer": 1,
-  "explanation": "u - cx = fx*x/z 이므로 z가 두 배가 되면 절반이 됩니다."
+  "explanation": "pixel 거리 u - cx는 fx*x/z라서 z가 분모에 있습니다. 그래서 z가 두 배가 되면 절반이 됩니다."
  },
  {
   "id": 3,
@@ -33,42 +33,42 @@
    "z / fx, depth를 focal length로 나눈 값"
   ],
   "answer": 2,
-  "explanation": "x = (u - cx)*z/fx 이므로 1 px는 z/fx m입니다."
+  "explanation": "옆 위치는 x = (u - cx)*z/fx라서 pixel이 1 px 틀리면 옆으로 z/fx m 어긋납니다. depth가 클수록 같은 1 px가 더 큰 오차가 됩니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "카메라가 principal point에 정확히 놓인 pixel의 depth를 0.1 m 크게 읽었습니다. 3D 오차는 무엇입니까?",
+  "question": "카메라가 principal point에 정확히 놓인 pixel의 depth를 0.1 m 크게 읽었습니다. 3D 오차는 어떻게 나타납니까?",
   "options": [
-   "광축 방향으로 0.1 m 어긋난다",
-   "옆으로 0.1 m, 영상 가장자리 쪽",
-   "없다. pixel 자체는 정확하다"
+   "카메라 중심선을 따라 앞뒤로 0.1 m 어긋납니다",
+   "옆으로 영상 가장자리 쪽을 향해 0.1 m 어긋납니다",
+   "어긋나지 않습니다. pixel 자체는 정확합니다"
   ],
   "answer": 0,
-  "explanation": "그 pixel의 ray가 광축(optical axis)이라 옆 성분이 없습니다."
+  "explanation": "principal point 위의 pixel은 ray가 카메라 중심선과 같아서 depth 오차가 그 ray를 따라서만 나타납니다. 옆으로 밀리는 성분은 0입니다."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "카메라가 컵의 여러 pixel에서 똑같이 틀린 depth를 읽었습니다. 가장 크게 영향받는 pixel은 무엇입니까?",
+  "question": "카메라가 컵의 여러 pixel에서 똑같이 틀린 depth를 읽었습니다. 점이 가장 크게 어긋나는 pixel은 어느 것입니까?",
   "options": [
    "principal point에서 멀리 떨어진 pixel",
    "정확히 principal point 위에 놓인 pixel",
-   "u 값과 상관없이 모든 pixel이 똑같이 틀린다"
+   "이미지 안의 위치와 상관없이 똑같이 틀리는 모든 pixel"
   ],
   "answer": 0,
-  "explanation": "옆 이동량은 dz*(u-cx)/fx 입니다."
+  "explanation": "같은 depth 오차 dz라도 옆으로 밀리는 양은 dz*(u-cx)/fx라서 중심에서 멀수록 커집니다."
  },
  {
   "id": 6,
   "stage": "post",
   "question": "컵 가장자리에서 카메라가 뒤의 벽 depth를 읽습니다. 가장 좋은 해결책은 무엇입니까?",
   "options": [
-   "안쪽 pixel이나 창 안에서 더 가까운 depth를 쓴다",
-   "이미지 해상도를 높여 가장자리를 더 선명하게 한다",
-   "넓게 잡은 창 안의 depth를 전부 평균해서 쓴다"
+   "컵 안쪽 pixel이나 더 가까운 depth를 골라 쓰기",
+   "이미지 해상도를 높여 가장자리를 더 선명하게 하기",
+   "넓게 잡은 창 안의 depth를 모두 평균해서 쓰기"
   ],
   "answer": 0,
-  "explanation": "pixel과 depth는 같은 표면을 가리켜야 합니다."
+  "explanation": "가장자리 pixel의 depth가 뒤의 벽에서 오면 점이 컵이 아니라 벽에 놓입니다. 넓게 평균하면 벽 depth가 섞여 들어가므로 pixel과 depth는 같은 표면을 가리켜야 합니다."
  }
 ]

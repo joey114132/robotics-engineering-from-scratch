@@ -9,7 +9,7 @@
    "A faster loop adds more electrical noise per count"
   ],
   "answer": 1,
-  "explanation": "One count per shorter sample is a larger speed."
+  "explanation": "One count in a shorter sample reads as a larger speed, so a faster loop makes each jump in the reading bigger."
  },
  {
   "id": 2,
@@ -21,19 +21,19 @@
    "1000 rad/s"
   ],
   "answer": 0,
-  "explanation": "2*pi / (1000 * 0.001) = 2*pi."
+  "explanation": "One count is 2*pi / CPR rad, and dividing by dt gives 2*pi / (1000 * 0.001) = 2*pi rad/s."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You turn your encoder disc slowly at a constant rate and difference the counts. What is the long-run average velocity?",
+  "question": "You turn your encoder disc slowly at a constant rate and get speed by subtracting successive counts. What is the long-run average velocity?",
   "options": [
    "Biased low, as most samples read zero",
    "Unbiased, equal to the true speed",
    "Zero until the speed passes a limit"
   ],
   "answer": 1,
-  "explanation": "Counts add up, so only the sample-to-sample values are noisy."
+  "explanation": "Counts add up over time, so the long-run average equals the true speed. Only the sample-to-sample values are noisy."
  },
  {
   "id": 4,
@@ -45,7 +45,7 @@
    "dt, a single sample interval"
   ],
   "answer": 0,
-  "explanation": "The estimate describes the middle of the window."
+  "explanation": "The estimate describes the middle of the window, so it trails the true speed by half the window length n*dt."
  },
  {
   "id": 5,
@@ -57,7 +57,7 @@
    "Halves both the velocity step and the delay"
   ],
   "answer": 1,
-  "explanation": "Step is step/n, delay is n*dt/2."
+  "explanation": "With a window of n samples the velocity step becomes step/n and the delay becomes n*dt/2, so doubling n halves the step and doubles the delay."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "Lengthen the window or time the edges, then check delay"
   ],
   "answer": 2,
-  "explanation": "Smoothing cures it, but you must budget for its delay."
+  "explanation": "Smoothing stops the kd term from kicking the joint, but the speed then arrives later, so you must check that the delay is acceptable."
  }
 ]

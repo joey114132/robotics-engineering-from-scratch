@@ -2,14 +2,14 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your gripper camera sees a cup, but the targets are consistently off by the same offset. Which transform is probably wrong?",
+  "question": "Your arm's base frame is accurate, yet its gripper camera makes the targets consistently off by the same offset. Which transform is probably wrong?",
   "options": [
    "The base frame measured in the room",
    "The camera-to-gripper transform X",
    "The lens distortion coefficients"
   ],
   "answer": 1,
-  "explanation": "A fixed offset between camera and gripper shifts every target the same way."
+  "explanation": "A wrong camera-to-gripper offset X shifts every target by the same amount in the same direction, which is exactly a constant offset."
  },
  {
   "id": 2,
@@ -21,19 +21,19 @@
    "The calibration target moves along with the robot hand"
   ],
   "answer": 1,
-  "explanation": "The same physical motion is seen from two frames linked by the constant X."
+  "explanation": "The hand and the camera measure the same physical motion, and the camera is bolted to the gripper so X stays constant. That gives A X = X B."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You calibrate the camera on your arm's gripper. How is R_X found?",
+  "question": "In hand-eye calibration, how is R_X, the camera's rotation relative to the gripper, found?",
   "options": [
    "Invert the camera matrix and read off its rotation",
    "Average the translation parts of every motion",
    "Align the rotation axes of A and B using SVD"
   ],
   "answer": 2,
-  "explanation": "log(R_A) = R_X log(R_B), a rotation alignment problem."
+  "explanation": "log(R_A) = R_X log(R_B) is a rotation alignment problem, and SVD gives the R_X that lines up the two sets of axes."
  },
  {
   "id": 4,
@@ -45,7 +45,7 @@
    "Linear least squares on the translation equation"
   ],
   "answer": 2,
-  "explanation": "The translation equation is linear in t_X."
+  "explanation": "Once R_X is known, the translation equation (R_A - I) t_X = R_X t_B - t_A is linear in t_X, so linear least squares solves it."
  },
  {
   "id": 5,
@@ -54,10 +54,10 @@
   "options": [
    "The tilt of the camera away from that rotation axis",
    "The image scale and the lens distortion terms",
-   "The twist about that axis and the shift along it"
+   "The turn about that axis and the position along it"
   ],
   "answer": 2,
-  "explanation": "Every R_A - I has that axis in its null space."
+  "explanation": "When every motion turns about the same axis, R_A - I sends that axis to zero, so the twist about it and the shift along it never show up in the equations."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "The total number of motions you recorded so far"
   ],
   "answer": 1,
-  "explanation": "A ratio near zero means nearly parallel axes."
+  "explanation": "The ratio of the second to the first singular value falls toward zero when the axes are nearly parallel, and you can compute it before the arm moves."
  }
 ]

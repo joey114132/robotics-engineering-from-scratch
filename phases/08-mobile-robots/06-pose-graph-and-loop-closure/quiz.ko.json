@@ -2,14 +2,14 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "로버가 사각형을 돌고 출발점에서 어긋난 채 끝나서 마지막 pose만 덮어씁니다. drift한 지도가 고쳐지지 않는 이유는?",
+  "question": "로버가 사각형을 돌고 출발점에서 어긋난 채 끝났습니다. 마지막 pose만 덮어쓰면 drift한 지도가 고쳐지지 않는 이유는 무엇입니까?",
   "options": [
    "측정이 끝난 마지막 pose는 바꿀 수 없기 때문입니다",
    "경로의 이전 pose가 모두 휜 채로 남기 때문입니다",
    "loop closure는 쓸 만한 측정을 못 주기 때문입니다"
   ],
   "answer": 1,
-  "explanation": "오차는 한 점이 아니라 경로 전체에 쌓였습니다."
+  "explanation": "오차는 한 점이 아니라 경로 전체에 쌓여서 앞의 pose도 휘어 있으므로 마지막 pose만 고쳐서는 모자랍니다."
  },
  {
   "id": 2,
@@ -18,10 +18,10 @@
   "options": [
    "첫 번째 로봇을 뒤따르는 두 번째 로봇입니다",
    "이웃한 두 pose 사이에 걸린 스프링입니다",
-   "두 pose가 함께 곁에 둔 landmark입니다"
+   "두 pose가 함께 바라보는 landmark입니다"
   ],
   "answer": 1,
-  "explanation": "pose i에서 보았을 때 pose j가 어디에 있어야 하는지를 알려 줍니다."
+  "explanation": "odometry edge는 측정한 이동 하나입니다. pose i에서 보았을 때 pose j가 어디에 있어야 하는지를 알려 주는 스프링입니다."
  },
  {
   "id": 3,
@@ -33,19 +33,19 @@
    "pose 0이 스캐너가 직접 측정한 유일한 pose이기 때문입니다"
   ],
   "answer": 1,
-  "explanation": "고정하지 않으면 세 가지 gauge 방향이 정해지지 않습니다."
+  "explanation": "지도 전체를 옮기거나 돌려도 잔차가 같아서 pose 0을 고정하지 않으면 x, y, heading 세 방향이 정해지지 않습니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "로버의 pose graph를 Gauss-Newton으로 풉니다. 여기서 반복 사이에 cost는 어떻게 됩니까?",
+  "question": "로버의 pose graph를 Gauss-Newton으로 풉니다. 한 번 반복할 때마다 cost는 어떻게 됩니까?",
   "options": [
    "반복할 때마다 조금씩 오릅니다",
    "처음부터 끝까지 변하지 않습니다",
    "오르지 않고 같거나 줄어듭니다"
   ],
   "answer": 2,
-  "explanation": "이 잘 정의된 그래프에서는 매 걸음이 선형화한 cost를 줄입니다."
+  "explanation": "Gauss-Newton은 cost를 가장 많이 줄이는 걸음을 고릅니다. 이 레슨의 테스트로 확인했듯이 이 그래프에서는 cost가 한 번도 오르지 않습니다."
  },
  {
   "id": 5,
@@ -53,22 +53,22 @@
   "question": "로버가 출발점을 알아본 줄 알았지만 틀린 match입니다. 틀린 loop closure는 무엇을 합니까?",
   "options": [
    "closure가 없을 때보다 지도를 더 휘게 합니다",
-   "solver가 나쁜 edge를 무시해서 변화가 없습니다",
-   "가짜 match라도 항상 지도를 개선해 줍니다"
+   "solver가 나쁜 edge를 무시해 변화가 없습니다",
+   "틀린 match라도 항상 지도를 개선해 줍니다"
   ],
   "answer": 0,
-  "explanation": "solver는 모든 edge를 믿으므로 거짓 edge가 pose를 틀리게 당깁니다."
+  "explanation": "solver는 모든 edge를 믿으므로 틀린 edge가 pose를 틀린 쪽으로 당깁니다."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "로버가 루프를 닫자 경로 앞부분의 pose들도 움직입니다. 보정이 앞부분 pose에도 닿는 이유는?",
+  "question": "로버가 루프를 닫자 경로 앞부분의 pose도 움직입니다. 보정이 앞부분 pose에도 닿는 이유는 무엇입니까?",
   "options": [
-   "고정되지 않은 pose가 모두 함께 풀리기 때문입니다",
-   "그때마다 지도를 처음부터 다시 만들기 때문입니다",
+   "고정되지 않은 pose가 한꺼번에 계산되기 때문입니다",
+   "그때마다 지도 전체를 처음부터 다시 만들기 때문입니다",
    "오래된 pose를 마지막 pose로 덮어쓰기 때문입니다"
   ],
   "answer": 0,
-  "explanation": "solver가 자유로운 모든 pose를 한꺼번에 바꿉니다."
+  "explanation": "pose 0을 뺀 모든 pose가 변수라서 solver가 한꺼번에 바꾸므로 루프를 닫는 스프링이 경로 전체를 당깁니다."
  }
 ]

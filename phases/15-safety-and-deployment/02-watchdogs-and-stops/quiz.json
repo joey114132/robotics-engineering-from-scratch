@@ -9,19 +9,19 @@
    "Keeps running the last command"
   ],
   "answer": 2,
-  "explanation": "The drive latches the last command."
+  "explanation": "Without a watchdog nothing tells the drive to stop, so it holds the last command and the joint keeps its last speed."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your bench joint moves at speed v and you brake with constant deceleration a. What is the stopping distance?",
+  "question": "A joint moving at speed v brakes with constant deceleration a. What is the stopping distance?",
   "options": [
    "v^2 / (2a)",
    "v^2 / (2a^2)",
    "v / (2a)"
   ],
   "answer": 0,
-  "explanation": "x = v t - a t^2 / 2 with t = v / a."
+  "explanation": "Braking takes t = v / a, and putting that into x = v t - a t^2 / 2 gives v^2 / (2a)."
  },
  {
   "id": 3,
@@ -33,19 +33,19 @@
    "Only friction slows it, so it coasts"
   ],
   "answer": 2,
-  "explanation": "The coast distance is J v / b, many times the ramped stop."
+  "explanation": "With no torque only friction slows the joint, so it coasts far past where a steady brake would stop it."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You pick a watchdog timeout T for your bench joint. Which inequality keeps it inside the limit?",
+  "question": "You pick a watchdog timeout T for your bench joint. Which inequality keeps it short of the hard stop?",
   "options": [
    "v T + v^2 / (4a) <= room",
    "v T + v^2 / (2a) <= room",
    "v T + v^2 / (2a) <= 2 room"
   ],
   "answer": 1,
-  "explanation": "Travel during the timeout plus braking travel must fit in the room."
+  "explanation": "The arm moves v T during the timeout and then v^2 / (2a) while braking, and the two together must fit in the room left."
  },
  {
   "id": 5,
@@ -57,18 +57,18 @@
    "The brake engages too softly to stop in time"
   ],
   "answer": 1,
-  "explanation": "The timeout needs a lower bound as well."
+  "explanation": "A heartbeat can arrive a little late, and if the timeout is shorter than the period plus jitter, one late message already counts as silence and stops the joint for no reason."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your bench joint's speed doubles with the same room and deceleration. What happens to the braking distance?",
+  "question": "A joint's speed doubles with the same deceleration. What happens to the braking distance?",
   "options": [
    "It becomes twice as large",
    "It becomes half as large",
    "It becomes four times larger"
   ],
   "answer": 2,
-  "explanation": "Distance grows with v squared."
+  "explanation": "Braking distance is v^2 / (2a), so doubling v makes it 2^2 = 4 times larger."
  }
 ]

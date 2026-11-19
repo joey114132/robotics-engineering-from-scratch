@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "작업대에서 카메라 node는 publish하는데 viewer에 아무것도 안 보이고 에러도 없습니다. 가장 먼저 무엇을 봅니까?",
+  "question": "작업대에서 카메라 node는 publish하는데 viewer에 아무것도 안 보이고 오류도 없습니다. 가장 먼저 무엇을 봅니까?",
   "options": [
    "카메라와 viewer의 QoS profile",
    "viewer 창 크기와 화면 주사율 설정",
-   "카메라 노출과 화이트밸런스 같은 영상 설정"
+   "카메라의 노출과 화이트밸런스 같은 영상 설정값"
   ],
   "answer": 0,
-  "explanation": "QoS가 호환되지 않으면 어느 node도 죽지 않은 채 전달만 막힙니다."
+  "explanation": "QoS가 서로 맞지 않으면 두 node 모두 멀쩡히 돌아가는데도 메시지가 전달되지 않고 오류도 나지 않습니다. 그래서 가장 먼저 볼 곳이 QoS입니다."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "rover가 위치를 publish하고 작업대 팔이 subscribe합니다. 어느 QoS 쌍이 끝내 연결되지 않습니까?",
+  "question": "rover가 위치를 publish하고 작업대 팔이 subscribe합니다. 어느 QoS 쌍이 연결되지 않습니까?",
   "options": [
-   "reliable publisher, reliable subscriber",
+   "reliable publisher와 reliable subscriber",
    "reliable publisher와 best effort subscriber",
-   "best effort publisher, reliable subscriber"
+   "best effort publisher와 reliable subscriber"
   ],
   "answer": 2,
-  "explanation": "subscriber가 publisher가 제공하는 것보다 더 많이 요구합니다."
+  "explanation": "reliable subscriber는 반드시 전달되는 방식을 요구하는데 best effort publisher는 그렇게 제공하지 못합니다. 요구가 제공보다 크면 연결되지 않습니다."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "작업대 팔의 depth 3 keep-last queue에 rover 메시지 5개가 한꺼번에 들어옵니다. 몇 개가 어떤 순서로 버려집니까?",
+  "question": "작업대 팔의 depth 3 keep-last queue에 rover 메시지 5개가 한꺼번에 들어옵니다. 버려지는 메시지는 몇 개이고 어느 것입니까?",
   "options": [
    "2개, 가장 새로운 것",
    "5개, 한꺼번에 온 것 전부",
    "2개, 가장 오래된 것"
   ],
   "answer": 2,
-  "explanation": "keep last는 최신 3개를 남기고 가장 오래된 것부터 버립니다."
+  "explanation": "queue는 3개까지만 담을 수 있어서 5개가 들어오면 2개가 넘칩니다. keep last는 가장 오래된 것부터 버리고 최신 3개를 남깁니다."
  },
  {
   "id": 4,
   "stage": "check",
   "question": "작업대 팔의 callback은 tick당 rover 메시지를 하나 가져가는데 rover는 tick당 둘을 보냅니다. depth를 키우면 어떻게 됩니까?",
   "options": [
-   "유실이 늦어질 뿐 완전히 없어지지는 않는다",
-   "depth가 충분히 크면 유실이 모두 없어진다",
-   "callback 속도도 함께 두 배가 된다"
+   "메시지가 버려지는 때가 늦어질 뿐 없어지지는 않습니다",
+   "depth가 충분히 크면 메시지가 더 버려지지 않습니다",
+   "callback이 처리하는 속도도 두 배가 됩니다"
   ],
   "answer": 0,
-  "explanation": "queue는 burst를 흡수하지만 평균적으로 더 느린 consumer를 고치지는 못합니다."
+  "explanation": "팔은 tick마다 하나씩 처리하는데 메시지는 둘씩 들어와서 queue가 계속 찹니다. depth를 키우면 넘치는 때가 늦어질 뿐 결국 메시지를 버리게 됩니다."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "rover의 publisher는 volatile이고 작업대 팔의 subscriber는 transient-local입니다. 결과는 무엇입니까?",
+  "question": "rover의 publisher는 volatile이고 작업대 팔의 subscriber는 transient local입니다. 결과는 무엇입니까?",
   "options": [
-   "연결되지 않는다. 오류도 없다",
-   "연결되고 옛 메시지를 재생한다",
-   "연결되지만 지연이 조금 늘어난다"
+   "연결되지 않으며 오류도 나지 않습니다",
+   "연결되고 지난 메시지를 다시 받습니다",
+   "연결되지만 메시지 전달 지연이 늘어납니다"
   ],
   "answer": 0,
-  "explanation": "subscriber가 publisher가 제공하지 않는 replay를 요구합니다."
+  "explanation": "volatile publisher는 지난 메시지를 주지 않는데 transient local subscriber는 지난 메시지를 요구합니다. 요구가 제공보다 커서 조용히 연결되지 않습니다."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "rover의 센서 스트림이 손실 있는 무선 링크로 작업대 팔에 전달됩니다. 가장 좋은 설정은 무엇입니까?",
+  "question": "rover의 센서 스트림이 메시지가 자주 유실되는 무선 링크로 작업대 팔에 전달됩니다. 팔에는 가장 최신 값만 쓸모 있습니다. 가장 좋은 설정은 무엇입니까?",
   "options": [
-   "reliable에 history를 전부 유지한다",
-   "양쪽 best effort에 작은 depth",
-   "양쪽 reliable에 아주 큰 depth"
+   "reliable로 받은 메시지를 전부 보관",
+   "양쪽 best effort와 작은 depth",
+   "양쪽 reliable과 큰 depth"
   ],
   "answer": 1,
-  "explanation": "best effort는 낡은 샘플을 재전송하지 않고 버립니다. 작은 depth는 가장 최신 것을 남깁니다."
+  "explanation": "best effort는 낡은 샘플을 다시 보내지 않고 버립니다. 거기에 작은 depth를 쓰면 가장 최신 샘플만 남습니다."
  }
 ]

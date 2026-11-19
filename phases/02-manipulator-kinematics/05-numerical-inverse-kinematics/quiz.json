@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your 6-joint bench arm has no closed-form IK. What is the usual fallback?",
+  "question": "Your 6-joint desk arm has no formula for its joint angles. What is the usual fallback?",
   "options": [
-   "Expand the closed form for two links to six joints",
+   "Stretch the two-link formula out to six joints",
    "Try random angle sets until the tip lands on target",
    "Iterate small joint steps using the Jacobian"
   ],
   "answer": 2,
-  "explanation": "Each step uses the local linear map from joint motion to tip motion."
+  "explanation": "There is no formula for the angles, so the solver makes a small joint move, uses the Jacobian to predict where the tip goes, and repeats until the miss is tiny."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your bench arm's IK loop damps its Jacobian solve. Why?",
+  "question": "Why does your IK loop damp its Jacobian solve?",
   "options": [
    "To make each step land nearer the exact answer",
    "To keep every joint inside its stop during the step",
    "To keep steps finite at a straight or folded arm"
   ],
   "answer": 2,
-  "explanation": "Near a singularity the plain inverse gives enormous steps, as in 02/04."
+  "explanation": "Near a straight or folded arm the plain inverse gives enormous steps, as in lesson 02/04, and damping keeps each step finite."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You run your three-link bench arm's IK from different random seeds toward one fixed target. What can happen?",
+  "question": "You run the IK of a three-link arm from different random seeds toward one fixed target. What can happen?",
   "options": [
    "Seeds can end on different valid joint sets",
    "Every seed must return the same joint angles",
    "Only a seed starting at the target can converge"
   ],
   "answer": 0,
-  "explanation": "A point can be reached by several joint sets, and the start decides which one is found."
+  "explanation": "The same point can be reached by several joint sets, like elbow up and elbow down, and the starting pose decides which one the solver finds."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You put the ball out of your bench arm's reach. What should the solver return?",
+  "question": "You put the ball out of your arm's reach. What should the solver return?",
   "options": [
    "The last pose reached, with converged=True",
    "The lowest-error pose seen, with converged=False",
    "An exception raised, with no pose returned at all"
   ],
   "answer": 1,
-  "explanation": "Keep the best iterate and clearly flag failure; this does not guarantee a global minimum."
+  "explanation": "The ball cannot be reached, so the solver returns the closest pose it found and marks it converged=False. That pose is only the best it saw, not a proven closest one."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your bench arm's joints have stops. Why clamp q to the limits inside the loop and not after it?",
+  "question": "Why does your IK clamp q to the joint limits inside the loop and not after it?",
   "options": [
    "Limits are only needed for the final answer",
-   "Each step then sees the reachable set",
+   "Each step then measures the miss from a real pose",
    "It makes the loop converge in fewer steps"
   ],
   "answer": 1,
-  "explanation": "A final clamp can move the tip far from the target, while in-loop clamping keeps the error honest."
+  "explanation": "If you clamp only at the end, the tip can end up far from the target. Clamping inside the loop means each step measures the error with the joints where they really can be."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your bench arm's solver converges from several seeds. How do you pick among the solutions?",
+  "question": "Several seeds converge on your arm. How do you pick among the solutions?",
   "options": [
    "Always the first one found, since it had converged",
    "By the one that needed the fewest iterations",
    "By a cost like distance from the current angles"
   ],
   "answer": 2,
-  "explanation": "A nearby solution means the arm moves the least."
+  "explanation": "Several answers reach the ball, so you need a rule to choose. A cost such as the distance from the current angles picks the answer where the arm moves the least."
  }
 ]

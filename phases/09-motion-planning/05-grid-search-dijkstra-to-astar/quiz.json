@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your blue Dijkstra rover and green A* rover search the same map. What is the only difference between them in this lesson?",
+  "question": "A blue Dijkstra rover and a green A* rover search the same map. What is the only difference between them in this lesson?",
   "options": [
    "Dijkstra ignores the walls but A* respects them",
    "A* searches a coarser version of the same grid",
    "A* adds a goal-distance guess to its priority"
   ],
   "answer": 2,
-  "explanation": "Both expand the cell with the smallest priority."
+  "explanation": "Both always expand the square with the smallest priority. Dijkstra uses only the steps already spent, and A* adds its guess of the steps left."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your green A* rover uses the Manhattan distance. When does it return the same cost as the blue Dijkstra rover?",
+  "question": "When does A* with the Manhattan distance return the same cost as Dijkstra?",
   "options": [
    "The heuristic never overestimates the cost",
    "A* has expanded more squares than Dijkstra would",
    "The weight w is set well above 1 on a big map"
   ],
   "answer": 0,
-  "explanation": "Admissible heuristics keep A* optimal."
+  "explanation": "An admissible heuristic never exaggerates the steps left, so A* is not lured into a longer route. A weight above 1 exaggerates the guess and breaks this."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your blue rover runs Dijkstra and your green rover runs A*. What does Dijkstra equal in A* terms?",
+  "question": "In A* terms, what is Dijkstra?",
   "options": [
    "A* without walls",
    "A* with h = 0",
    "A* with w = 10"
   ],
   "answer": 1,
-  "explanation": "With no guess, priority is just g."
+  "explanation": "With h = 0 there is no guess, so the priority is just g, the steps already spent. That is exactly what Dijkstra uses."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You give your blue rover a weight w = 4 on the trap map. What does that do?",
+  "question": "On the trap map, a rover runs A* with weight w = 4. What does that do?",
   "options": [
-   "Expands more cells but finds a shorter path",
-   "Expands fewer cells but finds a longer path",
+   "Expands more squares but finds a shorter path",
+   "Expands fewer squares but finds a longer path",
    "Finds the best path faster with no loss at all"
   ],
   "answer": 1,
-  "explanation": "The near gap looks cheap, and it costs 36 instead of 26."
+  "explanation": "The exaggerated guess rushes into the upper gap: 95 squares expanded instead of 115, but the path costs 36 instead of 26."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "You raise the weight on your blue rover so it rushes toward the flag. What bounds the damage of weighted A*?",
+  "question": "You raise the weight so A* rushes toward the flag. What limits how bad the path can get?",
   "options": [
    "The path costs at most w times the best path",
    "Nothing, since weighted A* can be arbitrarily bad",
    "The number of squares expanded before the goal"
   ],
   "answer": 0,
-  "explanation": "Scaling an admissible heuristic by w gives a bound of w."
+  "explanation": "Scaling an admissible heuristic by w inflates the guess at most w times, so the path costs at most w times the best path."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your green A* rover crosses an empty grid. How many cells does A* expand?",
+  "question": "A* crosses an empty grid using the Manhattan distance and, when scores tie, tries the square nearer the flag first. How many squares does it expand?",
   "options": [
-   "Only the cells along its final path",
+   "Only the squares along its final path",
    "About half the grid around the start",
    "Nearly the whole grid, like Dijkstra"
   ],
   "answer": 0,
-  "explanation": "Manhattan is exact there, so it never looks off-path."
+  "explanation": "On an empty grid the Manhattan distance is exact and ties go to the square nearer the flag, so the squares on the way always look best and A* never looks off the path."
  }
 ]

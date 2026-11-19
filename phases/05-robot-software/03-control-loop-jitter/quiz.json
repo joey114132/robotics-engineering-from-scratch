@@ -9,43 +9,43 @@
    "A few rare long delays barely move the mean"
   ],
   "answer": 2,
-  "explanation": "A few bad cycles among thousands good ones barely change an average."
+  "explanation": "A few bad cycles among thousands of good ones barely change an average, but the arm twitches on each bad cycle."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You must guarantee a hard deadline for your bench arm's control loop. Which statistic matters most?",
+  "question": "You must guarantee a hard deadline for a control loop. Which statistic matters most?",
   "options": [
    "Worst-case jitter of the run",
    "Median period over the whole run",
    "Mean jitter over the whole run"
   ],
   "answer": 0,
-  "explanation": "One missed deadline is enough to break the control step."
+  "explanation": "One missed deadline is enough to break the control step, so the worst cycle matters more than any average."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your bench arm's loop does 0.2 ms of work, then sleeps 1 ms. What is its mean period?",
+  "question": "A loop does 0.2 ms of work, then sleeps 1 ms. What is its mean period?",
   "options": [
    "About 0.8 ms, sleep minus the work",
    "About 1.0 ms, the sleep time alone",
    "About 1.2 ms, work plus sleep"
   ],
   "answer": 2,
-  "explanation": "Relative sleep adds the work time to every cycle, so the loop drifts slow."
+  "explanation": "One cycle is 0.2 ms of work plus 1 ms of sleep, so the mean period is 1.2 ms and the loop drifts later each cycle."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You count missed deadlines in your bench arm's loop. An iteration is a deadline miss when...",
+  "question": "You count missed deadlines in a loop. A cycle is a deadline miss when...",
   "options": [
    "it finishes after the next deadline",
    "its period differs from the mean",
-   "it wakes later than i times the period"
+   "it wakes later than its scheduled time"
   ],
   "answer": 0,
-  "explanation": "The work must be done before the next iteration is due."
+  "explanation": "A deadline is the time by which a cycle must finish. A cycle that ends after the next deadline is a miss, and waking late alone is not."
  },
  {
   "id": 5,
@@ -57,18 +57,18 @@
    "The CPU load of the control process"
   ],
   "answer": 1,
-  "explanation": "Delays do not accumulate, so they only add spread around T."
+  "explanation": "Sleeping until an absolute time means a late wake-up does not push later cycles back, so it only adds spread around T."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "You must report your bench arm's loop timing for a review. Which set is the minimum?",
+  "question": "You must report your bench arm's loop timing to your team. Which set is the minimum?",
   "options": [
    "Mean, CPU load and memory usage",
    "Mean, median, std dev and range",
    "Mean, p99, worst and miss count"
   ],
   "answer": 2,
-  "explanation": "The tail and the miss count carry the risk that the mean hides."
+  "explanation": "The mean hides the rare bad cycles. The p99, the worst value and the miss count show that risk."
  }
 ]

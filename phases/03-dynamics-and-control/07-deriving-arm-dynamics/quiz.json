@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "You bolt a heavier tool onto your bench arm. Why can't you simply adapt M(q) from a textbook?",
+  "question": "You bolt a heavier tool onto your bench arm. Why can't you simply reuse M(q) from a textbook?",
   "options": [
    "The textbook M(q) only works in simulation",
    "M(q) depends on the tool's mass distribution",
    "The terms depend on the controller, not on the arm"
   ],
   "answer": 1,
-  "explanation": "A new tool changes the mass distribution, so rebuild M(q) from energy to see what to change."
+  "explanation": "A new tool changes the mass distribution, so the numbers in M(q) change. Rebuild M(q) from the arm's energy to see what to change."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You build your bench arm's M from T = 1/2 qd' M qd. How do unit velocities give M?",
+  "question": "You build an arm's M from T = 1/2 qd' M qd. How do unit velocities give M?",
   "options": [
    "Each unit velocity is one random sample, and M is their average",
    "T is quadratic in qd, so T at unit velocities gives M",
    "They give the gravity torque on each joint, not the inertia"
   ],
   "answer": 1,
-  "explanation": "The diagonals are 2T(e_i) and the off-diagonal is T(e0+e1) - T(e0) - T(e1)."
+  "explanation": "Since T is quadratic in qd, T at unit velocities fixes the entries of M. M11 and M22 are 2T(e_i) and M12 is T(e0+e1) - T(e0) - T(e1)."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your bench arm's model contains a Coriolis term. Why does it exist at all?",
+  "question": "An arm's model contains a Coriolis term. Why does it exist at all?",
   "options": [
    "Gravity changes with the pose of the arm",
    "M depends on the joint angles of the arm",
    "Joint friction grows with the angular speed"
   ],
   "answer": 1,
-  "explanation": "If M were constant, d/dt(M qd) would have no velocity-squared term."
+  "explanation": "M changes with the joint angles, so d/dt(M qd) gains a velocity-squared term. If M were constant, that term would not exist."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your Lagrange and Newton-Euler derivations of the bench arm give different torques at one state. What do you conclude?",
+  "question": "The Lagrange and Newton-Euler derivations give different torques at one state. What do you conclude?",
   "options": [
    "Both are right, as each uses its own convention",
    "The arm is not rigid, so the methods differ",
    "At least one of the two derivations has a bug"
   ],
   "answer": 2,
-  "explanation": "Lagrange and Newton-Euler describe the same rigid arm and must agree."
+  "explanation": "Lagrange and Newton-Euler describe the same rigid arm, so they must give the same torque. If they differ, one of them has a bug."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your bench arm swings freely in a horizontal plane with zero torque and no friction. What must stay constant?",
+  "question": "An arm swings freely in a horizontal plane with zero torque and no friction. What must stay constant?",
   "options": [
    "The total kinetic energy of the arm",
    "The momentum of each separate link",
    "The joint angles of both links"
   ],
   "answer": 0,
-  "explanation": "There is no gravity or torque to change energy."
+  "explanation": "Nothing adds or removes energy, since there is no gravity, torque or friction. The links pull on each other, so a single link's motion still changes."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "In a free-swing simulation of your bench arm, flipping the sign of h makes kinetic energy wander. What does this tell you?",
+  "question": "In a free-swing simulation, flipping the sign of h makes kinetic energy wander. What does this tell you?",
   "options": [
-   "Energy conservation is a cheap check of Coriolis signs",
-   "h is only a numerical artifact that can be dropped",
-   "RK4 is always unstable for a free-swinging arm"
+   "Energy conservation is an easy check of Coriolis signs",
+   "The sign of h is only a convention and does not matter",
+   "Numerical integration is always unstable for a free-swinging arm"
   ],
   "answer": 0,
-  "explanation": "Correct h satisfies qd' h = 1/2 qd' Mdot qd, canceling the varying-inertia term in dT/dt during free motion. Flipping its sign breaks that cancellation; numerical integration can also cause small drift."
+  "explanation": "Correct h cancels the energy change that varying inertia causes during free motion. Flipping its sign breaks that cancellation, so the energy wanders."
  }
 ]

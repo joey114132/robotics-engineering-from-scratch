@@ -9,7 +9,7 @@
    "Measure fx, fy, cx and cy from a known target"
   ],
   "answer": 2,
-  "explanation": "Nominal intrinsics differ from the real ones, so measure them."
+  "explanation": "The datasheet gives nominal values, not your camera's real intrinsics, so measure fx, fy, cx and cy from a known target."
  },
  {
   "id": 2,
@@ -21,43 +21,43 @@
    "One full 3D pose of the robot base"
   ],
   "answer": 0,
-  "explanation": "H = K [r1 r2 t] relates grid coordinates to pixels."
+  "explanation": "One view gives a 3x3 homography H = K [r1 r2 t] that maps grid coordinates to pixels. The intrinsics need more than one such view."
  },
  {
   "id": 3,
   "stage": "check",
   "question": "You move a checkerboard in front of your camera. Why must the views have different tilts?",
   "options": [
-   "Views that only shift repeat the same constraints",
-   "The solver needs a different board size for each view",
+   "Views that only shift repeat the same clues",
+   "The solver needs a new board size for each view",
    "A tilted board is easier to detect in the image"
   ],
   "answer": 0,
-  "explanation": "Identical orientations add no new equations on B."
+  "explanation": "A board that only slides gives the same clue each time, so it adds no new equations on B. Tilting each view adds new ones."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Each checkerboard view you add contributes equations to B. How many does one view add?",
+  "question": "Each checkerboard view you add gives equations about B, a table of numbers built from the camera values. How many does one view give?",
   "options": [
    "Only one equation from each view",
    "Six equations, one per entry of B",
    "Two equations from every view"
   ],
   "answer": 2,
-  "explanation": "h1'Bh2 = 0 and h1'Bh1 = h2'Bh2."
+  "explanation": "The two edges are perpendicular and equally long, which gives h1'Bh2 = 0 and h1'Bh1 = h2'Bh2, so each view adds two equations."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your checkerboard corners have 1 px of noise. What happens to the linear result when you go from 3 to 10 views?",
+  "question": "Your checkerboard corners have 1 px of noise. What happens to the calibration result when you go from 3 to 10 views?",
   "options": [
    "The error doubles, as each view adds noise",
    "The error drops to nearly zero in practice",
    "The error roughly halves but does not vanish"
   ],
   "answer": 2,
-  "explanation": "More constraints average the noise, but it does not vanish."
+  "explanation": "More views add clues that average out the noise, so the error roughly halves, but the noise itself does not vanish."
  },
  {
   "id": 6,
@@ -65,10 +65,10 @@
   "question": "Your calibration returns cx far from the image centre and fx very different from fy. What is your first suspicion?",
   "options": [
    "The values are normal for a wide-angle lens",
-   "Views too few or too alike, giving a weak fit",
+   "Views too few or alike, giving an unstable fit",
    "The sensor has failed and needs replacing"
   ],
   "answer": 1,
-  "explanation": "The linear solution amplifies noise when views are poor."
+  "explanation": "When views are too few or too alike, the calculation amplifies the noise, so cx, fx and fy come out wrong. Add more views with different tilts."
  }
 ]

@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your bench joint slams into its hard stop and the log shows no error. What is most likely?",
+  "question": "A bench arm slams into its hard stop and the log shows no error. What is the most likely cause?",
   "options": [
    "The motor's gain was set too low to hold position",
-   "The controller obeyed a bad reading or command path",
+   "The controller followed a bad reading or command",
    "The CPU ran out of memory and the controller crashed"
   ],
   "answer": 1,
-  "explanation": "A fault in the sensor or command path leaves the controller consistent with itself."
+  "explanation": "The controller acts on what it is told, so a bad sensor reading or command can push the arm into the stop without any error."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "On your bench joint the controller sees a calm, constant reading, yet the true joint ends far from the target. Which fault is it?",
+  "question": "The controller sees a calm, constant reading, yet the joint ends far from the target. Which fault is it?",
   "options": [
    "A motor that saturates at its cap",
    "A sensor stuck at a single value",
    "A sensor reading that is delayed"
   ],
   "answer": 1,
-  "explanation": "A frozen reading hides the motion, so the torque keeps pushing."
+  "explanation": "A stuck sensor reports one value while the joint really moves, so the controller sees a calm joint and its torque keeps pushing."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You flip the torque sign on your bench joint. What does the PD spring turn into?",
+  "question": "You flip the sign of the torque. What does the PD spring turn into?",
   "options": [
    "A damper that does nothing but slow the joint",
    "A stiffer spring pulling harder toward the target",
    "A repeller that pushes the joint off the target"
   ],
   "answer": 2,
-  "explanation": "The restoring force flips direction, so error grows."
+  "explanation": "With the sign flipped, the push that used to pull the joint toward the target now pushes it away, so the error keeps growing."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You rank your bench joint's faults, and saturation is caught last. Why?",
+  "question": "When you rank the faults, saturation is caught last. Why?",
   "options": [
    "Its error is the largest, so the alarm waits to be sure",
    "It hides the sensor reading, so no check can see it",
    "It only slows the response, so only a time-based check trips"
   ],
   "answer": 2,
-  "explanation": "Nothing jumps, freezes or grows fast, so the 2 s check fires."
+  "explanation": "Saturation only slows the response, so nothing jumps, freezes or grows fast and only the 2 s deadline check trips."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "On your bench joint you inject the same stuck sensor after the joint has settled. What happens?",
+  "question": "You inject the same stuck sensor after the joint has settled. What happens?",
   "options": [
    "The loop goes unstable and the joint buzzes",
    "The joint drifts slowly to the hard stop",
    "Almost nothing, as torque is already near zero"
   ],
   "answer": 2,
-  "explanation": "The held reading equals the true one and the commanded torque is about zero."
+  "explanation": "Once the joint has settled, the frozen reading already equals the true angle and the commanded torque is about zero, so freezing it changes almost nothing."
  },
  {
   "id": 6,
   "stage": "post",
   "question": "You measured alarm thresholds on your bench joint. What should you do with them?",
   "options": [
-   "Re-measure them on your own robot's plant",
+   "Re-measure them on your own robot's joint",
    "Copy them to all robots with this controller",
    "Treat them as certified, final safety limits"
   ],
   "answer": 0,
-  "explanation": "They depend on this plant's inertia, gains and rates."
+  "explanation": "These thresholds come from this joint's own behaviour, so another robot gives other numbers and needs its own measurement."
  }
 ]

@@ -9,7 +9,7 @@
    "The laser was calibrated at the wrong distance"
   ],
   "answer": 1,
-  "explanation": "Points measured earlier needed the pose from their own time."
+  "explanation": "The robot kept turning during the scan, so points measured earlier needed the pose from their own time, not the newest one."
  },
  {
   "id": 2,
@@ -21,7 +21,7 @@
    "Interpolates: lerp for position, slerp for orientation"
   ],
   "answer": 2,
-  "explanation": "Interpolation answers a question about one instant between two known poses."
+  "explanation": "A time stamp between two stored poses is answered by blending them: a straight line for position and the shortest arc for orientation."
  },
  {
   "id": 3,
@@ -33,7 +33,7 @@
    "It returns the newest pose as the answer"
   ],
   "answer": 1,
-  "explanation": "A silent guess looks like data and hides a late message."
+  "explanation": "With a limit of 0 the buffer will not guess past its newest pose. A silent guess looks like data and hides that a message arrived late."
  },
  {
   "id": 4,
@@ -45,7 +45,7 @@
    "It turns at a constant rate and stays unit length"
   ],
   "answer": 2,
-  "explanation": "Component lerp shortens the quaternion and changes the turn rate."
+  "explanation": "Lerping the components shortens the quaternion and changes the turn rate. Slerp turns at a constant rate and keeps unit length."
  },
  {
   "id": 5,
@@ -57,18 +57,18 @@
    "It grows, roughly in step with the turn"
   ],
   "answer": 2,
-  "explanation": "The pose error is the turn between each point's stamp and the newest stamp."
+  "explanation": "Each point's pose error is the turn between its stamp and the newest stamp, so a faster turn gives a bigger smear."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your robot's pose samples arrive out of order. What must add() do?",
+  "question": "Your robot's pose samples arrive out of order. What must add(), which puts a sample into the PoseBuffer, do?",
   "options": [
    "Insert it by stamp so the buffer stays sorted",
    "Drop the late sample as it is already stale",
    "Append in arrival order, as that is the cheapest"
   ],
   "answer": 0,
-  "explanation": "A sorted buffer is what makes the bisect and the interpolation correct."
+  "explanation": "The bisect and the interpolation are only correct on a sorted buffer, so a late sample is inserted in place, not dropped."
  }
 ]

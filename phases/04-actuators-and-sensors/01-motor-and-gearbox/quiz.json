@@ -9,31 +9,31 @@
    "The load inertia reaches the motor divided by N squared"
   ],
   "answer": 2,
-  "explanation": "At N = 100 the load is 10,000 times smaller on the motor side."
+  "explanation": "The load inertia reaches the motor divided by N squared, so at N = 100 it feels 10,000 times smaller and a heavy wheel barely changes the motor's response."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You power a bench motor at a fixed voltage and spin it up. How does its torque change with speed?",
+  "question": "You power a motor at a fixed voltage and spin it up. How does its torque change with speed?",
   "options": [
-   "It stays flat, then drops sharply above the rated speed",
-   "It falls linearly to zero at the no-load speed",
-   "It rises linearly with speed up to the rated speed"
+   "It stays flat, then drops sharply at high speed",
+   "It falls along a straight line until it reaches zero",
+   "It rises in proportion to speed up to some limit"
   ],
   "answer": 1,
-  "explanation": "Back-EMF grows with speed, so current and torque fall linearly."
+  "explanation": "Back-EMF grows with speed, so the current falls, and torque is proportional to current, so torque falls linearly."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You bolt a gearbox of ratio N onto your bench motor. What happens at the output shaft?",
+  "question": "You bolt a gearbox of ratio N onto a motor. What happens to torque and speed at the output shaft?",
   "options": [
    "Torque / N, speed x N",
    "Torque x N, speed / N",
    "Torque x N, speed same"
   ],
   "answer": 1,
-  "explanation": "Power is conserved apart from losses."
+  "explanation": "A gearbox trades speed for torque. The output torque is N times larger and the speed N times smaller, so power is conserved apart from losses."
  },
  {
   "id": 4,
@@ -45,7 +45,7 @@
    "J_r * N, scaling with the torque"
   ],
   "answer": 0,
-  "explanation": "Energy 0.5*J*w^2 is conserved when speed is divided by N."
+  "explanation": "The output shaft turns N times slower, so to keep the energy 0.5*J*w^2 equal, the rotor inertia must count N^2 times more there."
  },
  {
   "id": 5,
@@ -57,18 +57,18 @@
    "N = 100, a large reduction"
   ],
   "answer": 2,
-  "explanation": "The load share of the motor-side inertia falls as 1 / N^2."
+  "explanation": "The load share of the motor-side inertia falls as 1 / N^2, so the larger N is, the less of the load the drive sees."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "You tuned your bench gearmotor empty, then the wheel it carries doubles in weight. What is a sound expectation at a high ratio?",
+  "question": "You tuned a motor with a gearbox while it was empty, then the wheel it carries doubles in weight. What is a sound expectation at a high ratio?",
   "options": [
    "The response barely moves, so sense the load elsewhere",
    "The response lags badly, so the gains must be retuned now",
    "The motor current jumps, so the drive can flag it"
   ],
   "answer": 0,
-  "explanation": "A high ratio hides load changes from motor-side signals."
+  "explanation": "At a high ratio the motor barely feels a load change, so its response and current barely change. The load has to be sensed elsewhere."
  }
 ]

@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "자동차의 카메라와 IMU가 서로 다른 컴퓨터에서 오는데 합친 위치가 뒤로 튑니다. 샘플은 모두 맞습니다. 무엇을 의심합니까?",
+  "question": "자동차의 카메라와 IMU가 서로 다른 컴퓨터에서 오는데 합친 위치가 뒤로 튑니다. 샘플은 모두 맞습니다. 가장 의심되는 이유는 무엇입니까?",
   "options": [
-   "두 컴퓨터의 시계가 어긋나 샘플 순서가 바뀐다",
-   "fusion filter의 gain이 너무 높다",
-   "IMU 샘플링 주기가 카메라보다 느리다"
+   "두 컴퓨터의 시계가 어긋나 샘플 순서가 바뀌기 때문입니다",
+   "fusion filter의 gain이 너무 높기 때문입니다",
+   "IMU 샘플링 주기가 카메라보다 느리기 때문입니다"
   ],
   "answer": 0,
-  "explanation": "사건 간격보다 큰 시계 offset은 정렬된 순서를 바꿉니다."
+  "explanation": "두 컴퓨터의 시계가 사건 사이의 간격보다 크게 어긋나면 time stamp로 줄 세운 순서가 뒤바뀝니다. 그러면 샘플이 모두 맞아도 합친 위치가 뒤로 튑니다."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "자동차의 두 컴퓨터 시계를 요청과 응답으로 맞춥니다. t0, t1, t2, t3로 server 시계에서 client 시계를 뺀 offset을 구하는 식은 무엇입니까?",
+  "question": "두 컴퓨터의 시계를 요청과 응답으로 맞춥니다. client가 t0에 요청을 보내고 server가 t1에 받아 t2에 응답하며 client가 t3에 응답을 받습니다. server 시계에서 client 시계를 뺀 offset을 구하는 식은 무엇입니까?",
   "options": [
    "(t3 - t0) / 2 + (t2 - t1) / 2",
    "((t1 - t0) + (t2 - t3)) / 2",
    "((t1 - t0) - (t2 - t3)) / 2"
   ],
   "answer": 1,
-  "explanation": "두 편도 차이를 평균하므로 지연이 같으면 정확히 상쇄됩니다."
+  "explanation": "t1 - t0은 시계 차이에 이동 시간을 더한 값이고 t2 - t3은 시계 차이에서 이동 시간을 뺀 값입니다. 둘을 평균하면 이동 시간이 사라집니다."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "시간 요청이 가는 데 30 ms 오는 데 10 ms 걸립니다. offset 오차는 얼마입니까?",
+  "question": "시간 요청이 가는 데 30 ms, 오는 데 10 ms 걸립니다. offset 오차는 얼마입니까?",
   "options": [
-   "0 ms. 두 지연이 상쇄된다",
-   "20 ms. 지연의 차이 전부이다",
-   "10 ms. 오차가 약간 남는다"
+   "0 ms, 두 지연이 서로 상쇄된 값",
+   "20 ms, 두 지연의 차이 전부",
+   "10 ms, 두 지연 차이의 절반"
   ],
   "answer": 2,
-  "explanation": "오차는 두 지연 차이의 절반입니다."
+  "explanation": "가는 지연과 오는 지연이 20 ms 차이 나므로 offset 추정은 그 절반만큼 틀립니다. 지연이 같을 때만 오차가 완전히 상쇄됩니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "자동차의 두 컴퓨터 사이에서 시간 요청을 여러 번 주고받았습니다. 가장 믿을 것은 어느 교환입니까?",
+  "question": "두 컴퓨터 사이에서 시간 요청을 여러 번 시도했습니다. 가장 믿을 것은 어느 시도입니까?",
   "options": [
-   "측정된 offset이 가장 큰 교환",
-   "시계가 어긋나기 전의 맨 처음 교환",
-   "round trip이 가장 짧은 교환"
+   "측정된 offset이 가장 큰 시도",
+   "시계가 어긋나기 전의 맨 처음 시도",
+   "round trip이 가장 짧은 시도"
   ],
   "answer": 2,
-  "explanation": "round trip이 짧으면 지연이 비대칭일 여지가 작습니다."
+  "explanation": "오차는 round trip의 절반을 넘지 않습니다. 그래서 round trip이 가장 짧은 시도가 가장 믿을 만합니다."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "자동차 trace를 읽는데 intent는 이동을 요구했지만 한 줄의 pre와 post가 같습니다. reader는 무엇을 보고합니까?",
+  "question": "자동차 trace를 읽는데 intent는 이동을 요구했지만 한 줄에서 pre와 post가 같습니다. reader는 무엇을 보고합니까?",
   "options": [
-   "not_executed, step이 실행되지 않았다",
-   "no_motion, 실행됐지만 변화가 없다",
-   "wrong_motion, 엉뚱한 방향으로 움직였다"
+   "not_executed, 실행되지 않은 step",
+   "no_motion, 실행됐지만 변화가 없는 step",
+   "wrong_motion, 엉뚱한 방향으로 움직인 step"
   ],
   "answer": 1,
-  "explanation": "step은 실행됐지만 상태가 바뀌지 않았습니다."
+  "explanation": "pre와 post가 같으면 step은 실행됐는데 상태가 바뀌지 않은 것이라서 no_motion입니다."
  },
  {
   "id": 6,
   "stage": "post",
   "question": "자동차 실행이 step 40에서 실패했는데 trace에는 step 12에서 잘못된 이동이 있습니다. 어디서부터 디버깅합니까?",
   "options": [
-   "step 12. 처음 어긋난 지점",
-   "step 40. 실행이 실패한 곳",
-   "로그의 마지막 줄. 실행이 끝난 곳"
+   "step 12, 처음 어긋난 지점",
+   "step 40, 실행이 실패한 지점",
+   "로그의 마지막 줄, 실행이 끝난 지점"
   ],
   "answer": 0,
-  "explanation": "첫 불일치가 실행이 의도와 어긋나기 시작한 가장 이른 지점입니다."
+  "explanation": "step 40의 실패는 앞서 틀어진 이동의 결과일 수 있습니다. 첫 불일치가 의도와 어긋나기 시작한 가장 이른 지점이라서 거기서부터 봅니다."
  }
 ]

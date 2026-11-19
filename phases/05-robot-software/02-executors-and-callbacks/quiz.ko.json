@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "CPU는 대부분 놀고 있는데 장난감 자동차의 10 ms timer가 가끔 50 ms 늦게 울려 watchdog이 차를 멈춥니다. 가능성 높은 원인은 무엇입니까?",
+  "question": "프로세서는 대부분 놀고 있는데 장난감 자동차의 10 ms timer가 가끔 50 ms 늦게 울려 watchdog이 차를 멈춥니다. 가장 가능성이 높은 원인은 무엇입니까?",
   "options": [
-   "긴 callback이 유일한 thread를 쥐고 있다",
-   "subscription queue depth가 너무 작다",
-   "timer 주기가 clock에 비해 지나치게 짧다"
+   "유일한 thread를 쥐고 있는 긴 callback",
+   "너무 작은 subscription queue depth",
+   "clock에 비해 지나치게 짧은 timer 주기"
   ],
   "answer": 0,
-  "explanation": "thread 하나는 callback 하나씩만 실행하므로 준비된 callback이 기다립니다."
+  "explanation": "thread가 하나뿐이라 긴 callback이 도는 동안 timer callback은 차례를 기다립니다. 프로세서가 놀고 있어도 유일한 thread가 비지 않으면 시작하지 못합니다."
  },
  {
   "id": 2,
   "stage": "check",
   "question": "장난감 자동차의 callback 둘이 같은 mutually exclusive group에 있고 executor에 thread가 네 개 있습니다. 동시에 실행될 수 있습니까?",
   "options": [
-   "된다. 여유 thread가 네 개나 남아 있다",
-   "된다. 단 둘 중 하나가 timer일 때에만 가능하다",
-   "안 된다. group이 겹쳐 실행하지 못하게 한다"
+   "됩니다. 비어 있는 thread가 네 개 있기 때문입니다",
+   "됩니다. 단 둘 중 하나가 timer일 때만 됩니다",
+   "안 됩니다. group이 둘을 겹쳐 실행하지 못하게 합니다"
   ],
   "answer": 2,
-  "explanation": "mutually exclusive group은 자기 callback 둘을 병렬로 실행하지 않습니다."
+  "explanation": "mutually exclusive group에 든 callback은 thread가 남아 있어도 서로 겹쳐 실행되지 않습니다. 그래서 둘이 공유하는 데이터가 지켜집니다."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "장난감 자동차의 timer와 60 ms 이미지 callback이 서로 다른 group에 있고 thread가 둘입니다. timer의 최악 대기 시간은 얼마입니까?",
+  "question": "timer와 60 ms 이미지 callback이 서로 다른 group에 있고 thread가 둘입니다. timer의 최악 대기 시간은 얼마입니까?",
   "options": [
-   "0 ms. 기다리지 않고 바로 시작한다",
-   "약 30 ms. 느린 callback의 절반이다",
-   "약 59 ms. thread가 하나일 때와 같다"
+   "0 ms, 기다리지 않고 바로 시작",
+   "약 30 ms, 느린 callback의 절반",
+   "약 59 ms, thread 하나일 때의 값"
   ],
   "answer": 0,
-  "explanation": "timer의 group이 비어 있으므로 놀고 있는 thread가 바로 가져갑니다."
+  "explanation": "timer는 느린 callback과 group이 달라서 두 번째 thread가 놀고 있으면 바로 가져갑니다. 그래서 기다릴 일이 없습니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "장난감 자동차의 callback을 group 인자 없이 만듭니다. 어느 group에 들어갑니까?",
+  "question": "callback을 group 인자 없이 만듭니다. 어느 group에 들어갑니까?",
   "options": [
-   "각자 새로 만든 group을 하나씩 받는다",
-   "node의 default group을 함께 쓴다",
-   "어느 group에도 속하지 않은 채로 실행된다"
+   "callback마다 새로 만들어지는 group",
+   "node 하나가 함께 쓰는 기본 group",
+   "어느 group에도 속하지 않는 상태"
   ],
   "answer": 1,
-  "explanation": "node의 default callback group에 배정됩니다."
+  "explanation": "group을 따로 지정하지 않은 callback은 모두 node의 기본 group 하나를 함께 씁니다. 그래서 thread를 늘리기 전에 느린 callback에 자기 group을 줘야 합니다."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "장난감 자동차의 executor에 thread를 하나 더 넣었는데 나아지지 않습니다. 가장 먼저 무엇을 봅니까?",
+  "question": "executor에 thread를 하나 더 넣었는데 나아지지 않습니다. 가장 먼저 무엇을 봅니까?",
   "options": [
-   "토픽의 메시지가 실제로 best effort QoS로 설정됐는지",
+   "publisher가 best effort QoS로 메시지를 보내고 있는지",
    "callback이 mutually exclusive group을 공유하는지",
-   "queue depth가 한꺼번에 몰려오는 burst보다 충분히 큰지"
+   "queue depth가 한꺼번에 몰리는 burst보다 충분히 큰지"
   ],
   "answer": 1,
-  "explanation": "thread는 group이 병렬을 허용하는 callback에만 도움이 됩니다."
+  "explanation": "callback들이 mutually exclusive group 하나를 함께 쓰면 thread가 늘어도 서로 겹쳐 실행되지 못합니다. thread는 group이 병렬을 허용하는 callback에만 도움이 됩니다."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "느린 callback이 timer를 굶겨 장난감 자동차가 계속 멈춥니다. thread를 늘리는 것 말고 굶김을 없애는 방법은 무엇입니까?",
+  "question": "느린 callback이 timer를 굶겨 장난감 자동차가 계속 멈춥니다. thread를 늘리는 것 말고 timer가 굶는 일을 없애는 방법은 무엇입니까?",
   "options": [
-   "느린 callback을 짧은 조각으로 나눈다",
-   "느린 callback의 queue depth를 키운다",
-   "여유를 주려고 timer 주기를 1초로 늘린다"
+   "느린 callback을 짧은 조각으로 나누기",
+   "느린 callback의 queue depth 키우기",
+   "여유를 주려고 timer 주기를 1초로 늘리기"
   ],
   "answer": 0,
-  "explanation": "callback이 짧으면 thread를 쥐는 시간이 줄어 최악 대기 시간이 줄어듭니다."
+  "explanation": "느린 callback을 짧게 나누면 각 조각이 thread를 쥐는 시간이 줄어서 timer가 기다리는 최악의 시간도 줄어듭니다."
  }
 ]

@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your arm pushes a peg into a tight slot. It stops halfway and pushing harder only holds it firmer. What is the likely cause?",
+  "question": "An arm pushes a peg into a tight hole. It stops halfway, and pushing harder only holds it firmer. What is the likely cause?",
   "options": [
    "A push that is too weak to finish",
-   "A wedge jam from a stiff wrist",
+   "A jam caused by a stiff robot wrist",
    "A peg that is too long for the hole"
   ],
   "answer": 1,
-  "explanation": "More push raises contact forces and friction, so a jammed wedge locks harder."
+  "explanation": "A stiff wrist turns a small misalignment into a big side force, so wall friction holds the peg, and pushing harder only raises that friction."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your arm's wrist has stiffness kx and the peg starts with a lateral offset e. About how big is the side force at the tip?",
+  "question": "A wrist has stiffness kx, and the peg starts misaligned by e. About how big is the side force at the tip?",
   "options": [
    "The push force multiplied by e",
    "e divided by the stiffness",
    "kx times the misalignment"
   ],
   "answer": 2,
-  "explanation": "The lateral spring turns misalignment into force."
+  "explanation": "The wrist acts as a lateral spring with stiffness kx, so a misalignment e becomes a side force of about kx times e."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You watch your arm's peg stop in the slot. What does the model call a jam?",
+  "question": "A peg stops in the hole. What does the model call a jam?",
   "options": [
    "The side force at the tip exceeds the push force",
-   "Both friction cones can balance the wrist wrench",
+   "Both cones can balance the wrist's push and twist",
    "The tilt angle reaches the chamfer angle at the edge"
   ],
   "answer": 1,
-  "explanation": "Then the contacts hold the peg and the push cannot move it."
+  "explanation": "When both friction cones can balance the wrist's push and twist, the contacts hold the peg and no push can move it."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your arm's peg is jammed in the slot. Which change helps the insertion most?",
+  "question": "A peg is jammed in the hole. Which change helps the insertion most?",
   "options": [
    "A larger push force",
    "A stiffer wrist mount",
    "More lateral compliance"
   ],
   "answer": 2,
-  "explanation": "A softer wrist lowers the side force that feeds friction."
+  "explanation": "A softer wrist lowers the side force that feeds friction, so the peg slides in. Pushing harder only locks the jam tighter."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "You simulate your arm's peg in a slot with frictionless walls. What happens to it?",
+  "question": "A peg goes into a hole with frictionless walls. What happens to it?",
   "options": [
    "Never jams in this model",
    "Always jams at the entry",
    "Jams only if the peg tilts"
   ],
   "answer": 0,
-  "explanation": "The cones shrink to the normals, which cannot balance a wrench that is not exactly along them."
+  "explanation": "A jam needs wall friction to hold the peg. Without friction the walls can only push straight sideways, so they cannot hold it against the downward push."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "You use the peg-in-slot model to plan your arm's insertion. What is NOT covered by it?",
+  "question": "You plan an insertion with the peg-in-hole model. What is NOT covered by it?",
   "options": [
    "The landing on the hole edge",
    "The wrist as a lateral spring",
-   "Coulomb friction at both walls"
+   "Friction force at both walls"
   ],
   "answer": 0,
-  "explanation": "The model starts in the wedge state."
+  "explanation": "The model only checks the peg once it is inside the hole, depth by depth, so it says nothing about how the peg first lands on the hole edge."
  }
 ]

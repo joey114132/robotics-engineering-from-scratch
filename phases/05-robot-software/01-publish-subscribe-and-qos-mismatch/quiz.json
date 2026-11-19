@@ -9,7 +9,7 @@
    "The camera exposure and white balance settings"
   ],
   "answer": 0,
-  "explanation": "Incompatible QoS prevents delivery without crashing either node."
+  "explanation": "When the QoS profiles do not match, both nodes keep running but no messages are delivered, and nothing reports an error. That makes QoS the first thing to check."
  },
  {
   "id": 2,
@@ -21,7 +21,7 @@
    "Best effort publisher, reliable subscriber"
   ],
   "answer": 2,
-  "explanation": "The subscriber asks for more than the publisher offers."
+  "explanation": "A reliable subscriber demands guaranteed delivery that a best effort publisher does not offer, so the two never connect."
  },
  {
   "id": 3,
@@ -33,7 +33,7 @@
    "2 messages, the oldest ones"
   ],
   "answer": 2,
-  "explanation": "Keep last holds the newest 3 and drops the oldest first."
+  "explanation": "The queue holds only 3, so 2 of the 5 messages overflow. Keep last drops the oldest first and keeps the newest 3."
  },
  {
   "id": 4,
@@ -45,26 +45,26 @@
    "Doubles the callback speed along with the depth"
   ],
   "answer": 0,
-  "explanation": "A queue absorbs a burst but cannot fix a consumer that is slower on average."
+  "explanation": "The arm takes one message per tick but two arrive, so the queue keeps filling. A deeper queue only delays the point where it overflows."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your rover's publisher is volatile and your arm's subscriber is transient-local. What is the result?",
+  "question": "Your rover's publisher is volatile and your arm's subscriber is transient local. What is the result?",
   "options": [
    "No connection is made, silently",
    "Connected, and old messages replay",
    "Connected, but with extra latency"
   ],
   "answer": 0,
-  "explanation": "The subscriber requests replay the publisher does not offer."
+  "explanation": "A volatile publisher keeps no old messages, yet a transient local subscriber asks for them. The request exceeds the offer, so the pair silently stays unconnected."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your rover's sensor stream crosses a lossy wireless link to the bench arm. Which setting fits best?",
+  "question": "Your rover's sensor stream crosses a lossy wireless link to the bench arm, and the arm only needs the newest reading. Which setting fits best?",
   "options": [
-   "Keep all the history on a reliable subscriber",
+   "Keep every past message on a reliable subscriber",
    "Best effort on both ends with a small depth",
    "Reliable on both ends with a large depth"
   ],

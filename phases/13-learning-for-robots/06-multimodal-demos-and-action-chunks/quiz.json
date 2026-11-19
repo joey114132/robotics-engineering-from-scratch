@@ -2,38 +2,38 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Half your rover's demos pass the pillar on the left and half on the right. What does a mean-regression policy do at the start?",
+  "question": "Half your rover's demos go above the pillar and half below it. What does a mean policy do at the start?",
   "options": [
-   "Heads straight at the obstacle",
-   "Picks left or right at random",
-   "Stops just short of the obstacle"
+   "Heads straight at the pillar",
+   "Picks above or below at random",
+   "Stops just short of the pillar"
   ],
   "answer": 0,
-  "explanation": "The mean of left and right is straight ahead, which nobody demonstrated."
+  "explanation": "The mean of \"above\" and \"below\" is straight ahead, so the rover heads at the pillar, a move nobody demonstrated."
  },
  {
   "id": 2,
   "stage": "check",
   "question": "At your rover's shared starting spot, the mean policy already picks a wrong first action. Why?",
   "options": [
-   "Compounding error has already pushed it off the demonstrated path",
-   "Regression averages two valid actions for one observation",
-   "The model is too small to fit even one of the demonstrations"
+   "Errors have piled up and pushed it off the demo path",
+   "It averages two valid actions given for the same spot",
+   "The model is too small to fit even one demonstration"
   ],
   "answer": 1,
-  "explanation": "The first action averages distinct valid modes. Compounding error instead concerns policy mistakes leading to unfamiliar states, and it can happen with deterministic errors too."
+  "explanation": "Both demos start from this spot but one goes above and one goes below, so the mean policy averages them. No error has piled up yet."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You switch your rover from one sampled action per step to a chunk sampler. What does it add?",
+  "question": "You switch your rover from one sampled action per step to a sampler that draws a chunk of H steps. What does it do differently?",
   "options": [
-   "It averages the H demos into one smoother path",
+   "It averages the demos into one smoother path",
    "It commits to one demonstration for H steps",
    "It redraws the mode at every single step"
   ],
   "answer": 1,
-  "explanation": "Step-wise sampling can flip between modes and chatter; a chunk keeps one way round."
+  "explanation": "Picking a new demo at every step can flip between the two ways and make the rover wobble. A chunk stays on one demo for H steps."
  },
  {
   "id": 4,
@@ -45,7 +45,7 @@
    "The commands jump to the newer chunk's side"
   ],
   "answer": 0,
-  "explanation": "That is why each new chunk is chosen to agree with the committed actions."
+  "explanation": "Averaging an above plan with a below plan gives straight ahead, so each new chunk is chosen to agree with the actions already committed."
  },
  {
   "id": 5,
@@ -57,7 +57,7 @@
    "Goes over and under equally, whatever the split"
   ],
   "answer": 0,
-  "explanation": "Sampling keeps the data's proportions; it does not average them."
+  "explanation": "The sampler picks one demo at random, so it follows the 5 to 1 split instead of averaging it, going over about five times in six."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "More wobble, since a longer chunk has more chances to drift"
   ],
   "answer": 1,
-  "explanation": "The actions in a chunk are decided at its start, so the robot reacts late."
+  "explanation": "A chunk's actions are all decided when it starts, so a very long chunk cannot react to what happens while it runs."
  }
 ]

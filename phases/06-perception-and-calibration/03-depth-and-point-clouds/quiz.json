@@ -9,7 +9,7 @@
    "Raise the voxel size until the box vanishes"
   ],
   "answer": 0,
-  "explanation": "RANSAC ignores points that do not agree with the majority plane."
+  "explanation": "RANSAC picks the plane most points agree with, so the box and the garbage pixels cannot pull it off."
  },
  {
   "id": 2,
@@ -21,7 +21,7 @@
    "Delete every other point in scan order"
   ],
   "answer": 1,
-  "explanation": "It buckets points by cell and averages each bucket."
+  "explanation": "A voxel grid buckets the points by cell and averages each bucket, so one point is left per occupied cell."
  },
  {
   "id": 3,
@@ -33,19 +33,19 @@
    "A random half of the whole cloud"
   ],
   "answer": 1,
-  "explanation": "Three non-collinear points define a plane."
+  "explanation": "Three points that do not lie on one line define a plane, so each round samples three random points and builds a plane from them."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Half the points of your table scan are inliers. How many samples give a 99% chance of one all-inlier triple?",
+  "question": "Half the points of your table scan are inliers. At least how many samples give a 99% chance of one all-inlier triple?",
   "options": [
    "99 samples",
    "1000 samples",
    "35 samples"
   ],
   "answer": 2,
-  "explanation": "log(0.01) / log(1 - 0.5^3) is about 34.5, rounded up to 35."
+  "explanation": "All three points are inliers with probability 0.5^3, so log(0.01) / log(1 - 0.5^3) is about 34.5, rounded up to 35 samples."
  },
  {
   "id": 5,
@@ -57,7 +57,7 @@
    "The triple is noisy, but many inliers average it out"
   ],
   "answer": 2,
-  "explanation": "Three points give a plane that is sensitive to their noise."
+  "explanation": "A plane from three points is sensitive to their noise, while the average over all the inliers is much steadier."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "The depth camera has lost its calibration"
   ],
   "answer": 0,
-  "explanation": "RANSAC finds the largest consistent set, which may be another surface."
+  "explanation": "RANSAC finds the largest consistent set of points. If fewer than half agree, that set may be another surface, not the table."
  }
 ]

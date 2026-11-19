@@ -9,66 +9,66 @@
    "The encoder is too coarse to follow such a soft K"
   ],
   "answer": 1,
-  "explanation": "A position mode is an inner PD that your outer loop cannot soften."
+  "explanation": "In position mode the drive runs its own inner PD with fixed gains, and your outer loop cannot soften it, so the requested K never takes effect."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You push your bench arm's joint with a constant force in position mode. About how far does it deflect?",
+  "question": "You push a joint with a constant external torque tau_ext in position mode. About how far does it move?",
   "options": [
    "tau_ext * kd_in, the drive's own damping term",
    "tau_ext / K, the stiffness you requested",
    "tau_ext / kp_in, the drive's own stiffness"
   ],
   "answer": 2,
-  "explanation": "The inner spring is the only spring there is."
+  "explanation": "In position mode only the drive's inner spring kp_in holds the joint, so the deflection is tau_ext / kp_in and the requested K plays no part."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You want your bench arm to act like a soft spring. Which interface must the drive give your impedance control?",
+  "question": "An arm should act like a soft spring. Which interface must the drive give your impedance control?",
   "options": [
    "A velocity command with a limit",
    "A position command with tuned gains",
    "A direct torque (effort) command"
   ],
   "answer": 2,
-  "explanation": "Impedance writes torque from position and velocity error."
+  "explanation": "Impedance computes torque from position and velocity error, so the drive has to accept torque (effort) commands directly."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your bench arm's drive only takes position commands, so you add an admittance layer. What does that layer need?",
+  "question": "A bench arm's drive only takes position commands, so you add an admittance layer. What does that layer need?",
   "options": [
    "A measured external torque on the joint",
    "A larger inner position gain kp_in",
    "A faster encoder on the output shaft"
   ],
   "answer": 0,
-  "explanation": "q_cmd is shifted by tau_ext / K, so tau_ext must be measured."
+  "explanation": "The layer shifts the target q_des by tau_ext / K, so it needs a measured external torque tau_ext."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your bench arm's drive has kp_in = 400. Can an admittance layer make the joint feel stiffer than 400 Nm/rad?",
+  "question": "A drive has kp_in = 400. Can an admittance layer make the joint feel stiffer than 400 Nm/rad?",
   "options": [
    "No, 1/K + 1/kp_in always exceeds 1/kp_in",
    "Yes, by setting K far above the drive's kp_in",
    "Yes, but only if kd is raised along with it"
   ],
   "answer": 0,
-  "explanation": "The inner compliance 1/kp_in always adds to the requested one."
+  "explanation": "The joint moves by the drive's own 1/kp_in plus the requested 1/K for the same push, so the total can never drop below 1/kp_in."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "On the same bench arm you need one very stiff joint and one very soft one. Which mode fits best?",
+  "question": "On one arm, one joint must be very stiff and another very soft. Which mode fits best?",
   "options": [
    "Position mode for both, because its gains are tuned",
    "Torque mode for both, because K can be set to any value",
    "Admittance for both, because it softens any drive"
   ],
   "answer": 1,
-  "explanation": "Only torque mode lets K span the whole range."
+  "explanation": "Only torque mode lets K span the whole range, so one mode can make both the stiff joint and the soft one."
  }
 ]

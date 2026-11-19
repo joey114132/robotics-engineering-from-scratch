@@ -2,14 +2,14 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your toy car's 10 ms timer sometimes fires 50 ms late and the watchdog stops it, though the CPU is mostly idle. Likely cause?",
+  "question": "Your toy car's 10 ms timer sometimes fires 50 ms late and the watchdog stops it, though the processor is mostly idle. What is the likely cause?",
   "options": [
    "A long callback holds the only executor thread",
    "The subscription queue depth is too small",
    "The timer period is too short for the clock"
   ],
   "answer": 0,
-  "explanation": "One thread runs one callback at a time, so ready callbacks wait."
+  "explanation": "With one thread, a long callback blocks the timer callback until it finishes, even though the processor looks mostly idle."
  },
  {
   "id": 2,
@@ -21,43 +21,43 @@
    "No, the group never lets them overlap"
   ],
   "answer": 2,
-  "explanation": "A mutually exclusive group never runs two of its callbacks in parallel."
+  "explanation": "Callbacks in a mutually exclusive group never overlap, even when threads are free. That protects the data they share."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your toy car's timer and a 60 ms image callback are in separate groups on two threads. What is the worst timer wait?",
+  "question": "A timer and a 60 ms image callback are in separate groups on two threads. What is the worst timer wait?",
   "options": [
    "0 ms, it starts right away",
    "About 30 ms, half the callback",
    "About 59 ms, as with one thread"
   ],
   "answer": 0,
-  "explanation": "A free thread takes the timer at once because its group is idle."
+  "explanation": "The timer is in a different group, so the second thread picks it up at once and it never waits."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You create your toy car's callbacks with no group argument. Which group are they in?",
+  "question": "You create callbacks with no group argument. Which group are they in?",
   "options": [
    "Each one gets its own new group",
    "The node's one default group",
    "None, they run outside any group"
   ],
   "answer": 1,
-  "explanation": "They are assigned to the node's default callback group."
+  "explanation": "Callbacks created without a group argument all share the node's one default callback group."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "You give your toy car's executor a second thread and nothing improves. What do you check first?",
+  "question": "You give the executor a second thread and nothing improves. What do you check first?",
   "options": [
    "Whether the topic messages use best effort QoS",
    "Whether callbacks share a mutually exclusive group",
    "Whether the queue depth is larger than the burst"
   ],
   "answer": 1,
-  "explanation": "Threads only help callbacks that the groups allow to run in parallel."
+  "explanation": "If the callbacks share a mutually exclusive group, they never overlap, so extra threads sit idle. Threads only help callbacks the groups allow to run in parallel."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "Raising the timer period to 1 s to give it room"
   ],
   "answer": 0,
-  "explanation": "Short callbacks hold the thread for less time, so the worst wait shrinks."
+  "explanation": "Short pieces hold the thread for less time each, so the timer's worst wait shrinks."
  }
 ]

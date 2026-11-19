@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "You tilt a plank under a block on your bench by theta. Which ratio decides stick versus slip?",
+  "question": "A block sits on a plank tilted by theta. Which ratio decides stick versus slip?",
   "options": [
    "sin(theta) against mu",
    "cos(theta) against mu",
    "tan(theta) against mu"
   ],
   "answer": 2,
-  "explanation": "Needed friction over normal force is m g sin / m g cos = tan(theta)."
+  "explanation": "Friction must balance m g sin(theta) while the plank presses with m g cos(theta). Needed friction over normal force is tan(theta), and the block sticks while that stays within mu."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "On your bench ramp mu = 0.5. At which tilt does the block start to slide?",
+  "question": "On a ramp with mu = 0.5, at which tilt does the block start to slide?",
   "options": [
-   "Around 30 degrees",
+   "About 30 degrees",
    "Around 63.4 degrees",
    "About 26.6 degrees"
   ],
   "answer": 2,
-  "explanation": "arctan(0.5) is about 26.6 degrees."
+  "explanation": "The block slides once tan(theta) exceeds mu, that is, once theta passes arctan(0.5), which is about 26.6 degrees."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your block slides down the ramp. What is its acceleration along the slope?",
+  "question": "A block slides down a ramp. What is its acceleration along the slope?",
   "options": [
    "g (sin(theta) + mu cos(theta))",
-   "g sin(theta) - mu g cos(theta)",
+   "g (sin(theta) - mu cos(theta))",
    "g (mu sin(theta) - cos(theta))"
   ],
   "answer": 1,
-  "explanation": "Friction at the cap, mu fn, opposes the pull."
+  "explanation": "Gravity pulls the block down the slope with g sin(theta). Friction at its cap, mu fn, pushes back with mu g cos(theta), and the difference is the acceleration."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You simulate the block with the penalty model. What stops the tangential spring from growing forever?",
+  "question": "In this lesson's contact model, what stops the sideways spring (friction) from stretching forever?",
   "options": [
-   "Raising the spring stiffness as it stretches",
-   "Adding a much bigger damper on the sliding velocity",
+   "Raising the spring stiffness as it stretches more",
+   "Adding a bigger damper on the sliding velocity",
    "Capping the force at mu fn and moving the anchor"
   ],
   "answer": 2,
-  "explanation": "At the cap the contact slips and the anchor is dragged along."
+  "explanation": "Once the spring force reaches mu fn the contact slips. The force is capped there and the anchor is dragged along, so the spring stops stretching."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "You swap your ramp block for one with double the mass. How does the sticking angle change?",
+  "question": "You swap a ramp block for one with double the mass. How does the angle where it starts to slide change?",
   "options": [
    "Lowers it slightly",
    "Does not change it",
    "Increases it slightly"
   ],
   "answer": 1,
-  "explanation": "Mass cancels in ft / fn = tan(theta)."
+  "explanation": "Mass appears in both the needed friction m g sin(theta) and the normal force m g cos(theta), so it cancels in ft / fn = tan(theta)."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "You tilt your wrist and the part slips out of the gripper. What do you check first?",
+  "question": "A part slips out of the gripper when you tilt your wrist. What do you do first?",
   "options": [
    "Cut the simulator time step",
    "Compare ft / fn against mu",
    "Raise the controller gain"
   ],
   "answer": 1,
-  "explanation": "If the ratio exceeds mu, no controller gain can hold it."
+  "explanation": "If the ratio exceeds mu, the needed friction lies outside the friction cone, and no controller gain can hold the part."
  }
 ]

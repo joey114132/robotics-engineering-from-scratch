@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "You simulate your pendulum arm once from rest and it stays still. What can you conclude about stability?",
+  "question": "You simulate a pendulum arm once from rest and it stays still. Can you conclude anything about stability?",
   "options": [
-   "Nothing, it may be sitting on an unstable point",
-   "It is asymptotically stable, since it never moves",
-   "It is stable, since the arm stays perfectly still"
+   "No, it may sit at an unstable equilibrium point",
+   "Yes, it never moves, so any start would settle",
+   "Yes, it is stable as the arm stays perfectly still"
   ],
   "answer": 0,
-  "explanation": "An unstable equilibrium also keeps a state that starts exactly on it."
+  "explanation": "An unstable equilibrium also holds a state that starts exactly on it, so one run from rest says nothing about stability."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You propose a V for your pendulum arm. What must hold for V to be a Lyapunov function candidate?",
+  "question": "You propose a V for the arm. What must hold for V to be a Lyapunov function candidate?",
   "options": [
    "V is negative at the goal and zero elsewhere",
    "V equals the kinetic energy of the swinging arm",
    "V is zero at the goal and positive elsewhere"
   ],
   "answer": 2,
-  "explanation": "A positive-definite V is the energy-like quantity whose slope you check."
+  "explanation": "A V that is zero at the goal and positive elsewhere behaves like energy, so you can check whether its slope along the motion stays at or below zero."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "For your PD pendulum arm, dV/dt equals -(c + kd) w^2. When is it never positive?",
+  "question": "For a PD pendulum arm, dV/dt equals -(c + kd) w^2. When is it never positive?",
   "options": [
    "When c + kd >= 0 at any speed w",
    "When w = 1 so the speed term is small",
    "When kp > 0 so the spring pulls back"
   ],
   "answer": 0,
-  "explanation": "Only damping terms survive the cancellation."
+  "explanation": "In dV/dt the spring terms cancel and only the damping term -(c + kd) w^2 is left, so c + kd >= 0 keeps it from going positive at any w."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You want to trust your pendulum arm's controller. Why does a sweep of sampled states beat one simulation?",
+  "question": "You want to trust the arm's controller. Why does a sweep of sampled states beat one simulation?",
   "options": [
    "It is faster, since no simulation is needed",
    "It covers many starts, including corners",
    "It solves the equations of motion exactly"
   ],
   "answer": 1,
-  "explanation": "A single start can miss where V rises. Seek the maximum vdot; a minimizer must minimize -vdot over the operating bounds."
+  "explanation": "A single start can miss where V rises, so you sweep many states, corners included, and look for the largest vdot."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "You sample your pendulum arm's states and find none with dV/dt > 0. What does that prove?",
+  "question": "You sample the arm's states and find none with dV/dt > 0. What does that prove?",
   "options": [
    "No counterexample found, not a proof",
    "Stability is proven for every start",
    "The system is unstable somewhere unsampled"
   ],
   "answer": 0,
-  "explanation": "A finite sample can miss a small bad region."
+  "explanation": "A finite sample can miss a small bad region, so a clean sweep is evidence, not a proof."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your pendulum arm's rate signal arrives half a second late. Why can that break a stable PD design?",
+  "question": "The arm's rate signal arrives half a second late. Why can that break a stable PD design?",
   "options": [
    "kp becomes negative when the signal is late",
    "The controller acts on old data and adds energy",
    "V stops being defined once the delay appears"
   ],
   "answer": 1,
-  "explanation": "A rate seen late can push in phase with the motion instead of against it."
+  "explanation": "A rate seen late can push in phase with the motion instead of against it, so the brake adds energy instead of removing it."
  }
 ]

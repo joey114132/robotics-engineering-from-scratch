@@ -9,66 +9,66 @@
    "kp is too low to hold the car at the line"
   ],
   "answer": 1,
-  "explanation": "A gain computed without the limit assumes it can brake at full strength."
+  "explanation": "A gain computed without the limit assumes it can brake at full strength, so it brakes too late and the car overshoots the line."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your toy car replans at every tick. What does MPC apply from each plan?",
+  "question": "A toy car replans at every step. What does MPC apply from each plan?",
   "options": [
    "The last input, at the very end of the plan",
-   "The whole input sequence, one input per tick",
+   "The whole input sequence, one input per step",
    "Only the first input, then it plans again"
   ],
   "answer": 2,
-  "explanation": "The plan is rebuilt every tick from the new measurement."
+  "explanation": "MPC does not use the whole plan. It applies the first input only and rebuilds the plan at the next step from the new measurement."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "In your toy car's stacked form X = Phi x0 + Gam U, what is U?",
+  "question": "In the stacked form X = Phi x0 + Gam U, what is U?",
   "options": [
    "The stacked inputs over the horizon",
    "The stacked states over the horizon",
    "The stacked cost weights for each step"
   ],
   "answer": 0,
-  "explanation": "Stacking inputs makes the cost a quadratic in U and the limit a box on U."
+  "explanation": "U is the stack of the inputs the car will apply. Stacking them makes the cost a quadratic in U and the limit a box on U."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your toy car's input limit is a box on U. How is it enforced here?",
+  "question": "The input limit is a box on U. How is it enforced here?",
   "options": [
    "Add a penalty term that grows when an input is large",
    "Clip back into the box after every gradient step",
    "Stop the gradient loop once one input hits the limit"
   ],
   "answer": 1,
-  "explanation": "Projection onto a box is just clipping, so the result obeys the bound exactly."
+  "explanation": "Clipping after every gradient step keeps the result exactly inside the limit. A penalty cannot forbid a large input, and stopping early leaves the plan half solved."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "You loosen your toy car's brake limit until it never binds. What should MPC reproduce?",
+  "question": "You loosen the brake limit so far that it is never reached. What should MPC reproduce?",
   "options": [
    "The LQR action, which is just -Kx",
    "Zero input, since no limit is active",
-   "A bang-bang action at the bound"
+   "Pushing at the limit on every step"
   ],
   "answer": 0,
-  "explanation": "With terminal cost P and no active limit, the plan's first input is -Kx."
+  "explanation": "With terminal cost P and no active limit, the plan's first input is the same -Kx that LQR gives."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "You stretch your toy car's planning horizon. What does a longer horizon cost you?",
+  "question": "You stretch the planning horizon. What does a longer horizon cost you?",
   "options": [
-   "More computation on every tick",
+   "More computation on every step",
    "A larger overshoot at the line",
    "A lower biggest allowed push"
   ],
   "answer": 0,
-  "explanation": "The quadratic has more variables, so each solve takes longer."
+  "explanation": "A longer horizon gives less overshoot, but the quadratic has more variables, so each solve takes longer."
  }
 ]

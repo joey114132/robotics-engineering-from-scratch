@@ -2,14 +2,14 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your rover ends its square away from the start and you overwrite only its last pose. Why does that not fix the drifted map?",
+  "question": "Your rover ends its square away from the start. Why does overwriting only its last pose not fix the drifted map?",
   "options": [
    "The last pose is locked once it has been measured",
    "Every earlier pose along the path stays bent",
    "A loop closure gives no usable measurement"
   ],
   "answer": 1,
-  "explanation": "The error accumulated along the whole path, not at one point."
+  "explanation": "The drift built up along the whole path, so every earlier pose is bent too and fixing only the last one leaves them wrong."
  },
  {
   "id": 2,
@@ -21,7 +21,7 @@
    "A landmark that two poses both stand next to"
   ],
   "answer": 1,
-  "explanation": "It says where pose j should be seen from pose i."
+  "explanation": "An odometry edge holds one measured move. It says where pose j should be seen from pose i, like a spring between them."
  },
  {
   "id": 3,
@@ -33,7 +33,7 @@
    "Pose 0 is the only pose the scanner measured directly"
   ],
   "answer": 1,
-  "explanation": "Three gauge directions are otherwise undetermined."
+  "explanation": "Moving or turning the whole map does not change any residual, so without an anchor three directions (x, y and heading) stay undetermined."
  },
  {
   "id": 4,
@@ -45,7 +45,7 @@
    "It does not rise"
   ],
   "answer": 2,
-  "explanation": "Each step reduces the linearised cost in this well-posed graph."
+  "explanation": "Each Gauss-Newton step is chosen to cut the cost, and in this well-posed graph the real cost does not go up from one iteration to the next."
  },
  {
   "id": 5,
@@ -69,6 +69,6 @@
    "Old poses are overwritten by the last pose"
   ],
   "answer": 0,
-  "explanation": "The solver changes all free poses at once."
+  "explanation": "The solver treats every pose except pose 0 as a variable and changes them all at once, so the closing spring pulls the whole path."
  }
 ]

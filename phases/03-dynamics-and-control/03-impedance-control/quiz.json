@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your bench arm's elbow should yield smoothly when someone pushes the hand. Which controller shape fits?",
+  "question": "Someone pushes a bench arm's hand and the elbow should give way smoothly. Which control approach fits?",
   "options": [
    "A virtual spring and damper (impedance)",
    "A very stiff position loop with high gain",
    "An open-loop torque command with no feedback"
   ],
   "answer": 0,
-  "explanation": "Impedance sets how the joint pushes back."
+  "explanation": "Impedance makes the joint push back like a spring and a damper, so it gives way smoothly. A stiff position loop pushes back with full force."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Someone leans on your bench arm with a constant external torque F, and the joint has stiffness K. What is the steady deflection?",
+  "question": "Someone leans on a bench arm with a constant external torque F, and the joint has stiffness K. What is the steady deflection?",
   "options": [
    "F/K",
    "F/(2*K)",
    "F*K"
   ],
   "answer": 0,
-  "explanation": "At rest K*q = F."
+  "explanation": "At rest the spring torque K*q equals the push F, so the deflection q is F/K."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You tune your bench arm's joint with stiffness K, inertia J and damping D. What is the damping ratio?",
+  "question": "A joint has stiffness K, inertia J and damping D. What is the damping ratio?",
   "options": [
    "D / (2 sqrt(K J))",
    "D / (2 K sqrt(J))",
    "D / (2 sqrt(K / J))"
   ],
   "answer": 0,
-  "explanation": "The standard second-order form."
+  "explanation": "The damping ratio compares D with 2 sqrt(K J), the damping at which the joint settles without overshoot."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You set your bench arm's damping ratio to zeta = 1. What do you get?",
+  "question": "You set the damping ratio to zeta = 1. How does the arm settle?",
   "options": [
    "It keeps oscillating around the target",
    "It settles without any overshoot",
    "It diverges, growing with each swing"
   ],
   "answer": 1,
-  "explanation": "Critical damping returns without overshoot."
+  "explanation": "At zeta = 1 the damper is strong enough to stop any swing, so the arm settles without overshoot. Only below 1 does it ring."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your bench arm's hand may move at most 2 cm when someone pushes with 20 N. What is the minimum K?",
+  "question": "The hand may move at most 2 cm when someone pushes with 20 N. What is the minimum K?",
   "options": [
    "40 N/m",
    "100 N/m",
    "1000 N/m"
   ],
   "answer": 2,
-  "explanation": "K = F / x = 20 / 0.02. Mixing up cm and m gives values such as 10, 40 or 100."
+  "explanation": "K = F / x = 20 / 0.02 = 1000 N/m. The 2 cm must be written as 0.02 m before dividing."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "You picked D for your bench arm's joint on a host loop. What else must you check?",
+  "question": "You picked D for a joint driven by a host loop. What else must you check?",
   "options": [
    "That D is larger than K, so the joint cannot ring",
    "That dt*D/J stays under the sampling limit of the loop",
    "That the damper torque stays below the gravity torque"
   ],
   "answer": 1,
-  "explanation": "A held damper command chatters or diverges above the limit from lesson 03/01."
+  "explanation": "A host loop holds the damper command for a whole tick, so the joint chatters or diverges once dt*D/J passes the limit from lesson 03/01."
  }
 ]

@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "You slide the ball 5 cm beyond your bench arm's full stretch. What should IK do?",
+  "question": "You slide the ball 5 cm beyond your desk arm's full stretch. What should IK do?",
   "options": [
    "Refuse the target and report that it is unreachable",
    "Return the angles for the nearest point and say nothing",
    "Return nan for q2 and keep going with the move"
   ],
   "answer": 0,
-  "explanation": "A refusal with the reach band is the only answer that is not a guess."
+  "explanation": "No joint angles can reach a target past full stretch, so any angles returned would be a guess. Refusing and reporting the reach band tells the caller what is possible."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your two-link bench arm must touch a ball strictly inside its reachable band. How many arm configurations reach it?",
+  "question": "A two-link arm must touch a ball strictly inside its reachable band. How many arm shapes reach it?",
   "options": [
    "One, since the target fixes both angles",
    "Infinitely many, since both links turn freely",
    "Two: one with the elbow up, one with it down"
   ],
   "answer": 2,
-  "explanation": "The sign of q2 gives elbow-up and elbow-down."
+  "explanation": "The triangle can fold to either side of the line from the base to the ball, so q2 can be positive or negative and both reach it: elbow down and elbow up."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You solve your bench arm's elbow with a triangle. What does the law of cosines give in this lesson?",
+  "question": "You solve the elbow of a two-link arm with a triangle. What does the law of cosines give in this lesson?",
   "options": [
    "q1 directly from the target's x and y alone",
    "cos q2 from the target distance and link lengths",
    "The torque each joint needs to hold the target"
   ],
   "answer": 1,
-  "explanation": "The triangle has sides L1, L2 and r, so the angle at the elbow follows from them."
+  "explanation": "The law of cosines turns three side lengths into an angle. The triangle's sides are L1, L2 and r, so it gives the elbow angle through cos q2. It says nothing about torque."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your two-link bench arm has L1 = 0.5 and L2 = 0.4. Which ball distances can it touch?",
+  "question": "A two-link arm has L1 = 0.5 and L2 = 0.4. Which ball distances can it touch?",
   "options": [
-   "Targets at a distance of 0 to 0.9, base included",
+   "Targets at a distance of 0 to 0.9 from the base",
    "Targets at a distance of 0.1 to 0.9 from the base",
    "Targets at a distance of 0.4 to 0.5 from the base"
   ],
   "answer": 1,
-  "explanation": "The band runs from |L1 - L2| to L1 + L2."
+  "explanation": "The arm reaches no closer than the difference of the links, 0.5 - 0.4 = 0.1, and no farther than their sum, 0.5 + 0.4 = 0.9."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your bench arm's IK function returns angles for many targets. What is the most reliable test of it?",
+  "question": "Your IK function returns angles for many targets. What is the most reliable test of it?",
   "options": [
    "Round trip through FK, on many targets and both elbows",
    "No nan or inf appears in the answer for any test target",
    "The drawn arm looks right when plotted for a few targets"
   ],
   "answer": 0,
-  "explanation": "FK is exact and cheap, so the round trip leaves no room for a guess."
+  "explanation": "Running the IK answer back through FK shows exactly where the hand lands, so comparing it with the target proves the answer. The other checks can pass with wrong angles."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "The ball sits at your bench arm's full stretch. Why does the lesson clip cos q2 after a tolerance check?",
+  "question": "The ball sits at your arm's full stretch. Why does the lesson clamp cos q2 to [-1, 1] after a tolerance check?",
   "options": [
    "To choose between elbow up and elbow down for it",
    "To hide targets that really are out of reach",
    "Rounding noise must not become a false refusal"
   ],
   "answer": 2,
-  "explanation": "Targets on the boundary can land a few ulps outside [-1, 1]."
+  "explanation": "Rounding can push cos q2 for a target exactly on the boundary a hair outside [-1, 1]. Clamping after the tolerance check keeps that noise from becoming a false refusal."
  }
 ]

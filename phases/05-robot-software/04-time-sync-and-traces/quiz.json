@@ -9,43 +9,43 @@
    "The IMU sample rate is lower than the camera's"
   ],
   "answer": 0,
-  "explanation": "A clock offset larger than the gap between events changes their sorted order."
+  "explanation": "When the clocks differ by more than the gap between two events, sorting by time stamp reverses them, so the fused position jumps back."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You sync your car's two computers with a time request. Which formula gives the server minus client offset from t0, t1, t2 and t3?",
+  "question": "A client sends a time request at t0, the server gets it at t1 and replies at t2, and the client receives at t3. Which formula gives the server minus client offset?",
   "options": [
    "(t3 - t0) / 2 + (t2 - t1) / 2",
    "((t1 - t0) + (t2 - t3)) / 2",
    "((t1 - t0) - (t2 - t3)) / 2"
   ],
   "answer": 1,
-  "explanation": "It averages the two one-way differences, so equal delays cancel exactly."
+  "explanation": "t1 - t0 is the clock offset plus the trip time, and t2 - t3 is the offset minus the trip time. Averaging the two cancels the trip time."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your car's time request takes 30 ms to go out and 10 ms to come back. What is the offset error?",
+  "question": "A time request takes 30 ms to go out and 10 ms to come back. What is the offset error?",
   "options": [
    "0 ms, the delays cancel",
    "20 ms, the full difference",
-   "10 ms of offset error"
+   "10 ms, half the difference"
   ],
   "answer": 2,
-  "explanation": "The error is half the difference of the two delays."
+  "explanation": "The two delays differ by 20 ms, and half of that difference is left as offset error."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You ran several time requests between your car's two computers. Which exchange do you trust most?",
+  "question": "You tried several time requests between two computers. Which try do you trust most?",
   "options": [
-   "The one with the largest measured offset",
-   "The first exchange, before the clocks drift",
-   "The exchange with the smallest round trip"
+   "The try with the largest measured offset",
+   "The first try, before the clocks drift",
+   "The try with the smallest round trip"
   ],
   "answer": 2,
-  "explanation": "A small round trip leaves little room for asymmetric delay."
+  "explanation": "The error never exceeds half the round trip, so the try with the smallest round trip leaves the least room for unequal delays."
  },
  {
   "id": 5,
@@ -57,7 +57,7 @@
    "wrong_motion, it moved the wrong way"
   ],
   "answer": 1,
-  "explanation": "The step ran, but the state did not change."
+  "explanation": "Equal pre and post mean the step ran but the state did not change, which is no_motion."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "The last line, where it ended"
   ],
   "answer": 0,
-  "explanation": "The first mismatch is the earliest point where the run stopped matching its intent."
+  "explanation": "The failure at step 40 may come from the earlier wrong move. The first mismatch is where the run first stopped matching its intent, so start there."
  }
 ]

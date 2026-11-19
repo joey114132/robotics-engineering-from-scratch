@@ -9,7 +9,7 @@
    "The depth value sampled at that pixel"
   ],
   "answer": 2,
-  "explanation": "A wrong depth slides the point along the viewing ray."
+  "explanation": "A wrong depth slides the point along the viewing ray, and away from the image centre that slide also shifts it sideways."
  },
  {
   "id": 2,
@@ -21,7 +21,7 @@
    "Unchanged, as the principal point is fixed"
   ],
   "answer": 1,
-  "explanation": "u - cx = fx*x/z, so doubling z halves it."
+  "explanation": "The pixel offset u - cx is fx*x/z, so z sits in the denominator and doubling z halves it."
  },
  {
   "id": 3,
@@ -33,31 +33,31 @@
    "z / fx, depth over focal length"
   ],
   "answer": 2,
-  "explanation": "x = (u - cx)*z/fx, so one pixel is z/fx metres."
+  "explanation": "The sideways position is x = (u - cx)*z/fx, so a 1 px error moves it by z/fx metres, and a larger depth makes the same pixel error bigger."
  },
  {
   "id": 4,
   "stage": "check",
   "question": "Your camera reads the depth 0.1 m too large at a pixel exactly on the principal point. What is the 3D error?",
   "options": [
-   "0.1 m along the optical axis",
-   "0.1 m sideways, toward the edge",
-   "Zero, the pixel itself is exact"
+   "0.1 m along the camera's centre line",
+   "0.1 m sideways, toward the image edge",
+   "Zero, since the pixel itself is exact"
   ],
   "answer": 0,
-  "explanation": "The ray there is the optical axis, so there is no sideways part."
+  "explanation": "The ray at the principal point is the camera's centre line, so the depth error stays along it and has no sideways part."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your camera reads the same wrong depth at several pixels of the cup. Which pixel is hurt most?",
+  "question": "Your camera reads the same wrong depth at several pixels of the cup. At which pixel is the point shifted most?",
   "options": [
    "A pixel far from the principal point",
    "A pixel exactly on the principal point",
-   "All pixels the same, whatever u is"
+   "All pixels the same, wherever they sit"
   ],
   "answer": 0,
-  "explanation": "The sideways shift is dz*(u-cx)/fx."
+  "explanation": "The sideways shift is dz*(u-cx)/fx, so the same depth error moves a pixel farther from the centre more."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "Average the depth over a wide window there"
   ],
   "answer": 0,
-  "explanation": "The pixel and depth must describe the same surface."
+  "explanation": "At the edge the depth comes from the wall, so the point lands on the wall. A wide average mixes the wall in; the pixel and depth must describe the same surface."
  }
 ]

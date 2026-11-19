@@ -9,31 +9,31 @@
    "They check conditions too slowly to catch a failure in time"
   ],
   "answer": 1,
-  "explanation": "Without stored progress each cycle starts from scratch or needs a pile of flags."
+  "explanation": "Nested ifs do not store how far the task got, so after a failed grasp each cycle starts over unless you add a pile of flags."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "In your arm's fetch tree, a Sequence child returns failure. What does the Sequence do?",
+  "question": "In a fetch tree, a Sequence child returns failure. What does the Sequence do?",
   "options": [
    "Returns success to its own parent",
    "Stops at once and returns failure",
    "Skips that child and runs the next one"
   ],
   "answer": 1,
-  "explanation": "A Sequence needs every child to succeed, so the first failure ends it."
+  "explanation": "A Sequence needs every child to succeed, so it stops at the first failure and returns failure."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "In your arm's fetch tree, a Fallback child returns failure. What does the Fallback do?",
+  "question": "When a Fallback child returns failure, what does the Fallback do?",
   "options": [
    "Returns failure to its own parent",
    "Restarts from its first child",
    "Tries the next child in order"
   ],
   "answer": 2,
-  "explanation": "A Fallback looks for one child that works, so it moves on after a failure."
+  "explanation": "A Fallback looks for one child that works, so after a failure it moves on to the next child."
  },
  {
   "id": 4,
@@ -45,7 +45,7 @@
    "restart from its first child to be on the safe side"
   ],
   "answer": 0,
-  "explanation": "Remembering the running child keeps finished steps from repeating."
+  "explanation": "The Sequence remembers which child is running and resumes there, so finished steps do not repeat."
  },
  {
   "id": 5,
@@ -57,7 +57,7 @@
    "running, while it still has tries left"
   ],
   "answer": 2,
-  "explanation": "It turns a failure into running until its tries run out."
+  "explanation": "While tries remain, the Retry turns the grasp's failure into running, so its parent does not see the failures."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "Trees run each cycle faster, so a retry costs less in a tree"
   ],
   "answer": 1,
-  "explanation": "A state machine lists the exits of each state separately."
+  "explanation": "A state machine lists the exits of each state separately, so a retry means editing every state that can fail. In a tree one Retry node wraps the step."
  }
 ]

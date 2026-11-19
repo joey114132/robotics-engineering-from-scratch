@@ -9,66 +9,66 @@
    "The command flips sign each tick once kd passes the limit"
   ],
   "answer": 2,
-  "explanation": "A held command acts on old velocity, so a large kd chatters (lesson 03/01)."
+  "explanation": "A command held for a whole tick acts on an old velocity, so a large kd makes the brake overshoot and the command flips sign each tick (lesson 03/01)."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your toy car pushes against a constant headwind under PD control with no I. What is the steady error?",
+  "question": "A toy car pushes against a constant headwind under PD control with no I. What is the steady offset?",
   "options": [
    "load / kp",
    "load * kp",
    "load / kp^2"
   ],
   "answer": 0,
-  "explanation": "At rest kp * e = load."
+  "explanation": "Once the car stops moving only the P term pushes back, so kp * e = load and the error settles at load / kp."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You add an integral term to your toy car's controller. What does it fix?",
+  "question": "You add an integral term to the car's controller. What does it fix?",
   "options": [
    "Sensor noise on the velocity signal",
    "The steady offset under constant load",
    "Overshoot after a fast setpoint change"
   ],
   "answer": 1,
-  "explanation": "It keeps adding error until the offset is gone."
+  "explanation": "The I term keeps adding up the error while any offset is left, so it grows until it cancels the constant load."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your toy car rolls past the stop line after its motor sat at the limit. Why does windup happen?",
+  "question": "A toy car rolls past the stop line after its motor hit its torque limit. Why does windup happen?",
   "options": [
    "The loop runs faster than the encoder can update",
    "The integrator keeps adding at the actuator limit",
    "kd is too small to brake the joint in time"
   ],
   "answer": 1,
-  "explanation": "The output is clipped but the integral state is not."
+  "explanation": "The output is clipped at the limit but the integral state is not, so the stored error pushes the car past the line."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your toy car uses conditional integration. It freezes the integrator when:",
+  "question": "When does conditional integration freeze the integrator?",
   "options": [
-   "Whenever the output is above zero for a tick",
-   "The error changes sign for the first time in a run",
-   "Saturated and the error pushes the output deeper"
+   "When the output is above zero for a whole tick",
+   "When the error changes sign for the first time in a run",
+   "When saturated and the error pushes the output deeper"
   ],
   "answer": 2,
-  "explanation": "It still integrates when the error pulls the output out of saturation."
+  "explanation": "It freezes only while the output is saturated and the error pushes it deeper. When the error pulls the output out of saturation it keeps integrating."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "You check your toy car's loop and the closed-loop update matrix has a largest eigenvalue magnitude of 1.3. What happens?",
+  "question": "You check the loop and the update matrix has a largest eigenvalue magnitude of 1.3. What happens?",
   "options": [
    "The motion settles with a small overshoot",
    "The motion decays slowly over many ticks",
    "The motion grows in size on every tick"
   ],
   "answer": 2,
-  "explanation": "Magnitude above 1 means growth."
+  "explanation": "The magnitude says how many times larger a motion pattern gets each tick, so 1.3 means it grows 1.3 times larger every tick."
  }
 ]

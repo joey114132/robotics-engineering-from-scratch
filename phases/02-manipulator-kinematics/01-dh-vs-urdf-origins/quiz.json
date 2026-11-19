@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your bench arm's DH table goes into FK code and the zero pose matches the drawing. What does that prove?",
+  "question": "Your desk arm's DH table goes into FK code and the zero pose matches the drawing. What does that prove?",
   "options": [
    "Little: wrong conventions can match at zero too",
    "The table will also be right at every other pose",
    "The twist angles and link lengths are both right"
   ],
   "answer": 0,
-  "explanation": "Wrong-convention errors can vanish at q = 0 and grow elsewhere."
+  "explanation": "With the elbow straight the two conventions put the hand in the same place, so a wrong table can look right at the zero pose and drift apart once the elbow bends."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You read your bench arm's DH table in Craig's convention. Which parameters sit on row i?",
+  "question": "Reading your arm's DH table in Craig's convention, which parameters sit on row i?",
   "options": [
    "a(i), alpha(i)",
    "a(i-1), alpha(i-1)",
    "a(i), alpha(i-1)"
   ],
   "answer": 1,
-  "explanation": "Craig's table is proximal: the fixed link transform comes before the joint."
+  "explanation": "Craig's convention puts the fixed link transform before the joint, so row i holds the previous link's a(i-1) and alpha(i-1)."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You open your bench arm's URDF file. How is a joint described there?",
+  "question": "You open your arm's URDF file. How is a joint described there?",
   "options": [
    "Four numbers per joint: length, twist, slide and joint angle",
    "An xyz and rpy pose from the parent, then a turn about its axis",
    "A link length and twist from the parent, then a turn about the z axis"
   ],
   "answer": 1,
-  "explanation": "The origin is a plain pose of the joint frame in the parent frame."
+  "explanation": "A URDF joint gives an origin, which is just the pose of the joint's frame seen from its parent, and then the axis it turns about. It does not use DH table numbers."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your bench arm's Craig table has a theta offset. Why does converting it to URDF need offsets of zero in this lesson?",
+  "question": "You run your Craig table through craig_to_urdf(). What do you get back?",
   "options": [
-   "URDF origins have no rotation field, only xyz offsets",
-   "The converter lacks general rotation-to-rpy conversion",
-   "A nonzero offset would also change the slide d"
+   "The same table read in the standard convention",
+   "Joint offsets to write into the robot file (URDF)",
+   "The hand position at the zero pose, as numbers"
   ],
   "answer": 1,
-  "explanation": "The converter raises instead of silently dropping the offset, because it has no general rotation-to-rpy step."
+  "explanation": "craig_to_urdf() turns each row of a Craig table into the offset a URDF joint needs: where the joint sits and how it is turned. Changing the convention is craig_to_standard()."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "A datasheet gives a DH table for a bench arm that you did not derive. What is the best way to test it?",
+  "question": "A datasheet gives a DH table that you did not derive. What is the best way to test it?",
   "options": [
    "FK at the zero pose plus a single straight-elbow pose",
    "Rereading the table against the textbook figure",
-   "FK at 5 or more random poses vs a second description"
+   "FK at 5 or more random poses, compared with the URDF"
   ],
   "answer": 2,
-  "explanation": "Random poses expose convention and offset mistakes that the zero pose hides."
+  "explanation": "A random pose bends the elbow, which exposes the convention and offset mistakes that the straight zero pose hides."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "You feed your FK routine a table from the other convention and it raises no error. Why?",
+  "question": "You feed your FK code a table from the other convention and it raises no error. Why?",
   "options": [
    "Any four numbers count as valid input to a DH routine",
    "Both conventions give the same hand position everywhere",
    "The routine infers the convention from the number order"
   ],
   "answer": 0,
-  "explanation": "Nothing in the numbers says which convention they were written for."
+  "explanation": "A DH row is just four numbers and nothing in them says which convention they were written for. The code reads them its own way, so a wrong table runs without any error."
  }
 ]

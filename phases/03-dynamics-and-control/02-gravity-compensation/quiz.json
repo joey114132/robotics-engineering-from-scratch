@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "You soften your bench arm by lowering kp and its hand sags more. Likely cause?",
+  "question": "You lower kp to soften your bench arm and the hand sags more. What is the most likely cause?",
   "options": [
    "The encoder has a constant offset from the true angle",
    "Gravity feedforward does not match true gravity",
    "The control loop rate is too low for this joint"
   ],
   "answer": 1,
-  "explanation": "A model residual is divided by kp, so a soft kp exposes it."
+  "explanation": "The sag is the model residual divided by kp, so a soft kp turns a small gravity mismatch into a large sag."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your bench arm holds still under a PD loop with feedforward ff while true gravity is tau_g. What is the first-order steady-state error?",
+  "question": "An arm holds still under a PD loop with feedforward ff while true gravity is tau_g. To first order, how far does it sag from the commanded angle?",
   "options": [
    "(ff - tau_g) / kp",
    "(ff - tau_g) * kp",
    "(ff - tau_g) / kp^2"
   ],
   "answer": 0,
-  "explanation": "From kp*(q_des - q) + ff = tau_g."
+  "explanation": "At rest kp*(q_des - q) + ff = tau_g, so solving for the angle error gives the torque mismatch divided by kp."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your gravity model of the bench arm is lighter than the real arm. What does the arm do?",
+  "question": "Your gravity model is lighter than the real arm. What does the arm do?",
   "options": [
    "It droops down below the commanded angle",
    "It floats up above the commanded angle",
    "It holds the commanded angle exactly"
   ],
   "answer": 0,
-  "explanation": "Too little feedforward leaves a net downward torque."
+  "explanation": "With too little feedforward a net downward torque is left over, so the arm settles below the commanded angle."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You halve kp on your bench arm with the same model error. What happens to the sag?",
+  "question": "You halve kp and keep the same model error. What happens to the sag?",
   "options": [
    "It halves along with the weaker spring",
    "It stays the same, as ff does not change",
    "It doubles as the spring gets weaker"
   ],
   "answer": 2,
-  "explanation": "Sag is inversely proportional to kp."
+  "explanation": "The sag is the model error divided by kp, so halving kp doubles the sag."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "On your planar bench arm, in which pose is the gravity torque on joint 1 largest?",
+  "question": "On a planar arm, in which pose is the gravity torque on joint 1 largest?",
   "options": [
    "Arm held out horizontal, fully stretched",
    "Arm pointing straight up, vertical",
    "Arm folded back with the elbow bent"
   ],
   "answer": 0,
-  "explanation": "The moment arm is the full horizontal reach when the arm is stretched out."
+  "explanation": "A fully stretched arm hangs its weight farthest from the shoulder, so joint 1 carries the largest gravity torque."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your bench arm sags only after you lower kp. What is the best response?",
+  "question": "Your arm sags only after kp is lowered. What is the best response?",
   "options": [
    "Add integral gain on every joint to cancel it",
    "Raise kp back up until the sag is gone",
    "Measure sag at several poses, fix the model"
   ],
   "answer": 2,
-  "explanation": "Raising kp hides the model error, and integral gain adds windup and drift."
+  "explanation": "The sag comes from the model error, so the model has to be fixed. Raising kp only hides the error, and integral gain adds windup and drift."
  }
 ]

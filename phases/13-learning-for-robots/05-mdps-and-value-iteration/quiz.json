@@ -2,26 +2,26 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your rover plans on a slippery floor with a pit. What does V(s) mean in the MDP?",
+  "question": "Your rover plans on a slippery floor with a pit. What does V(s) mean for a square s in the MDP?",
   "options": [
-   "The expected number of steps to the goal under the best actions",
-   "The expected discounted reward-to-go under the best actions",
-   "The expected reward of the next step, averaged over slips"
+   "The number of moves the rover needs to reach the goal from s",
+   "The reward you can expect from s if you play the best moves",
+   "The reward of the next move alone, averaged over slips"
   ],
   "answer": 1,
-  "explanation": "It is the reward-to-go of 13/03 averaged over chance, under the best policy."
+  "explanation": "V(s) is the reward you can expect from square s onward, averaged over the slips, when the best moves are played. It is the reward-to-go of 13/03 averaged over chance."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "You write one backup of V(s) for your slippery-floor rover. Which pieces does it use?",
+  "question": "You write one backup of V(s) for your slippery-floor rover. What does it compute for a square?",
   "options": [
-   "Reward now plus gamma times the next state's value, maximised over actions",
-   "Reward now plus the next state's value with no discount, maximised over actions",
-   "Reward now plus gamma times the next state's value, averaged over all the actions"
+   "Reward now plus gamma times the next square's value, for the best move",
+   "Reward now plus the next square's value with no discount, for the best move",
+   "Reward now plus gamma times the next square's value, averaged over all moves"
   ],
   "answer": 0,
-  "explanation": "The max over actions is what makes it the optimal value."
+  "explanation": "The backup scores each move by its reward now plus gamma times the next square's value, then keeps the best one. Taking the best move, not the average, makes it the best value."
  },
  {
   "id": 3,
@@ -33,19 +33,19 @@
    "By a factor 0.9, equal to gamma"
   ],
   "answer": 2,
-  "explanation": "The backup is a contraction with factor gamma."
+  "explanation": "In one update the next square's value enters multiplied by gamma, so any error in it shrinks by gamma as well. With gamma at 0.9 the worst error becomes 0.9 times as big."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your rover runs value iteration with 0 < gamma < 1, rewards of size at most 1 and V starting at 0. Why is the sweep count bounded for a positive tolerance?",
+  "question": "Your rover runs value iteration with 0 < gamma < 1, rewards of size at most 1 and V starting at 0. Why can any small error target be reached in a bounded number of sweeps?",
   "options": [
    "Each sweep fixes one more square, so squares set the count",
    "The greedy policy stops changing, so V is frozen from then on",
    "Changes start at most 1 and shrink by gamma or less each sweep"
   ],
   "answer": 2,
-  "explanation": "Changes fall like gamma to the k, so they pass below any tolerance."
+  "explanation": "Each sweep shrinks the change by gamma or less, and gamma is below one, so the changes drop below any small target after enough sweeps."
  },
  {
   "id": 5,
@@ -57,7 +57,7 @@
    "Picks any route, since slips make them all equal"
   ],
   "answer": 0,
-  "explanation": "The expected -1 from slipping into the pit outweighs the extra discount of a longer route."
+  "explanation": "The chance of sliding into the pit costs an expected -1, which can be worse than the small discount a longer route pays, so the longer route can win."
  },
  {
   "id": 6,
@@ -66,9 +66,9 @@
   "options": [
    "When moves slip, so the outcomes are left to chance",
    "When several squares carry a negative reward",
-   "When the transition model and rewards are unknown"
+   "When you do not know the move chances and rewards"
   ],
   "answer": 2,
-  "explanation": "The sweep needs the full model, which is why sampling methods such as policy gradients exist."
+  "explanation": "Each sweep needs the chance of every outcome and every reward. Without them you have to learn from tries instead, as in policy gradients."
  }
 ]

@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "You print your bench arm's Jacobian and look at column j. What does it mean?",
+  "question": "You print your desk arm's Jacobian and look at column j. What does it mean?",
   "options": [
    "The torque joint j needs to hold the tip still",
    "The tip position when only joint j is bent",
    "The tip velocity per unit speed of joint j"
   ],
   "answer": 2,
-  "explanation": "Each column is the effect of one joint moving alone."
+  "explanation": "Column j shows how the tip moves when only joint j turns at unit speed, so it is a tip velocity, not a position or a torque."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your bench arm holds still while a hand pushes its tip. Which relation maps that tip force to joint torques?",
+  "question": "Your arm holds still while a person pushes its tip. Which relation maps that tip force to joint torques?",
   "options": [
    "tau = J^T F",
    "tau = J^-1 F",
    "tau = J F"
   ],
   "answer": 0,
-  "explanation": "Power balance forces the transpose."
+  "explanation": "The tip's power F . (J q-dot) must equal the joints' power tau . q-dot, which only works for tau = J^T F. So the tip force reaches the joints through the transpose of J."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "On your bench arm the analytic and finite-difference Jacobians disagree by 0.3 at a random pose. Most likely cause?",
+  "question": "On your desk arm the analytic and finite-difference Jacobians disagree by 0.3 at a random pose. Most likely cause?",
   "options": [
    "Rounding noise from the finite-difference step",
    "The arm is close to a singularity at that pose",
    "A real bug in one of the two Jacobian programs"
   ],
   "answer": 2,
-  "explanation": "Rounding noise is near 1e-10 here, so 0.3 is a real error."
+  "explanation": "Finite-difference rounding noise is only about 1e-10 here, so a gap of 0.3 is far too big for noise and means one of the two programs has a real bug."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You check your bench arm's Jacobian with a central-difference step of 1e-12 rad. What happens?",
+  "question": "You check a Jacobian with a central-difference step of 1e-12 rad. What happens?",
   "options": [
-   "The reference is dominated by rounding noise",
+   "The error now comes mostly from rounding",
    "The curvature error grows and spoils the check",
    "The slope gets better as the step shrinks"
   ],
   "answer": 0,
-  "explanation": "The tip change is smaller than float64 can resolve reliably."
+  "explanation": "A step of 1e-12 rad changes the tip position so little that the rounding error in that tiny difference outweighs the curvature error, so a smaller step no longer helps."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "A 2 kg mass hangs from your bench arm's tip. How do you get the joint torques that hold it?",
+  "question": "A 2 kg mass hangs from your arm's tip. How do you get the joint torques that hold it?",
   "options": [
    "Split the weight force equally across the joints",
    "J^T times the weight force acting at the tip",
    "J times the weight force acting at the tip"
   ],
   "answer": 1,
-  "explanation": "A tip force goes to joints through J transposed."
+  "explanation": "The weight pulls down on the tip as a force, and a tip force reaches the joints through J transposed, so you multiply the weight force by J^T."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your Jacobian test passes at the one pose you tried on the bench arm. Why is that not enough?",
+  "question": "Your Jacobian test passes at the one pose you tried. Why is that not enough?",
   "options": [
    "Jacobians change with time even when the arm holds still",
    "A wrong sign or link order can pass at a symmetric pose",
    "The finite-difference check cannot run at only one pose"
   ],
   "answer": 1,
-  "explanation": "Check many random poses, as for the DH table in lesson 1."
+  "explanation": "A wrong sign or link order can still give the right answer at a symmetric pose, so one pose proves little. Check many random poses, as with the DH table in lesson 02/01."
  }
 ]

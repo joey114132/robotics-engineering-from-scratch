@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "누가 손을 밀면 작업대 팔의 elbow가 부드럽게 양보해야 합니다. 어떤 컨트롤러 형태가 맞습니까?",
+  "question": "누가 작업대 팔의 손을 밀면 팔꿈치가 부드럽게 물러나야 합니다. 어떤 제어 방식이 맞습니까?",
   "options": [
    "가상 spring과 damper(임피던스)",
    "높은 gain의 뻣뻣한 position loop",
    "피드백이 없는 open-loop 토크 명령"
   ],
   "answer": 0,
-  "explanation": "임피던스는 관절이 어떻게 되밀지를 정합니다."
+  "explanation": "임피던스는 관절이 spring과 damper처럼 되밀게 하므로 부드럽게 물러납니다. 뻣뻣한 position loop는 최대 힘으로 맞섭니다."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "누가 작업대 팔에 일정한 외부 토크 F를 걸고 있고 joint의 stiffness는 K입니다. 정상 처짐은 얼마입니까?",
+  "question": "누가 작업대 팔을 일정한 외부 토크 F로 누르고 있고 관절의 stiffness는 K입니다. 팔이 멈춘 뒤 deflection은 얼마입니까?",
   "options": [
    "F/K",
    "F/(2*K)",
    "F*K"
   ],
   "answer": 0,
-  "explanation": "정지 상태에서는 K*q = F입니다."
+  "explanation": "멈추면 spring이 되미는 K*q가 바깥에서 미는 F와 같아지므로 deflection q는 F/K입니다."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "작업대 팔의 joint를 stiffness K, 관성 J, damping D로 조정합니다. damping ratio는 무엇입니까?",
+  "question": "관절의 stiffness는 K, 관성은 J, damping은 D입니다. damping ratio는 무엇입니까?",
   "options": [
    "D / (2 sqrt(K J))",
    "D / (2 K sqrt(J))",
    "D / (2 sqrt(K / J))"
   ],
   "answer": 0,
-  "explanation": "2차 시스템의 표준 형태입니다."
+  "explanation": "damping ratio는 D를 2 sqrt(K J)로 나눈 값입니다. D가 2 sqrt(K J)와 같으면 overshoot 없이 자리를 잡습니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "작업대 팔의 damping ratio를 zeta = 1로 맞춥니다. 어떻게 됩니까?",
+  "question": "damping ratio를 zeta = 1로 맞추면 팔은 어떻게 움직입니까?",
   "options": [
-   "목표 주위에서 영원히 진동을 이어 간다",
-   "overshoot 없이 자리를 잡는다",
-   "한 번 흔들릴 때마다 커져서 발산한다"
+   "목표 주위에서 계속 진동하며 멈추지 않습니다",
+   "overshoot 없이 자리를 잡습니다",
+   "한 번 흔들릴 때마다 커져서 발산합니다"
   ],
   "answer": 1,
-  "explanation": "임계 감쇠는 overshoot 없이 돌아옵니다."
+  "explanation": "zeta가 1이면 damper가 출렁임을 막을 만큼 세서 overshoot 없이 자리를 잡습니다. 1보다 작을 때만 출렁입니다."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "작업대 팔의 손이 20 N으로 밀려도 최대 2 cm만 움직여야 합니다. 최소 K는 얼마입니까?",
+  "question": "손이 20 N으로 밀려도 최대 2 cm만 움직여야 합니다. 필요한 최소 K는 얼마입니까?",
   "options": [
    "40 N/m",
    "100 N/m",
    "1000 N/m"
   ],
   "answer": 2,
-  "explanation": "K = F / x = 20 / 0.02입니다. cm와 m를 섞으면 10, 40, 100 같은 값이 나옵니다."
+  "explanation": "K = F / x = 20 / 0.02 = 1000 N/m입니다. 2 cm는 0.02 m이므로 단위를 m로 맞춰 계산해야 합니다."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "작업대 팔의 joint에 host loop로 D를 골랐습니다. 또 무엇을 확인해야 합니까?",
+  "question": "host loop로 구동하는 관절의 D를 골랐습니다. 또 어느 조건을 확인해야 합니까?",
   "options": [
-   "D가 K보다 커서 관절이 절대 떨지 않는지",
-   "dt*D/J가 루프의 샘플링 한계 밑인지",
-   "damper 토크가 중력 토크보다 작은지"
+   "D가 K보다 커서 관절이 절대 떨지 않는 것",
+   "dt*D/J가 loop의 샘플링 한계 밑인 것",
+   "damper 토크가 중력 토크보다 작은 것"
   ],
   "answer": 1,
-  "explanation": "tick 동안 유지되는 damper 명령은 레슨 03/01의 한계를 넘으면 떨리거나 발산합니다."
+  "explanation": "host loop는 damper 명령을 한 tick 동안 그대로 두므로 dt*D/J가 레슨 03/01의 한계를 넘으면 관절이 떨리거나 발산합니다."
  }
 ]

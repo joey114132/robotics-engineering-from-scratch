@@ -21,19 +21,19 @@
    "The best turn and shift for fixed pairs"
   ],
   "answer": 2,
-  "explanation": "Kabsch gives the optimal rigid fit for given correspondences."
+  "explanation": "Once the pairs are fixed, the SVD (Kabsch) step gives the best rigid turn and shift. Finding the nearest pairs is a separate step."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "Your rover's ICP fits a turn and a shift. Why force the last singular direction by the sign of a determinant?",
+  "question": "Your rover's ICP gets a turn and a shift from the SVD, then fixes one sign. Why is that sign fix needed?",
   "options": [
    "To speed up the SVD by skipping a step",
    "To average out the noise in the pairs",
    "To rule out a mirrored fit of the points"
   ],
   "answer": 2,
-  "explanation": "An orthogonal fit may be a reflection, which is not a robot motion."
+  "explanation": "The SVD may return a mirror image of the points, which no robot motion can make. Fixing the sign rules that answer out."
  },
  {
   "id": 4,
@@ -57,7 +57,7 @@
    "Real walls bend, so a rigid fit cannot match"
   ],
   "answer": 1,
-  "explanation": "The fit has no information about the slide along the wall."
+  "explanation": "A straight wall looks the same after any slide along it, so the fit has no information about that shift."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "Use far fewer points so pairing gets easier"
   ],
   "answer": 0,
-  "explanation": "A close start keeps nearest points as true partners."
+  "explanation": "The wheel odometry guess is already close to the answer, so nearest points stay true partners and the fit locks onto the right pose."
  }
 ]

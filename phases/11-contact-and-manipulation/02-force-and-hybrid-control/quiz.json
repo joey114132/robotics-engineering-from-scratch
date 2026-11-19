@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your arm presses a sponge to depth fd / k_est, but the real sponge is stiffer than k_est. What happens?",
+  "question": "An arm presses a sponge to depth fd / k_est, but the real sponge is stiffer than k_est. What happens?",
   "options": [
    "The force is larger than wanted",
    "The force is exactly as wanted",
    "The force is lower than wanted"
   ],
   "answer": 0,
-  "explanation": "Force is ke times depth, so a larger real ke gives a larger force."
+  "explanation": "Force is ke times depth, and the depth was chosen for k_est. A real ke larger than k_est therefore gives a larger force than wanted."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your arm presses a spring-like sponge with v = ki (fd - f). What is the settling time constant?",
+  "question": "A spring-like sponge is pressed with v = ki (fd - f). What is the settling time constant?",
   "options": [
    "1 / (ke + ki)",
    "1 / (ke / ki)",
    "1 / (ke ki)"
   ],
   "answer": 2,
-  "explanation": "f_dot = ke ki (fd - f) is a first-order lag."
+  "explanation": "The force changes ke times as fast as the depth, so the error shrinks at rate ke ki. It falls by about two thirds every 1 / (ke ki) seconds."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You press your arm on a soft sponge, then on a stiff plate. Which surface makes the integral force loop settle faster?",
+  "question": "The same force loop presses a soft sponge and then a stiff plate. Which surface settles faster?",
   "options": [
    "A stiffer one",
    "A softer one",
    "Both equally fast"
   ],
   "answer": 0,
-  "explanation": "The loop gain is ke ki, so a stiffer surface gives a shorter time constant."
+  "explanation": "The loop gain is ke ki, so a stiffer surface has a larger ke and a shorter time constant 1 / (ke ki)."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You set S = diag(0, 1) for your arm's tool on the table. What does it mean in 2-D?",
+  "question": "A tool uses S = diag(0, 1) in 2-D. What does it mean?",
   "options": [
    "x force law, y position law",
    "Both axes use the position law",
    "x position law, y force law"
   ],
   "answer": 2,
-  "explanation": "S = 1 selects the force law for that axis."
+  "explanation": "In S, 1 selects the force law for that axis and 0 selects the position law. So x is position controlled and y is force controlled."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your arm's discrete force loop must satisfy ke ki dt < 2. Why?",
+  "question": "A discrete force loop must satisfy ke ki dt < 2. Why?",
   "options": [
    "The tool velocity must always stay below 2",
    "The force sensor saturates at high stiffness",
    "The error scales by 1 - ke ki dt each step"
   ],
   "answer": 2,
-  "explanation": "The factor must stay inside the unit circle, so its size must be below 1."
+  "explanation": "Each step multiplies the error by 1 - ke ki dt, and the error only shrinks when that factor's size stays below 1. That is exactly the condition ke ki dt < 2."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your arm's force loop works on a soft pad but shakes on steel. What is the likely cause?",
+  "question": "A force loop works on a soft pad but shakes on steel. What is the likely cause?",
   "options": [
    "The steel adds too much friction",
    "ke ki dt passed its limit on steel",
    "The target force is too small"
   ],
   "answer": 1,
-  "explanation": "Loop gain scales with ke, so the stiff surface is the one that goes unstable."
+  "explanation": "Loop gain scales with ke, so the stiff steel is where ke ki dt passes its limit and the loop goes unstable."
  }
 ]

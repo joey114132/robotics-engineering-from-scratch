@@ -9,19 +9,19 @@
    "It cannot run unless the real arm is connected"
   ],
   "answer": 0,
-  "explanation": "The output is a number either way."
+  "explanation": "A controller with the wrong sign still returns a number, so this test passes while the joint runs away. It checks nothing about what the number does."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "Your controller test needs seconds to pass. What does a FakeClock buy you?",
+  "question": "A controller test needs seconds to pass. What does a FakeClock give you?",
   "options": [
    "A more accurate model of the motor's own physics",
-   "Controller seconds that pass instantly each time",
+   "Test seconds that pass instantly, without waiting",
    "A recording of a real clock from a good run"
   ],
   "answer": 1,
-  "explanation": "The test decides when time moves."
+  "explanation": "A FakeClock only moves when the test moves it, so a test can jump seconds ahead in an instant instead of waiting."
  },
  {
   "id": 3,
@@ -33,31 +33,31 @@
    "A unit test that only checks the output is a number"
   ],
   "answer": 1,
-  "explanation": "The recorded inputs give a different torque through the bug."
+  "explanation": "Replaying the recorded inputs through the flipped controller gives torques that differ from the recording, so the replay test fails at once."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You write a property test for your controller. What does it assert?",
+  "question": "You write a property test for your controller. What rule does it check?",
   "options": [
    "The joint reaches the target for every random input",
    "Torque is finite and within limits for any input",
    "Torque comes out the same for every random input"
   ],
   "answer": 1,
-  "explanation": "One rule over many inputs, NaN and huge values included."
+  "explanation": "A property test tries one rule on many random inputs, NaN and huge values included. Here the rule is that the torque is finite and never over the limit."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "Your MockJoint stands in for the arm in tests. Why should it raise on an over-limit command?",
+  "question": "Your MockJoint stands in for the arm in tests. Why should it refuse an over-limit command with an error?",
   "options": [
-   "So the replay recording still keeps the bad command",
-   "So the test ends sooner and saves a lot of time",
+   "So the bad command is saved in the replay recording",
+   "So the test ends sooner and the run takes less time",
    "So a bad command fails the test where it happens"
   ],
   "answer": 2,
-  "explanation": "The failure points at the offending call."
+  "explanation": "Raising right at the over-limit command makes the test fail on that line, so the failure points at the call that sent the bad command."
  },
  {
   "id": 6,
@@ -69,6 +69,6 @@
    "Re-record right away, without reading the diff"
   ],
   "answer": 0,
-  "explanation": "A replay fails on any behaviour change, and a person decides which are real."
+  "explanation": "A replay test fails on any change in behaviour, so after an intended change you first confirm the new output is what you meant, then record it as the new trusted trace."
  }
 ]

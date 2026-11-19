@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "작업대 팔의 impedance controller에 K = 20을 요청했는데 손으로 밀어도 관절이 뻣뻣합니다. 가능성 높은 원인은 무엇입니까?",
+  "question": "작업대 팔의 impedance controller에 K = 20을 요청했는데 손으로 밀어도 관절이 뻣뻣합니다. 가장 가능성이 높은 원인은 무엇입니까?",
   "options": [
-   "중력 보상이 필요 이상으로 큰 토크를 계속 더하고 있다",
-   "drive가 gain 고정인 position loop를 돌린다",
-   "encoder 분해능이 너무 낮아서 부드러운 K를 따라가지 못한다"
+   "중력 보상이 필요 이상으로 큰 토크를 계속 더해 주는 것",
+   "drive의 gain이 고정된 position loop를 쓰는 것",
+   "encoder 분해능이 낮아 부드러운 K를 못 따라가는 것"
   ],
   "answer": 1,
-  "explanation": "position 모드는 바깥 loop가 부드럽게 만들 수 없는 안쪽 PD입니다."
+  "explanation": "position 모드의 drive는 gain이 고정된 안쪽 PD를 돌리기 때문에 바깥 loop가 부드럽게 만들 수 없어서 요청한 K가 적용되지 않습니다."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "position 모드의 작업대 팔 관절을 일정한 힘으로 밉니다. 처짐은 대략 얼마입니까?",
+  "question": "position 모드에서 관절을 일정한 외부 토크 tau_ext로 밉니다. 관절은 대략 얼마나 밀립니까?",
   "options": [
-   "tau_ext * kd_in, 자체 damping 항",
-   "tau_ext / K, 사용자가 요청한 강성",
-   "tau_ext / kp_in, drive 자체 강성"
+   "tau_ext * kd_in, drive의 damping",
+   "tau_ext / K, 사용자가 요청한 강성 값",
+   "tau_ext / kp_in, drive 자체의 강성"
   ],
   "answer": 2,
-  "explanation": "안쪽 스프링이 유일한 스프링이기 때문입니다."
+  "explanation": "position 모드에서는 drive 안쪽의 스프링 kp_in만 관절을 붙잡으므로 밀리는 각도는 tau_ext / kp_in이고 요청한 K는 쓰이지 않습니다."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "작업대 팔이 부드러운 스프링처럼 움직이게 하려 합니다. impedance 제어는 drive에서 어떤 인터페이스를 필요로 합니까?",
+  "question": "팔이 부드러운 스프링처럼 움직이게 하려 합니다. impedance 제어는 drive에서 어떤 인터페이스를 필요로 합니까?",
   "options": [
    "속도 제한이 걸린 velocity 명령 방식",
    "튜닝한 gain이 붙은 position 명령 방식",
    "토크(effort) 명령을 직접 내리는 방식"
   ],
   "answer": 2,
-  "explanation": "impedance는 위치와 속도 오차에서 토크를 만듭니다."
+  "explanation": "impedance는 위치와 속도 오차에서 직접 토크를 만들기 때문에 drive가 토크(effort) 명령을 직접 받아야 합니다."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "작업대 팔의 drive가 position 명령만 받아서 admittance 층을 얹습니다. 그 층에 필요한 것은 무엇입니까?",
+  "question": "drive가 position 명령만 받아서 admittance 층을 얹습니다. 그 층에 필요한 것은 무엇입니까?",
   "options": [
-   "관절에 걸린 측정된 외부 토크",
+   "관절에 걸리는 외부 토크의 측정값",
    "더 큰 안쪽 gain kp_in",
    "출력축에 달린 더 빠른 encoder"
   ],
   "answer": 0,
-  "explanation": "q_cmd를 tau_ext / K만큼 옮기므로 tau_ext를 측정해야 합니다."
+  "explanation": "admittance 층은 목표 각도 q_des를 tau_ext / K만큼 옮기므로 외부 토크 tau_ext를 측정해야 합니다."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "작업대 팔 drive의 kp_in = 400입니다. admittance 층으로 관절을 400 Nm/rad보다 뻣뻣하게 만들 수 있습니까?",
+  "question": "drive의 kp_in = 400입니다. admittance 층으로 관절을 400 Nm/rad보다 뻣뻣하게 만들 수 있습니까?",
   "options": [
-   "불가능하다. 1/K + 1/kp_in은 항상 1/kp_in보다 크다",
-   "가능하다. K를 drive 안쪽의 kp_in보다 훨씬 더 크게 잡는다",
-   "가능하다. 다만 안쪽 loop의 kd도 함께 올려야만 한다"
+   "아니요, 1/K + 1/kp_in은 항상 1/kp_in보다 큽니다",
+   "예, K를 drive 안쪽의 kp_in보다 훨씬 크게 잡으면 됩니다",
+   "예, 다만 안쪽 loop의 kd도 함께 올려야만 가능합니다"
   ],
   "answer": 0,
-  "explanation": "안쪽 compliance 1/kp_in이 요청한 compliance에 항상 더해집니다."
+  "explanation": "같은 힘에 밀리는 정도는 drive 안쪽의 1/kp_in에 요청한 1/K가 더해진 값이라 1/kp_in보다 작아질 수 없습니다. 그래서 관절은 400보다 뻣뻣해지지 않습니다."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "같은 작업대 팔에서 아주 뻣뻣한 관절과 아주 부드러운 관절이 모두 필요합니다. 가장 알맞은 모드는 무엇입니까?",
+  "question": "한 팔에서 아주 뻣뻣한 관절과 아주 부드러운 관절이 모두 필요합니다. 어떤 모드를 씁니까?",
   "options": [
-   "둘 다 position 모드. 안쪽 gain이 잘 맞춰져 있기 때문이다",
-   "둘 다 토크 모드. K를 어떤 값으로도 정할 수 있기 때문이다",
-   "둘 다 admittance. 어떤 drive도 부드럽게 만들기 때문이다"
+   "안쪽 gain이 튜닝되어 있으니 둘 다 position 모드를 씁니다",
+   "K를 어떤 값으로도 정할 수 있으니 둘 다 토크 모드를 씁니다",
+   "어떤 drive도 부드럽게 만드니 둘 다 admittance를 씁니다"
   ],
   "answer": 1,
-  "explanation": "K가 전 범위를 지나갈 수 있는 것은 토크 모드뿐입니다."
+  "explanation": "토크 모드만 K를 전 범위에서 정할 수 있으므로 뻣뻣한 관절도 부드러운 관절도 같은 모드로 만들 수 있습니다."
  }
 ]

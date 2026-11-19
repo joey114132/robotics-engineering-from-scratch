@@ -2,73 +2,73 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "You tune your toy car's kp and kd by feel on a state-space model. What does LQR change?",
+  "question": "You tune your toy car's kp and kd by feel. What does LQR change?",
   "options": [
    "It guarantees no motor saturation at any start",
    "It removes the need for a model of the car",
-   "You pick two cost weights, the gain follows"
+   "You pick two cost weights and the gain follows"
   ],
   "answer": 2,
-  "explanation": "Q and R state the trade, and the Riccati recursion computes K."
+  "explanation": "Q and R state the trade-off between error and effort, and the Riccati recursion then computes K, so you no longer guess each gain."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "In your toy car's LQR cost, what does R price?",
+  "question": "In a toy car's LQR cost, what does R put a penalty on?",
   "options": [
    "State error, the miss from the stop line",
    "Control effort, the size of the push",
    "Sample time, how long each tick lasts"
   ],
   "answer": 1,
-  "explanation": "The cost is x'Qx + u'Ru. R multiplies the input."
+  "explanation": "The cost is x'Qx + u'Ru. Q multiplies the state error and R multiplies the input, so a larger R makes big pushes more expensive."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "You make your toy car's R ten times larger. What happens to the first push?",
+  "question": "You make R ten times larger. What happens to the first push?",
   "options": [
    "It gets smaller, so the car pushes more gently",
    "It stays the same, since only Q sets the first push",
    "It gets larger, because the car must catch up"
   ],
   "answer": 0,
-  "explanation": "Effort is more expensive, so the optimiser uses less of it and settles more slowly."
+  "explanation": "A larger R makes effort more expensive, so the optimiser uses less of it. The first push gets smaller and the car settles more slowly."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "You compute your toy car's gains with the Riccati loop. When does the loop stop?",
+  "question": "You compute the car's gains with the Riccati loop. When does the loop stop?",
   "options": [
    "P stops changing between repeats",
    "The state x reaches 0 on the rollout",
    "The gain K reaches the value 1"
   ],
   "answer": 0,
-  "explanation": "A steady P is the fixed point that defines the optimal gain."
+  "explanation": "The settled P is the fixed point that defines the optimal gain. Stopping earlier leaves a weak gain."
  },
  {
   "id": 5,
   "stage": "post",
-  "question": "For the optimal K, what is the cost of your toy car's whole run from state x0?",
+  "question": "For the optimal K, what is the cost of the toy car's whole run from state x0?",
   "options": [
    "K x0, the first push applied to the car",
    "x0' Q x0, the error weight at the start state",
    "x0' P x0, with P from the settled Riccati loop"
   ],
   "answer": 2,
-  "explanation": "P holds the cost-to-go of every state."
+  "explanation": "P holds the total future cost from each starting state, so the whole run from x0 costs x0' P x0. The first push K x0 is only one step of that run."
  },
  {
   "id": 6,
   "stage": "post",
-  "question": "Your toy car's first LQR push from a specified start is too large. Which is a sensible effort-reduction trial, without claiming a hard limit?",
+  "question": "The toy car's first LQR push from a given start is too large. What sensibly reduces it, even though it gives no hard limit?",
   "options": [
    "Clip the first command and skip the rollout check",
    "Set Q to zero so the cost counts only the effort",
    "Raise R, recompute K and check the full rollout"
   ],
   "answer": 2,
-  "explanation": "R penalizes effort, not a hard limit. Test the new gain for the specified starts; hard limits need explicit constraints or separately validated saturation handling."
+  "explanation": "Raising R shrinks the push but gives no hard limit, so recompute K and check the full rollout. A hard limit needs explicit constraints or separately validated saturation handling."
  }
 ]
