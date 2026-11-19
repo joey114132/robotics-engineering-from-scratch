@@ -38,7 +38,7 @@
  {
   "id": 4,
   "stage": "check",
-  "question": "damped least squares를 켜서 모터가 속도 한계를 넘지 않게 합니다. joint 속도는 어떤 식을 만족합니까?",
+  "question": "팔에 양수 lam으로 damped least squares를 적용합니다. joint 속도는 어떤 식을 만족합니까?",
   "options": [
    "|qd| <= |v| / (2 lam)",
    "|qd| <= |v| * (2 * lam)",

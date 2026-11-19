@@ -69,6 +69,6 @@
    "양쪽 reliable과 큰 depth"
   ],
   "answer": 1,
-  "explanation": "best effort는 낡은 샘플을 다시 보내지 않고 버립니다. 거기에 작은 depth를 쓰면 가장 최신 샘플만 남습니다."
+  "explanation": "best effort는 한 번 보내고 넘어가므로 유실된 메시지를 다시 보내지 않습니다. 또 depth가 작으면 읽지 않은 메시지 중 가장 최신 몇 개만 남습니다."
  }
 ]

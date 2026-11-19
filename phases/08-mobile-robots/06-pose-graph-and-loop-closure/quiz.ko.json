@@ -16,7 +16,7 @@
   "stage": "check",
   "question": "로버의 pose graph를 만듭니다. 여기서 odometry edge는 무엇입니까?",
   "options": [
-   "첫 번째 로봇을 뒤따르는 두 번째 로봇입니다",
+   "모든 pose를 출발점에 이어 주는 스프링입니다",
    "이웃한 두 pose 사이에 걸린 스프링입니다",
    "두 pose가 함께 바라보는 landmark입니다"
   ],
@@ -53,7 +53,7 @@
   "question": "로버가 출발점을 알아본 줄 알았지만 틀린 match입니다. 틀린 loop closure는 무엇을 합니까?",
   "options": [
    "closure가 없을 때보다 지도를 더 휘게 합니다",
-   "solver가 나쁜 edge를 무시해 변화가 없습니다",
+   "solver가 edge를 무시해 변화가 없습니다",
    "틀린 match라도 항상 지도를 개선해 줍니다"
   ],
   "answer": 0,

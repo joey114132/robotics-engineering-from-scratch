@@ -21,12 +21,12 @@
    "1 / (ke ki)"
   ],
   "answer": 2,
-  "explanation": "The force changes ke times as fast as the depth, so the error shrinks at rate ke ki. It falls by about two thirds every 1 / (ke ki) seconds."
+  "explanation": "Since f = ke x and x moves at v = ki (fd - f), df/dt = ke ki (fd - f). The error therefore falls by about two thirds every 1 / (ke ki) seconds."
  },
  {
   "id": 3,
   "stage": "check",
-  "question": "The same force loop presses a soft sponge and then a stiff plate. Which surface settles faster?",
+  "question": "The same force loop presses a soft sponge and then a stiff plate. The speed limit never acts and ke ki dt is below 1 for both. Which settles faster?",
   "options": [
    "A stiffer one",
    "A softer one",

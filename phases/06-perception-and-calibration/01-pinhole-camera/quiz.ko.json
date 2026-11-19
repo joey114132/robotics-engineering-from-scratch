@@ -50,7 +50,7 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "카메라가 컵의 여러 pixel에서 똑같이 틀린 depth를 읽었습니다. 점이 가장 크게 어긋나는 pixel은 어느 것입니까?",
+  "question": "컵의 여러 pixel에서 depth가 똑같은 양만큼 틀렸습니다. 옆으로 가장 크게 어긋나는 pixel은 어느 것입니까?",
   "options": [
    "principal point에서 멀리 떨어진 pixel",
    "정확히 principal point 위에 놓인 pixel",

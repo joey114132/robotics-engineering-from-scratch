@@ -38,7 +38,7 @@
  {
   "id": 4,
   "stage": "check",
-  "question": "Damped least squares keeps your arm's motors under their speed limit. What does it guarantee about joint speed?",
+  "question": "Your arm uses damped least squares with a positive damping lam. Which bound does it set on the joint speed?",
   "options": [
    "|qd| <= |v| / (2 lam)",
    "|qd| <= |v| * (2 * lam)",

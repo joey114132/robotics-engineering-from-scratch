@@ -9,7 +9,7 @@
    "The sensor noise is too large to follow a turn"
   ],
   "answer": 0,
-  "explanation": "The motion model puts heading inside cos and sin, so no single constant F fits a curved path, and a plain Kalman filter needs one."
+  "explanation": "The motion model uses the sin and cos of the unknown heading, so a linear model like 07/02's cannot express it. The EKF redraws a straight-line rule at its current estimate each cycle."
  },
  {
   "id": 2,

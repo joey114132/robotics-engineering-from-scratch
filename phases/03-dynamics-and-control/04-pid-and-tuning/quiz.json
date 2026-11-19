@@ -53,7 +53,7 @@
   "question": "When does conditional integration freeze the integrator?",
   "options": [
    "When the output is above zero for a whole tick",
-   "When the error changes sign for the first time in a run",
+   "When the error changes its sign for the first time",
    "When saturated and the error pushes the output deeper"
   ],
   "answer": 2,

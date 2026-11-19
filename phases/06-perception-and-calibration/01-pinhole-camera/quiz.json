@@ -50,7 +50,7 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "Your camera reads the same wrong depth at several pixels of the cup. At which pixel is the point shifted most?",
+  "question": "Your camera's depth is off by the same amount at several pixels of the cup. At which pixel is the point shifted sideways most?",
   "options": [
    "A pixel far from the principal point",
    "A pixel exactly on the principal point",

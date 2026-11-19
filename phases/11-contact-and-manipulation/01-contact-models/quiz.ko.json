@@ -33,7 +33,7 @@
    "g (mu sin(theta) - cos(theta))"
   ],
   "answer": 1,
-  "explanation": "중력은 블록을 경사 아래로 g sin(theta)로 당기고 한계에 이른 마찰력 mu fn은 mu g cos(theta)로 되밉니다. 둘의 차이가 가속도입니다."
+  "explanation": "경사 아래로 당기는 중력 성분은 m g sin(theta)이고 미끄러지는 동안 위로 작용하는 마찰력은 mu m g cos(theta)입니다. 두 힘의 차이를 질량 m으로 나누면 가속도입니다."
  },
  {
   "id": 4,
@@ -69,6 +69,6 @@
    "controller gain을 더 올립니다"
   ],
   "answer": 1,
-  "explanation": "ft / fn이 mu를 넘으면 필요한 마찰력이 friction cone 밖에 있어서 어떤 gain으로도 부품을 붙잡을 수 없습니다."
+  "explanation": "ft / fn이 mu를 넘으면 부품이 friction cone 밖에 있어 미끄러집니다. fn이 그대로면 gain을 올려도 마찰 한계 mu fn은 커지지 않습니다."
  }
 ]

@@ -16,7 +16,7 @@
   "stage": "check",
   "question": "You build your rover's pose graph. What is an odometry edge in it?",
   "options": [
-   "A second robot that follows the first one",
+   "A spring joining every pose to the start",
    "A spring between two neighbouring poses",
    "A landmark that two poses both stand next to"
   ],

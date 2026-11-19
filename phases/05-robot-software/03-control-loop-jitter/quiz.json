@@ -57,7 +57,7 @@
    "The CPU load of the control process"
   ],
   "answer": 1,
-  "explanation": "Sleeping until an absolute time means a late wake-up does not push later cycles back, so it only adds spread around T."
+  "explanation": "Each wake-up aims at its own slot i * T, so lateness does not pile up and the mean period stays T. One very late wake-up can still delay the next cycle."
  },
  {
   "id": 6,

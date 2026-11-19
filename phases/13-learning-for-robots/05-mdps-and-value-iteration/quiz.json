@@ -4,12 +4,12 @@
   "stage": "pre",
   "question": "Your rover plans on a slippery floor with a pit. What does V(s) mean for a square s in the MDP?",
   "options": [
-   "The number of moves the rover needs to reach the goal from s",
+   "The number of moves it needs to reach the goal from s",
    "The reward you can expect from s if you play the best moves",
-   "The reward of the next move alone, averaged over slips"
+   "The reward of the next move alone, averaged over the slips"
   ],
   "answer": 1,
-  "explanation": "V(s) is the reward you can expect from square s onward, averaged over the slips, when the best moves are played. It is the reward-to-go of 13/03 averaged over chance."
+  "explanation": "V(s) is the reward you can expect from square s onward if you play the best moves. It is averaged over the slips, and later rewards are discounted by gamma."
  },
  {
   "id": 2,
@@ -26,19 +26,19 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "Your rover's value iteration runs with gamma = 0.9. How much does one sweep shrink the worst-case error at most?",
+  "question": "Your rover's value iteration runs with gamma = 0.9. After one sweep, the worst-case error is guaranteed to be at most how many times its old size?",
   "options": [
-   "By a factor 0.81, gamma squared",
-   "By a factor 0.1, one minus gamma",
-   "By a factor 0.9, equal to gamma"
+   "0.81 times, gamma squared",
+   "0.1 times, one minus gamma",
+   "0.9 times, equal to gamma"
   ],
   "answer": 2,
-  "explanation": "In one update the next square's value enters multiplied by gamma, so any error in it shrinks by gamma as well. With gamma at 0.9 the worst error becomes 0.9 times as big."
+  "explanation": "In one update the next square's value is multiplied by gamma, so an error in it shrinks by gamma. With gamma = 0.9, one sweep leaves at most 0.9 times the old worst-case error."
  },
  {
   "id": 4,
   "stage": "check",
-  "question": "Your rover runs value iteration with 0 < gamma < 1, rewards of size at most 1 and V starting at 0. Why can any small error target be reached in a bounded number of sweeps?",
+  "question": "Your rover's value iteration uses 0 < gamma < 1, rewards of size at most 1 and V starting at 0. Why can a bounded number of sweeps reach any small error?",
   "options": [
    "Each sweep fixes one more square, so squares set the count",
    "The greedy policy stops changing, so V is frozen from then on",
@@ -57,7 +57,7 @@
    "Picks any route, since slips make them all equal"
   ],
   "answer": 0,
-  "explanation": "The chance of sliding into the pit costs an expected -1, which can be worse than the small discount a longer route pays, so the longer route can win."
+  "explanation": "Sliding into the pit pays -1, so its chance adds a loss to the short route's score. If that loss is bigger than the small discount a longer route pays, the longer route wins."
  },
  {
   "id": 6,

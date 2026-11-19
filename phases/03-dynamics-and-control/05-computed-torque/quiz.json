@@ -50,7 +50,7 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "The masses in the arm model are 20% wrong. What does computed torque do compared with PD?",
+  "question": "In the lesson's test, the masses in the arm model are 20% wrong. How does computed torque compare with PD?",
   "options": [
    "Does no better than PD, because the model terms are wrong",
    "Becomes unstable, since any model error gets amplified at every tick",
@@ -69,6 +69,6 @@
    "Check that M stays a symmetric 2x2 array"
   ],
   "answer": 0,
-  "explanation": "mj_inverse is a second, separate implementation, so it does not share your mistakes, and matching it on random states is a strong test."
+  "explanation": "mj_inverse is a separate implementation, so a bug in your equations is not copied into it. Matching it on random states for the same model tests far more than symmetry or a smooth path."
  }
 ]

@@ -9,7 +9,7 @@
    "The lens distortion coefficients"
   ],
   "answer": 1,
-  "explanation": "A wrong camera-to-gripper offset X shifts every target by the same amount in the same direction, which is exactly a constant offset."
+  "explanation": "The base frame is accurate, so a steady miss points to X, the fixed mounting that turns what the camera sees into a place for the gripper to reach."
  },
  {
   "id": 2,
@@ -40,7 +40,7 @@
   "stage": "check",
   "question": "Once you know R_X for your gripper camera, how do you find t_X?",
   "options": [
-   "A second SVD on the rotation axes of both A and B",
+   "A second SVD on the rotation axes of A and B",
    "It is measured with a ruler on the gripper",
    "Linear least squares on the translation equation"
   ],

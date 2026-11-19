@@ -2,26 +2,26 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "An arm pushes a peg into a tight hole. It stops halfway, and pushing harder only holds it firmer. What is the likely cause?",
+  "question": "An arm pushes a peg into a tight hole. It stops halfway, and twice the push only gets it a little deeper before it stops again. What is the likely cause?",
   "options": [
    "A push that is too weak to finish",
    "A jam caused by a stiff robot wrist",
    "A peg that is too long for the hole"
   ],
   "answer": 1,
-  "explanation": "A stiff wrist turns a small misalignment into a big side force, so wall friction holds the peg, and pushing harder only raises that friction."
+  "explanation": "A stiff wrist cannot give while the hole allows less and less lean, so the peg wedges and wall friction holds it."
  },
  {
   "id": 2,
   "stage": "check",
-  "question": "A wrist has stiffness kx, and the peg starts misaligned by e. About how big is the side force at the tip?",
+  "question": "A wrist has stiffness kx, and the hole holds the peg top e away from where the wrist wants it. About how big is the wrist's side force?",
   "options": [
    "The push force multiplied by e",
    "e divided by the stiffness",
    "kx times the misalignment"
   ],
   "answer": 2,
-  "explanation": "The wrist acts as a lateral spring with stiffness kx, so a misalignment e becomes a side force of about kx times e."
+  "explanation": "The wrist acts as a lateral spring with stiffness kx, so being held e off its target gives a side force of about kx times e."
  },
  {
   "id": 3,
@@ -33,7 +33,7 @@
    "The tilt angle reaches the chamfer angle at the edge"
   ],
   "answer": 1,
-  "explanation": "When both friction cones can balance the wrist's push and twist, the contacts hold the peg and no push can move it."
+  "explanation": "At the current push, both friction cones can balance the wrist's push and twist, so the contacts hold the peg still."
  },
  {
   "id": 4,
@@ -45,7 +45,7 @@
    "More lateral compliance"
   ],
   "answer": 2,
-  "explanation": "A softer wrist lowers the side force that feeds friction, so the peg slides in. Pushing harder only locks the jam tighter."
+  "explanation": "A softer wrist lowers the side force that feeds friction, so the peg slides in. Doubling the push only moves the jam from 34.6 mm to 36.4 mm."
  },
  {
   "id": 5,

@@ -4,7 +4,7 @@
   "stage": "pre",
   "question": "작업대 관절이 천천히 도는데 loop를 더 빠르게 돌리자 속도 값이 더 심하게 튑니다. 이유는 무엇입니까?",
   "options": [
-   "샘플링이 빨라질수록 encoder가 count를 더 많이 놓치기 때문입니다",
+   "샘플링이 빨라질수록 encoder가 count를 더 놓치기 때문입니다",
    "dt가 줄면 속도 step 2*pi/(CPR*dt)가 커지기 때문입니다",
    "loop가 빨라지면 count마다 전기 노이즈가 더 붙기 때문입니다"
   ],
@@ -14,7 +14,7 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "encoder의 CPR = 1000이고 dt = 1 ms로 샘플링합니다. 한 샘플 간격으로 count를 빼서 구하는 속도가 보고할 수 있는 0이 아닌 가장 작은 값은 얼마입니까?",
+  "question": "encoder의 CPR = 1000이고 dt = 1 ms로 샘플링합니다. 연속한 두 샘플의 count 차이로 속도를 구할 때 0이 아닌 가장 작은 값은 얼마입니까?",
   "options": [
    "2*pi rad/s",
    "2*pi/1000 rad/s",

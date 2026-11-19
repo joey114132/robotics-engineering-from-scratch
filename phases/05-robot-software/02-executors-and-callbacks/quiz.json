@@ -26,7 +26,7 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "A timer and a 60 ms image callback are in separate groups on two threads. What is the worst timer wait?",
+  "question": "In the lesson's model, a timer and a 60 ms image callback use separate groups on two threads. What is the worst timer wait?",
   "options": [
    "0 ms, it starts right away",
    "About 30 ms, half the callback",

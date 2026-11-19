@@ -5,7 +5,7 @@
   "question": "You write a test that only checks your controller returns a number. Why is that weak for robot code?",
   "options": [
    "It passes even with the wrong sign and a runaway joint",
-   "It takes too long to run after every change to the code",
+   "It takes too long to run after every change to code",
    "It cannot run unless the real arm is connected"
   ],
   "answer": 0,

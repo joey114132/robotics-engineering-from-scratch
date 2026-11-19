@@ -26,7 +26,7 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "When a Fallback child returns failure, what does the Fallback do?",
+  "question": "A Fallback child returns failure and another child remains. What does the Fallback do next?",
   "options": [
    "Returns failure to its own parent",
    "Restarts from its first child",
@@ -64,7 +64,7 @@
   "stage": "post",
   "question": "You want your arm's fetch task to retry a missed grasp. Why is adding a retry easier in a tree than in a state machine?",
   "options": [
-   "A state machine cannot repeat any state, but a tree repeats any node",
+   "A state machine cannot repeat any state, but a tree repeats nodes",
    "One node wraps the step, but a table needs edits per failing state",
    "Trees run each cycle faster, so a retry costs less in a tree"
   ],

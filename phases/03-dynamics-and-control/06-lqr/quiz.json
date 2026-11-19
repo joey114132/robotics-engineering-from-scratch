@@ -52,12 +52,12 @@
   "stage": "post",
   "question": "For the optimal K, what is the cost of the toy car's whole run from state x0?",
   "options": [
-   "K x0, the first push applied to the car",
+   "-K x0, the first push applied to the car",
    "x0' Q x0, the error weight at the start state",
    "x0' P x0, with P from the settled Riccati loop"
   ],
   "answer": 2,
-  "explanation": "P holds the total future cost from each starting state, so the whole run from x0 costs x0' P x0. The first push K x0 is only one step of that run."
+  "explanation": "P holds the total future cost from each starting state, so the whole run from x0 costs x0' P x0. The first push -K x0 is an input, not the cost."
  },
  {
   "id": 6,

@@ -52,7 +52,7 @@
   "stage": "post",
   "question": "A datasheet gives a DH table that you did not derive. What is the best way to test it?",
   "options": [
-   "FK at the zero pose plus a single straight-elbow pose",
+   "FK at the zero pose plus one straight-elbow pose",
    "Rereading the table against the textbook figure",
    "FK at 5 or more random poses, compared with the URDF"
   ],

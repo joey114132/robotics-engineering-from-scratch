@@ -54,7 +54,7 @@
   "options": [
    "The first mismatch is always the worst one",
    "The engineer can fix every mismatch in one pass",
-   "Printing a list is faster than printing one line"
+   "Printing a list is faster than a single line"
   ],
   "answer": 1,
   "explanation": "With every mismatch in one report, the person fixing it can repair them all at once instead of restarting the robot after each single fix."

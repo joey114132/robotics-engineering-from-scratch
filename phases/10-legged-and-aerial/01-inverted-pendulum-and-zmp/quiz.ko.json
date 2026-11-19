@@ -1,5 +1,5 @@
 [
-  {"id": 1, "stage": "pre", "question": "보행 로봇이 뒤에서 밀렸는데 발목 토크가 이미 한계입니다. 넘어질지는 무엇이 결정합니까?", "options": ["몸무게가 발 크기에 비해 얼마나 무거운지", "capture point가 발 안에 있는지", "질량 중심이 발 바로 위에 있는지"], "answer": 1, "explanation": "발목은 ZMP를 발 안에서만 옮길 수 있습니다. capture point가 발 밖에 있으면 발목으로는 막을 수 없어서 걸음이 필요합니다."},
+  {"id": 1, "stage": "pre", "question": "보행 로봇이 뒤에서 밀려 걸음 없이 발목만으로 버팁니다. 넘어질지는 무엇이 결정합니까?", "options": ["몸무게가 발 크기에 비해 얼마나 무거운지", "capture point가 발 안에 있는지", "질량 중심이 발 바로 위에 있는지"], "answer": 1, "explanation": "발목은 ZMP를 발 안에서만 옮길 수 있습니다. capture point가 발 밖에 있으면 발목으로는 막을 수 없어서 걸음이 필요합니다."},
   {"id": 2, "stage": "check", "question": "x'' = (g/h)(x - p)로 모델링한 로봇의 time constant는 무엇입니까?", "options": ["sqrt(h/g)", "sqrt(g/h)", "sqrt(2h/g)"], "answer": 0, "explanation": "해를 exp(t/Tc)로 놓고 대입하면 1/Tc^2 = g/h가 되므로 Tc는 sqrt(h/g)입니다."},
   {"id": 3, "stage": "check", "question": "몸 높이를 4배로 키우면 Tc는 어떻게 됩니까?", "options": ["2배가 됩니다", "4배가 됩니다", "절반으로 줄어듭니다"], "answer": 0, "explanation": "Tc는 sqrt(h)에 비례하므로 높이가 4배가 되면 Tc는 2배만 커집니다."},
   {"id": 4, "stage": "check", "question": "capture point에 정확히 발을 내디디면 몸은 어떻게 됩니까?", "options": ["같은 속도로 지나칩니다", "더 천천히 넘어집니다", "그 점 위에서 정지합니다"], "answer": 2, "explanation": "발을 capture point에 놓으면 그 점이 더 움직이지 않습니다. 그래서 몸은 그 점을 향해 속도를 줄이다가 바로 위에서 멈춥니다."},

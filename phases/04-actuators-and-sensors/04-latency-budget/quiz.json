@@ -62,7 +62,7 @@
  {
   "id": 6,
   "stage": "post",
-  "question": "A loop's delay budget grows by 3 ms. What is the best response?",
+  "question": "The total delay from sensor to motor grows by 3 ms. What is the best response?",
   "options": [
    "Recompute the largest safe kd again",
    "Raise kp to make up for the lost margin",

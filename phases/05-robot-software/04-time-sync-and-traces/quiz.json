@@ -14,14 +14,14 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "A client sends a time request at t0, the server gets it at t1 and replies at t2, and the client receives at t3. Which formula gives the server minus client offset?",
+  "question": "A client sends a request at t0, the server gets it at t1 and replies at t2, and the reply arrives at t3. Which formula gives the server minus client offset?",
   "options": [
    "(t3 - t0) / 2 + (t2 - t1) / 2",
    "((t1 - t0) + (t2 - t3)) / 2",
    "((t1 - t0) - (t2 - t3)) / 2"
   ],
   "answer": 1,
-  "explanation": "t1 - t0 is the clock offset plus the trip time, and t2 - t3 is the offset minus the trip time. Averaging the two cancels the trip time."
+  "explanation": "t1 - t0 is the clock offset plus the trip time, and t2 - t3 is the offset minus the trip time. If both trips take equally long, averaging cancels the trip time."
  },
  {
   "id": 3,

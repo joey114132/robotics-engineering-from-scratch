@@ -69,6 +69,6 @@
    "Reliable on both ends with a large depth"
   ],
   "answer": 1,
-  "explanation": "Best effort drops stale samples instead of retrying them, and a small depth keeps the freshest."
+  "explanation": "Best effort sends once and moves on instead of resending lost messages, and a small depth keeps only the newest few unread ones."
  }
 ]

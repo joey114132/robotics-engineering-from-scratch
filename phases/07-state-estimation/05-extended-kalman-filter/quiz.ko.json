@@ -9,7 +9,7 @@
    "센서 잡음이 너무 커서 회전을 못 따라가기 때문입니다"
   ],
   "answer": 0,
-  "explanation": "움직임 모델은 heading을 cos과 sin 안에 쓰기 때문에 곡선 경로를 매번 같은 F 하나로 나타낼 수 없습니다. 일반 Kalman filter는 그런 F가 필요합니다."
+  "explanation": "움직임 모델에 아직 모르는 heading의 sin과 cos이 들어가서 07/02의 선형 모델로는 나타낼 수 없습니다. EKF는 매 cycle 현재 추정값에서 직선 규칙을 다시 만듭니다."
  },
  {
   "id": 2,
@@ -52,9 +52,9 @@
   "stage": "post",
   "question": "로봇의 filter를 어떻게 시작하느냐에 따라 결과가 달라집니다. 이 레슨에서 발산하는 시작은 무엇입니까?",
   "options": [
-   "landmark 한 개, 처음 heading 오차 없음",
+   "landmark 한 개뿐, 처음 heading 오차 없음",
    "landmark 네 개, 처음 heading 오차 1.5 rad",
-   "landmark 한 개, 처음 heading 오차 1.5 rad"
+   "landmark 한 개뿐, 처음 heading 오차 1.5 rad"
   ],
   "answer": 2,
   "explanation": "heading이 많이 틀렸는데 landmark가 하나뿐이면 단서가 적어서 틀린 heading을 바로잡지 못하고 확신한 채 어긋납니다."

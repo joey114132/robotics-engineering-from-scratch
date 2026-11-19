@@ -4,5 +4,5 @@
   {"id": 3, "stage": "check", "question": "math.cos에 넣는 각도는 어떤 단위여야 합니까?", "options": ["radian 단위", "바퀴 수 단위", "degree 단위"], "answer": 0, "explanation": "코드는 각도를 radian으로 세므로 math.cos와 numpy 삼각함수도 radian을 기대합니다. degree를 넣어도 경고 없이 엉뚱한 값이 나옵니다."},
   {"id": 4, "stage": "check", "question": "경첩이 사분의 일 바퀴, 즉 90도를 돕니다. 약 몇 radian입니까?", "options": ["15.7", "1.57", "0.157"], "answer": 1, "explanation": "사분의 일 바퀴는 6.28 radian의 사분의 일이라서 90도는 1.57 radian입니다. 15.7과 0.157은 자릿수가 틀린 값입니다."},
   {"id": 5, "stage": "post", "question": "경첩이 450도를 읽습니다. wrap_turn은 그 각도를 어떻게 바꿉니까?", "options": ["한 바퀴를 더해 810도로 만듭니다", "한 바퀴인 360도로 만듭니다", "같은 방향인 90도로 만듭니다"], "answer": 2, "explanation": "wrap_turn은 온전한 바퀴를 뺍니다. 450도에서 한 바퀴(360도)를 빼면 같은 방향인 90도가 남습니다."},
-  {"id": 6, "stage": "post", "question": "경첩 각도를 degree로 적고 math.cos(90)을 호출했습니다. 어떻게 됩니까?", "options": ["90을 degree로 읽지만 답을 반올림합니다", "90이 너무 커서 오류가 나며 멈춥니다", "90을 radian으로 읽어서 답이 틀립니다"], "answer": 2, "explanation": "math.cos는 입력을 항상 radian으로 읽으므로 90을 90 radian으로 받아들입니다. 오류 없이 돌아가고 답만 틀립니다."}
+  {"id": 6, "stage": "post", "question": "경첩 각도를 degree로 적고 math.cos(90)을 호출했습니다. 어떻게 됩니까?", "options": ["90을 degree로 읽지만 답을 반올림합니다", "90이 너무 커서 오류가 나며 멈춥니다", "90을 radian 값으로 읽어서 답이 틀립니다"], "answer": 2, "explanation": "math.cos는 입력을 항상 radian으로 읽으므로 90을 90 radian으로 받아들입니다. 오류 없이 돌아가고 답만 틀립니다."}
 ]

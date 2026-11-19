@@ -1,5 +1,5 @@
 [
-  {"id": 1, "stage": "pre", "question": "로버의 두 바퀴를 같은 속도로 돌립니다. 로버는 어떻게 움직입니까?", "options": ["왼쪽으로 천천히 휘어지는 호를 그립니다", "heading 방향의 직선으로 갑니다", "중심을 축으로 제자리에서 돕니다"], "answer": 1, "explanation": "두 바퀴가 같은 속도로 돌면 wr - wl이 0이라 회전율이 0이고 로버는 직진합니다."},
+  {"id": 1, "stage": "pre", "question": "로버의 두 바퀴를 같은 속도로 돌립니다. 로버는 어떻게 움직입니까?", "options": ["왼쪽으로 천천히 휘는 호를 그립니다", "heading 방향의 직선으로 갑니다", "중심을 축으로 제자리에서 돕니다"], "answer": 1, "explanation": "두 바퀴가 같은 속도로 돌면 wr - wl이 0이라 회전율이 0이고 로버는 직진합니다."},
   {"id": 2, "stage": "check", "question": "차동 구동에서 회전율을 구하는 식은 무엇입니까?", "options": ["r (wr + wl) / 2", "r (wr - wl) / b", "r (wr - wl) * b"], "answer": 1, "explanation": "회전은 두 바퀴 속도의 차 r (wr - wl)를 track width b로 나눈 값입니다. r (wr + wl) / 2는 전진 속도입니다."},
   {"id": 3, "stage": "check", "question": "odometry는 사각형이 닫혔다고 하는데 줄자로 재니 출발점에서 18 cm 떨어져 끝났습니다. 가장 가능성 높은 원인은 무엇입니까?", "options": ["wheel radius나 track width가 틀렸습니다", "로봇이 사각형 경로를 너무 느린 속도로 주행했습니다", "모서리마다 encoder가 카운트를 몇 개씩 놓쳤습니다"], "answer": 0, "explanation": "계획과 odometry가 같은 틀린 wheel radius나 track width를 쓰므로 기록 속 사각형은 닫혀도 실제 사각형은 닫히지 않습니다."},
   {"id": 4, "stage": "check", "question": "설정 하나를 바꿨더니 주행 거리는 그대로이고 회전각만 바뀝니다. 어떤 설정입니까?", "options": ["time step", "wheel radius", "track width"], "answer": 2, "explanation": "track width는 회전율 w = r (wr - wl) / b에만 들어가고 전진 속도 v에는 없어서 각도만 바뀝니다."},

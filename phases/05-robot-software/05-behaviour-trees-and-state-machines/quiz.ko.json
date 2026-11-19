@@ -26,7 +26,7 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "Fallback의 자식이 failure를 돌려주면 Fallback은 어떻게 합니까?",
+  "question": "Fallback의 자식이 failure를 돌려줬고 다음 자식이 남아 있습니다. Fallback은 어떻게 합니까?",
   "options": [
    "failure를 부모에게 돌려줍니다",
    "맨 앞 자식부터 다시 시작합니다",

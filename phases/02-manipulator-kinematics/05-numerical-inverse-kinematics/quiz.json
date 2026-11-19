@@ -2,14 +2,14 @@
  {
   "id": 1,
   "stage": "pre",
-  "question": "Your 6-joint desk arm has no formula for its joint angles. What is the usual fallback?",
+  "question": "Your 6-joint desk arm has no handy formula for its joint angles. What is the usual fallback?",
   "options": [
    "Stretch the two-link formula out to six joints",
    "Try random angle sets until the tip lands on target",
    "Iterate small joint steps using the Jacobian"
   ],
   "answer": 2,
-  "explanation": "There is no formula for the angles, so the solver makes a small joint move, uses the Jacobian to predict where the tip goes, and repeats until the miss is tiny."
+  "explanation": "With no handy formula for the angles, the solver makes a small joint move, uses the Jacobian to predict where the tip goes, and repeats until the miss is tiny."
  },
  {
   "id": 2,
@@ -42,7 +42,7 @@
   "options": [
    "The last pose reached, with converged=True",
    "The lowest-error pose seen, with converged=False",
-   "An exception raised, with no pose returned at all"
+   "An exception raised and no pose returned at all"
   ],
   "answer": 1,
   "explanation": "The ball cannot be reached, so the solver returns the closest pose it found and marks it converged=False. That pose is only the best it saw, not a proven closest one."
@@ -62,7 +62,7 @@
  {
   "id": 6,
   "stage": "post",
-  "question": "Several seeds converge on your arm. How do you pick among the solutions?",
+  "question": "Several seeds converge on your arm, and you want the smallest move from the current pose. How do you pick one?",
   "options": [
    "Always the first one found, since it had converged",
    "By the one that needed the fewest iterations",

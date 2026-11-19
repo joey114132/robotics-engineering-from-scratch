@@ -17,7 +17,7 @@
   "question": "A two-link arm must touch a ball strictly inside its reachable band. How many arm shapes reach it?",
   "options": [
    "One, since the target fixes both angles",
-   "Infinitely many, since both links turn freely",
+   "Infinitely many, since both links can turn",
    "Two: one with the elbow up, one with it down"
   ],
   "answer": 2,
@@ -38,7 +38,7 @@
  {
   "id": 4,
   "stage": "check",
-  "question": "A two-link arm has L1 = 0.5 and L2 = 0.4. Which ball distances can it touch?",
+  "question": "A two-link arm has L1 = 0.5 and L2 = 0.4. Which description fits exactly the targets it can touch?",
   "options": [
    "Targets at a distance of 0 to 0.9 from the base",
    "Targets at a distance of 0.1 to 0.9 from the base",

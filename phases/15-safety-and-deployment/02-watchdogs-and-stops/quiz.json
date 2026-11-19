@@ -54,7 +54,7 @@
   "options": [
    "The heartbeat messages stop being sent",
    "One late message trips the watchdog falsely",
-   "The brake engages too softly to stop in time"
+   "The brake grips too softly to stop in time"
   ],
   "answer": 1,
   "explanation": "A heartbeat can arrive a little late, and if the timeout is shorter than the period plus jitter, one late message already counts as silence and stops the joint for no reason."

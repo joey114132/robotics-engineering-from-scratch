@@ -29,11 +29,11 @@
   "question": "You switch your rover from one sampled action per step to a sampler that draws a chunk of H steps. What does it do differently?",
   "options": [
    "It averages the demos into one smoother path",
-   "It commits to one demonstration for H steps",
+   "It draws H actions from one demonstration",
    "It redraws the mode at every single step"
   ],
   "answer": 1,
-  "explanation": "Picking a new demo at every step can flip between the two ways and make the rover wobble. A chunk stays on one demo for H steps."
+  "explanation": "A chunk copies H actions from one demonstration, so the rover does not flip sides at every step. Chunks overlap, so a new one can start before the old one ends."
  },
  {
   "id": 4,
@@ -69,6 +69,6 @@
    "More wobble, since a longer chunk has more chances to drift"
   ],
   "answer": 1,
-  "explanation": "A chunk's actions are all decided when it starts, so a very long chunk cannot react to what happens while it runs."
+  "explanation": "A chunk plans its next H actions in advance, so a longer chunk reacts more slowly to what happens while it runs."
  }
 ]

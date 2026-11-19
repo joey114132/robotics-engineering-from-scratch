@@ -33,7 +33,7 @@
    "g (mu sin(theta) - cos(theta))"
   ],
   "answer": 1,
-  "explanation": "Gravity pulls the block down the slope with g sin(theta). Friction at its cap, mu fn, pushes back with mu g cos(theta), and the difference is the acceleration."
+  "explanation": "The downslope force is m g sin(theta), and sliding friction is mu m g cos(theta) uphill. Dividing their difference by m gives g (sin(theta) - mu cos(theta))."
  },
  {
   "id": 4,
@@ -50,7 +50,7 @@
  {
   "id": 5,
   "stage": "post",
-  "question": "You swap a ramp block for one with double the mass. How does the angle where it starts to slide change?",
+  "question": "What does doubling the block's mass do to the angle where it starts to slide?",
   "options": [
    "Lowers it slightly",
    "Does not change it",
@@ -69,6 +69,6 @@
    "Raise the controller gain"
   ],
   "answer": 1,
-  "explanation": "If the ratio exceeds mu, the needed friction lies outside the friction cone, and no controller gain can hold the part."
+  "explanation": "If ft / fn exceeds mu, the part is outside the friction cone and slips. At a fixed fn, a higher controller gain does not raise the limit mu fn."
  }
 ]

@@ -14,7 +14,7 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "Your arm holds still while a person pushes its tip. Which relation maps that tip force to joint torques?",
+  "question": "Your arm applies a requested tip force F. Which relation gives the required motor torques?",
   "options": [
    "tau = J^T F",
    "tau = J^-1 F",
@@ -52,12 +52,12 @@
   "stage": "post",
   "question": "A 2 kg mass hangs from your arm's tip. How do you get the joint torques that hold it?",
   "options": [
-   "Split the weight force equally across the joints",
-   "J^T times the weight force acting at the tip",
-   "J times the weight force acting at the tip"
+   "The supporting force split equally across the joints",
+   "J^T times the supporting force applied at the tip",
+   "J times the supporting force applied at the tip"
   ],
   "answer": 1,
-  "explanation": "The weight pulls down on the tip as a force, and a tip force reaches the joints through J transposed, so you multiply the weight force by J^T."
+  "explanation": "The arm holds the mass up with a tip force F equal to its weight, and a tip force reaches the joint torques through J transposed, so tau = J^T F."
  },
  {
   "id": 6,

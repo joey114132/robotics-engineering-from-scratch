@@ -14,7 +14,7 @@
  {
   "id": 2,
   "stage": "check",
-  "question": "팔이 가만히 있는데 사람이 tip을 밉니다. 이 tip 힘을 joint torque로 바꾸는 관계는 무엇입니까?",
+  "question": "팔이 tip으로 힘 F를 가합니다. 이 힘을 내기 위한 모터 torque는 어떤 관계로 구합니까?",
   "options": [
    "tau = J^T F",
    "tau = J^-1 F",
@@ -52,12 +52,12 @@
   "stage": "post",
   "question": "팔의 tip에 2 kg 질량이 매달려 있습니다. 이것을 받치는 joint torque는 어떻게 구합니까?",
   "options": [
-   "무게를 모든 joint에 똑같이 나누어 줍니다",
-   "tip에 걸리는 무게 F에 J^T를 곱합니다",
-   "tip에 걸리는 무게 F에 J를 곱합니다"
+   "질량을 받치는 힘을 모든 joint에 똑같이 나눕니다",
+   "tip에서 질량을 받치는 힘 F에 J^T를 곱합니다",
+   "tip에서 질량을 받치는 힘 F에 J를 곱합니다"
   ],
   "answer": 1,
-  "explanation": "무게는 tip을 아래로 당기는 힘이고 tip 힘은 J의 transpose를 거쳐 joint torque가 됩니다. 그래서 무게 F에 J^T를 곱합니다."
+  "explanation": "팔은 질량의 무게와 같은 힘 F로 tip을 위로 받칩니다. tip 힘은 J의 transpose를 거쳐 joint torque가 되므로 tau = J^T F입니다."
  },
  {
   "id": 6,

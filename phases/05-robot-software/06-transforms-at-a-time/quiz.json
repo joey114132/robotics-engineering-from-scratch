@@ -41,7 +41,7 @@
   "question": "You blend your robot's orientation between two stored poses. Why slerp instead of lerping quaternion components?",
   "options": [
    "It converts rotations to Euler angles first",
-   "It needs fewer samples for the same final accuracy",
+   "It needs fewer samples for equal final accuracy",
    "It turns at a constant rate and stays unit length"
   ],
   "answer": 2,

@@ -26,7 +26,7 @@
  {
   "id": 3,
   "stage": "check",
-  "question": "timer와 60 ms 이미지 callback이 서로 다른 group에 있고 thread가 둘입니다. timer의 최악 대기 시간은 얼마입니까?",
+  "question": "이 레슨의 모델에서 timer와 60 ms 이미지 callback이 서로 다른 group에 있고 thread가 둘입니다. timer의 최악 대기 시간은 얼마입니까?",
   "options": [
    "0 ms, 기다리지 않고 바로 시작",
    "약 30 ms, 느린 callback의 절반",

@@ -64,11 +64,11 @@
   "stage": "post",
   "question": "Your arm sags only after kp is lowered. What is the best response?",
   "options": [
-   "Add integral gain on every joint to cancel it",
+   "Add integral gain on each joint to fix it",
    "Raise kp back up until the sag is gone",
    "Measure sag at several poses, fix the model"
   ],
   "answer": 2,
-  "explanation": "The sag comes from the model error, so the model has to be fixed. Raising kp only hides the error, and integral gain adds windup and drift."
+  "explanation": "The sag comes from the model's weight error, which a low kp leaves to the spring. Raising kp only covers that error; measuring the sag at several poses and fixing the model removes it."
  }
 ]

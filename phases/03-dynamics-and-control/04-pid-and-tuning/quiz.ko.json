@@ -30,7 +30,7 @@
   "options": [
    "속도 신호에 섞여 들어오는 센서 잡음 성분",
    "일정한 부하 때문에 남는 steady offset",
-   "setpoint를 빨리 바꾼 뒤의 overshoot"
+   "setpoint를 바꾼 뒤의 overshoot"
   ],
   "answer": 1,
   "explanation": "I 부분은 offset이 남아 있는 동안 오차를 계속 쌓으므로 결국 일정한 부하를 이겨 내고 offset이 사라집니다."
