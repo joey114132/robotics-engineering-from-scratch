@@ -8,14 +8,14 @@
 
 Place an eraser on a textbook and slowly tilt the book. Gravity pulls the eraser downhill. Friction, the grip between the surfaces, pulls it back uphill.
 
-Friction has a cap: at most `mu` times the force pressing the eraser into the book. All friction forces up to that cap form the friction cone. When the friction needed passes the cap, the eraser slides.
+Friction has a cap: at most `mu` times the force pressing the eraser into the book. The allowed pairs of pressing force and friction force form the friction cone. When the needed friction passes the cap, the eraser slides.
 
 ## Key Terms
 
 - **Contact model**: the rule a simulator uses to compute the forces where two bodies touch.
 - **Normal force**: the push of a surface straight out of itself, perpendicular to the surface.
 - **Friction coefficient (`mu`)**: how grippy the surfaces are.
-- **Friction cone**: all friction forces up to the grip limit, the friction coefficient times the normal force.
+- **Friction cone**: the allowed combinations of normal force and sideways friction force at a contact.
 - **Stick and slip**: two states of a contact; holding still, or sliding.
 - **Penetration**: how far a simulated body sinks into a surface.
 
@@ -29,11 +29,11 @@ A gripper drops a part when friction runs out, so you need to know the angle whe
 
 Friction holds the eraser until the slope gets too steep, then it slides. Friction can only push back up to a limit, set by how hard the surfaces press together and how grippy they are.
 
-![Layers](../assets/diagram-penalty-layers.png)
+![Penalty contact has two layers: spring force and friction cap](../assets/diagram-penalty-layers.png)
 
 *A simulated block sinks a tiny bit. The deeper it sinks, the harder friction can hold.*
 
-![Tilting plank](../assets/clip-example.mp4)
+[![Tilting plank](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The block holds until the plank passes the marker, then slides.*
 
@@ -41,7 +41,7 @@ Friction holds the eraser until the slope gets too steep, then it slides. Fricti
 
 *Does the friction needed fit inside the cone?*
 
-![Cone](../assets/fig-stick-slip.png)
+![Friction cone: sticking inside, sliding on its edge](../assets/fig-stick-slip.png)
 
 *Sticking blocks stay inside the cone. The sliding block rides its edge.*
 
@@ -75,7 +75,7 @@ python3 phases/11-contact-and-manipulation/01-contact-models/code/main.py
 
 ## Use It
 
-MuJoCo, a physics simulator, works the same way. Build the same block there and compare sliding angles.
+MuJoCo, a physics simulator, uses a different soft-contact solver. Build the same block there and compare sliding angles.
 
 Sources: MuJoCo documentation, Computation chapter (opened 2026-11-09).
 

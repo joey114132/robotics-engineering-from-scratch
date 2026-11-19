@@ -481,7 +481,7 @@ class Diagram:
                 break
             if chosen is None:
                 fails += 1
-                self.warnings.append(f"label '{e["label"]}' has no clear spot")
+                self.warnings.append(f"label '{e['label']}' has no clear spot")
                 chosen = cands[0][1] if cands else (0, 0, w, h)
             placed.append(chosen)
             out[e["id"]] = (chosen, lines)

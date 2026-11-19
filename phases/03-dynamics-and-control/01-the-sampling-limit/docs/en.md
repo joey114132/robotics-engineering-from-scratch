@@ -41,7 +41,7 @@ The key number, `r`, is how much of the speed one step of braking removes. Below
 
 *In the buzzing zone the sign flips but the swings shrink.*
 
-![Two arms](../assets/clip-example.mp4)
+[![Two arms](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same brake: the light arm buzzes, the heavy one glides.*
 
@@ -74,7 +74,7 @@ python3 phases/03-dynamics-and-control/01-the-sampling-limit/code/figure.py
 
 ## Use It
 
-Many motor controllers run a second, much faster loop inside, which removes the limit. Otherwise lower `kd`, raise the loop rate, or cap `kd` using the lightest pose.
+Many motor controllers run a second, much faster loop inside. Damping computed there raises this limit: recompute `r` with that loop's period. Otherwise lower `kd`, raise the loop rate, or cap `kd` using the lightest pose.
 
 ## Ship It
 

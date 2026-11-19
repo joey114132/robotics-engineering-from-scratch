@@ -37,7 +37,7 @@ Each offset is measured in the previous part's own directions. Read in the room'
 
 *Measured the file's way, the offset turns with the arm.*
 
-![Offsets read two ways](../assets/clip-example.mp4)
+[![Offsets read two ways](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue added the offsets in room directions and misses the ball. Green turns them first.*
 

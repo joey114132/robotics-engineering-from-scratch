@@ -1,4 +1,4 @@
-# MuJoCo Hello World
+# MuJoCo 첫걸음
 
 > simulator가 물체를 아주 작은 시간 스텝으로 움직이는 법, 잘못된 스텝이 없던 에너지를 만드는 이유, 그리고 한 줄짜리 해결책을 배웁니다.
 
@@ -31,16 +31,16 @@
 
 *가속도가 속도를 바꾸고 새 속도가 위치를 움직입니다. 옛 속도로 움직이는 쪽이 explicit입니다.*
 
-그네를 놓고 10초 동안 돌려 보세요. 순서가 맞으면 같은 높이로 계속 흔들리고 순서가 틀리면 약 다섯 배 높이까지 올라갑니다.
+그네를 놓고 10초 동안 돌려 보세요. 순서가 맞으면 같은 크기로 계속 흔들리고 순서가 틀리면 흔들리는 각도가 약 다섯 배로 커집니다.
 
 <details><summary>The math (optional)</summary>
 
 `theta`는 흔들린 각도(radian), `omega`는 각속도, `L`은 막대 길이, `g`는 중력(9.81)입니다. 중력은 속도를 초마다 `-(g/L) sin(theta)`만큼 바꿉니다.
-explicit 스텝 하나는 에너지에 약 `1 + (g/L) dt^2`를 곱하고 이 값은 1보다 조금 큽니다. 0.5 rad에서 놓고 10초를 돌리면 semi-implicit는 0.50 rad에 머물고 explicit는 2.46 rad까지 올라갑니다.
+explicit 스텝 하나는 에너지에 약 `1 + (g/L) dt^2`를 곱하고 이 값은 1보다 조금 큽니다. `L = 1` m와 `dt = 0.04`초로 두고 0.5 rad에서 놓습니다. 10초 동안 최대 각도는 semi-implicit가 0.50 rad이고 explicit가 2.46 rad입니다.
 
 </details>
 
-![진자 세 개](../assets/clip-example.mp4)
+[![진자 세 개](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *호박색 선은 놓은 높이입니다. 틀린 순서에서는 파랑(큰 스텝)과 진한 파랑(작은 스텝)이 선 위로 올라가고 맞는 순서에서는 초록이 선에 머뭅니다.*
 
@@ -77,7 +77,7 @@ python3 phases/00-start-here/08-mujoco-hello-world/code/main.py
 
 ## 실제 도구로 보기
 
-`mujoco_period()`는 같은 진자를 MuJoCo로 흔듭니다. MuJoCo도 새 속도로 움직이기 때문에 주기가 우리 값과 0.5% 안에서 일치합니다(테스트로 확인).
+`mujoco`를 설치한 뒤 `mujoco_period()`를 부르면 같은 진자를 MuJoCo로 흔듭니다. MuJoCo도 새 속도로 움직이기 때문에 주기가 우리 값과 0.5% 안에서 일치합니다(테스트로 확인).
 
 출처: https://mujoco.readthedocs.io/en/stable/XMLreference.html
 

@@ -37,7 +37,7 @@ A bug in robot code can break hardware, so it must be caught on a computer befor
 
 *Left: the unit test fails because the joint ends far from the target. Right: the buggy controller's push is the opposite of the recorded one.*
 
-![Replay](../assets/clip-example.mp4)
+[![Same recording, two controllers; the wrong-sign one pushes away](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The red arrow is the push: green goes toward the target, blue (pushes the wrong way) goes away.*
 
@@ -47,7 +47,7 @@ A bug in robot code can break hardware, so it must be caught on a computer befor
 
 <details><summary>The math (optional)</summary>
 
-Replay example: a step of 1.0 rad gives `kp * error = 40 * 1.0 = 40`, clipped to `tau_max` 10, so the recorded first torque is +10.0. The flipped controller answers -10.0 first, then the mirror of all 80 recorded samples, 10 ms apart. The replay test fails at the first. The unit test checks after 0.3 s. The property test checks torque is finite and never over the limit.
+Replay example: a step of 1.0 rad gives `kp * error = 40 * 1.0 = 40`, clipped to `tau_max` 10, so the recorded first torque is +10.0. The flipped controller answers -10.0 first, then the mirror of all 300 recorded samples, 10 ms apart. The replay test fails at the first. The unit test checks after 0.3 s. The property test checks torque is finite and never over the limit.
 
 </details>
 

@@ -32,7 +32,7 @@ Pick a random spot. Find the closest point of the tree grown so far and take one
 
 *Sample, step, keep if free.*
 
-![Two steps](../assets/clip-example.mp4)
+[![Two steps](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The first step ends inside the rock and is dropped. The second is clear.*
 
@@ -42,11 +42,11 @@ The path found this way wanders. Replace any part of it by a straight shortcut w
 
 *Left: the tree and its first path. Right: after shortcuts.*
 
-![Shortcutting](../assets/diagram-shortcut.png)
+![Shortcutting drops route points when a straight line is clear](../assets/diagram-shortcut.png)
 
 *If the straight line is free, drop the points between.*
 
-![Lengths](../assets/fig-rrt-lengths.png)
+![Path lengths before and after shortcutting for each seed](../assets/fig-rrt-lengths.png)
 
 *Shortcuts shorten every path.*
 
@@ -75,7 +75,7 @@ python3 phases/09-motion-planning/02-rrt/code/main.py
 
 ## Use It
 
-With thousands of nodes, a faster ready-made search finds the nearest node. A test checks both agree.
+With thousands of nodes, SciPy's `cKDTree(nodes).query(q)` finds the nearest node faster. The last test checks that its indices match the plain search.
 
 Sources: [RRT, Wikipedia](https://en.wikipedia.org/wiki/Rapidly-exploring_random_tree) and [CHOMP, Ratliff et al. 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf), both opened 2026-11-09.
 

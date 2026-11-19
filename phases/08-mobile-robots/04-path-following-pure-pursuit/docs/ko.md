@@ -14,7 +14,7 @@
 ## 핵심 용어
 
 - **Pure pursuit**: 경로 위에서 일정 거리 앞의 점을 향해 로봇을 조향하는 방법입니다.
-- **Lookahead (`Ld`)**: 그 일정한 거리입니다. 조절하는 값은 이것 하나입니다.
+- **Lookahead (`Ld`)**: 그 거리의 최솟값입니다. 로봇에서 곧게 잰 거리이며 조절하는 값은 이것 하나입니다.
 - **Curvature (`k`)**: 경로가 얼마나 급하게 굽는지입니다. 급하게 돌수록 curvature가 큽니다.
 - **Robot frame**: 로봇과 함께 움직이는 좌표계입니다. x는 앞, y는 왼쪽입니다.
 - **Gain**: 같은 크기의 오차에 로봇이 얼마나 세게 보정하는지입니다.
@@ -28,23 +28,23 @@
 
 로봇은 흔들리지도 코너를 자르지도 않아야 하는데 거리 하나가 둘을 정합니다.
 
-로봇은 늘 경로 위에서 일정 거리만큼 앞에 있는 점을 겨냥합니다. 그리고 그 점에서 끝나는 곡선, 즉 원의 한 조각을 따라 조향합니다. 그 거리가 lookahead입니다.
+로봇은 현재 위치에서 곧게 잰 거리가 `Ld` 이상인 첫 경로 점을 겨냥하고 그런 점이 없으면 마지막 점을 겨냥합니다. 그리고 그 점에서 끝나는 곡선, 즉 원의 한 조각을 따라 조향합니다.
 
-![한 step](../assets/diagram-pp-step.png)
+![pure pursuit 한 step: 앞쪽 점을 보고 원을 따라 조향](../assets/diagram-pp-step.png)
 
 *앞을 겨냥하고 원을 따라 조향합니다.*
 
 가까운 점을 겨냥하면 작은 어긋남에도 크게 돌아서 바퀴가 느린 로봇은 흔들립니다. 먼 점을 겨냥하면 목표가 코너 너머에 있어서 코너를 자릅니다.
 
-![원들](../assets/clip-example.mp4)
+[![경로 옆에서 lookahead가 다른 두 자동차가 조향하는 모습](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파랑은 가까이 겨냥해서 크게 돌고 선 양쪽으로 흔들립니다. 초록은 멀리 겨냥해서 완만하게 돕니다.*
 
-![트레이드오프](../assets/diagram-pp-tradeoff.png)
+![lookahead가 짧으면 흔들리고 길면 모서리를 자르는 모습](../assets/diagram-pp-tradeoff.png)
 
 *짧은 lookahead는 세게 조향하고 긴 lookahead는 코너를 자릅니다.*
 
-![경로들](../assets/fig-lookahead-paths.png)
+![lookahead 세 가지의 전체 경로와 모서리 확대](../assets/fig-lookahead-paths.png)
 
 *lookahead 세 가지입니다. 짧은 것은 흔들리고 긴 것은 코너를 자릅니다.*
 

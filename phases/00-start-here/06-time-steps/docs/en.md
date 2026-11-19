@@ -39,7 +39,7 @@ At a steady speed the step size does not matter. When the speed keeps changing, 
 
 *Left: the big step falls much too far. Right: half the step, half the error.*
 
-![Two toy cars](../assets/clip.mp4)
+[![Two toy cars](../assets/clip.jpg)](../assets/clip.mp4)
 
 *Both cars speed up alike. Blue hops in big steps and ends past the amber line. Green ends near it.*
 

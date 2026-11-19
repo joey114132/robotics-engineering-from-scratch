@@ -33,7 +33,7 @@ A robot must know where each part is and which way it faces.
 
 Turning then shifting lands somewhere different from shifting then turning.
 
-![Two drones, opposite orders](../assets/clip-example.mp4)
+[![Two drones, opposite orders](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Green turns first, then moves. Blue moves first, so its turn swings it around the origin.*
 
@@ -59,7 +59,7 @@ Three small helpers check that a matrix is a true rotation, undo a pose, and rep
 
 ```python
 def is_rotation(R, tol=1e-9):
-    return np.allclose(R.T @ R, np.eye(3), atol=tol) and np.isclose(np.linalg.det(R), 1.0, atol=tol)
+    return np.allclose(R.T @ R, np.eye(3), atol=tol, rtol=0.0) and np.isclose(np.linalg.det(R), 1.0, atol=tol, rtol=0.0)
 
 def invert_T(T):
     R, p = T[:3, :3], T[:3, 3]

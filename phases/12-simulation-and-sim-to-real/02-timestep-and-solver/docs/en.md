@@ -23,7 +23,7 @@ You drop a simulated ball and it bounces higher than where it fell, or a simulat
 
 ## The Concept
 
-Every simulator moves time forward in steps, so a wrong step can make robot tests lie. The old-speed update creates extra bounce (energy) out of nowhere. The speed-first update does not. Even then a step that is too big can make the result blow up, so shrink the step until the answer stops changing.
+Every simulator moves time forward in steps, so a wrong step can make robot tests lie. The old-speed update creates extra bounce (energy) out of nowhere. The speed-first update drifts far less. Even then a step that is too big can make the result blow up, so shrink the step until the answer stops changing.
 
 ![Update order](../assets/diagram-update-order.png)
 
@@ -35,9 +35,9 @@ Every simulator moves time forward in steps, so a wrong step can make robot test
 
 ![Drift and rebound](../assets/fig-dt-sweep.png)
 
-*Left: a pendulum's energy climbs with the old-speed update, stays flat with the speed-first one. Right: first bounce height by step size.*
+*Left: worst pendulum energy drift by step size, far smaller with the speed-first update. Right: first bounce height by step size.*
 
-![Three crates](../assets/clip-example.mp4)
+[![Three crates](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same drop, three step sizes. Only the smallest step (green) bounces back to the drop height.*
 

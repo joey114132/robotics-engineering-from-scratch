@@ -1,12 +1,12 @@
 {
   "en": {
     "hook": "Give me a target and ten random starts. I'll show you ten different elbow shapes that all poke the same spot.",
-    "mission": "Move the target to full stretch and see whether more or fewer starts reach it. In `code/main.py` change the target from `[0.5, 0.3]` to `[0.85, 0.0]` and print how many seeds converge. Predict whether the count goes up or down first.",
+    "mission": "Move the target near full stretch and see whether more or fewer starts reach it. In `code/main.py` change the target from `[0.5, 0.3]` to `[0.85, 0.0]` and print how many seeds converge. Predict whether the count goes up or down first.",
     "clip": "Two three-link arms correct their angles one small step at a time. The green arm's target is reachable, and the miss falls below 1 mm in seven steps. The blue arm's red target is out of reach, so the arm stretches toward it and the miss stops shrinking at about 0.27 m. It stays at its best effort."
   },
   "ko": {
     "hook": "목표 하나와 무작위 시작 열 개를 주세요. 같은 자리를 찌르는 서로 다른 elbow 모양 열 개를 보여 드려요.",
-    "mission": "목표를 완전히 뻗은 지점으로 옮기면 목표에 닿는 시작점이 늘어나는지 줄어드는지 봅니다. `code/main.py`에서 목표를 `[0.5, 0.3]`에서 `[0.85, 0.0]`으로 바꾸고 수렴하는 seed 수를 출력하세요. 수가 늘지 줄지 먼저 예측하세요.",
+    "mission": "목표를 거의 완전히 뻗은 지점으로 옮기면 목표에 닿는 시작점이 늘어나는지 줄어드는지 봅니다. `code/main.py`에서 목표를 `[0.5, 0.3]`에서 `[0.85, 0.0]`으로 바꾸고 수렴하는 seed 수를 출력하세요. 수가 늘지 줄지 먼저 예측하세요.",
     "clip": "link가 셋인 팔 두 대가 작은 걸음씩 밟아 가며 각도를 고칩니다. 초록 팔의 목표는 닿는 곳이라 빗나감이 일곱 걸음 만에 1 mm 아래로 떨어집니다. 파란 팔의 빨간 목표는 닿지 않는 곳이라서 팔이 그쪽으로 쭉 펴지고 빗나감은 약 0.27 m에서 더는 줄지 않습니다. 팔은 최선의 자세에 머뭅니다."
   },
   "toy": "ik-seeds",

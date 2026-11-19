@@ -42,7 +42,7 @@ A point is `(x, y)`. `shift` adds a move to each number, and `measured_from(poin
 
 </details>
 
-![A rover visits three marks](../assets/clip.mp4)
+[![A rover visits three marks](../assets/clip.jpg)](../assets/clip.mp4)
 
 *The rover drives from mark to mark. Each leg is one distance.*
 
@@ -52,7 +52,7 @@ A point is `(x, y)`. `shift` adds a move to each number, and `measured_from(poin
 
 ## Build It
 
-Each function works on a pair or a triple of numbers.
+Each function works on pairs or triples. `lerp(p, q, t)` goes the fraction `t` of the way from `p` to `q`; `t=0.5` is the midpoint.
 
 ```python
 def shift(point, move):

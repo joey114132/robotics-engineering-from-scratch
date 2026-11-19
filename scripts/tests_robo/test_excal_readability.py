@@ -518,9 +518,9 @@ def test_labels_and_arrowheads_stay_unpainted():
     end = _pts(ar)[-1]
     for f in excal.animate(sc, base):
         crop = (round(bg["x"] + ox), round(bg["y"] + oy), round(bg["x"] + bg["width"] + ox), round(bg["y"] + bg["height"] + oy))
-        assert list(f.crop(crop).getdata()) == list(base.crop(crop).getdata())
+        assert f.crop(crop).tobytes() == base.crop(crop).tobytes()
         head = (round(end[0] + ox - 20), round(end[1] + oy - 12), round(end[0] + ox + 1), round(end[1] + oy + 12))
-        assert list(f.crop(head).getdata()) == list(base.crop(head).getdata())
+        assert f.crop(head).tobytes() == base.crop(head).tobytes()
 
 
 @pytest.mark.parametrize("direction,dashed", [("right", False), ("right", True), ("left", False), ("down", False), ("down", True), ("up", False)])

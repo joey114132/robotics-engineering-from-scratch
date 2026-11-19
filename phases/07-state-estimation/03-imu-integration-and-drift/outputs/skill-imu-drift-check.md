@@ -5,7 +5,7 @@ description: Use when an estimate relies on integrating a gyro or accelerometer 
 
 # IMU drift check
 
-1. Record the IMU stationary for a few minutes. Read the mean of each gyro and accelerometer axis: that is the bias. The scatter, scaled by `sqrt(dt * t)`, gives the random-walk term.
+1. Record the IMU stationary for a few minutes. The gyro mean is its bias. The accelerometer mean also holds gravity, so first subtract the gravity expected in the sensor frame (from a known orientation or from several stationary poses); what is left is the accelerometer bias. The scatter, scaled by `sqrt(dt * t)`, gives the random-walk term.
 2. Predict the error at time `t`: angle `b t`, velocity `a t`, position `a t^2 / 2`. Add the tilt leak `g b t^3 / 6` when the angle feeds a gravity subtraction.
 3. State the time when each error reaches the tolerance the task needs (for example 1 degree or 0.1 m). That is how long the result can go uncorrected.
 4. Check what corrects it. Gyro drift needs an absolute reference (gravity direction, a magnetometer, vision). Position drift needs a position or velocity reference. Averaging or a higher sample rate corrects nothing.

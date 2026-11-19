@@ -32,15 +32,15 @@ A waiting robot holds nothing, so nobody waits on it and no loop can form. The p
 
 *An arrow means "waits for the car standing there". A loop is a deadlock.*
 
-![Reservation](../assets/diagram-reservation.png)
+![Reservation: take the whole route or wait outside](../assets/diagram-reservation.png)
 
 *A robot enters only if its whole route is free. A robot waiting outside holds nothing.*
 
-![Throughput](../assets/fig-throughput.png)
+![Jobs finished with and without reservation as robots increase](../assets/fig-throughput.png)
 
 *Left: with "move if free" the fleet freezes, with reservation all jobs finish. Right: reservation stops improving as robots are added.*
 
-![Reserved cells](../assets/clip-example.mp4)
+[![Reserved cells](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *A red bar stops a car whose whole route is not free. Amber marks claimed squares.*
 

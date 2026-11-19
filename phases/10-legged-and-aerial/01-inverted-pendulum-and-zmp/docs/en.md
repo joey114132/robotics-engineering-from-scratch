@@ -35,7 +35,7 @@ A standing body falls like a balanced pencil: the farther it leans, the faster i
 
 For a small shove the capture point stays inside the foot, so the ankle alone can hold. For a big shove it lands beyond the toes, and only a step there helps.
 
-![Two shoves](../assets/clip-example.mp4)
+[![Two shoves](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Green: the capture point stays inside the foot. Blue: it leaves the foot and the walker falls.*
 

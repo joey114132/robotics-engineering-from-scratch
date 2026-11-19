@@ -30,23 +30,23 @@ A simulator is where you test robot code safely, so you need to know how far to 
 
 *The real command goes through a slow motor, a rubbing joint and a late sensor. The simple simulator skips all three.*
 
-![Replay](../assets/diagram-replay-rank.png)
+![Replay commands on real and simulated arms, rank the gaps](../assets/diagram-replay-rank.png)
 
-*Both get the same commands and neither checks its sensor, so any gap keeps growing.*
+*Both get the same commands and neither corrects itself from a sensor, so nothing hides a gap.*
 
-![Divergence](../assets/fig-divergence.png)
+![Real and simulated trajectories drift apart without friction](../assets/fig-divergence.png)
 
 *Without friction the copy drifts far. Missing lag or delay barely matters.*
 
 Friction matters far more than the delays, so model it first.
 
-![Three arms](../assets/clip-example.mp4)
+[![Three arms](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue is the real arm. Each ghost misses one effect: friction, motor lag, sensor delay. Only the ghost with no friction drifts.*
 
 <details><summary>The math (optional)</summary>
 
-The model is `J*w' = tm - b*w - c*tanh(w/eps) - k*sin(q)` and `Tm*tm' = u - tm`, stepped with RK4. `J` is how hard the arm is to speed up, `b` a drag that grows with speed, `c` a constant rub, `k = m*g*l` gravity's pull and `Tm` the motor lag. RMS error is 0.545 rad without friction, 0.042 rad without lag and 0.029 rad without delay (1 rad is about 57 degrees). On a 0.4 m arm 0.545 rad is a fingertip 22 cm off, while lag and delay cost 1 to 2 cm, so friction costs 13 times more than lag. A joint with no friction and no lag keeps its energy to 1e-6.
+The model is `J*w' = tm - b*w - c*tanh(w/eps) - k*sin(q)` and `Tm*tm' = u - tm`, stepped with RK4, which samples four rates per step. Here `tm` is the actual motor torque, `u` the commanded torque and `eps` softens the friction flip at zero speed. `J` is how hard the arm is to speed up, `b` a drag that grows with speed, `c` a constant rub, `k = m*g*l` gravity's pull and `Tm` the motor lag. RMS error is 0.545 rad without friction, 0.042 rad without lag and 0.029 rad without delay (1 rad is about 57 degrees). On a 0.4 m arm 0.545 rad is a fingertip 22 cm off, while lag and delay cost 1 to 2 cm, so friction costs 13 times more than lag. A joint with no friction, no lag and no command keeps its energy to 1e-6 (relative).
 
 </details>
 

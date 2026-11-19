@@ -21,7 +21,7 @@ Cascaded attitude control adds a memory, the integral: a running total of the er
 
 ## The Problem
 
-Picture a hovering drone pushed by a gust for a second. A simple rule leans and stays leaning for the whole gust, so the drone drifts. Pushing harder per degree shrinks the lean but costs more torque.
+Picture a hovering drone pushed by a gust for a second. A simple rule leans and stays leaning for the whole gust, so the drone drifts. A larger angle gain shrinks the lean, but the torque that holds against the gust stays the same.
 
 ## The Concept
 
@@ -29,15 +29,15 @@ A real drone fights wind all day, so it must resist the push and still stay leve
 
 The fix is the memory: while the drone is not level, it keeps adding push until the push matches the gust.
 
-![PD](../assets/diagram-single-pd.png)
+![Single PD loop on angle leaves a steady lean](../assets/diagram-single-pd.png)
 
 *Plain control: the lean stays.*
 
-![Cascade](../assets/diagram-cascade.png)
+![Cascade: outer angle loop around an inner rate loop](../assets/diagram-cascade.png)
 
 *Two loops, angle outside and turning speed inside, plus a memory.*
 
-![Push back](../assets/clip-example.mp4)
+[![Push back](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Both push back equally, but only green is level.*
 

@@ -5,7 +5,7 @@ description: Use when a camera calibration result (fx, fy, cx, cy) is about to b
 
 # Intrinsics calibration check
 
-1. Count the views and the distinct target orientations. Fewer than 3 views, or views that only translate, make the problem degenerate.
+1. Count the views and the distinct target orientations. This lesson's zero-skew model can be solved from two sufficiently different tilted views. Views that only translate stay degenerate; use more views to reduce noise.
 2. Recompute the reprojection error on points that were not used for the fit. Compare it with the detector noise. A large multiple of the noise means too few or too similar views.
 3. Check plausibility: `cx, cy` near the image centre, `fx` close to `fy`, `fx` close to the lens datasheet value. Large gaps point to a bad view, not a surprising camera.
 4. Confirm the resolution of the images used. Intrinsics do not transfer to another resolution without scaling.

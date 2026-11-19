@@ -35,7 +35,7 @@ A robot has several layers that each set limits, so a mismatch hides. Each layer
 
 *The planner asks for a lot, the drive allows less.*
 
-![Arm stops short](../assets/clip-example.mp4)
+[![Arm stops short](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The dark ghost is where the planner thinks the joint is. Blue stops short. Green's limits agree.*
 

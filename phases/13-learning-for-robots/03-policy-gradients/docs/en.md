@@ -28,15 +28,15 @@ When no expert exists, trial and error with a score is the only teacher a robot 
 
 *Try random moves, add up the points, and nudge the steering toward what scored well.*
 
-![Baseline](../assets/diagram-baseline-effect.png)
+![A baseline keeps only differences between returns](../assets/diagram-baseline-effect.png)
 
 *When every score is big, every move is pushed up. A baseline keeps only the differences.*
 
-![Curves](../assets/fig-reinforce-baseline.png)
+![Learning curves with and without a baseline](../assets/fig-reinforce-baseline.png)
 
 *Left: learning with a baseline climbs steadily, without it wobbles. Right: the baseline makes the nudges much steadier.*
 
-![Cars with arrows](../assets/clip-example.mp4)
+[![Cars with arrows](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue arrows are all about equal. After subtracting the average, green arrows push up and red arrows push down.*
 

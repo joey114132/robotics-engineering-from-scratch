@@ -104,7 +104,8 @@ def home(u, course, state, today, head=True):
     if isinstance(hint, tuple):
         u.print(Text("  ") + hint[0])
         n = hint[1].short
-        u.para(Text(f"        robo read {n}   robo quiz {n}   robo mission {n}", style="muted"), indent=8)
+        for line in U.pack([f"robo read {n}", f"robo quiz {n}", f"robo mission {n}"], u.width - 8):   # a command never breaks across lines
+            u.print(Text(" " * 8 + line, style="muted"), no_wrap=True, overflow="crop")
     else:
         u.print(Text("  ") + hint)
     u.print(Text("  " + u.t("robo --help lists every command", "robo --help로 모든 명령을 볼 수 있습니다"), style="muted"))
@@ -170,8 +171,10 @@ def stats(u, course, state, today, weeks=12):
     def level_row(scale):
         t = Text(f"{i + 1}  ", style="bold")
         t.append(P.level_name(state["xp"], u.lang), style="bold accent"), t.append("  ")
-        t.append_text(U.bar_text(into / span * scale, 20, u.plain))
-        t.append(f"  {into}/{span}" + (u.t(f" to {nxt_name}", f" → {nxt_name}") if nxt_name else u.t(" top level", " 최고 레벨")), style="muted")
+        tail = f"  {into}/{span}" + (u.t(f" to {nxt_name}", f" → {nxt_name}") if nxt_name else u.t(" top level", " 최고 레벨"))
+        bar = max(1, min(20, u.width - 2 - 9 - t.cell_len - cell_len(tail)))   # shrink the bar so the "35/60 to Servo" phrase stays on this line
+        t.append_text(U.bar_text(into / span * scale, bar, u.plain))
+        t.append(tail, style="muted")
         return t
 
     def lessons_row(scale):

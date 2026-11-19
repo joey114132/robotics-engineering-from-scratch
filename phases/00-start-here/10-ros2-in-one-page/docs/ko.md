@@ -27,21 +27,21 @@ queue가 가득 차면 새 보고가 올 때마다 가장 오래된 보고가 �
 
 로봇은 작은 프로그램 여러 개로 이루어져 있습니다. 그 프로그램이 데이터를 어떻게 주고받느냐가 데이터가 얼마나 신선하게 도착하는지를 정합니다.
 
-![Topics and services](../assets/diagram-ros-parts.png)
+![topic과 service로 대화하는 노드들](../assets/diagram-ros-parts.png)
 
 *프로그램은 스트림(topic)을 보내거나 질문 하나를 하고 답 하나를 받습니다(service).*
 
 읽는 쪽마다 메시지 대기열이 하나씩 있습니다. 대기열이 가득 차면 새 메시지가 가장 오래된 것을 밀어냅니다. 대기열을 길게 하면 더 오래된 데이터를 읽을 뿐입니다.
 
-![Slow subscriber](../assets/diagram-queue-depth.png)
+![느린 구독자 앞에서 가득 찬 짧은 대기열](../assets/diagram-queue-depth.png)
 
 *보내는 쪽이 더 빠르므로 대기열은 가득 찬 채로 있습니다.*
 
-![Three arms, three queue depths](../assets/clip-example.mp4)
+[![대기열 길이가 다른 세 팔이 같은 컵을 쫓는 모습](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *대기열이 짧은 경우, 중간인 경우, 긴 경우입니다. 대기열이 길수록 팔이 옛 위치를 쫓아갑니다.*
 
-![Queue depth](../assets/fig-queue-depth.png)
+![대기열이 깊을수록 읽는 메시지가 낡는다는 그래프](../assets/fig-queue-depth.png)
 
 *대기열을 길게 해도 메시지를 지키지 못합니다. 읽는 메시지가 더 낡을 뿐입니다.*
 

@@ -33,7 +33,7 @@ In position mode the drive runs its own control code, like a spring of fixed str
 
 An admittance layer measures the push and moves the target, so the joint acts soft.
 
-![Admittance clip](../assets/clip-example.mp4)
+[![Admittance clip](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Both in position mode, pushed up (red). Blue barely moves. Green: the layer lifts the amber target.*
 

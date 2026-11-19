@@ -26,30 +26,30 @@
 
 로봇은 자기 위치를 확실히 알 수 없어서 좋은 계획만으로는 부족하고 위치를 고치는 방법이 필요합니다. planner는 로버 크기만큼 벽을 두껍게 만든 격자에서 빈 경로를 찾습니다. 로버는 자기가 어디 있다고 믿는지를 보고 그 경로를 따라갑니다.
 
-![시스템](../assets/diagram-nav-system.png)
+![A* 경로, 지름길, pure pursuit, 위치 추정으로 이어진 navigation 사슬](../assets/diagram-nav-system.png)
 
 *A\*가 경로를 짜고 다듬는 단계가 경로를 줄이고 pure pursuit이 그 경로를 따라갑니다.*
 
-![중단 실험](../assets/diagram-nav-broken.png)
+![같은 바퀴 오차에 landmark 보정이 없을 때와 있을 때](../assets/diagram-nav-broken.png)
 
 *두 줄 모두 바퀴 오차는 같지만 아래 줄만 landmark 기둥을 씁니다.*
 
-![로버 둘](../assets/clip-example.mp4)
+[![로버 둘](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *옅은 로버가 믿음입니다. 파란 쪽은 믿음이 선 위에 있는데 실제 로버는 옆으로 휘어 갑니다. 초록 로버는 1초마다 보정합니다.*
 
-![성공](../assets/fig-nav-result.png)
+![계획한 경로와 로버가 실제로 간 경로](../assets/fig-nav-result.png)
 
 *계획한 경로와 로버가 간 길입니다.*
 
-![drift](../assets/fig-nav-drift.png)
+![보정이 없으면 커지고 있으면 리셋되는 믿음의 drift](../assets/fig-nav-drift.png)
 
 *보정이 없으면 믿음이 멀리 벗어나고 로버는 벽에 부딪힙니다. 1초마다 보정하면 가까이 머뭅니다.*
 
 <details><summary>The math (optional)</summary>
 
 0.6 m/s로 직선 주행하는데 속도는 3% 크게 읽고 회전율은 0.03 rad/s 어긋나게 읽는다고 해 봅시다. 10초 뒤 방향은 `0.03 × 10 = 0.3` rad 틀립니다.
-믿음은 1초 뒤 0.015 m, 5초 뒤 0.26 m, 10초 뒤 0.97 m 어긋납니다. 방향 오차 때문에 그 뒤에 가는 거리가 매번 옆으로 틀어지기 때문입니다. 1초마다 보정하면 0.012 m로 유지됩니다.
+믿음은 1초 뒤 0.015 m, 5초 뒤 0.26 m, 10초 뒤 0.97 m 어긋납니다. 방향 오차 때문에 그 뒤에 가는 거리가 매번 옆으로 틀어지기 때문입니다. 1초마다 보정하면 10초 뒤에도 0.012 m만 어긋납니다.
 A\*는 waypoint 77개(21.1 m)를 주고 shortcut을 거치면 6개(19.8 m)가 됩니다. 보정이 없으면 믿음이 4.7 m 벗어나고 로버는 벽에 부딪힙니다. 1초마다 보정하면 0.11 m 안에 머물고 목표 오차는 0.15 m입니다.
 
 </details>

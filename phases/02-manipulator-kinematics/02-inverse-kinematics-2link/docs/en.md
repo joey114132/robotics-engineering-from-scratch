@@ -21,11 +21,11 @@ Past full stretch nothing reaches. Inverse kinematics (IK) finds joint angles fo
 
 ## The Problem
 
-You ask a robot arm to touch a point, and the math fails with `nan` (not a number), or the arm folds the wrong way. A solver that hides an out-of-reach target sends the arm to the wrong place.
+You ask a robot arm to touch a point, and the math fails with `nan`, or the arm folds the wrong way. A solver that hides an out-of-reach target sends the arm to the wrong place.
 
 ## The Concept
 
-A robot is told where to reach and must work out the joint angles. For two links this is a triangle: the links are two sides, and the line from base to target is the third.
+A robot told where to reach must work out the joint angles. For two links this is a triangle: the links are two sides, and the line from base to target is the third.
 
 ![IK as a triangle](../assets/diagram-triangle.png)
 
@@ -41,7 +41,7 @@ The triangle can bend either way, so there are two answers: elbow up and elbow d
 
 *Both elbows reach; at full stretch they merge.*
 
-![Elbows follow a circling target](../assets/clip-example.mp4)
+[![Elbows follow a circling target](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The target circles; the elbow angle stays the same.*
 
@@ -58,12 +58,13 @@ The code uses the law of cosines for the elbow. For the shoulder, it takes the d
 ```python
 c2 = (x*x + y*y - l1*l1 - l2*l2) / (2*l1*l2)
 if abs(c2) > 1 + tol: raise ValueError("unreachable")
+c2 = np.clip(c2, -1.0, 1.0)
 s2 = np.sqrt(1 - c2*c2) * (1 if elbow == "down" else -1)
 q2 = np.arctan2(s2, c2)
 q1 = np.arctan2(y, x) - np.arctan2(l2*s2, l1 + l2*c2)
 ```
 
-A small tolerance stops rounding noise from causing a false refusal. Tests run `fk(ik(p))` on 200 targets for each elbow choice.
+A small tolerance stops rounding noise from causing a false refusal; `np.clip` keeps the root real. Tests run `fk(ik(p))` on 200 targets for each elbow choice.
 
 ```bash
 cd robotics-engineering-from-scratch

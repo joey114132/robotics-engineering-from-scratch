@@ -27,21 +27,21 @@
 
 simulator와 로봇 프로그램은 모두 이 파일에서 출발하므로 잘못 읽으면 그 위에 쌓은 것이 전부 틀어집니다.
 
-![URDF tree](../assets/diagram-urdf-tree.png)
+![링크와 joint로 이어진 URDF 트리](../assets/diagram-urdf-tree.png)
 
 *상자는 부품이고 화살표는 joint입니다.*
 
 offset은 바로 앞 부품 자신의 방향으로 잽니다. 방에 고정된 방향으로 읽으면 엉뚱한 곳이 나옵니다.
 
-![Which frame](../assets/diagram-origin-frame.png)
+![elbow offset을 어느 frame으로 읽느냐에 따라 달라지는 위치](../assets/diagram-origin-frame.png)
 
 *파일이 재는 방식으로 보면 offset이 팔과 함께 돕니다.*
 
-![Offsets read two ways](../assets/clip-example.mp4)
+[![offset을 두 가지 방식으로 읽는 두 팔](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파랑은 offset을 방의 방향으로 더해서 공을 빗나갑니다. 초록은 먼저 돌립니다.*
 
-![Top view](../assets/fig-origin-frames.png)
+![어깨를 90도 돌렸을 때 위에서 본 hand 위치 차이](../assets/fig-origin-frames.png)
 
 *위에서 보면 elbow offset이 옆을 향합니다.*
 

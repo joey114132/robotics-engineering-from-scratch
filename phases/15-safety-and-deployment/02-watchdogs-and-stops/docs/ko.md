@@ -8,7 +8,7 @@
 
 watchdog은 작업대 위 로봇 팔을 조종하는 프로그램이 규칙적으로 보내는 "아직 살아 있다"는 신호를 듣고 있어요. 신호가 너무 오래 끊기면 정지를 명령해요. 그 기다림이 timeout이에요.
 
-팔은 그 timeout 동안에도 계속 움직이고 제동에도 거리가 들어요. 전원을 끊는 것은 제동이 아니에요. 자전거 페달을 멈춰도 계속 굴러가듯 팔도 계속 굴러가요.
+팔은 그 timeout 동안에도 계속 움직이고 제동에도 거리가 들어요. 전원을 끊는 것은 제동이 아니에요. 자전거 페달을 멈춰도 바퀴가 계속 돌듯 팔도 한동안 계속 움직여요.
 
 ## 핵심 용어
 
@@ -36,7 +36,7 @@ timeout이 길면 위험하고 너무 짧으면 팔이 이유 없이 멈춥니�
 
 *timeout 동안의 이동과 제동 이동이 남은 거리 안에 들어와야 합니다.*
 
-![timeout 두 가지](../assets/clip-example.mp4)
+[![timeout 두 가지](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *초록 팔은 금방 작동해 stop 앞에서 멈춥니다. 파란 팔은 너무 오래 기다리다 stop에 부딪힙니다.*
 
@@ -67,7 +67,10 @@ def stop_distance(v, a):
     return v * v / (2.0 * a)
 
 def max_timeout(room, v, a):
-    return (room - stop_distance(v, a)) / v   # raises if this is <= 0
+    t = (room - stop_distance(v, a)) / v
+    if t <= 0:
+        raise ValueError("braking alone needs more room than is free")
+    return t
 ```
 
 `simulate()`는 0.5초에 명령 프로그램을 죽인 뒤 모터를 끄거나(`"cut"`) 일정하게 제동합니다(`"ramp"`).

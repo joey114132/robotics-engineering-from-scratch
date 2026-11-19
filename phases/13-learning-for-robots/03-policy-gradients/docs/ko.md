@@ -28,15 +28,15 @@
 
 *무작위로 움직여 보고 점수를 더한 뒤 점수가 좋았던 쪽으로 조향을 밉니다.*
 
-![baseline](../assets/diagram-baseline-effect.png)
+![baseline이 return 사이의 차이만 남기는 그림](../assets/diagram-baseline-effect.png)
 
 *모든 점수가 크면 모든 움직임이 위로 밀립니다. baseline은 차이만 남깁니다.*
 
-![곡선](../assets/fig-reinforce-baseline.png)
+![baseline이 있을 때와 없을 때의 학습 곡선](../assets/fig-reinforce-baseline.png)
 
 *왼쪽은 baseline을 쓰면 학습이 꾸준히 오르고 쓰지 않으면 흔들리는 모습입니다. 오른쪽은 baseline이 미는 힘을 훨씬 안정시키는 모습입니다.*
 
-![화살표가 달린 자동차들](../assets/clip-example.mp4)
+[![화살표가 달린 자동차들](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파란 화살표는 모두 거의 같은 길이입니다. 평균을 빼면 초록 화살표는 위로 밀고 빨간 화살표는 아래로 밉니다.*
 

@@ -33,7 +33,7 @@ pose는 어느 쪽을 보는지와 어디에 있는지를 합친 것이에요. p
 
 돌리고 이동하는 것과 이동하고 돌리는 것은 다른 곳에 닿습니다.
 
-![반대 순서의 드론 두 대](../assets/clip-example.mp4)
+[![반대 순서의 드론 두 대](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *초록은 먼저 돌고 나서 이동합니다. 파랑은 먼저 이동하므로 회전할 때 원점을 중심으로 크게 휘돌아 갑니다.*
 
@@ -61,7 +61,7 @@ float32로 작은 회전을 20,000번 곱하면 drift가 생깁니다. 100번마
 
 ```python
 def is_rotation(R, tol=1e-9):
-    return np.allclose(R.T @ R, np.eye(3), atol=tol) and np.isclose(np.linalg.det(R), 1.0, atol=tol)
+    return np.allclose(R.T @ R, np.eye(3), atol=tol, rtol=0.0) and np.isclose(np.linalg.det(R), 1.0, atol=tol, rtol=0.0)
 
 def invert_T(T):
     R, p = T[:3, :3], T[:3, 3]

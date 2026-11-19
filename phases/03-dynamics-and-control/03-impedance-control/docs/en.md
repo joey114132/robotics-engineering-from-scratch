@@ -37,17 +37,17 @@ A stiffer spring moves less for the same push. The damper changes how the arm ge
 
 *Three damper strengths end at the same place.*
 
-![Same push, two stiffnesses](../assets/clip-example.mp4)
+[![Same push, two stiffnesses](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same push: the stiff arm moves half as far.*
 
 ![Choosing K and D](../assets/diagram-impedance-recipe.png)
 
-*Pick stiffness, then damping, then check the buzzing limit from 03/01.*
+*Pick stiffness, then damping, then check the full sampling limit in the math fold.*
 
 <details><summary>The math (optional)</summary>
 
-`tau = K (q_des - q) - D qd + tau_g`. A constant push `F` settles the joint at `F / K`. The damping ratio is `zeta = D / (2 sqrt(K J))`: no overshoot at 1, ringing below 1, overshoot `exp(-pi zeta / sqrt(1 - zeta^2))`, about 0.53 at 0.2. With `F = 2` Nm and `J = 1`: `K = 100` settles at 0.02 rad, `K = 200` at 0.01 rad, using `D` of 20 and 28.3. Choose `K = F_max / x_max`. The clip draws the push 15 times larger.
+`tau = K (q_des - q) - D qd + tau_g`. A constant push `F` settles the joint at `F / K`. The damping ratio is `zeta = D / (2 sqrt(K J))`: no overshoot at 1, ringing below 1, overshoot `exp(-pi zeta / sqrt(1 - zeta^2))`, about 0.53 at 0.2. With `F = 2` Nm and `J = 1`: `K = 100` settles at 0.02 rad, `K = 200` at 0.01 rad, using `D` of 20 and 28.3. Choose `K = F_max / x_max`. The buzzing check `dt*D/J < 1` ignores the spring. The full limit for this update is `dt^2 K/J + 2 dt D/J < 4`: with `J = 1`, `K = 10000`, `D = 1`, `dt = 0.1` the damper check reads 0.1, yet the left side is 100.2 and the loop diverges. The clip draws the push 15 times larger.
 
 </details>
 

@@ -59,6 +59,7 @@ COMMANDS = [
     ("play", "<toy>", "Terminal toys: pd-step, sampling-limit, kalman.", "터미널에서 돌려 보는 toy: pd-step, sampling-limit, kalman."),
     ("stats", "", "XP, level, streak, badges and a 12-week strip.", "XP, 레벨, 연속 학습일, 배지, 12주 달력."),
     ("sync", "export | import <code>", "Move progress between the CLI and the website.", "진행 상황을 CLI와 웹사이트 사이에서 옮기기."),
+    ("ids", "", "Print every lesson id, one per line (used by completion).", "레슨 id를 한 줄에 하나씩 출력 (자동완성에서 사용)."),
     ("completion", "bash | zsh", "Print a shell completion script.", "셸 자동완성 스크립트 출력."),
 ]
 HELP_KO = {
@@ -95,7 +96,7 @@ def build_parser():
     _add_common(top, True)
     sub = top.add_subparsers(dest="cmd")
     P_ = {"": top}
-    for name, _, _, _ in COMMANDS + [("ids", "", "", "")]:
+    for name, _, _, _ in COMMANDS:
         P_[name] = sub.add_parser(name, add_help=False)
         _add_common(P_[name], False)
     for n in ("read", "quiz", "mission"):

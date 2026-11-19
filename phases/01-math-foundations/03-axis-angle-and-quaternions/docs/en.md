@@ -11,9 +11,9 @@ A robot wrist is told to turn a tiny bit left. Turning almost a full circle to t
 ## Key Terms
 
 - **Orientation**: which way something faces.
-- **Quaternion**: four numbers that name an orientation.
+- **Quaternion**: four numbers, with squares adding up to one, that name an orientation.
 - **Slerp**: a smooth, even-speed turn between two orientations.
-- **Dot product**: multiply matching numbers of two quaternions and add them up. Positive means they are close; negative means far.
+- **Dot product**: multiply matching numbers of two quaternions and add them up. Negative means the smooth turn between them would take the long way round.
 - **Radian (rad)**: an angle unit where one full turn is about 6.28.
 
 ## The Problem
@@ -24,7 +24,7 @@ A robot wrist, told to correct a tiny error, spins almost a full turn the long w
 
 One sign slip makes the wrist take the long way.
 
-![Two wrists, one pose](../assets/clip-example.mp4)
+[![Two wrists, one pose](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same final pose. Green turned one extra full turn.*
 
@@ -34,11 +34,11 @@ Every orientation has two quaternions: call one q, and the other, with all four 
 
 *q and -q are different numbers that give the same turn.*
 
-The fix: take the dot product of the two quaternions: positive when the orientations are close, negative when far apart. If negative, the target is the long way round, so flip its sign before the smooth turn (slerp).
+The fix: take the dot product of the two quaternions. If it is negative, the smooth turn (slerp) goes the long way, even for close orientations. Flip the target's sign first: same orientation, short turn.
 
 ![Slerp sign check](../assets/diagram-slerp-sign-fix.png)
 
-*If the check says far, flip the sign, and the short way is taken.*
+*If the check says negative, flip the sign for the short way.*
 
 ![Swept angle](../assets/fig-slerp-long-way.png)
 
@@ -46,7 +46,7 @@ The fix: take the dot product of the two quaternions: positive when the orientat
 
 <details><summary>The math (optional)</summary>
 
-A turn of angle `t` about axis `k` is the quaternion `(cos(t/2), sin(t/2) k)`. A turn of 0.1 about z gives `q = (0.9988, 0, 0, 0.0500)`; adding a full turn (`t = 0.1 + 2pi`) gives `-q = (-0.9988, 0, 0, -0.0500)`. The dot product of `q0 = (1, 0, 0, 0)` and `-q` is -0.9988: negative means far, so flip. Without the fix the wrist sweeps 354.3 degrees; with it 5.7 (0.1 rad). The clip's needles show half angles 0.05 and pi + 0.05. SciPy lists a quaternion's four numbers in a different order than this lesson, so check the order when you switch libraries.
+A turn of angle `t` about axis `k` is the quaternion `(cos(t/2), sin(t/2) k)`. A turn of 0.1 about z gives `q = (0.9988, 0, 0, 0.0500)`; adding a full turn (`t = 0.1 + 2pi`) gives `-q = (-0.9988, 0, 0, -0.0500)`. The dot product of `q0 = (1, 0, 0, 0)` and `-q` is -0.9988: negative means the slerp would take the long way, so flip. Without the fix the wrist sweeps 354.3 degrees; with it 5.7 (0.1 rad). The clip's needles show half angles 0.05 and pi + 0.05. SciPy lists a quaternion's four numbers in a different order than this lesson, so check the order when you switch libraries.
 
 </details>
 

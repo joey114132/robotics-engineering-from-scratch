@@ -16,7 +16,7 @@ A robot works the same way. It never makes one big plan and hopes. It checks, de
 - **Sensor**: a part that measures something, such as the distance to a wall.
 - **Actuator**: a part that makes motion, such as a motor that turns a wheel.
 - **Loop**: steps that repeat over and over.
-- **Time step**: the short pause between two passes of the loop. Here it is a tenth of a second.
+- **Time step**: the time from the start of one pass of the loop to the start of the next, here a tenth of a second.
 
 ## The Problem
 
@@ -42,7 +42,7 @@ On each pass: `distance = wall - position`. If `distance` is more than 0.5 m the
 
 </details>
 
-![A toy car stops at the wall](../assets/clip.mp4)
+[![A toy car stops at the wall](../assets/clip.jpg)](../assets/clip.mp4)
 
 *The green car measures the gap on every pass. The amber bar is that reading, and it shrinks until the car stops.*
 

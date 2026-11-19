@@ -33,11 +33,11 @@ Every cycle the tree is ticked and each step answers `success`, `failure` or `ru
 
 ![What a parent does with each answer](../assets/diagram-status-rules.png)
 
-*What a parent does with each answer.*
+*Sequence continues on success, Fallback on failure; running pauses both.*
 
 A Fallback tries bin A, then bin B. Bin A is full, so it answers failure and the Fallback moves on to bin B, which answers running. The next tick resumes at bin B without asking about A again.
 
-![An arm skips a full bin](../assets/clip-example.mp4)
+[![An arm skips a full bin](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *A red frame flashes on the full bin. The arm then carries the crate to bin B.*
 

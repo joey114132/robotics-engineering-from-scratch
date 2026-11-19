@@ -32,7 +32,7 @@ RRT는 이것을 가지(branch) 하나가 깃발에 닿을 때까지 반복해�
 
 *점을 뽑고 걸음을 내딛고 비어 있으면 남깁니다.*
 
-![걸음 두 개](../assets/clip-example.mp4)
+[![걸음 두 개](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *첫 번째 걸음은 바위 안에서 끝나서 버려지고 두 번째 걸음은 바위를 피해서 남습니다.*
 
@@ -42,11 +42,11 @@ RRT는 이것을 가지(branch) 하나가 깃발에 닿을 때까지 반복해�
 
 *왼쪽은 나무와 처음 찾은 경로이고 오른쪽은 지름길을 적용한 뒤입니다.*
 
-![Shortcutting](../assets/diagram-shortcut.png)
+![직선이 비어 있으면 중간 점을 버리는 shortcutting](../assets/diagram-shortcut.png)
 
 *직선이 비어 있으면 그 사이의 점을 버립니다.*
 
-![길이](../assets/fig-rrt-lengths.png)
+![seed마다 shortcutting 전후의 경로 길이](../assets/fig-rrt-lengths.png)
 
 *지름길은 모든 경로를 줄입니다.*
 
@@ -84,7 +84,7 @@ python3 phases/09-motion-planning/02-rrt/code/main.py
 
 ## 실제 도구로 보기
 
-노드가 수천 개가 되면 이미 만들어진 더 빠른 탐색으로 가장 가까운 노드를 찾습니다. 테스트가 두 결과가 같은지 확인합니다.
+노드가 수천 개가 되면 SciPy의 `cKDTree(nodes).query(q)`로 가장 가까운 노드를 더 빠르게 찾습니다. 마지막 테스트가 이 함수와 직접 탐색한 결과의 index가 같은지 확인합니다.
 
 출처는 [RRT, Wikipedia](https://en.wikipedia.org/wiki/Rapidly-exploring_random_tree)와
 [CHOMP, Ratliff 외 2009](https://www.ri.cmu.edu/pub_files/2009/5/icra09-chomp.pdf)이고 둘 다 2026년 11월 9일에 열어 확인했습니다.

@@ -31,11 +31,11 @@
 
 ![지연이 margin을 소모한다](../assets/diagram-delay-margin.png)
 
-*지연이 loop의 안전 여유를 깎습니다.*
+*loop는 정해진 margin을 갖고 시작하고 지연이 그 일부를 씁니다. 다 쓰면 팔이 흔들립니다.*
 
 제동을 키운다고 항상 안전하지는 않습니다. 어느 지점부터는 loop가 더 빨리 반응하고 같은 지연이 한 번 흔들리는 동안의 더 많은 부분을 망칩니다. 제동이 너무 작아도 실패합니다.
 
-![같은 지연, 다른 kd](../assets/clip-example.mp4)
+[![같은 지연, 다른 kd](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *같은 지연입니다. 초록은 가라앉고 파랑은 stop에 부딪힐 때까지 더 크게 흔들립니다.*
 

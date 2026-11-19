@@ -6,7 +6,7 @@ description: Use when a simulated or real arm pick-and-place misses its place po
 # Pick-and-place miss triage
 
 1. Record tip position against the planned tip for the whole run, plus the final error at the place point.
-2. Constant offset that holds while the arm rests: gravity residual. Residual torque is about `kp * offset`. Check the feedforward scale first.
+2. Constant offset that holds while the arm rests: often a gravity residual, but a tip offset in metres does not prove it. Record the joint error (radians) as well. At rest the residual joint torque is about `kp * (q_ref - q)` in Nm. Check the feedforward scale first, then calibration and IK before naming the cause.
 3. Error that appears only during motion and returns to zero: tracking lag. Check path duration, `kd`, and whether acceleration feedforward is missing.
 4. Error at a waypoint before the arm moves: IK branch or reachability. Check `fk(ik(p))` against `p`.
 5. Error that grows or rings: gains too high for the sample time, or a wrong Coriolis term. Run the free-swing energy test.

@@ -29,23 +29,23 @@
 
 두 탐색은 늘 점수가 가장 좋은 칸을 먼저 시도합니다. 그 점수가 우선순위입니다. Dijkstra는 칸에 이르는 데 든 걸음 수를 점수로 삼아서 사방으로 퍼집니다. A*는 남은 걸음의 추측을 더해서 목표 쪽으로 기웁니다.
 
-![우선순위](../assets/diagram-astar-priority.png)
+![A*가 지금까지의 step에 추정을 더해 칸의 점수를 매기는 그림](../assets/diagram-astar-priority.png)
 
 *칸의 점수는 지금까지의 걸음 수이고 A*는 추측을 더합니다.*
 
 너무 크지 않은 추측은 가장 좋은 길을 지키면서 많은 칸을 건너뜁니다. 부풀린 추측은 목표 쪽으로 서둘러 가지만 더 먼 길을 갈 수 있습니다.
 
-![약속](../assets/diagram-astar-promise.png)
+![과대평가하지 않는 추정이 최적 경로를 지키는 그림](../assets/diagram-astar-promise.png)
 
 *부풀리지 않는 추측은 가장 좋은 길을 지킵니다.*
 
-![확장 수](../assets/fig-astar-expansions.png)
+![추정 가중치가 클수록 확장하는 칸은 줄고 경로는 길어지는 그래프](../assets/fig-astar-expansions.png)
 
 *추측이 크면 칸을 덜 확장하지만 경로가 더 깁니다.*
 
-시험용 지도 하나인 trap 지도에서는 위쪽 틈이 막다른 길인데 추측을 부풀린 탐색이 그리로 파고듭니다.
+trap 지도에서는 위쪽 틈으로 가면 더 길게 돌아야 하는데 추측을 부풀린 탐색이 그쪽을 고릅니다.
 
-![탐사 로봇 두 대](../assets/clip-example.mp4)
+[![탐사 로봇 두 대](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파란 쪽은 부풀려서 더 멀리 걷고 초록 쪽이 이깁니다.*
 

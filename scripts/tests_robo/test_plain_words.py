@@ -46,15 +46,6 @@ def test_missing_plain_words_fails_by_default(lesson, lang):
     assert any("missing" in e and PLAIN[lang] in e for e in checks.check_doc(lesson, lang))
 
 
-def test_rollout_allows_missing_but_not_invalid_blocks(lesson):
-    for lang in BASE:
-        edit(lesson, lang, f"## {PLAIN[lang]}\n\nA tray tips.\n\n", "")
-    assert checks.check_doc(lesson, "en", allow_missing_plain_words=True) == []
-    assert checks.check_doc(lesson, "ko", allow_missing_plain_words=True) == []
-    edit(lesson, "en", "## The Problem", "## In Plain Words\n\n" + "word " * 71 + "\n\n## The Problem")
-    assert any("70" in e for e in checks.check_doc(lesson, "en", allow_missing_plain_words=True))
-
-
 @pytest.mark.parametrize("lang,body", [("en", "word " * 71), ("ko", "설명 " * 91), ("ko", "가" * 601)])
 def test_plain_words_over_cap_fails(lesson, lang, body):
     edit(lesson, lang, "A tray tips.", body)
@@ -135,13 +126,12 @@ def test_no_extra_content_between_metadata_and_explainer(lesson):
     assert any("directly follow" in e for e in checks.check_doc(lesson, "en"))
 
 
-def test_checker_cli_is_strict_by_default_and_rollout_is_explicit(lesson, monkeypatch, capsys):
+def test_checker_cli_is_strict_by_default(lesson, monkeypatch, capsys):
     monkeypatch.setattr(checks, "ROOT", lesson)
-    monkeypatch.setattr(checks, "check_lesson", lambda d, **kw: [] if kw["allow_missing_plain_words"] else ["missing opening"])
+    monkeypatch.setattr(checks, "check_lesson", lambda d: ["missing opening"])
     (lesson / "phases" / "00-test" / "01-topic" / "docs").mkdir(parents=True)
     assert checks.main([]) == 1
     assert checks.main(["--strict"]) == 1
-    assert checks.main(["--allow-missing-plain-words"]) == 0
 
 
 @pytest.mark.parametrize("lang", BASE)
@@ -184,3 +174,19 @@ def test_key_term_definition_has_no_code(lesson):
 def test_key_term_is_defined_before_it_is_used(lesson):
     edit(lesson, "en", "a set of axes.", "axes fixed to a link.")
     assert any("before it is defined" in e for e in checks.check_doc(lesson, "en"))
+
+
+def test_image_alt_text_does_not_count_toward_the_word_cap(lesson):
+    edit(lesson, "en", "![Figure](../assets/fig0.png)", f"![{'alt ' * 400}](../assets/fig0.png)")
+    assert not any("prose words" in e for e in checks.check_doc(lesson, "en"))
+
+
+def test_brackets_without_a_path_are_still_counted_as_prose(lesson):
+    with (lesson / "docs" / "en.md").open("a") as f:
+        f.write("\n![" + "visible " * 450 + "]\n")   # no (path) after it: ordinary prose
+    assert any("prose words" in e for e in checks.check_doc(lesson, "en"))
+
+
+def test_alt_of_a_linked_clip_poster_is_left_out_of_the_word_cap(lesson):
+    edit(lesson, "en", "![Figure](../assets/fig0.png)", f"[![{'alt ' * 400}](../assets/fig0.png)](../assets/fig0.mp4)")
+    assert not any("prose words" in e for e in checks.check_doc(lesson, "en"))

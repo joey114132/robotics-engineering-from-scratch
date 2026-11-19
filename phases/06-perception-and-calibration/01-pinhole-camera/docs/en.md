@@ -31,7 +31,7 @@ To grab what it sees, a robot must turn each pixel into a 3D point, and that nee
 
 A pixel is only a line of sight. Every point along that line lands on the same pixel, so the distance decides which point you mean. Use the wall's distance for a pixel on the cup's rim and the point slides along the line.
 
-![Two cups, depth too large](../assets/clip-example.mp4)
+[![Two cups, depth too large](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same distance mistake for both cups. The edge cup's ball also slides sideways.*
 

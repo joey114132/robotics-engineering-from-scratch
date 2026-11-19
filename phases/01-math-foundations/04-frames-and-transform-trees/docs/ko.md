@@ -39,7 +39,7 @@
 
 *base까지 올라갔다가 내려옵니다.*
 
-![같은 컵을 카메라와 base와 손에서 잰 모습](../assets/clip-example.mp4)
+[![같은 컵을 카메라와 base와 손에서 잰 모습](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *같은 컵을 세 시점에서 본 모습입니다. 위치 숫자가 세 가지로 다르게 나옵니다.*
 

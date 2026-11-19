@@ -1,11 +1,11 @@
 {
   "en": {
-    "hook": "A robot is not a machine that follows a plan. It keeps looking, and looks again a tenth of a second later.",
+    "hook": "A robot is not a machine that only follows a plan. It keeps looking, and looks again a tenth of a second later.",
     "mission": "Move the wall and see that the car never needed to know where it was. Run `cd code && python3 -c \"from main import *; print(drive(wall=5.0, seconds=8.0)['distance'][-1])\"`. Guess the answer first, then change the wall.",
     "clip": "A toy car drives toward a wall. Every tenth of a second it measures the gap, shown as the amber bar, and decides to go or stop. It stops half a metre from the wall."
   },
   "ko": {
-    "hook": "로봇은 계획을 따르는 기계가 아니에요. 계속 쳐다보고, 0.1초 뒤에 또 쳐다보는 기계예요.",
+    "hook": "로봇은 계획만 따르는 기계가 아니에요. 계속 쳐다보고, 0.1초 뒤에 또 쳐다보는 기계예요.",
     "mission": "벽을 옮겨 보면 자동차가 벽이 어디 있는지 몰라도 된다는 것을 알 수 있습니다. `cd code && python3 -c \"from main import *; print(drive(wall=5.0, seconds=8.0)['distance'][-1])\"`를 실행해 보세요. 답을 먼저 예측하고 벽 위치를 바꿔 보세요.",
     "clip": "장난감 자동차가 벽을 향해 달립니다. 0.1초마다 앞의 간격을 재고(호박색 막대) 갈지 멈출지 정합니다. 벽에서 0.5 m 앞에서 멈춥니다."
   },

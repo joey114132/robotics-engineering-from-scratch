@@ -35,7 +35,7 @@ A robot arm must hold up its own weight, and a wrong guess shows up as sag. The 
 
 *Light guess droops, exact guess holds, heavy guess floats up.*
 
-![Two models](../assets/clip-example.mp4)
+[![Two models](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same low kp: the left arm droops, the right floats.*
 
@@ -58,7 +58,7 @@ t2 = m2*lc2*g*np.cos(q1+q2)
 t1 = (m1*lc1 + m2*l1)*g*np.cos(q1) + t2
 ```
 
-`steady_state()` finds where the arm settles and complains if no balance exists, and `sag()` returns the difference from the commanded angle.
+`steady_state()` seeks where the arm settles and raises if its iteration fails, which does not prove no balance exists. `sag()` returns the difference from the commanded angle.
 
 ```bash
 cd robotics-engineering-from-scratch

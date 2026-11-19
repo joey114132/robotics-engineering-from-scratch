@@ -77,6 +77,7 @@ def ask_line(u, n):
         try:
             raw = input(u.t("answer> ", "답> ")).strip().lower()
         except EOFError:
+            u.print()                                # stdin closed: the prompt line is still open, so end it before the stop message
             return None
         if raw == "q":
             return None

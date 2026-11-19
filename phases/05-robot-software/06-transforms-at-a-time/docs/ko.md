@@ -40,7 +40,7 @@ transform tree(로봇의 부분들이 서로 어떤 위치 관계로 놓였는�
 *샘플 사이는 섞고 최신 샘플을 조금 넘으면 한도 안에서 짐작하고 그 밖에는 오류입니다.*
 
 
-![보간한 답과 거부](../assets/clip-example.mp4)
+[![보간한 답과 거부](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *회색 유령은 저장된 pose입니다. 주황색은 그 사이의 한 순간입니다. 빨간 십자는 너무 새로워서 거부됩니다.*
 

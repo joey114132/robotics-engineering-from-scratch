@@ -16,10 +16,10 @@ phases/NN-slug/NN-lesson-slug/
   assets/                       generated .excalidraw, .svg, .png. Commit them.
   quiz.json  quiz.ko.json       6 questions: 1 pre, 3 check, 2 post; same ids, same answer index
   outputs/skill-<slug>.md       English harness file, front matter name and description (when to call it)
-  fun.json                      extras: en and ko text (hook, mission, clip caption), plus the names of the lesson's toy and three (3D scene); the separate website repo reads the last two
+  fun.json                      extras: en and ko text (hook, mission, clip caption), plus the names of the lesson's three (3D scene) and, optionally, its toy; the website reads the last two
 ```
 
-## Doc shape: at most 380 English words outside code, Key Terms and the math fold, at least 3 images
+## Doc shape: at most 380 English words outside code, Key Terms, the math fold and alt text, at least 3 images
 
 ```text
 # Title
@@ -58,7 +58,7 @@ Apply these five rules in both languages.
 | "A notebook records every corner as a right angle, so the drawn square closes even though your smaller turns leave you away from the start." | "A wrong stride length distorts distances." (This does not explain why the notebook can hide the error.) |
 | "The showerhead pushes water away, so your hand feels a push in the opposite direction." | "A propeller's thrust points in the direction it blows air." |
 
-The English budget is 380 words outside fenced code, Key Terms and the math fold, including headings, metadata, captions and Sources (cut from 600 to 380 on 2026-11-16 for beginners). The main path is words and pictures. Formulas, parameters and exact numbers go in one optional fold at the end of The Concept, written exactly `<details><summary>The math (optional)</summary>` ... `</details>` with blank lines inside, at most 160 English words; ko has the same fold. Any number a quiz or test needs must appear somewhere in the lesson, the fold included.
+The English budget is 380 words outside fenced code, Key Terms, the math fold and image alt text, including headings, metadata, captions and Sources (cut from 600 to 380 on 2026-11-16 for beginners). The main path is words and pictures. Formulas, parameters and exact numbers go in one optional fold at the end of The Concept, written exactly `<details><summary>The math (optional)</summary>` ... `</details>` with blank lines inside, at most 160 English words; ko has the same fold. Any number a quiz or test needs must appear somewhere in the lesson, the fold included.
 The opening cap counts visible prose, including link labels. Korean has a mechanical ceiling of 90 whitespace-separated words and 600 characters, including spaces and paragraph breaks; match the English meaning rather than filling the ceiling.
 Prefer words to equations in the opening. If a familiar number is needed for the causal scene, link it to a source or a lesson test. The 08-01 example keeps 90° / 90도 and links those labels to a verified definition of a right angle. Put detailed numeric examples and equations in the later sections.
 Korean opening paragraphs may exceed the general 160-character paragraph guideline when needed to preserve a connected explanation; the block still has the 600-character ceiling. Source lines must stay within the checker's 160-character limit. A soft line break does not create a new paragraph.
@@ -172,17 +172,9 @@ quadrotor model은 드론의 기울기와 프로펠러가 드론을 미는 힘�
 드론도 공기를 아래로 밀어 위로 힘을 받고 몸체를 기울여 그 힘의 방향을 바꿔요. thrust가 그대로인 상태에서 드론을 기울이면 위로 받치는 힘이 줄어들어요. 같은 높이를 유지하려면 thrust를 얼마나 늘려야 할까요?
 ```
 
-### Opening-section rollout and humanizers
+### Checking the opening
 
-Strict checking is the default now: `python3 scripts/check_lessons.py` and `python3 scripts/check_lessons.py --strict` require every opening block.
-While the remaining lessons are being written, use `python3 scripts/check_lessons.py --allow-missing-plain-words`.
-This flag permits absent blocks only; existing blocks still have to pass every cap, evidence and order check.
-Remove the rollout flag from orchestration when every bilingual lesson is complete. No code default needs changing.
-
-Add the bilingual blocks first, then refresh only that lesson's English and Korean files in `.board/humanize-backup/phases/.../docs/` before applying humanizers.
-Never refresh the entire backup tree: it is the fact and structure baseline used by `scripts/humanize_guard.py`.
-Run English through humanizer-oneaway followed by no-ai-slop, and Korean through humanize-korean fast/light. Change style only; preserve concepts, examples, numbers, identifiers, technical terms and all existing lesson content. Keep explicitly approved replacement sentences verbatim; a humanizer may make no edits when they already read naturally.
-Run the guard afterward. Heading checks share `scripts/lesson_sections.py` with the checker and readers.
+`python3 scripts/check_lessons.py` requires the opening block in every lesson and checks its caps, evidence links and order. The heading checks share `scripts/lesson_sections.py` with the checker and the terminal reader.
 
 ## Visuals
 
@@ -210,8 +202,9 @@ d.save(OUT / "diagram-name.excalidraw")
 - At most 2 lines per box and short words; the engine wraps longer text, but a word wider than about 200 px (for example `Counterexample`) forces wide boxes. Colour carries meaning: blue input, yellow real world, red problem, purple transform, green result, gray neutral.
 - Data figures (matplotlib, Agg backend): 1200x675 px or smaller, English labels only, axis names with units, a title that states the takeaway, colour-blind-safe colours (`#0072B2` blue, `#D55E00` orange, `#555555` gray), seeded, no external data.
 - Captions live in each language's doc, so one image serves every language.
-- Every lesson has one 3D scene, which lives in the separate website repo. `fun.json` names it (`"three": "<name>-3d"`); this repo does not check the name.
-- Every lesson has a lead clip. `code/clip.py` builds a small Blender scene from `scripts/blender/kit.py` (a toy car, a bench arm, a rover, a drone) and keys it with arrays from `kit.lesson_main(__file__)`, so what moves is what `code/main.py` computes. No text in the picture, 4 to 6 seconds, blue for the plain or failing case and green for the fixed one. Its caption is `clip` under `en` and `ko` in `fun.json`. The caption says what to look at in two to four short sentences. It carries no playback-speed or scale notes; when a quantity is drawn larger than it really is, one short sentence says it is exaggerated. A worked example may have its own clip, `code/clip-example.py`, linked in both docs as `![alt](../assets/clip-example.mp4)` with the usual italic caption line; the terminal reader shows its poster. Render with `python3 scripts/build_clips.py <lesson fragment>` (Blender 5 and ffmpeg on PATH; `CLIP_LOOK=real` for the ray-traced look; `--still N` for one frame). Commit the `.mp4` and `.jpg`.
+- Alt text says what the picture shows in about 4 to 10 words (not a single label word) and is written in the doc's own language; it does not count toward the word cap.
+- Every lesson has one 3D scene, which lives on the website (https://robotics-from-scratch.robotics-site.workers.dev). `fun.json` names it (`"three": "<name>-3d"`); this repo does not check the name.
+- Every lesson has a lead clip. `code/clip.py` builds a small Blender scene from `scripts/blender/kit.py` (a toy car, a bench arm, a rover, a drone) and keys it with arrays from `kit.lesson_main(__file__)`, so what moves is what `code/main.py` computes. No text in the picture, 4 to 6 seconds, blue for the plain or failing case and green for the fixed one. Its caption is `clip` under `en` and `ko` in `fun.json`. The caption says what to look at in two to four short sentences. It carries no playback-speed or scale notes; when a quantity is drawn larger than it really is, one short sentence says it is exaggerated. A worked example may have its own clip, `code/clip-example.py`, linked in both docs as its poster image wrapped in a link to the video, `[![alt](../assets/clip-example.jpg)](../assets/clip-example.mp4)`, with the usual italic caption line (GitHub cannot show an mp4 as an image; `scripts/check_lessons.py` rejects `![alt](x.mp4)`). The poster and the video have the same name; the website plays the video and the terminal reader shows the poster. Render with `python3 scripts/build_clips.py <lesson fragment>` (Blender 5 and ffmpeg on PATH; `CLIP_LOOK=real` for the ray-traced look; `--still N` for one frame). Commit the `.mp4` and `.jpg`.
 - Look at every PNG with the Read tool before reporting. Check clipped or overlapping text, crossing arrows, and whether the picture shows what the caption claims. Fix and rebuild.
 
 ## Content rules

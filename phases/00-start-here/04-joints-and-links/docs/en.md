@@ -37,7 +37,7 @@ Picture one link lying flat, pointing across. Turn its joint, and the tip lifts.
 
 A second link starts at the tip of the first. Its angle is counted from the first link, not from the floor. Add the two links' across amounts, and add their up amounts.
 
-![Two links reaching](../assets/clip.mp4)
+[![Two links reaching](../assets/clip.jpg)](../assets/clip.mp4)
 
 *Amber balls show where the code says the hand is. The hand reaches each one.*
 

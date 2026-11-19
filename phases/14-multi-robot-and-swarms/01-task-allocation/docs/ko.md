@@ -43,7 +43,7 @@ Hungarian 방법은 모든 거리를 함께 보고 앞의 짝을 되돌려서 �
 
 *로봇이 많을수록 greedy 배정이 최적 배정보다 더 쓰는 비용이 커집니다.*
 
-![자동차 다섯 대](../assets/clip-example.mp4)
+[![자동차 다섯 대](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파란 쪽(greedy)은 5번 자동차가 바닥을 가로지르고 초록 쪽(Hungarian)은 3, 4, 5번이 패드를 바꿉니다.*
 
@@ -66,7 +66,7 @@ greedy 배정은 로봇 N = 4에서 최적의 약 1.12배, N = 32에서 약 1.28
 
 ## 만들기
 
-`greedy()`는 로봇마다 남은 일 중 가장 싼 것을 고릅니다. `hungarian()`은 가장 좋은 합을 한 걸음씩 만들어 갑니다.
+`greedy()`는 로봇마다 남은 일 중 가장 싼 것을 고릅니다. `hungarian()`은 로봇과 작업마다 가격을 하나씩 둡니다(로봇은 `u`, 작업은 `v`). 한 쌍의 reduced cost는 거리에서 두 가격을 뺀 값이고 0이 된 쌍부터 짝지을 수 있습니다.
 
 ```python
 cur = C[i0 - 1, j - 1] - u[i0] - v[j]   # reduced cost of edge (robot i0, task j)

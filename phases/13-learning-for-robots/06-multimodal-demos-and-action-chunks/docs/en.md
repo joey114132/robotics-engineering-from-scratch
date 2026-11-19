@@ -24,7 +24,7 @@ Half your demonstrations steer a rover above the pillar, half below. Both are fi
 
 ## The Concept
 
-People solve one task in different ways, and a robot copying them must still pick one. Picking one demonstration avoids the bad average, but picking again every step can flip sides and wobble. So the robot picks a short chunk of the next few moves and follows it.
+People solve one task in different ways, and a robot copying them must still pick one. Picking one demonstration avoids the bad average, but picking again every step can flip sides and wobble. So the robot follows a short chunk of the next few moves and picks new chunks matching the old plan.
 
 ![Average or commit](../assets/diagram-average-or-commit.png)
 
@@ -38,7 +38,7 @@ People solve one task in different ways, and a robot copying them must still pic
 
 *Left: the average goes straight through the pillar. Middle: sampling splits both ways round. Right: longer chunks wobble less.*
 
-![Steps vs chunks](../assets/clip-example.mp4)
+[![Steps vs chunks](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue picks a demonstration every step and wobbles. Green follows chunks and glides.*
 

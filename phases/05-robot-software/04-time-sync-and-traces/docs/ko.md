@@ -29,7 +29,7 @@
 
 *한 컴퓨터가 상대에게 시각을 묻고 물은 때와 답이 돌아온 때를 적어 둡니다.*
 
-요청의 기록은 시계 차이에 이동 시간을 더한 값이고 응답의 기록은 시계 차이에서 이동 시간을 뺀 값입니다. 둘을 평균하면 이동 시간이 사라집니다. round trip이 가장 짧은 시도를 믿으세요. 오차가 가장 작기 때문입니다.
+요청의 기록은 시계 차이에 이동 시간을 더한 값이고 응답의 기록은 시계 차이에서 이동 시간을 뺀 값입니다. 가는 시간과 오는 시간이 같으면 둘을 평균할 때 이동 시간이 사라집니다. round trip이 가장 짧은 시도는 두 시간이 달라질 여지가 가장 작으므로 그 시도를 가장 믿으세요.
 
 ![offset 추정과 순서 오류](../assets/fig-time-sync.png)
 
@@ -37,11 +37,11 @@
 
 trace는 단계마다 전후 상태를 기록합니다. trace reader(작은 검사 프로그램)는 각 단계를 intent와 견주어 처음 틀린 것을 알려 줍니다.
 
-![trace reader](../assets/diagram-trace-reader.png)
+![trace를 순서대로 읽다가 처음 어긋난 줄에서 멈추는 reader](../assets/diagram-trace-reader.png)
 
 *reader는 intent를 순서대로 확인하고 처음 어긋난 곳에서 멈춥니다.*
 
-![목표 두 번째를 건너뛴 팔](../assets/clip-example.mp4)
+[![목표 두 번째를 건너뛴 팔](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *팔이 가운데 목표를 놓칩니다. reader는 첫 번째를 초록, 두 번째를 빨강으로 바꾸고 멈춥니다.*
 
@@ -49,7 +49,8 @@ trace는 단계마다 전후 상태를 기록합니다. trace reader(작은 검�
 
 client는 `t0`에 요청을 보내고 `t3`에 응답을 받습니다. server는 `t1`에 받고 `t2`에 응답합니다. offset은 `((t1 - t0) + (t2 - t3)) / 2`입니다.
 server 시계가 50 ms 앞서고 편도가 20 ms이면 `t1 - t0`는 70 ms이고 `t2 - t3`는 30 ms이므로 평균은 50 ms입니다. 가는 데 30 ms, 오는 데 10 ms이면 추정은 10 ms 틀리는데 이는 두 지연 차이의 절반입니다.
-오차는 round trip의 절반을 넘지 않으므로 round trip이 가장 짧은 시도가 가장 믿을 만합니다. 카메라 시계가 30 ms 앞서면 먼저 찍은 카메라 샘플이 나중에 잰 IMU 샘플보다 늦은 stamp를 받을 수 있습니다. 그림은 8번 시도 중 가장 좋은 것과 10 ms 간격의 센서를 씁니다.
+오차는 round trip의 절반을 넘지 않으므로 round trip이 가장 짧은 시도는 오차의 상한이 가장 작습니다.
+카메라 시계가 30 ms 앞서면 먼저 찍은 카메라 샘플이 나중에 잰 IMU 샘플보다 늦은 stamp를 받을 수 있습니다. 그림은 8번 시도 중 가장 좋은 것과 10 ms 간격의 센서를 씁니다.
 reader는 `not_executed`, `no_motion`, `wrong_motion` 중 하나를 알려 줍니다.
 
 </details>

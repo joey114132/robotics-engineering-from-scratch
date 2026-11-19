@@ -41,7 +41,7 @@ Real robots have many interacting joints, so guessing gains one by one fails. LQ
 
 The calculation must repeat until its answer stops changing. Stop early and the gains are too weak.
 
-![More loops](../assets/clip-example.mp4)
+[![More loops](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *1 repeat: the car creeps. 10: it crosses the line. Finished (green): it settles.*
 

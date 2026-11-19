@@ -33,13 +33,13 @@ Most robot joints use PID control, so know what each part does and where it fail
 
 *A steady load: only I brings the joint back.*
 
-![Two toy cars hold a line while a steady push arrives](../assets/clip-example.mp4)
+[![Two toy cars hold a line while a steady push arrives](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *A steady push: blue (P and D) stays short, green (with I) returns.*
 
 But I keeps adding even when the motor is at its limit, then overshoots to pay the debt back: windup.
 
-![Windup](../assets/diagram-windup.png)
+![Integral windup piles up while the motor saturates](../assets/diagram-windup.png)
 
 *The fix stops adding at the limit.*
 
@@ -53,7 +53,7 @@ But I keeps adding even when the motor is at its limit, then overshoots to pay t
 
 <details><summary>The math (optional)</summary>
 
-A steady load leaves an offset `load / kp` under P+D. With `kp = 100` and a push of 20 the offset is `20 / 100 = 0.2`; the load steps in at 5 s. Windup overshoots by about 1.5 rad without the clamp. ROS 2 `control_toolbox` offers `none`, `back_calculation` and `conditional_integration` anti-windup, chosen per joint via `gains.<dof_names>.antiwindup_strategy`. The loop is stable only while the eigenvalues (how much each motion pattern is multiplied per tick) of its 2x2 update matrix stay below 1 in size; `kd` above about `2J/dt` breaks that (Craig 9.7).
+A steady load leaves an offset `load / kp` under P+D. With `kp = 100` and a push of 20 the offset is `20 / 100 = 0.2`; the load steps in at 5 s. Windup overshoots by about 1.5 rad without the clamp. ROS 2 `control_toolbox` offers `none`, `back_calculation` and `conditional_integration` anti-windup, chosen per joint via `gains.<dof_names>.antiwindup_strategy`. The loop is stable only while the eigenvalues (how much each motion pattern is multiplied per tick) of its update matrix stay below 1 in size. The 2x2 matrix covers P and D; with I the stored I term is a third state (`spectral_radius(..., ki=ki)`), and `ki = 50000` gives 1.006 where P+D alone gives 0.946 (`J = 0.02`, `kp = 400`, `kd = 2`). Saturation is not covered. `kd` above about `2J/dt` breaks the P+D part (Craig 9.7).
 
 </details>
 

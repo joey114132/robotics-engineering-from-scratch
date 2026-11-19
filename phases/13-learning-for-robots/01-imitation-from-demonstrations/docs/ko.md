@@ -28,7 +28,7 @@
 로봇은 아무도 규칙을 써 두지 않은 상황을 만나곤 합니다. 그럴 때 사람은 올바른 동작을 그냥 보여 줄 수 있는 경우가 많습니다. 전문가가 지나간 위치마다 그때 한 동작을 저장하고 그 짝들에 맞는 규칙을 찾습니다.
 직선 규칙 하나는 "왼쪽으로"와 "오른쪽으로"를 평균해서 "직진"으로 만들고 기둥에 부딪힙니다. 가장 가까운 예시를 따라 하면 훨씬 잘 됩니다.
 
-![파이프라인](../assets/diagram-imitation-pipeline.png)
+![전문가가 운전하고 기록한 쌍으로 policy를 학습하는 과정](../assets/diagram-imitation-pipeline.png)
 
 *전문가가 주행하고 우리는 그 동작을 저장합니다. 학습은 저장된 짝을 policy로 바꿉니다.*
 
@@ -36,11 +36,11 @@
 
 *직선 규칙 하나는 기둥을 향해 곧장 갑니다. 가장 가까운 예시를 따라 하면 기둥을 돌아갑니다.*
 
-![성공률](../assets/fig-imitation-success.png)
+![시연 횟수에 따른 두 방법의 성공률과 실제 경로](../assets/fig-imitation-success.png)
 
 *왼쪽은 시연 수에 따라 주행이 성공하는 비율입니다. 가장 가까운 예시를 따르는 규칙은 열두 번쯤에서 전문가만큼 잘하고 직선 규칙은 오히려 나빠집니다. 오른쪽은 시험 주행 한 번입니다.*
 
-![1개와 10개](../assets/clip-example.mp4)
+[![1개와 10개](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파랑 로버는 시연 하나만 보고 배워서 기둥에 부딪힙니다. 초록 로버는 열 개를 보고 배워서 기둥을 돌아갑니다.*
 
@@ -58,7 +58,7 @@ policy는 로버의 위치 `x`를 속도로 바꿉니다. least squares는 직�
 ```python
 X, A = collect(rng, n_demos)        # stacked (position, velocity) pairs
 policy = fit_knn(X, A, k=3)         # mean action of the 3 closest demo states
-W = np.linalg.lstsq(feats, A)[0]    # or one linear rule, fit_linear
+linear_policy = fit_linear(X, A)   # alternative: one straight rule
 ```
 
 `success()`는 주행이 기둥을 한 번도 건드리지 않고 목표 근처에서 끝나는지 확인합니다.

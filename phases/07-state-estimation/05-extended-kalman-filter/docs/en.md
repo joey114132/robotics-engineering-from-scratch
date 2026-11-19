@@ -29,7 +29,7 @@ A confidently wrong robot is more dangerous than an unsure one.
 
 *The straight-line rule is rebuilt each cycle.*
 
-A Kalman filter needs straight-line motion, but the robot's real path is a curve. The extended filter pretends a short piece of the curve around its current guess is straight, and redraws that piece every cycle.
+A Kalman filter handles only straight (linear) rules, but motion here depends on the heading's sine and cosine. The extended filter treats a short piece of each rule near its guess as straight, redrawn every cycle.
 
 ![Bad linearisation feeds itself](../assets/diagram-ekf-spiral.png)
 
@@ -41,13 +41,13 @@ NEES checks whether the filter's claimed doubt matches its real error.
 
 *Left: the EKF follows the truth. Right: with four landmarks NEES stays near the dashed line (3); with one it climbs far above as the start error grows.*
 
-![One post, four posts](../assets/clip-example.mp4)
+[![One post, four posts](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Both start with a wrong heading. This picture compares one post (blue) with four (green); the lead clip uses three. With one post the guess ends far off while its small circle says the filter is sure. With four it stays on the robot.*
 
 <details><summary>The math (optional)</summary>
 
-The state is `[x, y, heading]`; the robot moves along a curve `f(x, u)` with speed `v` and turn rate `w`. `F` is the Jacobian of the motion, `H` that of the landmark's range and bearing `h(x)`. Covariance is predicted by `P = F P F^T + Q`. Bearing differences are wrapped. NEES is `e^T P^-1 e` and averages the state size, 3 (two for position, one for heading). With a heading guess 1 rad off and one landmark, NEES averages 100.5 over 30 runs and the estimate ends 2.8 m off. With four it averages 2.7. In the figure NEES stays near 3 with four landmarks and grows from about 4 to several hundred with one. Tests check NEES near 3 over 150 seeds, and over 20 times larger with one landmark and a 1.5 rad heading error. 1 m is drawn as 0.5 m.
+The state is `[x, y, heading]`; the robot moves along a curve `f(x, u)` with speed `v` and turn rate `w`. `F` linearises the motion; `H` linearises `h(x)`, which returns the range (distance) and the bearing (direction relative to the robot) of the landmark. Covariance is predicted by `P = F P F^T + Q`. Bearing differences are wrapped. NEES is `e^T P^-1 e` and averages the state size, 3 (two for position, one for heading). With a heading guess 1 rad off and one landmark, NEES averages 100.5 over 30 runs and the estimate ends 2.8 m off. With four it averages 2.7. In the figure NEES stays near 3 with four landmarks and grows from about 4 to several hundred with one. Tests check NEES near 3 over 150 seeds, and over 20 times larger with one landmark and a 1.5 rad heading error. 1 m is drawn as 0.5 m.
 
 </details>
 

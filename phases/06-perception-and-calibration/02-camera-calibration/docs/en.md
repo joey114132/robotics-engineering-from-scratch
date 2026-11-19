@@ -30,7 +30,7 @@ Every camera differs a little, and a robot that trusts the datasheet misjudges w
 
 A flat checkerboard has corners at known spots. Each photo from a new angle links those spots to pixels. With photos from two different tilts, simple matrix maths gives the camera's zoom and centre. Photos where the board only slides repeat the same clue, so the solver refuses them.
 
-![Slid and tilted boards](../assets/clip-example.mp4)
+[![Slid and tilted boards](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue only slides: red cross (rejected). Green tilts each time: green ball (solved).*
 
@@ -52,9 +52,11 @@ Each view gives a 3x3 `H = K [r1 r2 t]` that maps board corners `(X, Y, 1)` to p
 
 ```python
 A = np.array([r for H in Hs for r in (_v(H, 0, 1), _v(H, 0, 0) - _v(H, 1, 1))])
-b = np.linalg.svd(A)[2][-1]          # smallest singular vector = [B11, B22, B13, B23, B33]
+b = np.linalg.svd(A)[2][-1]          # smallest singular vector
+B11, B22, B13, B23, B33 = b
 cx, cy = -B13 / B11, -B23 / B22
-fx, fy = np.sqrt(lam / B11), np.sqrt(lam / B22)   # lam = B33 - B13^2/B11 - B23^2/B22
+lam = B33 - B13**2 / B11 - B23**2 / B22
+fx, fy = np.sqrt(lam / B11), np.sqrt(lam / B22)
 ```
 
 `homography_dlt()` rescales the points, then uses the SVD, a matrix tool that finds the best fit. `calibrate()` refuses degenerate views and results that make no physical sense.

@@ -35,7 +35,7 @@
 
 *가벼운 어림은 처지고 정확한 어림은 버티고 무거운 어림은 뜹니다.*
 
-![가벼운 모델과 무거운 모델](../assets/clip-example.mp4)
+[![가벼운 모델과 무거운 모델](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *같은 낮은 kp에서 왼쪽 팔은 처지고 오른쪽 팔은 뜹니다.*
 
@@ -59,7 +59,7 @@ t2 = m2*lc2*g*np.cos(q1+q2)
 t1 = (m1*lc1 + m2*l1)*g*np.cos(q1) + t2
 ```
 
-`steady_state()`는 팔이 멈추는 자리를 찾고 균형이 없으면 예외를 냅니다. `sag()`는 명령한 각도와의 차이를 돌려줍니다.
+`steady_state()`는 팔이 멈추는 자리를 찾고 반복 계산이 수렴하지 않으면 예외를 냅니다. 예외가 균형이 없다는 뜻은 아닙니다. `sag()`는 명령한 각도와의 차이를 돌려줍니다.
 
 ```bash
 cd robotics-engineering-from-scratch

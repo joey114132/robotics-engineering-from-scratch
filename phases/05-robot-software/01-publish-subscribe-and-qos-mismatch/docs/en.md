@@ -35,9 +35,9 @@ Each side declares a delivery promise. Best effort sends once and moves on, whil
 
 *A keep-last queue holds the newest few and drops the oldest.*
 
-A slow listener loses messages unless the queue is deep enough.
+A deeper queue absorbs bursts; sustained overload still loses messages.
 
-![Eight messages, two arms](../assets/clip-example.mp4)
+[![Eight messages, two arms](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same burst of eight messages. Blue's queue holds one: most are dropped. Green's holds enough: the arm steps through all.*
 

@@ -36,7 +36,7 @@ planner가 drive의 두 배 속도까지 허용하면 계획이 실제 팔보다
 
 *planner는 많이 요청하고 drive는 적게 허용합니다.*
 
-![목표 앞에서 멈춘 팔](../assets/clip-example.mp4)
+[![목표 앞에서 멈춘 팔](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *어두운 반투명 팔은 planner가 관절이 있다고 믿는 위치입니다. 파란 팔은 목표 앞에서 멈춥니다. 초록은 한계가 서로 맞습니다.*
 

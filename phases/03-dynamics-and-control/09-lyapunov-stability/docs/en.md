@@ -13,10 +13,10 @@ A Lyapunov function is such an energy-like number. A brake that reacts late can 
 ## Key Terms
 
 - **State**: the arm's angle and speed at one moment.
-- **Lyapunov function (`V`)**: an energy-like number that never rises while a stable system (one that settles) moves.
+- **Lyapunov function (`V`)**: an energy-like number, zero at the goal and positive elsewhere. If it never rises, a start near the goal stays near it.
 - **Slope (`vdot`)**: how fast the energy-like number changes as the system moves.
 - **Level set**: all states with the same energy-like number, drawn as a curve.
-- **Counterexample**: one state where the slope is positive, which breaks the stability claim.
+- **Counterexample**: one state where the slope is positive, so this energy-like number fails the test. Another number might still work.
 - **PD control**: a spring on the angle plus a brake on the rate (how fast the angle is changing).
 
 ## The Problem
@@ -31,7 +31,7 @@ A robot near people must be stable from any starting state. The trick is an ener
 
 *Pick the number, then check its slope at many states.*
 
-![Rest, nudged and damped](../assets/clip-example.mp4)
+[![Rest, nudged and damped](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Left: at rest. Middle (blue): the brake pushes with the motion and the swing grows. Right (green): it settles.*
 
@@ -62,7 +62,7 @@ grad = np.array([(V(x + h*e, p) - V(x - h*e, p)) / (2*h) for e in np.eye(2)])
 vdot = grad @ f(x, p)          # dV/dt along the motion
 ```
 
-Tests check the slope matches the formula, stable settings pass, and a negative brake or delayed rate is caught. A clean sweep is evidence, not proof; one bad slope is a counterexample.
+Tests check the slope matches the formula, stable settings pass, and a negative brake or delayed rate is caught. A clean sweep is evidence, not proof. One positive slope rejects only this V.
 
 ```bash
 cd robotics-engineering-from-scratch
@@ -72,7 +72,7 @@ python3 phases/03-dynamics-and-control/09-lyapunov-stability/code/figure.py
 
 ## Use It
 
-Hunt for a counterexample by minimizing the slope with SciPy's `minimize`. A proof needs a specialised maths tool.
+Hunt for a counterexample by minimizing `-vdot` with SciPy's `minimize`. A proof needs a specialised maths tool.
 
 ## Ship It
 

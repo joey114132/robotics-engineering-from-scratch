@@ -1,12 +1,12 @@
 {
   "en": {
     "hook": "Pressing to a set depth to get a force is like tipping by guessing the menu price. Measure the force and the guess stops mattering.",
-    "mission": "Guess the sponge's stiffness differently and see which control still hits the target force. In `code/main.py` change `5e3` to `1e4`. Guess the force the position mode now gives, then run `python3 code/main.py` and check that force mode still lands on 10.",
+    "mission": "Try a stiffer sponge and see which control still hits the target force. In the last lines of `code/main.py`, change the sponge stiffness `5e3` to `1e4`. Guess the force the position mode now gives, then run `python3 code/main.py` and check that force mode still lands on 10.",
     "clip": "Two arms press a sponge that is softer than they assumed. The blue arm goes to the depth that would give 10 N on the assumed sponge, and presses with only 1.6 N. The green arm measures the force and keeps pushing until it reads 10 N. The red arrow is the force the sponge pushes back with. Exaggerated so it is easy to see."
   },
   "ko": {
     "hook": "깊이를 정해서 힘을 얻는 건 메뉴 가격을 짐작해서 팁을 주는 것과 같아요. 힘을 직접 재면 짐작은 필요 없어요.",
-    "mission": "스펀지의 강성을 다르게 가정하고 어느 방식이 목표 힘을 맞히는지 보세요. `code/main.py`에서 `5e3`을 `1e4`로 바꾸세요. position 모드의 힘을 먼저 맞힌 뒤 `python3 code/main.py`를 실행해 force 모드가 여전히 10인지 확인하세요.",
+    "mission": "더 뻣뻣한 스펀지로 바꿔서 어느 방식이 목표 힘을 맞히는지 보세요. `code/main.py` 마지막 줄들에서 스펀지 강성 `5e3`을 `1e4`로 바꾸세요. position 모드의 힘을 먼저 맞힌 뒤 `python3 code/main.py`를 실행해 force 모드가 여전히 10인지 확인하세요.",
     "clip": "두 팔이 생각보다 부드러운 스펀지를 누릅니다. 파란 팔은 가정한 스펀지에서 10 N이 나올 깊이까지만 내려가서 실제로는 1.6 N으로 누릅니다. 초록 팔은 힘을 재면서 10 N이 될 때까지 더 누릅니다. 빨간 화살표는 스펀지가 되미는 힘입니다. 잘 보이도록 과장해서 그렸습니다."
   },
   "toy": null,

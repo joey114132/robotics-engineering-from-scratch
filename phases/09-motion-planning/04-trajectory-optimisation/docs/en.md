@@ -39,7 +39,7 @@ The path settles where pull and push balance, reached by moving points a little 
 
 *Pull and push balance at rest.*
 
-![Pull and push](../assets/clip-example.mp4)
+[![Pull and push](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Red arrows: pull and push. The push starts huge and shrinks.*
 

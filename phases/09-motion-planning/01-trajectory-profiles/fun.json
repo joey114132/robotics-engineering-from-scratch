@@ -2,12 +2,12 @@
   "en": {
     "hook": "Getting to the target on time is easy. Getting there without a knock means promising a gentle start and a gentle stop.",
     "mission": "Make the move twice as fast and guess how much harder the knock gets. In `code/main.py` change `T, dt = 2.0, 0.002` to `T, dt = 1.0, 0.002` and run `python3 code/main.py`. Guess how many times bigger the quintic peak jerk (7.5 now) gets when the move takes half the time.",
-    "clip": "Two bench arms make the same move in 2 s. The blue arm uses a plan that jumps, the green arm uses the smooth quintic. The red arrow shows how hard the joint is pushed. The blue arrow jumps to full length at the start and vanishes at the end, which is the knock a motor feels, while the green arrow grows and fades smoothly. Played 1.5 times slower."
+    "clip": "Two bench arms make the same move in 2 s. The blue arm uses a plan that jumps, the green arm uses the smooth quintic. The red arrow shows the joint's acceleration. The blue arrow jumps to full length at the start and vanishes at the end, which is the knock a motor feels, while the green arrow grows and fades smoothly. Played 1.5 times slower."
   },
   "ko": {
     "hook": "제시간에 목표에 닿는 건 쉬워요. 덜컥거림 없이 닿으려면 부드럽게 시작하고 부드럽게 멈추겠다는 약속이 필요해요.",
     "mission": "이동을 두 배 빠르게 하고 덜컥거림이 얼마나 심해지는지 맞혀 보세요. `code/main.py`에서 `T, dt = 2.0, 0.002`를 `T, dt = 1.0, 0.002`로 바꾸고 `python3 code/main.py`를 실행하세요. 이동 시간이 절반이면 quintic peak jerk(현재 7.5)가 몇 배가 될지 맞혀 보세요.",
-    "clip": "팔 두 개가 같은 이동을 2 s 동안 합니다. 파란 팔은 갑자기 뛰는 계획을 쓰고 초록 팔은 부드러운 quintic을 씁니다. 빨간 화살표는 관절이 얼마나 세게 밀리는지 보여 줍니다. 파란 화살표는 시작하는 순간 한 번에 최대 길이가 되고 끝나는 순간 사라집니다. 이것이 모터가 느끼는 덜컥거림입니다. 초록 화살표는 서서히 자랐다가 서서히 줄어듭니다."
+    "clip": "팔 두 개가 같은 이동을 2 s 동안 합니다. 파란 팔은 갑자기 뛰는 계획을 쓰고 초록 팔은 부드러운 quintic을 씁니다. 빨간 화살표는 관절의 가속도를 보여 줍니다. 파란 화살표는 시작하는 순간 한 번에 최대 길이가 되고 끝나는 순간 사라집니다. 이것이 모터가 느끼는 덜컥거림입니다. 초록 화살표는 서서히 자랐다가 서서히 줄어듭니다."
   },
   "toy": null,
   "three": "trajectory-lanes-3d"

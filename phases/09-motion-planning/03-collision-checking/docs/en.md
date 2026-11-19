@@ -29,7 +29,7 @@ A robot hits whatever its checker skips, so how often you check must match the t
 
 A checker tests the path at spots along the route. If the spots are farther apart than the post is wide, they can all land beside it, and the robot hits the post between them.
 
-![Tunnelling](../assets/diagram-tunnel.png)
+![Coarse pegs miss a post that an exact test hits](../assets/diagram-tunnel.png)
 
 *A wide step lets samples land on both sides.*
 
@@ -43,7 +43,7 @@ Two fixes: check the whole stretch exactly, or pretend the post is a bit wider. 
 
 *Steps no wider than the post (2r) catch hits through its middle. Padding catches the thin ones too.*
 
-![Two cars](../assets/clip-example.mp4)
+[![Two cars](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue's pegs stay white; it clips the post. Green's turn red; it stops.*
 
@@ -82,4 +82,4 @@ Sources: [Motion planning, Wikipedia](https://en.wikipedia.org/wiki/Motion_plann
 
 1. Make the post thinner and see when the pegs-only check starts to miss.
 2. Shrink the step; watch the false alarms.
-3. Treat the robot as a circle and add its radius to the post's width.
+3. Treat the robot as a circle and add its radius to the post's radius.

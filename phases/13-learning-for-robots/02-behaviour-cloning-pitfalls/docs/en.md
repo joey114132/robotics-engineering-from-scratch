@@ -38,13 +38,13 @@ A real robot always slips a little, so it must handle places its teacher never s
 
 *Left: plain copying drifts further and further, DAgger stays close to the expert's path. Right: DAgger reaches expert level in about two rounds.*
 
-![Two rovers](../assets/clip-example.mp4)
+[![Two rovers](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The line is each rover's distance from anything it was taught. Blue's grows until the pillar, green's stays short.*
 
 <details><summary>The math (optional)</summary>
 
-Noise added to the commanded velocity mimics wheel slip. With four clean demonstrations, plain cloning error rises about sevenfold over 60 steps, and after four DAgger rounds it stays near zero. Plain cloning ends 0.31 m from the nearest recorded spot when it hits the pillar. After four DAgger rounds it never exceeds 0.09 m. Goal success is 52.5% for plain cloning, 90% after two rounds and 93% after four. Over T steps a learner can make up to T² mistakes (Ross, Gordon and Bagnell).
+Noise added to the commanded velocity mimics wheel slip. With four clean demonstrations, plain cloning error rises about sevenfold over 60 steps, and after four DAgger rounds it stays near zero. Plain cloning ends 0.31 m from the nearest recorded spot when it hits the pillar. After four DAgger rounds it never exceeds 0.09 m. Goal success is 52.5% for plain cloning, 90% after two rounds and 93% after four. If the learner's error rate on the expert's own states is a small `e`, the extra cost of a drive can grow as `T*T*e`, because early mistakes carry the rover to places it never saw (Ross, Gordon and Bagnell).
 
 </details>
 

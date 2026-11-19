@@ -1,6 +1,6 @@
 # The Jacobian: Joint Speeds, Tip Speeds and Forces
 
-> Learn how joint speeds set the hand's speed, and how a push on the hand turns into motor torque.
+> Learn how joint speeds set the hand's speed, and how a force applied by the hand turns into motor torque.
 
 **Type:** Build   **Prerequisites:** 02/01 DH vs URDF Origins, 02/02 Inverse Kinematics   **Time:** ~15 minutes
 
@@ -8,7 +8,7 @@
 
 Turn a desk arm's shoulder steadily and the tip swings around it, faster the farther it is from the shoulder. So the tip's speed and direction depend on the pose.
 
-The Jacobian is a table for the current pose: feed it joint speeds, get the tip's motion. Flip it on its side and it turns a push on the tip into the twist each motor must supply.
+The Jacobian is a table for the current pose: feed it joint speeds, get the tip's motion. Flip it on its side and it turns a force applied by the tip into the twist each motor must supply.
 
 ## Key Terms
 
@@ -24,7 +24,7 @@ You want a robot arm's hand to move straight, and to know how hard each motor mu
 
 ## The Concept
 
-To move a hand straight or press on a table, each joint needs the right speed and force. The Jacobian, recalculated for each pose, turns joint speeds into hand speed. Flipped on its side, it turns a push on the hand into the push each motor must make.
+To move a hand straight or press on a table, each joint needs the right speed and force. The Jacobian, recalculated for each pose, turns joint speeds into hand speed. Flipped on its side, it turns a force applied by the hand into the push each motor must make.
 
 ![One matrix, used twice](../assets/diagram-bridge.png)
 
@@ -38,13 +38,13 @@ To move a hand straight or press on a table, each joint needs the right speed an
 
 *A bent arm moves its hand easily in every direction. A straight arm cannot: one direction is hard.*
 
-![Torque while stretching](../assets/clip-example.mp4)
+[![Torque while stretching](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The stretched arm needs far more shoulder torque.*
 
 <details><summary>The math (optional)</summary>
 
-`v = J @ qd` and `tau = J^T F` (Craig, Ch. 5, Sec. 5.7, 5.9, 5.10). Tip power `F . (J q-dot)` equals joint power `tau . q-dot`. A 2 kg block gives `F = 2 * 9.81 = 19.6` N. Stretched flat the tip is 0.9 m out and the shoulder needs 19.6 x 0.9 = 17.7 N m; nearly over the base it needs about 1 N m. The step size has a best value between rounding noise and curvature. The clip draws 0.03 m of bar per N m. The straight move is 0.1 m/s.
+`v = J @ qd` and `tau = J^T F` (Craig, Ch. 5, Sec. 5.7, 5.9, 5.10). Tip power `F . (J q-dot)` equals joint power `tau . q-dot`. To hold a 2 kg block the tip pushes up with `F = 2 * 9.81 = 19.6` N, and `tau` is the torque the motors supply. Stretched flat the tip is 0.9 m out and the shoulder needs 19.6 x 0.9 = 17.7 N m; nearly over the base it needs about 1 N m. The step size has a best value between rounding noise and curvature. The clip draws 0.03 m of bar per N m. The straight move is 0.1 m/s.
 
 </details>
 
@@ -57,7 +57,7 @@ J = np.array([[-l1*s1 - l2*s12, -l2*s12], [l1*c1 + l2*c12, l2*c12]])
 col = (fk(q + dq, L) - fk(q - dq, L)) / (2 * eps)   # one column per joint
 ```
 
-Then speeds go through `J @ qd` (`qd`: the joint speeds) and forces through `J.T @ F` (`F`: the push on the tip).
+Then speeds go through `J @ qd` (`qd`: the joint speeds) and forces through `J.T @ F` (`F`: the force the tip applies).
 
 ```bash
 cd robotics-engineering-from-scratch

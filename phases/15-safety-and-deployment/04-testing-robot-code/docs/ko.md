@@ -38,7 +38,7 @@ replay 테스트는 녹화를 다시 넣습니다. property 테스트는 규칙 
 
 *왼쪽에서는 관절이 목표에서 멀어 unit 테스트가 실패합니다. 오른쪽은 버그가 있는 controller의 힘이 녹화된 힘과 반대인 모습입니다.*
 
-![재생](../assets/clip-example.mp4)
+[![같은 녹화로 두 controller를 돌릴 때 부호가 뒤집힌 쪽이 반대로 미는 모습](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *빨간 화살표는 미는 힘입니다. 초록은 목표 쪽으로 밀고 반대로 미는 파란 쪽은 멀어집니다.*
 
@@ -49,7 +49,7 @@ replay 테스트는 녹화를 다시 넣습니다. property 테스트는 규칙 
 <details><summary>The math (optional)</summary>
 
 replay 예시입니다. 1.0 rad step은 `kp * error = 40 * 1.0 = 40`을 만들고 `tau_max` 10으로 잘리므로 녹화된 첫 torque는 +10.0입니다.
-부호가 뒤집힌 controller의 첫 답은 -10.0이고 그 뒤에도 10 ms 간격의 샘플 80개 모두 녹화 torque의 거울상입니다. replay 테스트는 첫 샘플에서 실패합니다. unit 테스트는 0.3초 뒤를 확인합니다.
+부호가 뒤집힌 controller의 첫 답은 -10.0이고 그 뒤에도 10 ms 간격의 샘플 300개 모두 녹화 torque의 거울상입니다. replay 테스트는 첫 샘플에서 실패합니다. unit 테스트는 0.3초 뒤를 확인합니다.
 property 테스트는 토크가 유한하고 한계를 넘지 않는지 확인합니다.
 
 </details>

@@ -6,39 +6,39 @@
 
 ## In Plain Words
 
-A robot arm pushes a thin peg into a tight hole. It starts a little off to one side. A rigid wrist fights the offset and shoves the peg sideways into the walls. Their friction resists the downward push.
+A robot arm pushes a thin peg into a tight hole, its top held a little off centre. The deeper it goes, the less the walls let it lean.
 
-A wrist that gives way sideways, called compliance, lets the peg straighten and slide in.
+A rigid wrist will not give, so the peg wedges and friction grows until it beats the push. A wrist that gives way, called compliance, lets it slide in.
 
 ## Key Terms
 
 - **Compliance**: the ability to give way under a force instead of holding a position rigidly.
-- **Jam**: the peg stops and pushing harder only holds it more firmly.
+- **Jam**: the peg stops because wall friction holds against the push.
 - **Stiffness (`kx`)**: the sideways force per metre the wrist is stretched.
 
 - **Chamfer**: a slanted hole edge that guides the peg in.
 
 ## The Problem
 
-Picture a robot pushing a peg into a tight hole, a millimetre or less out of line. The peg stops halfway, and pushing harder only holds it more firmly.
+Picture a robot pushing a peg into a tight hole, a millimetre or less out of line. The peg stops halfway, and twice the push only goes a little deeper, then stops again.
 
 ## The Concept
 
 A real assembly robot is never perfectly aligned, so it must give way a little to get the part in.
 
-A stiff wrist insists on its position, so a small misalignment turns into a big sideways force. That force presses the peg against the wall, and the wall's friction holds it. This is a jam.
+A stiff wrist keeps the peg leaning the same way while the hole allows less lean. The peg wedges, and the squeeze feeds friction, which holds it. This is a jam.
 
-![Chain](../assets/diagram-jam-chain.png)
+![How a stiff wrist jams the peg, step by step](../assets/diagram-jam-chain.png)
 
-*Stiff wrist: a big side force, and friction holds the peg.*
+*Stiff wrist: the peg wedges and friction holds it.*
 
-A soft wrist gives way sideways, called compliance. The side force stays small, and the peg straightens and slides down.
+A soft wrist gives way sideways, called compliance. The walls squeeze lightly, and the peg slides down.
 
-![Comply](../assets/diagram-comply.png)
+![A soft wrist gives way so the peg slides in](../assets/diagram-comply.png)
 
-*Soft wrist: a small side force, and the peg slides down.*
+*Soft wrist: it gives, and the peg slides down.*
 
-![Two wrists](../assets/clip-example.mp4)
+[![Two wrists](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue jams halfway. Green goes in.*
 
@@ -46,15 +46,15 @@ A soft wrist gives way sideways, called compliance. The side force stays small, 
 
 *Orange marks jams. Stiff wrists jam. Soft wrists insert.*
 
-![Forces](../assets/fig-contact-forces.png)
+![Stiff wrist wall force rises once the edge catches](../assets/fig-contact-forces.png)
 
-*The stiff wrist starts with a big side force.*
+*The stiff wrist's wall force climbs once the edge catches the peg.*
 
 Without friction the peg never jams.
 
 <details><summary>The math (optional)</summary>
 
-Stiffness `kx` is sideways force per metre of stretch, so the side force at the tip is about `kx` times the misalignment. With a 1 mm offset and a 5 N push, the tilted peg's top sits about 2.1 mm from the hole centre while the tool holds 1 mm, so the wrist stretches about 1.1 mm: 1e5 N/m gives 112 N sideways, 1e3 N/m gives 1.1 N and slides in. At 34.6 mm depth the forces in the two friction cones can balance the wrist's push and twist: the stiff peg locks. A jam means the negated wrist wrench (a push and a twist) is a non-negative mix of three of the four cone-edge wrenches. A stiff wrist jams from about 0.7 mm of offset; a wrist below about 2.5e3 N/m inserts for every offset shown.
+Stiffness `kx` is sideways force per metre of stretch, so the side force is `kx` times the misalignment: the gap between where the hole holds the peg's top and where the wrist wants it. With only the tip touching, the peg leans where the wrist's twist balances: 1.7° at 1e5 N/m, 2.2° at 1e3 N/m. The hole allows a lean of at most `2h` (1 mm) over the depth, so the edge catches it at 33.2 mm (1e5) or 25.5 mm (1e3); the largest wall force reaches 8.2 N or 1.2 N. At 34.6 mm the stiff peg locks: the friction cones balance the wrist's push and twist. Doubling the push from 5 to 10 N moves it to 36.4 mm. A jam means the negated wrist wrench is a non-negative mix of three of four cone-edge wrenches. A stiff wrist jams from about 0.7 mm offset; below about 2e3 N/m it inserts at every offset up to 3 mm.
 
 </details>
 

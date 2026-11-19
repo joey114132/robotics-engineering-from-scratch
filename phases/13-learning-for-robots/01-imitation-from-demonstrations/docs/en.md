@@ -27,7 +27,7 @@ You want a toy rover to drive around a pillar from any starting spot. Writing ru
 
 Robots meet situations no one wrote rules for, and a person can often just show the right move. We save each spot the expert drove through with the move they made, then find a rule that matches those pairs. One straight rule averages "go left" and "go right" into "go straight" and hits the pillar. Copying the closest examples works much better.
 
-![Pipeline](../assets/diagram-imitation-pipeline.png)
+![Expert drives, pairs are recorded, a policy is fitted](../assets/diagram-imitation-pipeline.png)
 
 *An expert drives, we save what they did, and training turns the saved pairs into a policy.*
 
@@ -35,11 +35,11 @@ Robots meet situations no one wrote rules for, and a person can often just show 
 
 *One straight rule goes straight at the pillar. Copying the closest examples goes around it.*
 
-![Success](../assets/fig-imitation-success.png)
+![Two imitation methods: success by demonstration count, plus rollouts](../assets/fig-imitation-success.png)
 
 *Left: how often the drive succeeds, by number of demonstrations. The closest-examples rule matches the expert after about a dozen, the straight rule gets worse. Right: one test drive.*
 
-![One vs ten](../assets/clip-example.mp4)
+[![One vs ten](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue learned from one demonstration and hits the pillar. Green learned from ten and goes around.*
 
@@ -56,7 +56,7 @@ The code's pretend expert steers sideways near the pillar. The code stores the e
 ```python
 X, A = collect(rng, n_demos)        # stacked (position, velocity) pairs
 policy = fit_knn(X, A, k=3)         # mean action of the 3 closest demo states
-W = np.linalg.lstsq(feats, A)[0]    # or one linear rule, fit_linear
+linear_policy = fit_linear(X, A)   # alternative: one straight rule
 ```
 
 `success()` checks that a drive never touches the pillar and ends near the goal.

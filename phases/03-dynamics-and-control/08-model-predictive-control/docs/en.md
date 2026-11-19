@@ -41,7 +41,7 @@ Real motors have limits, so plan with them instead of asking for the impossible 
 
 Looking further ahead helps.
 
-![Three plan lengths](../assets/clip-example.mp4)
+[![Three plan lengths](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Plans of 2, 10 and 20 steps; amber bars show the slide past the line.*
 

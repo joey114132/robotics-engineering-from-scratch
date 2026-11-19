@@ -29,7 +29,7 @@ Real arms pass near poses where one direction of motion disappears. A fully stra
 
 *As the elbow straightens, the hand loses a direction.*
 
-![Two arrows merge](../assets/clip-example.mp4)
+[![Two arrows merge](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Where the hand goes when the shoulder, or the elbow, turns. At full stretch the two line up.*
 

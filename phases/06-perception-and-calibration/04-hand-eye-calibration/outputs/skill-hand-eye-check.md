@@ -7,7 +7,7 @@ description: Use when planning or reviewing a hand-eye calibration (camera on a 
 
 1. List the rotation axes of the calibration motions (axis of each relative gripper rotation). Compute the SVD of the stacked axis correlation matrix.
 2. If the second singular value over the first is below about 1e-2, the axes are nearly parallel. Add motions about other axes before calibrating.
-3. After solving, compute the residual of `A X - X B` per motion. One large residual means a bad pose detection, not a bad solver.
+3. After solving, compute the residual of `A X - X B` per motion. For a large residual, check the pose detections, the frame conventions and the motion diversity, and then the solver; the residual alone does not say which is at fault.
 4. Translation along a single common rotation axis is unobservable. Do not trust that component if the motions had one axis.
 5. Use at least 3 poses, and many more for noisy detections.
 

@@ -44,7 +44,7 @@ A long time constant gives a smooth angle but lets gyro drift through. A short o
 
 *Simulation matches the predicted curve.*
 
-![Three filters](../assets/clip-example.mp4)
+[![Three filters](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Left: `tau` too small, so noise shakes the board. Right: `tau` too large, so a steady lean. The middle one is closest to level. Errors are exaggerated.*
 

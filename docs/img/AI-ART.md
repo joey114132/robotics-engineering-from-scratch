@@ -44,4 +44,4 @@ Scene sentence per phase (placed before the style sentence):
 
 The lesson clips (`phases/*/*/assets/clip*.mp4`) are Blender renders from `code/clip*.py`, driven by the lesson's own `code/main.py` (see `scripts/blender/kit.py` and `scripts/build_clips.py`). Their look, including the "real" look with textures and the room, is made inside Blender. `scripts/restyle_clips.py` can restyle a clip with an AI video model, which writes a separate `*.real.mp4`; no such file ships with the course today.
 
-The pictures and opening clips were checked by eye only. A Codex visual check is still pending.
+The pictures and opening clips were checked by eye only.

@@ -31,11 +31,11 @@ The small delays add up. Control code that corrects hard with old information ov
 
 ![Delay spends margin](../assets/diagram-delay-margin.png)
 
-*Delay eats into the loop's safety margin.*
+*The loop starts with a fixed margin; delay spends part of it, and with none left the arm swings.*
 
 More braking is not always safer. Past a point the loop reacts faster, and the same delay then spoils more of each swing. Too little braking fails too.
 
-![Same delay, different kd](../assets/clip-example.mp4)
+[![Same delay, different kd](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same delay. Green settles, blue swings wider until it hits the stop.*
 

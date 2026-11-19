@@ -39,7 +39,7 @@ The table decides where your code thinks the hand is. There are two ways to read
 
 *Left: one table, two readings. Right: the error appears when the elbow bends.*
 
-![Shoulder turn, then elbow bend](../assets/clip-example.mp4)
+[![Shoulder turn, then elbow bend](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue reads the table wrongly and drifts from green.*
 

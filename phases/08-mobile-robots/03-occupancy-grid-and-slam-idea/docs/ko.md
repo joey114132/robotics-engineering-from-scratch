@@ -36,7 +36,7 @@ SLAM은 지금까지 만든 지도로 로버의 위치를 고쳐요.
 
 *벽 앞은 비었고 끝은 벽입니다.*
 
-![기둥이 자랍니다](../assets/clip-example.mp4)
+[![기둥이 자랍니다](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *기둥 하나가 칸 하나의 점수입니다. 벽은 오르고 바닥은 내려갑니다.*
 

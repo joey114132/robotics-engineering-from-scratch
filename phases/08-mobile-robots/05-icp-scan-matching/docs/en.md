@@ -34,7 +34,7 @@ ICP pairs each new dot with the nearest old dot, then slides and turns the whole
 
 Starting close, the nearest dots are the true partners and the scans lock together. Starting far away, nearest dots belong to the wrong walls and the scans get stuck.
 
-![Near start, far start](../assets/clip-example.mp4)
+[![Near start, far start](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Green settles. Blue pairs wrong walls and gets stuck.*
 

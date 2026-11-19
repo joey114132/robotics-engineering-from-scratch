@@ -32,7 +32,7 @@ controller는 고장 나지 않았어요. 잘못된 값을 그대로 따랐을 �
 
 *결함은 나가는 힘에도 돌아오는 측정값에도 생길 수 있습니다.*
 
-![wrong sign](../assets/clip-example.mp4)
+[![부호가 틀린 팔이 목표 반대쪽으로 달려가는 모습](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파란 팔은 반대쪽으로 달려가고 경고 램프는 stop에 닿기 전에 켜집니다. 초록 팔은 목표에 자리를 잡습니다.*
 
@@ -44,7 +44,7 @@ controller는 고장 나지 않았어요. 잘못된 값을 그대로 따랐을 �
 
 *왼쪽은 결함마다 팔이 얼마나 벗어나는지입니다. 오른쪽은 대개 팔이 stop에 닿기 전에 경보가 울리는 모습입니다.*
 
-![검사](../assets/diagram-fault-checks.png)
+![어떤 값싼 검사가 어떤 센서 고장을 잡는지](../assets/diagram-fault-checks.png)
 
 *결함마다 값싼 검사 네 개 중 하나 이상이 걸립니다.*
 

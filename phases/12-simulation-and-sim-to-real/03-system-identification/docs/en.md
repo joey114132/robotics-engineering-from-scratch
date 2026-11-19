@@ -27,25 +27,25 @@ You build a simulated arm from design-file numbers and a guess for friction. It 
 
 To trust a simulator you need real numbers, and a recording of the real arm can supply them. A computer finds the hidden numbers that make the simulated arm match the recording. But if the arm only moved at one steady speed, rub and drag look the same, so the computer cannot split them. Speeding up and slowing down can.
 
-![Pipeline](../assets/diagram-id-pipeline.png)
+![From a recorded run to fitted motor parameters](../assets/diagram-id-pipeline.png)
 
 *A recording goes in and the hidden numbers come out.*
 
-![Collinear](../assets/diagram-collinear.png)
+![A slow steady run cannot separate friction from drag](../assets/diagram-collinear.png)
 
 *At a steady speed, rub and drag both stay constant, so only their sum is visible.*
 
-![Fit](../assets/fig-id-fit.png)
+![Varied motion fits well; one slow run gives wrong estimates](../assets/fig-id-fit.png)
 
 *Left: the model follows a varied recording. Middle: one slow steady run gives a wildly wrong drag. Right: the more excitation (varied motion), the better the match.*
 
-![Two recordings](../assets/clip-example.mp4)
+[![Two recordings](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Steady speed (blue) gives a wrong drag, varied speed (green) the right one.*
 
 <details><summary>The math (optional)</summary>
 
-Drag `b` is also called viscous damping and rub `c` Coulomb friction. Over a short window, motor torque minus gravity, drag and rub, added up, equals `J` times the speed change, so `1/J`, `b/J` and `c/J` are the only unknowns. A grid search covers the motor lag `Tm`. The slow run holds 0.28 rad/s, where drag `b = 0.02` and rub `c = 0.05` push 0.0556 in all. The fit returned `b = -0.345` and `c = 0.153`, which also total 0.056, so the data cannot choose: `b` comes out at -17 times its true value. In the varied run the speed reaches 3.35 rad/s and the fit returns `b = 0.0206`. More excitation drives `J` below 0.1% error and `c` near 2%, but `b` stays near 8%. The condition number (how blurred the parameters are) is about 4 for the varied run and about 2400 for the slow one.
+Drag `b` is also called viscous damping and rub `c` Coulomb friction. Over a short window, motor torque minus gravity, drag and rub, added up, equals `J` times the speed change, so `1/J`, `b/J` and `c/J` are the only unknowns. A grid search covers the motor lag `Tm`. The slow run holds 0.28 rad/s, where drag `b = 0.02` and rub `c = 0.05` push 0.0556 in all. The fit returned `b = -0.345` and `c = 0.153`, which also total 0.056, so the data cannot choose: `b` comes out at -17 times its true value. In the varied run the speed reaches 3.35 rad/s and the fit returns `b = 0.0206`. More excitation drives `J` below 0.1% error and `c` near 2%, but `b` stays near 8%. The condition number (how blurred the parameters are) is about 4 for the varied run and 361 for the slow one with the noise above (seed 1); without noise, 2400.
 
 </details>
 

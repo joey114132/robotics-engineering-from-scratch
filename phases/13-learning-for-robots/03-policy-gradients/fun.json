@@ -2,12 +2,12 @@
   "en": {
     "hook": "One try's score is noisy gossip. Subtract the average gossip and the useful news gets louder.",
     "mission": "Use fewer tries per update and see which run gets shakier, with or without the baseline. Add `batch=4,` to the `train(...)` call in `code/main.py`, guess which run gets shakier, then run `python3 code/main.py`.",
-    "clip": "Two toy cars were trained 40 times in the same way, and now drive from the same start to the amber mark where the score is highest. The green car trained with a baseline and stops on the mark. The blue car trained on the raw score, drifted, and stops about half a metre past the mark. This is one training run. One unit is drawn as one metre."
+    "clip": "Both toy cars get 40 training updates from the same starting settings: green with a baseline, blue on the raw score. They then drive from the same start toward the amber mark where the score is highest. Green stops close to the mark and blue stops about half a metre past it. This is one training run. One unit is drawn as one metre."
   },
   "ko": {
     "hook": "시도 하나의 점수는 소음 섞인 소문이에요. 평균 소문을 빼면 쓸 만한 소식이 더 크게 들려요.",
     "mission": "한 번에 쓰는 시도 수를 줄여서 baseline이 있는 쪽과 없는 쪽 중 어느 쪽이 더 흔들리는지 보세요. `code/main.py`의 `train(...)` 호출에 `batch=4,`를 추가하고 어느 쪽이 더 흔들릴지 예측한 뒤 `python3 code/main.py`를 실행하세요.",
-    "clip": "장난감 자동차 두 대를 같은 방식으로 40번 학습시킨 뒤 같은 출발점에서 점수가 가장 높은 주황색 표시선까지 달리게 했습니다. 초록 자동차는 baseline을 쓰고 학습해서 표시선 위에 섭니다. 파랑 자동차는 날것의 점수로 학습해서 한쪽으로 치우쳤고 표시선을 약 0.5 m 지나 섭니다. 학습 한 번의 결과입니다. 1 단위를 1 m로 그렸습니다."
+    "clip": "장난감 자동차 두 대는 같은 초기 설정에서 각각 40번 update합니다. 초록은 baseline을 쓰고 파랑은 날것의 점수를 그대로 씁니다. 학습한 뒤에는 같은 출발점에서 점수가 가장 높은 주황색 표시선을 향해 달립니다. 초록은 표시선 가까이에 서고 파랑은 표시선을 약 0.5 m 지나 섭니다. 학습 한 번의 결과입니다. 1 단위를 1 m로 그렸습니다."
   },
   "toy": null,
   "three": "baseline-spread-3d"

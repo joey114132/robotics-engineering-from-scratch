@@ -29,23 +29,23 @@ A robot must plan fast and well; the guess trades one for the other.
 
 Both searches always try the best-scoring square next. That score is the priority. Dijkstra scores a square by the steps spent reaching it, so it spreads everywhere. A* adds a guess of the steps left, so it leans toward the goal.
 
-![Priority](../assets/diagram-astar-priority.png)
+![A* scores each cell as steps so far plus guess](../assets/diagram-astar-priority.png)
 
 *The score of a square: steps so far, plus the guess for A*.*
 
 A guess that is never too big keeps the best route and skips many squares. An exaggerated one rushes toward the goal but may take a longer way.
 
-![Promise](../assets/diagram-astar-promise.png)
+![A guess that never overestimates keeps the best route](../assets/diagram-astar-promise.png)
 
 *A guess that never exaggerates keeps the best route.*
 
-![Expansions](../assets/fig-astar-expansions.png)
+![Heavier guess weight expands fewer cells but lengthens the path](../assets/fig-astar-expansions.png)
 
 *A bigger guess expands fewer squares but gives a longer route.*
 
-On one test map, the trap map, the top gap is a dead end, and the exaggerating search dives into it.
+On the trap map, the top gap leads to a longer detour, and the exaggerating search takes it.
 
-![Two rovers](../assets/clip-example.mp4)
+[![Two rovers](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue exaggerates, walks farther; green wins.*
 

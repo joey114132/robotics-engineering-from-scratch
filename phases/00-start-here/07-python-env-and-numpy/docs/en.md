@@ -6,7 +6,7 @@
 
 ## In Plain Words
 
-An arm's sensor reports the elbow angle as ninety. In degrees that is a quarter turn; in radians it is over fourteen turns. numpy, a Python add-on for working with grids of numbers, always assumes radians and never asks. So a wrong unit or array shape still runs. Only a check on the numbers as they arrive catches it.
+An arm's sensor reports the elbow angle as ninety. In degrees that is a quarter turn; in radians it is over fourteen turns. numpy, a Python add-on for grids of numbers, reads sin and cos angles as radians and never asks. So a wrong unit or array shape still runs. Only a check on the numbers as they arrive catches it.
 
 ## Key Terms
 
@@ -35,7 +35,7 @@ Arrays have the same trap. Each point is a row, so to turn them all we first tra
 
 *Skipping the transpose turns the points the wrong way, silently.*
 
-![Two arms turn](../assets/clip-example.mp4)
+[![Two arms turn](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Green reaches the post. Blue skipped the transpose and swings away.*
 
@@ -45,7 +45,7 @@ Arrays have the same trap. Each point is a row, so to turn them all we first tra
 
 <details><summary>The math (optional)</summary>
 
-`np.cos(90)` reads radians: 90 minus fourteen full turns is 2.04 radians (about 117 degrees), and its cosine is -0.448 instead of 0, so the tip lands 0.45 of a link length off. Turning a point `p` is `R @ p`; points stored as rows need `points @ R.T`. Turning `(1, 0, 0)` by +90 degrees about z should give `(0, 1, 0)`, and `points @ R` gives `(0, -1, 0)`. On a 0.4 m link the unit error moves the tip by almost 0.8 m.
+`np.cos(90)` reads radians: 90 minus fourteen full turns is 2.04 radians (about 117 degrees), and its cosine is -0.448 instead of 0, so the horizontal coordinate is off by 0.45 of a link length. On a 0.4 m link that puts the tip 0.18 m from the right spot. Turning a point `p` is `R @ p`; points stored as rows need `points @ R.T`. Turning `(1, 0, 0)` by +90 degrees about z should give `(0, 1, 0)`, and `points @ R` gives `(0, -1, 0)`. Across sensor readings from 0 to 90, the horizontal error peaks at almost 0.8 m, as the last figure's right panel shows.
 
 </details>
 
@@ -64,7 +64,7 @@ def looks_like_degrees(q, limit=2 * np.pi):
     return bool(np.max(np.abs(q)) > limit)
 ```
 
-`joint_angles` and `rotate_z` use both.
+`joint_angles` uses both; `rotate_z` only the shape check.
 
 ```bash
 cd robotics-engineering-from-scratch

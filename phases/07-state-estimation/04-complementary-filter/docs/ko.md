@@ -46,7 +46,7 @@ time constant가 길면 각도는 매끄럽지만 gyro의 어긋남이 새어 �
 
 *시뮬레이션이 예측한 곡선과 맞습니다.*
 
-![필터 세 개](../assets/clip-example.mp4)
+[![필터 세 개](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *왼쪽은 `tau`가 너무 작아서 잡음이 판을 흔들고 오른쪽은 `tau`가 너무 커서 판이 일정하게 기웁니다. 가운데가 수평에 가장 가깝습니다. 오차는 과장해서 그렸습니다.*
 

@@ -29,7 +29,7 @@ A robot understands its sensors only if every reading is placed at the moment it
 
 *One computer asks the other for its time and notes when it asked and when the answer came back.*
 
-The request's note shows the clock gap plus the trip time, and the reply's shows the gap minus it. Averaging cancels the trip. Trust the try with the shortest round trip, whose error is smallest.
+The request's note shows the clock gap plus the trip time, and the reply's shows the gap minus it. Averaging cancels equal trips. The shortest round trip leaves the least room for unequal ones, so trust it.
 
 ![Offset estimate and order errors](../assets/fig-time-sync.png)
 
@@ -41,13 +41,13 @@ A trace logs the state before and after each step. A trace reader (a small check
 
 *The reader checks intents in order and stops at the first mismatch.*
 
-![Arm skips target two](../assets/clip-example.mp4)
+[![Arm skips target two](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The arm misses the middle target. The reader turns the first green, the second red, then stops.*
 
 <details><summary>The math (optional)</summary>
 
-The client sends a request at `t0` and gets the reply at `t3`. The server receives at `t1` and replies at `t2`. The offset is `((t1 - t0) + (t2 - t3)) / 2`. If the server clock is 50 ms ahead and each trip takes 20 ms, `t1 - t0` is 70 ms and `t2 - t3` is 30 ms, so the average is 50 ms. With 30 ms out and 10 ms back the estimate is off by 10 ms, half the difference of the delays. The error is at most half the round trip, so the shortest one is the most trustworthy. A camera clock 30 ms ahead can give a camera sample taken first a later stamp than an IMU sample taken after it. The figure uses the best of 8 tries and sensors 10 ms apart. The reader reports `not_executed`, `no_motion` or `wrong_motion`.
+The client sends a request at `t0` and gets the reply at `t3`. The server receives at `t1` and replies at `t2`. The offset is `((t1 - t0) + (t2 - t3)) / 2`. If the server clock is 50 ms ahead and each trip takes 20 ms, `t1 - t0` is 70 ms and `t2 - t3` is 30 ms, so the average is 50 ms. With 30 ms out and 10 ms back the estimate is off by 10 ms, half the difference of the delays. The error is at most half the round trip, so the shortest one has the smallest worst-case error bound. A camera clock 30 ms ahead can give a camera sample taken first a later stamp than an IMU sample taken after it. The figure uses the best of 8 tries and sensors 10 ms apart. The reader reports `not_executed`, `no_motion` or `wrong_motion`.
 
 </details>
 

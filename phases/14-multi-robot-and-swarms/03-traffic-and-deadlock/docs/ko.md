@@ -32,15 +32,15 @@
 
 *화살표는 "그 칸에 서 있는 자동차를 기다린다"는 뜻입니다. 고리가 교착입니다.*
 
-![예약](../assets/diagram-reservation.png)
+![경로 전체를 예약하거나 밖에서 기다리는 reservation](../assets/diagram-reservation.png)
 
 *로봇은 경로 전체가 비어 있을 때에만 들어와서 그 경로를 쥡니다. 바깥에서 기다리는 로봇은 아무것도 쥐지 않습니다.*
 
-![처리량](../assets/fig-throughput.png)
+![로봇 수에 따라 reservation 유무별로 끝낸 작업 수](../assets/fig-throughput.png)
 
 *왼쪽은 "비면 이동" 규칙에서는 무리가 멈추고 예약에서는 모든 작업이 끝나는 모습입니다. 오른쪽은 로봇이 늘면 예약이 더는 나아지지 않는 모습입니다.*
 
-![예약한 칸](../assets/clip-example.mp4)
+[![예약한 칸](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *경로 전체가 비지 않으면 빨간 막대가 기다리는 자동차를 막습니다. 주황색은 잡아 둔 칸입니다.*
 

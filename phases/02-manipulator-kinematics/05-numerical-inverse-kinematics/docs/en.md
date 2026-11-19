@@ -1,12 +1,12 @@
 # Numerical Inverse Kinematics
 
-> Learn how to find joint angles by trial and correction when no formula exists.
+> Learn how to find joint angles by trial and correction, with limits and restarts.
 
 **Type:** Build   **Prerequisites:** 02/03 Jacobian and Velocity, 02/04 Singularities   **Time:** ~15 minutes
 
 ## In Plain Words
 
-A three-link desk arm must touch a ball, and no formula gives the joint angles. Bend the joints a little, see where the hand went, and correct. A big bend can shoot past the ball; a joint at its stop cannot bend further.
+A three-link desk arm must touch a ball using repeated corrections. Bend the joints a little, see where the hand went, and correct. A big bend can shoot past the ball; a joint at its stop cannot bend further.
 
 Numerical inverse kinematics repeats these small corrections, using the Jacobian to predict each one. The starting pose decides which answer it finds, so it restarts from several.
 
@@ -21,11 +21,11 @@ Numerical inverse kinematics repeats these small corrections, using the Jacobian
 
 ## The Problem
 
-You want a robot arm's hand at a point, but a six-joint arm has no neat formula for the angles. They must respect the joint limits and not depend on where the arm started.
+You want a robot arm's hand at a point without deriving a new formula for each arm. The angles must respect the joint limits. Try several starts because one can get stuck.
 
 ## The Concept
 
-Most real arms have no angle formula, so robots find angles by trying and correcting: look where the hand is, measure the miss, nudge the joints to shrink it, and repeat until the miss is tiny.
+When a direct formula is inconvenient, find angles by trying and correcting: look where the hand is, measure the miss, nudge the joints to shrink it, and repeat until the miss is tiny.
 
 ![One step of the iteration](../assets/diagram-ik-loop.png)
 
@@ -33,7 +33,7 @@ Most real arms have no angle formula, so robots find angles by trying and correc
 
 Small nudges keep each correction accurate, and a joint at its stop is held there. The start decides which answer you find, so the robot tries several random starts.
 
-![Restarts](../assets/diagram-ik-restarts.png)
+![Random start poses converge to several different answers](../assets/diagram-ik-restarts.png)
 
 *Each start slides into a nearby answer.*
 
@@ -41,7 +41,7 @@ Small nudges keep each correction accurate, and a joint at its stop is held ther
 
 *Faint arms are the steps. The miss shrinks, but stays flat for an unreachable target.*
 
-![Two start poses reach the same ball](../assets/clip-example.mp4)
+[![Two start poses reach the same ball](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Two starts, two arm shapes, one ball.*
 
@@ -61,7 +61,7 @@ dq = J.T @ np.linalg.solve(J @ J.T + lam**2 * np.eye(2), e)
 q = np.clip(q + dq * min(1.0, max_step / np.abs(dq).max()), lo, hi)
 ```
 
-`solve_ik()` returns the angles and whether it converged (`False` plus the closest pose for an unreachable target). `ik_restarts()` tries random starts.
+`solve_ik()` returns the angles and whether it converged. On failure it returns the best pose it visited, which may not be the closest possible. `ik_restarts()` tries random starts.
 
 ```bash
 cd robotics-engineering-from-scratch

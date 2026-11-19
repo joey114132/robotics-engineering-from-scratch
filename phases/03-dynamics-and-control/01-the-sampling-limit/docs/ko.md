@@ -41,7 +41,7 @@
 
 *윙윙거리는 구간에서는 부호가 뒤집히지만 흔들림은 줄어듭니다.*
 
-![같은 kd를 건 가벼운 팔과 무게를 단 팔](../assets/clip-example.mp4)
+[![같은 kd를 건 가벼운 팔과 무게를 단 팔](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *같은 브레이크에서 가벼운 팔은 윙윙거리고 무거운 팔은 미끄러지듯 멈춥니다.*
 
@@ -76,7 +76,7 @@ python3 phases/03-dynamics-and-control/01-the-sampling-limit/code/figure.py
 
 ## 실제 도구로 보기
 
-많은 모터 컨트롤러는 안쪽에서 훨씬 빠른 loop를 하나 더 돌리므로 한계가 사라집니다. 그렇지 않으면 `kd`를 낮추거나 loop를 더 빠르게 돌리거나 가장 가벼운 자세로 `kd`의 상한을 정하세요.
+많은 모터 컨트롤러는 안쪽에서 훨씬 빠른 loop를 하나 더 돌립니다. 그 loop에서 damping을 계산하면 한계가 올라가므로 그 loop의 주기로 `r`을 다시 계산합니다. 그렇지 않으면 `kd`를 낮추거나 loop를 더 빠르게 돌리거나 가장 가벼운 자세로 `kd`의 상한을 정하세요.
 
 ## 결과물
 

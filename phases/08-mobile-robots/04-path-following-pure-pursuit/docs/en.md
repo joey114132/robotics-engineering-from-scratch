@@ -14,7 +14,7 @@ A far point gives gentle corrections. But near a bend that point lies beyond the
 ## Key Terms
 
 - **Pure pursuit**: steering a robot toward a point on the path a fixed distance ahead.
-- **Lookahead (`Ld`)**: that fixed distance; the one knob you tune.
+- **Lookahead (`Ld`)**: the least straight-line distance from the robot to the aim point; the one knob you tune.
 - **Curvature (`k`)**: how sharply a path bends. A tight turn has a large curvature.
 - **Robot frame**: coordinates that move with the robot, x forward and y left.
 - **Gain**: how strongly the robot corrects a given error.
@@ -28,23 +28,23 @@ Picture a delivery robot following a path with a sharp corner. Aiming at a point
 
 A robot must neither wobble nor clip corners, and one distance decides both.
 
-It always aims at a point on the path a fixed distance ahead, and steers along the curve, a piece of a circle, that ends at that point. That distance is the lookahead.
+It aims at the first path point at least `Ld` away in a straight line, else the last point, and steers along the curve, a piece of a circle, that ends there.
 
-![Step](../assets/diagram-pp-step.png)
+![One pure pursuit step: aim ahead, then steer](../assets/diagram-pp-step.png)
 
 *Aim ahead, steer along the circle.*
 
 Aim close and every small drift causes a hard turn, so a robot with slow wheels wobbles. Aim far and the target lies beyond the corner, so the robot cuts it.
 
-![Circles](../assets/clip-example.mp4)
+[![Two cars steering from beside the path with different lookaheads](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue aims close and turns hard, swinging across the line. Green aims far and turns gently.*
 
-![Tradeoff](../assets/diagram-pp-tradeoff.png)
+![Short lookahead wobbles, long lookahead cuts corners](../assets/diagram-pp-tradeoff.png)
 
 *A short lookahead steers hard. A long one cuts corners.*
 
-![Paths](../assets/fig-lookahead-paths.png)
+![Paths for three lookahead distances, whole path and corner zoom](../assets/fig-lookahead-paths.png)
 
 *Three lookaheads: the short one wobbles, the long ones cut the corner.*
 

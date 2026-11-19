@@ -1,4 +1,4 @@
-# Model Predictive Control
+# 모델 예측 제어 (Model Predictive Control)
 
 > 컨트롤러가 모터의 한계를 지키면서 앞을 내다보고 계획하는 법을 배웁니다.
 
@@ -41,7 +41,7 @@ model predictive control은 그 브레이크 한계를 넣고 앞으로 몇 번 
 
 더 멀리 내다볼수록 도움이 됩니다.
 
-![세 가지 계획 길이](../assets/clip-example.mp4)
+[![세 가지 계획 길이](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *계획이 2, 10, 20 step인 경우입니다. 호박색 막대는 선을 지나 미끄러진 거리입니다.*
 

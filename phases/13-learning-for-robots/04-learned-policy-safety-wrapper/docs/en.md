@@ -31,15 +31,15 @@ A learned model can surprise you, so a robot that can hurt someone needs a guard
 
 *Check the picture's age, run the policy on a fresh picture only, then clip and slow the command.*
 
-![Ladder](../assets/diagram-wrapper-ladder.png)
+![Wrapper ladder: run, hold last command, then ramp to stop](../assets/diagram-wrapper-ladder.png)
 
 *A slightly old picture: repeat the last command. A very old picture: slide down to a stop.*
 
-![Containment](../assets/fig-wrapper-containment.png)
+![Reversed command burst with and without the wrapper](../assets/fig-wrapper-containment.png)
 
 *Without the wrapper a burst of reversed commands throws the car far past its target. With it the car barely moves.*
 
-![Cars with arrows](../assets/clip-example.mp4)
+[![Cars with arrows](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The amber arrow is the command the motor gets. Blue gets the raw nonsense and is thrown backward. Green's stays small.*
 

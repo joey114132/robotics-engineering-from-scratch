@@ -26,7 +26,7 @@ Each earlier lesson passes its own test, yet the arm sets the ball 2 cm off its 
 
 Real robot tasks chain several parts together, so one small missing part can ruin the whole task. Four parts work together: IK finds the poses, a smooth path joins them, a controller follows it, and gravity feedforward holds the arm up. Remove the feedforward, which works quietly, and the arm sags.
 
-![System](../assets/diagram-pick-place-system.png)
+![Pick and place chain: IK, path, controller, arm](../assets/diagram-pick-place-system.png)
 
 *IK finds poses, a smooth path joins them, a controller with feedforward drives the arm.*
 
@@ -34,15 +34,15 @@ Real robot tasks chain several parts together, so one small missing part can rui
 
 *Without feedforward, gravity pulls the arm off its plan, and the controller pushes back only after it sags.*
 
-![Two arms](../assets/clip-example.mp4)
+[![Two arms](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue, without feedforward, stops short of the marker. Green reaches it. The sag is drawn bigger.*
 
-![Success](../assets/fig-pick-place-result.png)
+![Tip follows the plan and ends on the marker](../assets/fig-pick-place-result.png)
 
 *The tip follows the plan closely and ends exactly on the marker.*
 
-![Sag](../assets/fig-pick-place-sag.png)
+![Without feedforward the tip sags off the plan](../assets/fig-pick-place-sag.png)
 
 *Without feedforward the tip sits off the plan and misses the marker, so the check fails.*
 

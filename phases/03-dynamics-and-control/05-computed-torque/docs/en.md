@@ -43,7 +43,7 @@ Fast motion makes an arm's links pull on each other, and a good controller predi
 
 *A one-second swing: computed torque misses the planned path far less.*
 
-![Wrong masses](../assets/clip-example.mp4)
+[![Wrong masses](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Even with wrong model masses, the miss is smaller than with a simple controller.*
 

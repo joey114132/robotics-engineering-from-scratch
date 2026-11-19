@@ -29,13 +29,13 @@
 
 *팔꿈치가 펴지면 손이 방향 하나를 잃습니다.*
 
-![합쳐지는 두 화살표](../assets/clip-example.mp4)
+[![합쳐지는 두 화살표](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *어깨나 팔꿈치가 돌 때 손이 가는 방향입니다. 완전히 뻗으면 둘이 한 줄로 섭니다.*
 
 해법은 damping입니다. 작은 오차를 받아들여서 joint 속도가 한계 안에 있게 합니다.
 
-![Damped least squares](../assets/diagram-damping.png)
+![damped least squares가 속도를 제한하는 그림](../assets/diagram-damping.png)
 
 *속도는 더 이상 정해진 한계를 넘지 못합니다.*
 

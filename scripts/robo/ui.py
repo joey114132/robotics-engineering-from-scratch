@@ -73,6 +73,17 @@ def trunc(s, width):
     return set_cell_size(s, max(0, width - 1)).rstrip() + "…"
 
 
+def pack(items, width, sep="   "):
+    """Join items with sep into lines of at most width cells; an item is never split, so a line breaks only between items."""
+    lines, cur = [], ""
+    for it in items:
+        if cur and cell_len(cur + sep + it) > width:
+            lines.append(cur)
+            cur = ""
+        cur = cur + sep + it if cur else it
+    return lines + [cur] if cur else lines
+
+
 def wrap_cells(text, width):
     """공백 기준으로 줄바꿈하되 폭은 cell 로 센다. 한 낱말이 너무 길면 글자 단위로 자른다."""
     lines = []

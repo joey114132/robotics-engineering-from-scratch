@@ -36,11 +36,11 @@ executor는 준비된 callback 중 무엇을 어느 thread에서 실행할지 �
 
 ![스레드와 group](../assets/diagram-callback-groups.png)
 
-*두 callback이 서로 다른 group에 있을 때만 두 번째 thread가 도움이 됩니다.*
+*group이 두 callback의 동시 실행을 허용할 때만 두 번째 thread가 도움이 됩니다.*
 
-그래서 고치려면 thread를 하나 더 두고 느린 callback을 자기만의 group에 넣어야 합니다.
+thread를 하나 더 두고 group이 두 callback의 동시 실행을 허용하도록 구성합니다.
 
-![자동차 두 대와 각 thread 두 개](../assets/clip-example.mp4)
+[![자동차 두 대와 각 thread 두 개](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *지붕의 등 하나가 thread 하나입니다. 파랑은 group을 공유해서 두 번째 등이 꺼진 채 차가 멈춥니다. 초록은 멈추지 않습니다.*
 
@@ -59,8 +59,8 @@ timer는 1 ms에 준비되므로 thread가 하나이거나 thread 둘에 group �
 ## 만들기
 
 ```python
-busy = {g for _, g in running if g is not None}
-job = next((j for j in pending if j[3] is None or j[3] not in busy), None)
+busy = {g for _, g in running}
+job = next((j for j in pending if j[3] not in busy), None)
 ```
 
 `simulate()`는 시간을 1 ms씩 앞으로 보냅니다. 쉬는 thread는 group이 바쁘지 않은 가장 오래된 대기 callback을 가져갑니다.

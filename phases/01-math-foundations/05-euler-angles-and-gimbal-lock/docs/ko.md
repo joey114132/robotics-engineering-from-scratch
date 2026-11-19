@@ -30,7 +30,7 @@
 
 *바로 아래를 보면 고리 두 개가 나란해져서 돌릴 수 있는 방향 하나를 잃습니다.*
 
-![고리 장치 두 개, 한 자세](../assets/clip-example.mp4)
+[![고리 장치 두 개, 한 자세](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *고리 설정은 두 가지인데 화면은 똑같습니다.*
 
@@ -48,7 +48,7 @@
 
 pitch가 90도이면 roll `+a`는 yaw `-a`와 같아서 `yaw - roll`만 의미가 있습니다. 각도를 다시 읽으면 pitch는 -90도에서 90도 사이로만 나오므로 90도를 넘으면 roll과 yaw가 180도 떨어진 두 번째 표기로 바뀝니다.
 rate 행렬의 determinant(행렬이 방향을 잃으면 0이 되는 숫자 하나)는 `cos(pitch)`이고 90도에서 0입니다. 그림은 pitch를 60도에서 120도까지 돌립니다. yaw 0에서 1 rad/s로 회전하면 rate가 1 / cos(pitch)처럼 커집니다.
-영상은 roll 고리를 +1.2 rad, yaw 고리를 -1.2 rad 돌립니다. `locked=True`는 lock에서 1e-9 이내일 때 나옵니다.
+영상은 roll 고리를 +1.2 rad, yaw 고리를 -1.2 rad 돌립니다. `locked=True`는 `|sin(pitch)|`가 1에서 1e-9 이내라는 뜻이고 lock에서 약 0.00005 rad 떨어진 곳까지 해당합니다.
 
 </details>
 

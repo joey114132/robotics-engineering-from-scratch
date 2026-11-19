@@ -7,13 +7,20 @@ Fork it, change it, run the checks, open a pull request. Small fixes (a typo, a 
 ```bash
 git clone https://github.com/<you>/robotics-engineering-from-scratch
 cd robotics-engineering-from-scratch
+python3 -m venv .venv
+. .venv/bin/activate
 pip install -r requirements.txt
-python scripts/check_lessons.py
-python -m pytest phases scripts/tests_robo -q
-python scripts/robo.py        # read the course in the terminal
+python3 scripts/check_lessons.py
+python3 -m pytest phases scripts/tests_robo -q
+python3 scripts/robo.py        # read the course in the terminal
 ```
 
-Rendering a lesson clip (`python3 scripts/build_clips.py <lesson>`) needs Blender 5 and ffmpeg; you do not need them to edit text, code or tests, because the rendered clips are committed. On Windows, set `PYTHONUTF8=1` first, because the scripts read Korean text as UTF-8.
+Nothing more is needed to read lessons, edit text, code or tests, or run a lesson's `code/main.py`: the rendered figures and clips are committed. On Windows, set `PYTHONUTF8=1` first, because the scripts read Korean text as UTF-8.
+
+## Rebuilding figures and clips (only if you change one)
+
+- **Figures** (`python3 scripts/build_figures.py <lesson fragment>`) run each lesson's `code/diagram*.py` and `code/figure*.py`, then render the Excalidraw files in a headless browser. That needs Node, `puppeteer` installed globally (`npm install -g puppeteer`), network access (the renderer loads Excalidraw from esm.sh) and Linux or macOS, because the script takes a file lock with `fcntl`.
+- **Clips** (`python3 scripts/build_clips.py <lesson fragment>`) need Blender 5 and ffmpeg on your PATH, and also Linux or macOS. Commit the resulting `.mp4` and `.jpg`.
 
 The same two checks run on every push through GitHub Actions, so your fork tells you if something broke.
 

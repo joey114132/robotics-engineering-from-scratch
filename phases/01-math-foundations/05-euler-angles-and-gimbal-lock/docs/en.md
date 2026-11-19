@@ -30,7 +30,7 @@ Many robot sensors report orientation as three angles, and near one pose those n
 
 *Straight down, two rings line up and a direction is lost.*
 
-![Two rigs, one pose](../assets/clip-example.mp4)
+[![Two rigs, one pose](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Two different ring settings, one identical view.*
 
@@ -46,7 +46,7 @@ The code that reads the angles back must pick one of the two settings, and it sw
 
 <details><summary>The math (optional)</summary>
 
-At pitch 90 degrees roll `+a` equals yaw `-a`, so only `yaw - roll` matters. Reading angles back gives pitch between -90 and 90 degrees, so past 90 it switches to a second spelling with roll and yaw 180 degrees away. The rate matrix has determinant `cos(pitch)` (one number that is 0 when the matrix loses a direction), which is 0 at 90 degrees. The plot sweeps pitch from 60 to 120 degrees; for a 1 rad/s spin at yaw 0 the rates grow like 1 / cos(pitch). The clip turns the roll ring +1.2 rad and the yaw ring -1.2 rad. `locked=True` is reported within 1e-9 of the lock.
+At pitch 90 degrees roll `+a` equals yaw `-a`, so only `yaw - roll` matters. Reading angles back gives pitch between -90 and 90 degrees, so past 90 it switches to a second spelling with roll and yaw 180 degrees away. The rate matrix has determinant `cos(pitch)` (one number that is 0 when the matrix loses a direction), which is 0 at 90 degrees. The plot sweeps pitch from 60 to 120 degrees; for a 1 rad/s spin at yaw 0 the rates grow like 1 / cos(pitch). The clip turns the roll ring +1.2 rad and the yaw ring -1.2 rad. `locked=True` means `|sin(pitch)|` is within 1e-9 of 1, about 0.00005 rad from the lock.
 
 </details>
 

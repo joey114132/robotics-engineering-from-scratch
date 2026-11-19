@@ -53,6 +53,8 @@ The phases follow that loop. Phase 00 starts from zero: what a robot is, points,
    ```bash
    git clone https://github.com/joey114132/robotics-engineering-from-scratch
    cd robotics-engineering-from-scratch
+   python3 -m venv .venv
+   . .venv/bin/activate
    pip install -r requirements.txt
    python3 phases/00-start-here/01-what-is-a-robot/code/main.py
    ```
@@ -64,7 +66,7 @@ The phases follow that loop. Phase 00 starts from zero: what a robot is, points,
 |---|---|
 | In Plain Words | the idea as an everyday story, no math |
 | Key Terms | the new words of the lesson, one plain line each |
-| Clip | a short 3D animation computed by the lesson's code |
+| Clip | a short 3D animation computed by the lesson's code; the website plays it and `robo` shows its poster |
 | The Problem, The Concept | what goes wrong, and pictures that show why |
 | Build It | the code, small enough to read, with tests |
 | Use It | the same thing done with a real library |
@@ -91,7 +93,9 @@ The clips are computed, not drawn: the motion comes from each lesson's own code.
 
 ![The robo terminal home screen listing the 17 phases and the next lesson](docs/img/cli-home.png)
 
-`python3 scripts/robo.py` opens the course in your terminal. `robo read 03-02` opens a lesson, `robo quiz 03-02` runs its quiz, `robo daily` gives five review questions. Add `--lang ko` for Korean.
+`python3 scripts/robo.py` opens the course in your terminal. `robo read 03-02` opens a lesson, `robo quiz 03-02` runs its quiz, `robo daily` gives five review questions. Add `--lang ko` for Korean. Here `robo` is short for `python3 scripts/robo.py`; to type it as written, run `alias robo='python3 scripts/robo.py'` in the repository folder.
+
+The clips and figures are prebuilt and committed, so Blender, Node and a browser are needed only to rebuild them, never to read a lesson or run its code.
 
 ## Check the code
 
@@ -113,7 +117,7 @@ Forks and pull requests are welcome, from a typo to a whole new lesson. Run the 
 
 MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The Bolt mascot picture below, the 17 phase covers, the social card background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures are drawn in code, not generated.
 
-To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw`, `node scripts/readme_shots.cjs cli` and `node scripts/social_card.cjs`.
+To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw`, `node scripts/readme_shots.cjs cli home cli-home` and `node scripts/social_card.cjs`.
 
 <img src="docs/img/hero-bolt.jpg" width="360" alt="Bolt, the course mascot, waves in a toy robotics workshop while a small arm lifts a hex nut and a drone drifts past">
 

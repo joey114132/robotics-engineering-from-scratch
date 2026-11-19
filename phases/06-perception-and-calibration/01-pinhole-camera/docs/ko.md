@@ -33,7 +33,7 @@
 
 pixel은 시선 하나일 뿐입니다. 그 시선 위의 모든 점이 같은 pixel에 찍히므로 어느 점을 뜻하는지는 거리가 정합니다. 컵 가장자리 pixel에 벽의 거리를 쓰면 점이 시선을 따라 밀립니다.
 
-![depth가 너무 큰 컵 두 개](../assets/clip-example.mp4)
+[![depth가 너무 큰 컵 두 개](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *두 컵에 같은 거리 실수를 줍니다. 가장자리 컵의 공은 옆으로도 밀립니다.*
 

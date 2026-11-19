@@ -34,7 +34,7 @@ depth 카메라가 상자가 놓인 테이블을 내려다봐요. 팔은 블록�
 depth 이미지는 3D 점의 구름이 됩니다. voxel grid는 작은 정육면체마다 평균 점 하나만 남기므로 테이블은 남고 점군은 줄어듭니다. 단순한 best-fit 평면은 상자처럼 평면에서 벗어난 점에 세게 끌려갑니다.
 RANSAC은 대신 무작위 세 점으로 평면을 만들고 가까운 점을 세어 가장 좋은 것을 남깁니다.
 
-![RANSAC 세 회차](../assets/clip-example.mp4)
+[![RANSAC 세 회차](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *주황 공이 뽑힌 점이고 초록 점은 평면 가까이에 있는 점입니다. 마지막 회차만 테이블을 찾습니다.*
 

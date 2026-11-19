@@ -41,7 +41,7 @@
 
 *두 elbow가 모두 닿고 완전히 뻗으면 하나로 합쳐집니다.*
 
-![원을 도는 목표를 따라가는 elbow](../assets/clip-example.mp4)
+[![원을 도는 목표를 따라가는 elbow](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *목표가 원을 돌아도 elbow 각도는 그대로입니다.*
 
@@ -59,12 +59,13 @@ base에서 0.05 m 떨어진 목표는 거부합니다. link 0.5 m와 0.4 m에서
 ```python
 c2 = (x*x + y*y - l1*l1 - l2*l2) / (2*l1*l2)
 if abs(c2) > 1 + tol: raise ValueError("unreachable")
+c2 = np.clip(c2, -1.0, 1.0)
 s2 = np.sqrt(1 - c2*c2) * (1 if elbow == "down" else -1)
 q2 = np.arctan2(s2, c2)
 q1 = np.arctan2(y, x) - np.arctan2(l2*s2, l1 + l2*c2)
 ```
 
-작은 tolerance는 반올림 잡음 때문에 가짜 거부가 나는 것을 막습니다. 테스트는 elbow 선택(위와 아래)마다 목표 200개에 `fk(ik(p))`를 돌립니다.
+작은 tolerance는 반올림 잡음 때문에 가짜 거부가 나는 것을 막고 `np.clip`은 제곱근 안의 값이 음수가 되지 않게 합니다. 테스트는 elbow 선택(위와 아래)마다 목표 200개에 `fk(ik(p))`를 돌립니다.
 
 ```bash
 cd robotics-engineering-from-scratch

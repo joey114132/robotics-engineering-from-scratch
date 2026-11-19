@@ -1,8 +1,14 @@
-# Lessons run on Python 3.10+. numpy is the only hard dependency; scipy is used only in "Use It" cross-checks and its tests skip when absent.
+# Lessons run on Python 3.10+. numpy is the only hard dependency of the lesson code; scipy is used only in "Use It" cross-checks and its tests skip when absent.
 numpy
 scipy
 pytest
+# Every lesson's code/figure.py draws its data figure with matplotlib.
+matplotlib
 # Optional: only for the terminal reader scripts/robo.py. Lessons and their tests do not need these.
 # rich is required to run robo; Pillow is optional (without it figures print as caption lines). Tests: python3 -m pytest scripts/tests_robo
 rich
 Pillow
+# Optional, not listed here (install by hand if you want these Use It cross-checks; the tests skip without them):
+#   mujoco         lessons 00-08 and 03-05 (MuJoCo cross-check)
+#   opencv-python  lessons 06-01, 06-02, 06-04
+#   open3d         lesson 06-03

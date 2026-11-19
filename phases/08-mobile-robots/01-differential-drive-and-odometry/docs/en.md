@@ -34,7 +34,7 @@ It counts how much each wheel turned. Equal turns mean a straight line. A faster
 
 *Wheel speeds in, forward speed and turn out.*
 
-![Two rovers](../assets/clip-example.mp4)
+[![Two rovers](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue drives straight. Green curves left because its right wheel turns faster.*
 
@@ -50,7 +50,7 @@ Now make the settings slightly wrong. The robot still believes its own record, s
 
 <details><summary>The math (optional)</summary>
 
-`r` is the wheel radius and `b` the distance between the wheels. Forward speed is `v = r (wr + wl) / 2` and turn rate is `w = r (wr - wl) / b`. With `r = 0.05 m`, `b = 0.30 m` and wheels at 10 and 14 rad/s, `v = 0.6 m/s`, `w = 0.67 rad/s` and the circle has radius `v / w = 0.9 m`. If the real `b` is 2% larger, each turn is 88.2° instead of 90° and the robot ends 0.18 m from the start. The gap is `L |1 + e^(ia) + e^(2ia) + e^(3ia)|` (tested), where `L` is a side and `a` the turn angle.
+`r` is the wheel radius and `b` the distance between the wheels. Forward speed is `v = r (wr + wl) / 2` and turn rate is `w = r (wr - wl) / b`. With `r = 0.05 m`, `b = 0.30 m` and wheels at 10 and 14 rad/s, `v = 0.6 m/s`, `w = 0.67 rad/s` and the circle has radius `v / w = 0.9 m`. On the code's 2 m square, a real `b` that is 2% larger gives 88.2° turns instead of 90° and a 0.18 m gap at the start. The gap is `L |1 + e^(ia) + e^(2ia) + e^(3ia)|` (tested), where `L` is a side and `a` the turn angle.
 
 </details>
 

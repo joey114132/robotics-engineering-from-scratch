@@ -31,13 +31,13 @@ A robot never knows its position for sure, so it tracks how likely each place is
 
 The belief is a row of bars, one per corridor cell, taller where the robot is likelier to be. Predict slides the bars by the move and blurs them, because wheels slip. Update raises the bars for cells that agree with the sensor reading and lowers the others, then rescales so the bars add up to one. This step is Bayes' rule.
 
-![Rover finds its cell](../assets/clip-example.mp4)
+[![Rover finds its cell](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Moves slide and blur the green bars, readings (door: amber lamp) make them jump. The rover's cell ends up with most of the belief.*
 
 ![Filter against dead reckoning](../assets/diagram-bayes-split.png)
 
-*Dead reckoning (wheel counts alone, no sensor step): the belief keeps spreading.*
+*Dead reckoning (wheel counts alone, no sensor step): the belief spreads out.*
 
 ![Belief locks on](../assets/fig-belief-sharpening.png)
 
@@ -45,11 +45,11 @@ The belief is a row of bars, one per corridor cell, taller where the robot is li
 
 ![Doubt without the sensor](../assets/fig-dead-reckoning.png)
 
-*Left: motion-only doubt keeps rising. Right: the simulation matches the growth the formula gives.*
+*Left: motion-only doubt rises ever more slowly toward a ceiling. Right: the simulation matches the growth the formula gives.*
 
 <details><summary>The math (optional)</summary>
 
-Predict blurs by wheel slip: 5% short, 90% exact, 5% long. Update: `posterior = prior * likelihood / sum`. A cell that agrees with the reading gets weight `p_hit = 0.9`, one that disagrees `0.1`. With all 20 cells at 0.05 and 8 doors, "door" makes a door cell `0.05 * 0.9 = 0.045` and a wall cell `0.05 * 0.1 = 0.005`. The sum is `8 * 0.045 + 12 * 0.005 = 0.42`, so a door cell ends at 0.107 and a wall cell at 0.012. After five moves the rover's cell holds 0.86. Entropy falls from ln 20 (about 3) toward 1. Each predict adds `0.05 + 0.05 = 0.1` cell^2 of variance.
+Predict blurs by wheel slip: 5% short, 90% exact, 5% long. Update: `posterior = prior * likelihood / sum`. A cell that agrees with the reading gets weight `p_hit = 0.9`, one that disagrees `0.1`. With all 20 cells at 0.05 and 8 doors, "door" makes a door cell `0.05 * 0.9 = 0.045` and a wall cell `0.05 * 0.1 = 0.005`. The sum is `8 * 0.045 + 12 * 0.005 = 0.42`, so a door cell ends at 0.107 and a wall cell at 0.012. In the clip, a first reading and five moves with correct readings leave the rover's cell with 0.86. Entropy falls from ln 20 (about 3) toward 1. Each predict adds `0.05 + 0.05 = 0.1` cell^2 of variance.
 
 </details>
 

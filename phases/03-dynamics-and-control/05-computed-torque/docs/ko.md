@@ -1,4 +1,4 @@
-# Computed Torque
+# Computed Torque 제어
 
 > 팔 자신이 만드는 swing의 힘을 미리 상쇄해서 빠른 움직임도 경로를 지키게 하는 법을 배웁니다.
 
@@ -43,7 +43,7 @@ computed torque는 팔의 방정식으로 이런 영향이 요구하는 torque�
 
 *1초 동안 swing할 때 computed torque는 계획한 경로에서 훨씬 덜 벗어납니다.*
 
-![틀린 질량](../assets/clip-example.mp4)
+[![틀린 질량](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *모델의 질량이 틀려도 경로에서 벗어난 정도가 단순한 컨트롤러보다 작습니다.*
 

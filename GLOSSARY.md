@@ -56,7 +56,7 @@ Every term from the lessons' Key Terms, A to Z, with the lesson that introduces 
 | **Cost matrix `C`** | a table of how far each robot is from each job. | [14-01](phases/14-multi-robot-and-swarms/01-task-allocation/docs/en.md) |
 | **Cost weights** | numbers saying how much error hurts and how much effort hurts. | [03-06](phases/03-dynamics-and-control/06-lqr/docs/en.md) |
 | **Count** | one step an encoder reports, here one slot edge passing the reader. | [04-03](phases/04-actuators-and-sensors/03-encoders-and-quantisation/docs/en.md) |
-| **Counterexample** | one state where the slope is positive, which breaks the stability claim. | [03-09](phases/03-dynamics-and-control/09-lyapunov-stability/docs/en.md) |
+| **Counterexample** | one state where the slope is positive, so this energy-like number fails the test. Another number might still work. | [03-09](phases/03-dynamics-and-control/09-lyapunov-stability/docs/en.md) |
 | **Covariance (`P`)** | how unsure the estimate is. For one number it is the spread squared. | [07-02](phases/07-state-estimation/02-kalman-filter/docs/en.md) |
 | **CPR** | counts per revolution, the number of steps in one full turn. | [04-03](phases/04-actuators-and-sensors/03-encoders-and-quantisation/docs/en.md) |
 | **Crossover** | the speed of change, in cycles per second (Hz), where gyro and accelerometer count equally. | [07-04](phases/07-state-estimation/04-complementary-filter/docs/en.md) |
@@ -84,7 +84,7 @@ Every term from the lessons' Key Terms, A to Z, with the lesson that introduces 
 | **Discount (gamma)** | a number below one that makes later rewards count a little less. | [13-05](phases/13-learning-for-robots/05-mdps-and-value-iteration/docs/en.md) |
 | **Distance** | the straight-line gap between two points. | [00-02](phases/00-start-here/02-points-as-numbers/docs/en.md) |
 | **Domain randomisation** | tuning a controller across many simulated robots whose numbers are randomly changed. | [12-04](phases/12-simulation-and-sim-to-real/04-domain-randomisation/docs/en.md) |
-| **Dot product** | multiply matching numbers of two quaternions and add them up. Positive means they are close; negative means far. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/en.md) |
+| **Dot product** | multiply matching numbers of two quaternions and add them up. Negative means the smooth turn between them would take the long way round. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/en.md) |
 | **Double integrator** | a car steered by acceleration; position changes by speed, speed by push. | [03-06](phases/03-dynamics-and-control/06-lqr/docs/en.md) |
 | **Drag (`b`)** | a push-back that grows with speed. | [12-03](phases/12-simulation-and-sim-to-real/03-system-identification/docs/en.md) |
 | **Drift** | a slow error that builds up as rounded numbers are multiplied many times. | [01-01](phases/01-math-foundations/01-rotations-and-se3/docs/en.md) |
@@ -121,7 +121,7 @@ Every term from the lessons' Key Terms, A to Z, with the lesson that introduces 
 | **Frame** | a set of x, y, z axes attached to something, such as a link or the room. | [00-09](phases/00-start-here/09-reading-a-urdf/docs/en.md) |
 | **Friction** | rubbing that slowly drains movement. | [12-01](phases/12-simulation-and-sim-to-real/01-what-a-simulator-approximates/docs/en.md) |
 | **Friction coefficient (`mu`)** | how grippy the surfaces are. | [11-01](phases/11-contact-and-manipulation/01-contact-models/docs/en.md) |
-| **Friction cone** | all friction forces up to the grip limit, the friction coefficient times the normal force. | [11-01](phases/11-contact-and-manipulation/01-contact-models/docs/en.md) |
+| **Friction cone** | the allowed combinations of normal force and sideways friction force at a contact. | [11-01](phases/11-contact-and-manipulation/01-contact-models/docs/en.md) |
 | **Full turn** | one complete trip around, back to the direction you started in. | [00-03](phases/00-start-here/03-angles-and-radians/docs/en.md) |
 | **Fuzzing** | throwing many random inputs at code to see if it breaks. | [13-04](phases/13-learning-for-robots/04-learned-policy-safety-wrapper/docs/en.md) |
 | **Gain** | how strongly a controller reacts, such as push per unit of error. | [03-04](phases/03-dynamics-and-control/04-pid-and-tuning/docs/en.md) |
@@ -176,7 +176,7 @@ Every term from the lessons' Key Terms, A to Z, with the lesson that introduces 
 | **Jacobian (`F`, `H`)** | a table of slopes. It says how much the filter's prediction changes when the robot's position and heading change a little. | [07-05](phases/07-state-estimation/05-extended-kalman-filter/docs/en.md) |
 | **Jacobian (`J`)** | a table of numbers that turns joint speeds into the tip's speed and direction for the current pose. | [02-03](phases/02-manipulator-kinematics/03-jacobian-and-velocity/docs/en.md) |
 | **Jacobian inverse** | the table that turns a wanted hand motion back into joint speeds. | [02-04](phases/02-manipulator-kinematics/04-singularities/docs/en.md) |
-| **Jam** | the peg stops and pushing harder only holds it more firmly. | [11-04](phases/11-contact-and-manipulation/04-compliance-in-assembly/docs/en.md) |
+| **Jam** | the peg stops because wall friction holds against the push. | [11-04](phases/11-contact-and-manipulation/04-compliance-in-assembly/docs/en.md) |
 | **Jerk** | how fast the acceleration changes. A jump in acceleration is a spike in jerk. | [09-01](phases/09-motion-planning/01-trajectory-profiles/docs/en.md) |
 | **Jitter** | how far a cycle's real timing is from the plan. | [05-03](phases/05-robot-software/03-control-loop-jitter/docs/en.md) |
 | **Joint** | a hinge that turns. How far it has turned is an angle. | [00-04](phases/00-start-here/04-joints-and-links/docs/en.md) |
@@ -202,11 +202,11 @@ Every term from the lessons' Key Terms, A to Z, with the lesson that introduces 
 | **Link** | a stiff bar between two joints. It never bends or stretches. | [00-04](phases/00-start-here/04-joints-and-links/docs/en.md) |
 | **Local minimum** | a dead end where small moves no longer reduce the error, although the answer is wrong. | [08-05](phases/08-mobile-robots/05-icp-scan-matching/docs/en.md) |
 | **Log-odds (`L`)** | a square's evidence score. Positive means probably occupied, negative probably free, and 0 unknown. | [08-03](phases/08-mobile-robots/03-occupancy-grid-and-slam-idea/docs/en.md) |
-| **Lookahead (`Ld`)** | that fixed distance; the one knob you tune. | [08-04](phases/08-mobile-robots/04-path-following-pure-pursuit/docs/en.md) |
+| **Lookahead (`Ld`)** | the least straight-line distance from the robot to the aim point; the one knob you tune. | [08-04](phases/08-mobile-robots/04-path-following-pure-pursuit/docs/en.md) |
 | **Loop** | steps that repeat over and over. | [00-01](phases/00-start-here/01-what-is-a-robot/docs/en.md) |
 | **Loop closure** | recognising a place already visited, which adds one more spring. | [08-06](phases/08-mobile-robots/06-pose-graph-and-loop-closure/docs/en.md) |
 | **LQR** | a method that computes a feedback gain from a model and the cost weights. | [03-06](phases/03-dynamics-and-control/06-lqr/docs/en.md) |
-| **Lyapunov function (`V`)** | an energy-like number that never rises while a stable system (one that settles) moves. | [03-09](phases/03-dynamics-and-control/09-lyapunov-stability/docs/en.md) |
+| **Lyapunov function (`V`)** | an energy-like number, zero at the goal and positive elsewhere. If it never rises, a start near the goal stays near it. | [03-09](phases/03-dynamics-and-control/09-lyapunov-stability/docs/en.md) |
 | **Manhattan distance** | squares across plus squares down, ignoring walls. | [09-05](phases/09-motion-planning/05-grid-search-dijkstra-to-astar/docs/en.md) |
 | **Manipulability** | a score for how freely the tip can move. | [02-04](phases/02-manipulator-kinematics/04-singularities/docs/en.md) |
 | **MDP** | a list of squares, moves, the chances of each outcome, and rewards. The name is just a label. | [13-05](phases/13-learning-for-robots/05-mdps-and-value-iteration/docs/en.md) |
@@ -273,9 +273,9 @@ Every term from the lessons' Key Terms, A to Z, with the lesson that introduces 
 | **Quadratic** | a cost shaped like a bowl, easy to minimise. | [03-08](phases/03-dynamics-and-control/08-model-predictive-control/docs/en.md) |
 | **Quadrotor** | a drone with four propellers. | [10-03](phases/10-legged-and-aerial/03-quadrotor-model/docs/en.md) |
 | **Quantisation** | rounding a smooth value to whole steps, so small changes stay invisible. | [04-03](phases/04-actuators-and-sensors/03-encoders-and-quantisation/docs/en.md) |
-| **Quaternion** | four numbers that name an orientation. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/en.md) |
+| **Quaternion** | four numbers, with squares adding up to one, that name an orientation. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/en.md) |
 | **Queue depth** | how many messages a subscriber keeps while it waits to read them. | [00-10](phases/00-start-here/10-ros2-in-one-page/docs/en.md) |
-| **Quintic** | the simplest curve whose position, speed and push are all set at both ends. | [09-01](phases/09-motion-planning/01-trajectory-profiles/docs/en.md) |
+| **Quintic** | the simplest curve whose position, speed and acceleration are all set at both ends. | [09-01](phases/09-motion-planning/01-trajectory-profiles/docs/en.md) |
 | **rad/s** | radians per second, a spin speed. One full turn is about 6.28 radians. | [08-01](phases/08-mobile-robots/01-differential-drive-and-odometry/docs/en.md) |
 | **Radian** | an angle unit where a full turn is about 6.28. Code uses this unit. | [00-03](phases/00-start-here/03-angles-and-radians/docs/en.md) |
 | **Radian (rad)** | an angle unit where one full turn is about 6.28. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/en.md) |
@@ -348,14 +348,14 @@ Every term from the lessons' Key Terms, A to Z, with the lesson that introduces 
 | **tf2** | the ROS 2 library that stores a transform tree. | [01-04](phases/01-math-foundations/04-frames-and-transform-trees/docs/en.md) |
 | **Thread** | one worker inside a program, doing one job at a time. | [05-02](phases/05-robot-software/02-executors-and-callbacks/docs/en.md) |
 | **Throughput** | the number of jobs finished per time step. | [14-03](phases/14-multi-robot-and-swarms/03-traffic-and-deadlock/docs/en.md) |
-| **Thrust (`T`)** | the total upward push of the propellers. | [10-03](phases/10-legged-and-aerial/03-quadrotor-model/docs/en.md) |
+| **Thrust (`T`)** | the total push of the propellers along the drone's body axis; it tilts with the drone. | [10-03](phases/10-legged-and-aerial/03-quadrotor-model/docs/en.md) |
 | **Tick** | one small step, where the tree is asked to do a little work and report. | [05-05](phases/05-robot-software/05-behaviour-trees-and-state-machines/docs/en.md) |
 | **Tick (`dt`)** | one control step, the same as the time step in 00/06. | [03-01](phases/03-dynamics-and-control/01-the-sampling-limit/docs/en.md) |
 | **Time constant** | the time in which an error shrinks by about two thirds. | [11-02](phases/11-contact-and-manipulation/02-force-and-hybrid-control/docs/en.md) |
 | **Time constant (`tau`)** | how long the gyro is trusted before the accelerometer takes over. | [07-04](phases/07-state-estimation/04-complementary-filter/docs/en.md) |
 | **Time constant (`Tc`)** | how quickly the body tips over, the same number as in lesson 01. | [10-02](phases/10-legged-and-aerial/02-walking-by-foot-placement/docs/en.md) |
 | **Time stamp** | the time written on a reading by the clock of the computer that took it. | [05-04](phases/05-robot-software/04-time-sync-and-traces/docs/en.md) |
-| **Time step** | the short pause between two passes of the loop. Here it is a tenth of a second. | [00-01](phases/00-start-here/01-what-is-a-robot/docs/en.md) |
+| **Time step** | the time from the start of one pass of the loop to the start of the next, here a tenth of a second. | [00-01](phases/00-start-here/01-what-is-a-robot/docs/en.md) |
 | **Time step (`dt`)** | the small slice of time the computer jumps forward each time. | [00-06](phases/00-start-here/06-time-steps/docs/en.md) |
 | **Timeout `T`** | how long silence is tolerated before the watchdog acts. | [15-02](phases/15-safety-and-deployment/02-watchdogs-and-stops/docs/en.md) |
 | **Timing jitter** | how much message arrival times wobble. | [15-02](phases/15-safety-and-deployment/02-watchdogs-and-stops/docs/en.md) |

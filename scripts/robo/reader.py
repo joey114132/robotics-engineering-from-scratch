@@ -17,7 +17,8 @@ from . import progress as P
 from . import ui as U
 
 _FOLD = re.compile(r"^<details>\s*<summary>([^<]*)</summary>$")
-_IMG = re.compile(r"^!\[(.*?)\]\((.+?)\)\s*$")
+_IMG = re.compile(r"^!\[(.*?)\]\((?!.*\.mp4\)\s*$)(.+?)\)\s*$")
+_CLIP = re.compile(r"^\[!\[(.*?)\]\((.+?\.jpg)\)\]\(.+?\.mp4\)\s*$")   # a clip is its poster linked to the video; the terminal shows the poster
 _CAP = re.compile(r"^\*(?!\*)(.+?)\*\s*$")
 _META = re.compile(r"\*\*(.+?):\*\*\s*(.+?)(?=\s{2,}\*\*|$)")
 
@@ -106,7 +107,7 @@ def split_blocks(body):
         ln = lines[i]
         if ln.lstrip().startswith("```"):
             fence = not fence
-        m = None if fence else _IMG.match(ln.strip())
+        m = None if fence else (_CLIP.match(ln.strip()) or _IMG.match(ln.strip()))
         if m:
             if buf:
                 out.append(("md", "\n".join(buf)))
@@ -163,8 +164,6 @@ def print_lesson(u, lesson, state, mode, root=None):
         else:
             _, alt, src, cap = part
             path = (doc.parent / src).resolve() if not src.startswith("http") else Path(src)
-            if path.suffix == ".mp4":   # the terminal shows a clip as its poster frame
-                path = path.with_suffix(".jpg")
             u.print()
             full = mode == "full"
             lines = figures.render_figure(path, cap if u.plain else cap.replace("`", ""), min(w - 4, 96 if full else figures.MAX_COLS),

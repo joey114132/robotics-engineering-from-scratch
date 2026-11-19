@@ -32,7 +32,7 @@ Compare how the hand moved (joint angles) with how the world seemed to move in t
 
 With one axis, two things stay hidden: how the camera is turned about that line, and where it sits along it.
 
-![Arm spinning, two cameras](../assets/clip-example.mp4)
+[![Arm spinning, two cameras](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The arm spins about its upright axis. A camera higher up (ghost) sees the same motion.*
 
@@ -46,7 +46,7 @@ With one axis, two things stay hidden: how the camera is turned about that line,
 
 <details><summary>The math (optional)</summary>
 
-Write the hand motion as `A`, the camera motion as `B` and the unknown mounting as `X`, so `A X = X B`. Each motion is a rotation `R` plus a translation `t`. Rotation: `log(R_A) = R_X log(R_B)` (`log(R)` is axis times angle), and an SVD (a matrix tool that lines up two sets of axes) gives `R_X`. Translation: `(R_A - I) t_X = R_X t_B - t_A`. At spread 0 every axis is `z`, so `R_A z = z`, `R_A - I` sends `z` to zero and shifting `t_X` along `z` breaks no equation. With noise, 12 motions give 121 mm and 136 degrees of error at spread 0 and 4.9 mm and 1.3 degrees at 15 (median of 60 runs). The warning is the ratio of the axes' second to first singular value, an SVD number near zero when the axes are parallel. The cup is 0.4 m ahead.
+Write the hand motion as `A`, the camera motion as `B` and the unknown mounting as `X`, so `A X = X B`. Each motion is a rotation `R` plus a translation `t`. Rotation: `log(R_A) = R_X log(R_B)` (`log(R)` is axis times angle), and an SVD (a matrix tool that lines up two sets of axes) gives `R_X`. Translation: `(R_A - I) t_X = R_X t_B - t_A`. At spread 0 every axis is `z`, so `R_A z = z`, `R_A - I` sends `z` to zero and shifting `t_X` along `z` breaks no equation. With noise, 12 motions give 121 mm and 136 degrees of error at spread 0 and 4.9 mm and 1.3 degrees at 15 (one run, seed 1). The warning is the ratio of the axes' second to first singular value, an SVD number near zero when the axes are parallel. In the clip, the cup is 0.3 m ahead of the camera.
 
 </details>
 

@@ -42,7 +42,7 @@ Handing out jobs one by one wastes battery and time, so robots must plan as a gr
 
 *The more robots, the bigger greedy's extra cost over the best.*
 
-![Five cars](../assets/clip-example.mp4)
+[![Five cars](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue (greedy): car 5 crosses the floor. Green (Hungarian): cars 3, 4 and 5 trade pads.*
 
@@ -62,7 +62,7 @@ Greedy: 0.65 + 1.14 + 2.22 = 4.01 m. Best: 0.69 + 0.52 + 0.77 = 1.98 m. With car
 
 ## Build It
 
-`greedy()` takes the cheapest free job for each robot. `hungarian()` builds the best total step by step.
+`greedy()` takes the cheapest free job for each robot. `hungarian()` keeps a price on every robot (`u`) and job (`v`). A pair's reduced cost is its distance minus both prices, and a pair at zero is ready to match.
 
 ```python
 cur = C[i0 - 1, j - 1] - u[i0] - v[j]   # reduced cost of edge (robot i0, task j)

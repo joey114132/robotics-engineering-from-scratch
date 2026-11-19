@@ -8,7 +8,7 @@
 
 로봇 팔의 sensor가 팔꿈치 각도를 구십이라고 알려 줘요. degree로 읽으면 사분의 일 바퀴예요. radian으로 읽으면 열네 바퀴가 넘어요.
 
-numpy는 숫자 격자를 다루는 Python 도구예요. 언제나 radian이라고 가정하고 단위를 묻지 않아요. 그래서 단위나 배열 shape이 틀려도 계산은 그대로 돌아가요. 들어오는 숫자를 그 자리에서 검사해야만 잡을 수 있어요.
+numpy는 숫자 격자를 다루는 Python 도구예요. sin과 cos는 각도를 radian으로 읽고 단위를 묻지 않아요. 그래서 단위나 배열 shape이 틀려도 계산은 그대로 돌아가요. 들어오는 숫자를 그 자리에서 검사해야만 잡을 수 있어요.
 
 ## 핵심 용어
 
@@ -37,7 +37,7 @@ numpy는 숫자 격자를 다루는 Python 도구예요. 언제나 radian이라�
 
 *transpose를 빼먹으면 점이 조용히 반대로 돕니다.*
 
-![팔 두 대가 돕니다](../assets/clip-example.mp4)
+[![팔 두 대가 돕니다](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *초록은 기둥에 닿습니다. 파랑은 transpose를 빼먹어서 기둥에서 멀어집니다.*
 
@@ -47,9 +47,9 @@ numpy는 숫자 격자를 다루는 Python 도구예요. 언제나 radian이라�
 
 <details><summary>The math (optional)</summary>
 
-`np.cos(90)`은 90을 radian으로 읽습니다. 90에서 온전한 열네 바퀴를 빼면 2.04 radian(약 117도)이고 cosine은 0이 아니라 -0.448이라서 링크 끝이 링크 길이의 0.45배만큼 어긋납니다.
+`np.cos(90)`은 90을 radian으로 읽습니다. 90에서 온전한 열네 바퀴를 빼면 2.04 radian(약 117도)이고 cosine은 0이 아니라 -0.448이라서 가로 좌표가 링크 길이의 0.45배만큼 어긋납니다. 0.4 m 링크에서는 끝이 올바른 자리에서 0.18 m 벗어납니다.
 점 `p`를 돌리는 식은 `R @ p`이고 행으로 저장한 점에는 `points @ R.T`를 씁니다. `(1, 0, 0)`을 z축 둘레로 +90도 돌리면 `(0, 1, 0)`이 나와야 하는데 `points @ R`은 `(0, -1, 0)`을 내놓습니다.
-0.4 m 링크에서는 단위 오류가 끝을 0.8 m 가까이 움직입니다.
+센서 값이 0에서 90까지 가는 동안 가로 좌표 오차는 가장 클 때 0.8 m 가까이 됩니다. 마지막 그림의 오른쪽 그래프가 그 모양입니다.
 
 </details>
 
@@ -68,7 +68,7 @@ def looks_like_degrees(q, limit=2 * np.pi):
     return bool(np.max(np.abs(q)) > limit)
 ```
 
-`joint_angles`와 `rotate_z`가 둘 다 씁니다.
+`joint_angles`는 두 검사를 모두 쓰고 `rotate_z`는 shape 검사만 씁니다.
 
 ```bash
 cd robotics-engineering-from-scratch

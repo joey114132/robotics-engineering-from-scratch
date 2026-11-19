@@ -37,7 +37,7 @@ Each reader keeps a waiting line of messages. When the line is full, a new messa
 
 *The sender is faster, so the line stays full.*
 
-![Three arms, three queue depths](../assets/clip-example.mp4)
+[![Three arms, three queue depths](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Short, medium and long lines. The longer the line, the more the arm chases old positions.*
 

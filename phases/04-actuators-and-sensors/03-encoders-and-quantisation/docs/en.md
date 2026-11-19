@@ -39,7 +39,7 @@ An encoder only reports whole counts, so the angle goes up in small steps. Subtr
 
 You can smooth the speed by comparing counts further apart, a longer window. That cuts the noise but makes the answer describe an older moment, so the speed arrives late.
 
-![Two dials](../assets/clip-example.mp4)
+[![Two dials](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue (counts one reading apart) sits on the true speed. Green (many readings apart) trails behind it.*
 

@@ -31,7 +31,7 @@ A controller is only as good as its arm model, so you must be able to rebuild it
 
 *Two roads to one torque. If they disagree, one has a bug.*
 
-![Energy bars](../assets/clip-example.mp4)
+[![Energy bars](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Compare the single-joint bars with the both-together bar. The difference is the tug.*
 
@@ -47,7 +47,7 @@ A free-swinging arm keeps its energy, so a flipped sign on `h` makes the energy 
 
 <details><summary>The math (optional)</summary>
 
-Kinetic energy is `T = 1/2 qd' M(q) qd`, where `qd'` is the speed list `qd` written sideways; it expands to `1/2 (M11 qd1^2 + 2 M12 qd1 qd2 + M22 qd2^2)`; the Lagrange equation `tau = d/dt(dT/dqd) - dT/dq` gives `tau = M qdd + h`. For the lesson's arm (1 and 1.5 kg) at `q = (0.3, 1.0)` and 1 rad/s: joint 1 alone gives `T = 0.437`, `M11 = 0.873`; joint 2 alone `T = 0.0925`, `M22 = 0.185`; both `T = 0.836`, so `M12 = 0.307`. The wrong-sign energy wanders by tenths of a joule. The fast-motion torques `h` are called Coriolis and centripetal torques. `M` is built entry by entry: one joint at speed 1 and the others 0 gives `M11` or `M22`, both together give `M12`.
+Kinetic energy is `T = 1/2 qd' M(q) qd`, where `qd'` is the speed list `qd` written sideways; it expands to `1/2 (M11 qd1^2 + 2 M12 qd1 qd2 + M22 qd2^2)`; the Lagrange equation `tau = d/dt(dT/dqd) - dT/dq` gives `tau = M qdd + h`. For the lesson's arm (1 and 1.5 kg) at `q = (0.3, 1.0)` and 1 rad/s: joint 1 alone gives `T = 0.437`, `M11 = 0.873`; joint 2 alone `T = 0.0925`, `M22 = 0.185`; both `T = 0.836`, so `M12 = 0.307`. The wrong-sign energy wanders by tenths of a joule. The fast-motion torques `h` are called Coriolis and centripetal torques. `M` is built entry by entry: each diagonal entry is double the energy with only that joint at speed 1, and `M12` is the both-together energy minus the two single-joint energies.
 
 </details>
 

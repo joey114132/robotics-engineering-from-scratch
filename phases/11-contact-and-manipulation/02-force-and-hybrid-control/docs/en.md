@@ -23,7 +23,7 @@ Force control measures the push, going deeper when it is weak and backing off wh
 
 Picture a robot told to press a sponge with a steady force. It guesses how soft the sponge is and presses to a fixed depth. If the sponge is stiffer than guessed, it pushes far too hard.
 
-![Three arms](../assets/clip-example.mp4)
+[![Three arms](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Same depth on three sponges: very different forces.*
 
@@ -43,17 +43,17 @@ Force control skips the guess: the robot measures the push. If it is weak, the t
 
 Real tasks need both: slide along the surface by position, press into it by force. That is hybrid control.
 
-![Selection](../assets/diagram-hybrid-selection.png)
+![A selection matrix gives each axis one control law](../assets/diagram-hybrid-selection.png)
 
 *Position along x, force along y.*
 
 ![Bumpy surface](../assets/fig-hybrid-bumpy.png)
 
-*The path follows the bumps and the force stays steady.*
+*Hybrid control cuts the force swings on the bumps.*
 
 <details><summary>The math (optional)</summary>
 
-Pressing with 10 N, the robot assumes 5000 N/m and commands a 2 mm squeeze, but the sponge top sits 0.4 mm lower, so only 1.6 mm gets squeezed. Then 1000 N/m gives 1.6 N, 5000 N/m gives 8 N, 25000 N/m gives 40 N. The force loop moves the tool tip at `v = ki * (fd - f)`, with `fd` the wanted force and `f` the measured one. On a spring surface `f = ke * x` the gap shrinks by about two thirds every `1 / (ke * ki)` seconds, so a stiffer surface settles faster. Each step of `dt` multiplies the gap by `1 - ke * ki * dt`, so it is stable only while `ke * ki * dt < 2`: a loop that works on a soft pad can shake on steel. The selection matrix `S` gives each axis one law; `S = diag(0, 1)` means position on x and force on y.
+Pressing with 10 N, the robot assumes 5000 N/m and commands a 2 mm squeeze, but the sponge top sits 0.4 mm lower, so it squeezes only 1.6 mm. 1000 N/m gives 1.6 N, 5000 N/m gives 8 N, 25000 N/m gives 40 N. The force loop moves the tool at `v = ki * (fd - f)`, (`fd` wanted, `f` measured). On a spring surface `f = ke * x` the gap shrinks by about two thirds every `1 / (ke * ki)` seconds. Each step of `dt` multiplies the gap by `1 - ke * ki * dt`. While `ke * ki * dt < 1` the gap shrinks steadily, so a stiffer surface settles faster. Between 1 and 2 it flips sign each step and settles slower; above 2 it shakes. The selection matrix `S` gives each axis one law; the code stores its diagonal, `S = [0, 1]`: position on x, force on y.
 
 </details>
 
@@ -86,6 +86,6 @@ Sources: Craig (chapter 11) and the original hybrid-control paper; neither could
 
 ## Exercises
 
-1. Tell the robot the true stiffness; position control then works, but only on that surface.
+1. Set `K_EST` and `X_EST` to the true values: position control hits 10 N, on that surface only.
 2. Raise the gain until the force shakes.
 3. Add a small delay to the force reading and see the safe gain shrink.

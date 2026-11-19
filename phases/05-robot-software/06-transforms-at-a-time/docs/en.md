@@ -35,7 +35,7 @@ A transform tree (how the robot's parts are placed relative to each other) says 
 
 *Between samples: blend. Slightly past the newest: guess within a limit. Else: error.*
 
-![Interpolated answer and a refusal](../assets/clip-example.mp4)
+[![Interpolated answer and a refusal](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Grey ghosts are stored poses. Amber is a moment between them. The red cross is too new and is refused.*
 

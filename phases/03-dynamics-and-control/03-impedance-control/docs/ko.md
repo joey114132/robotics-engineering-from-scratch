@@ -37,19 +37,22 @@ spring이 뻣뻣할수록 같은 힘에 덜 움직입니다. damper는 멈추는
 
 *세 가지 damper 세기가 모두 같은 자리에서 끝납니다.*
 
-![같은 힘, 서로 다른 stiffness](../assets/clip-example.mp4)
+[![같은 힘, 서로 다른 stiffness](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *같은 힘에 뻣뻣한 팔은 절반만 움직입니다.*
 
 ![K와 D 고르기](../assets/diagram-impedance-recipe.png)
 
-*stiffness를 고르고 damping을 고른 뒤 03/01에서 본 윙윙거림 한계를 확인합니다.*
+*stiffness와 damping을 고른 뒤 접힌 수식에서 전체 sampling 한계를 확인합니다.*
 
 <details><summary>The math (optional)</summary>
 
 `tau = K (q_des - q) - D qd + tau_g`입니다. 일정한 힘 `F`로 밀면 관절은 `F / K`에서 멈춥니다.
 damping ratio는 `zeta = D / (2 sqrt(K J))`입니다. 1이면 overshoot가 없고 1보다 작으면 출렁입니다. overshoot 비율은 `exp(-pi zeta / sqrt(1 - zeta^2))`이고 `zeta = 0.2`에서 약 0.53입니다.
-`F = 2` Nm이고 `J = 1`일 때 `K = 100`이면 0.02 rad, `K = 200`이면 0.01 rad에서 멈춥니다. 이때 `D`는 각각 20과 28.3입니다. `K = F_max / x_max`로 고릅니다. 영상은 힘을 15배로 크게 그렸습니다.
+`F = 2` Nm이고 `J = 1`일 때 `K = 100`이면 0.02 rad, `K = 200`이면 0.01 rad에서 멈춥니다. 이때 `D`는 각각 20과 28.3입니다. `K = F_max / x_max`로 고릅니다.
+떨림 검사 `dt*D/J < 1`은 스프링을 무시합니다.
+이 갱신의 전체 한계는 `dt^2 K/J + 2 dt D/J < 4`입니다.
+`J = 1`, `K = 10000`, `D = 1`, `dt = 0.1`이면 damper 검사는 0.1이지만 왼쪽 값이 100.2여서 loop가 발산합니다. 영상은 힘을 15배로 크게 그렸습니다.
 
 </details>
 

@@ -31,7 +31,7 @@
 
 *직선 규칙은 매 주기 다시 만듭니다.*
 
-Kalman filter는 직선 움직임이 필요한데 로봇의 실제 경로는 곡선입니다. extended filter는 현재 추정값 둘레의 곡선 한 토막이 곧은 것처럼 가정하고 매 주기 그 토막을 다시 그립니다.
+Kalman filter는 직선(선형) 규칙만 다룰 수 있는데 여기서는 움직임이 heading의 sine과 cosine에 따라 달라집니다. extended filter는 현재 추정값 둘레에서 각 규칙의 짧은 한 토막이 곧은 것처럼 가정하고 매 주기 그 토막을 다시 그립니다.
 
 ![나쁜 선형화가 스스로를 키움](../assets/diagram-ekf-spiral.png)
 
@@ -43,13 +43,13 @@ NEES는 필터가 주장하는 불확실성이 실제 오차와 맞는지 확인
 
 *왼쪽은 EKF가 진짜 궤적을 따르는 모습입니다. 오른쪽은 landmark 네 개에서는 NEES가 점선(3) 근처에 머물고 하나일 때는 출발 오차가 커질수록 그 위로 높이 치솟는 모습입니다.*
 
-![기둥 하나, 기둥 넷](../assets/clip-example.mp4)
+[![기둥 하나, 기둥 넷](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *둘 다 heading이 틀린 채 시작합니다. 이 그림은 기둥 하나(파랑)와 넷(초록)을 견주고 맨 위 영상은 셋을 씁니다. 기둥이 하나이면 추측한 위치가 멀리 어긋난 채 끝나는데 그 둘레의 작은 원은 필터가 확신한다고 말합니다. 넷이면 로봇 위에 머뭅니다.*
 
 <details><summary>The math (optional)</summary>
 
-state는 `[x, y, heading]`이고 로봇은 속도 `v`와 회전율 `w`로 곡선 `f(x, u)`를 따라 움직입니다. `F`는 움직임의 Jacobian이고 `H`는 landmark의 range와 bearing `h(x)`의 Jacobian입니다.
+state는 `[x, y, heading]`이고 로봇은 속도 `v`와 회전율 `w`로 곡선 `f(x, u)`를 따라 움직입니다. `F`는 움직임을 선형화하고 `H`는 `h(x)`를 선형화합니다. `h(x)`는 landmark까지의 거리인 range와 로봇 기준 방향인 bearing을 돌려줍니다.
 covariance는 `P = F P F^T + Q`로 predict합니다. bearing 차이는 wrap합니다. NEES `e^T P^-1 e`의 평균은 상태 크기인 3입니다(위치 둘, 방향 하나).
 heading 추측이 1 rad 틀리고 landmark가 하나이면 30번 실행에서 NEES 평균이 100.5이고 추정이 2.8 m 어긋난 채 끝납니다. 넷이면 2.7입니다. 그림에서 NEES는 landmark 네 개에서 3 근처에 머물고 하나일 때는 약 4에서 수백으로 커집니다.
 테스트는 150개 seed에서 NEES가 3 근처인지, landmark 하나와 1.5 rad heading 오차에서 20배 넘게 커지는지 확인합니다. 1 m는 0.5 m로 그렸습니다.

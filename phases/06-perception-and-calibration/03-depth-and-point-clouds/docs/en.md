@@ -31,7 +31,7 @@ A robot needs the table's exact tilt to place things level, and a few bad points
 
 A depth image becomes a cloud of 3D points. A voxel grid keeps one averaged point per small cube, so the table stays and the cloud shrinks. A plain best-fit plane gets pulled hard by points that are off the plane, such as the box. RANSAC instead tries planes through three random points, counts the points near each, and keeps the best.
 
-![Three RANSAC rounds](../assets/clip-example.mp4)
+[![Three RANSAC rounds](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Amber balls are the picks, green points are near the plane. Only the last round finds the table.*
 

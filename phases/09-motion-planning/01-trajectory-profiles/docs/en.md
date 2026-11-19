@@ -8,14 +8,14 @@
 
 A bench arm swings from one pose to another and stops. To change speed, the motor pushes. The faster the speed must change, the harder it pushes. That rate of change is acceleration.
 
-If acceleration jumps from zero to a large value, the push jumps too and the arm gets a knock. A quintic profile starts and ends with zero acceleration, so the push grows from nothing.
+If acceleration jumps from zero to a large value, the push jumps too and the arm gets a knock. A quintic profile starts and ends with zero acceleration, so the extra push for acceleration grows smoothly.
 
 ## Key Terms
 
 - **Trajectory profile**: the plan of how a joint's position changes over time between two poses.
-- **Acceleration**: how fast the speed changes; the motor's push follows it.
+- **Acceleration**: how fast the speed changes; changing a joint's speed takes extra push from the motor.
 - **Jerk**: how fast the acceleration changes. A jump in acceleration is a spike in jerk.
-- **Quintic**: the simplest curve whose position, speed and push are all set at both ends.
+- **Quintic**: the simplest curve whose position, speed and acceleration are all set at both ends.
 - **Torque**: the turning force a motor applies to a joint.
 - **Control tick**: one step of the program that drives the motor; here 0.002 s.
 
@@ -27,25 +27,25 @@ Picture a robot arm moving between two poses along a smooth-looking curve. It re
 
 A real arm is worn and shaken by sudden pushes from its motors, so a plan should build the push up gradually.
 
-Three plans for the same move differ only at the ends: a trapezoid (speed up, cruise, slow down), a cubic and a quintic. The first two make the push jump from nothing to a lot at once. The quintic eases in and eases out.
+Three plans for the same move differ only at the ends: a trapezoid (speed up, cruise, slow down), a cubic and a quintic. The first two make acceleration jump at the ends. The quintic eases in and eases out.
 
-![Profiles](../assets/diagram-profile-choice.png)
+![One arm move planned three ways: cubic, quintic, trapezoid](../assets/diagram-profile-choice.png)
 
 *Same move, three plans.*
 
-![Profiles](../assets/fig-profiles.png)
+![Cubic, quintic and trapezoid profiles compared from rest to rest](../assets/fig-profiles.png)
 
-*Only the quintic starts and ends with zero push.*
+*Only the quintic starts and ends with zero acceleration.*
 
 ![Jerk chain](../assets/diagram-jerk-chain.png)
 
-*A jump in push reaches the motor as a hard knock.*
+*A jump in acceleration reaches the motor as a hard knock.*
 
-![Jerk](../assets/fig-jerk-vs-dt.png)
+![Peak jerk against sample period for three profiles](../assets/fig-jerk-vs-dt.png)
 
 *Checking the plan more often makes the jumpy plans look worse.*
 
-![Two arms](../assets/clip-example.mp4)
+[![Two arms](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue jumps on and off. Green eases in.*
 
@@ -83,6 +83,6 @@ Sources: Craig, *Introduction to Robotics*, 3rd ed., ch. 7.
 
 ## Exercises
 
-1. Make the move take twice as long and see how the peak push changes.
+1. Make the move take twice as long and see how the peak acceleration changes.
 2. Shorten the sample period and watch the jumpy plans get worse.
-3. Make the move bigger and see how the peak push changes.
+3. Make the move bigger and see how the peak acceleration changes.

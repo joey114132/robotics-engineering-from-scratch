@@ -40,7 +40,7 @@
 
 *당김과 밂은 멈춘 경로에서 균형을 이룹니다.*
 
-![당김과 밂](../assets/clip-example.mp4)
+[![당김과 밂](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *빨간 화살표는 당기는 힘과 미는 힘입니다. 미는 힘은 아주 크게 시작해서 줄어듭니다.*
 

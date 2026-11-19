@@ -27,7 +27,7 @@ gravity feedforward는 그 힘을 미리 더해 줘요. 이것이 없으면 cont
 실제 로봇 작업은 여러 부품을 이어 붙이므로 작은 부품 하나가 빠져도 작업 전체가 망가질 수 있습니다. 네 부품이 함께 일합니다.
 IK가 자세를 찾고 매끄러운 경로가 그 자세들을 잇고 controller가 그 경로를 따라가고 gravity feedforward가 팔을 받쳐 줍니다. 조용히 일하는 feedforward를 빼면 팔이 처집니다.
 
-![시스템](../assets/diagram-pick-place-system.png)
+![IK, 경로, controller, 팔로 이어진 pick and place 사슬](../assets/diagram-pick-place-system.png)
 
 *IK가 자세를 찾고 매끄러운 경로가 자세들을 잇고 feedforward를 더한 controller가 팔을 움직입니다.*
 
@@ -35,15 +35,15 @@ IK가 자세를 찾고 매끄러운 경로가 그 자세들을 잇고 controller
 
 *feedforward가 없으면 중력이 팔을 계획에서 끌어내리고 controller는 팔이 처진 뒤에야 되밉니다.*
 
-![팔 둘](../assets/clip-example.mp4)
+[![팔 둘](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파란 팔은 feedforward 없이 표시 앞에서 멈춥니다. 초록 팔은 표시에 닿습니다. 처짐은 크게 그렸습니다.*
 
-![성공](../assets/fig-pick-place-result.png)
+![끝점이 계획을 따라가 marker 위에서 끝나는 그래프](../assets/fig-pick-place-result.png)
 
 *팁은 계획을 바짝 따라가서 표시 위에서 정확히 끝납니다.*
 
-![처짐](../assets/fig-pick-place-sag.png)
+![feedforward가 없으면 끝점이 계획에서 처지는 그래프](../assets/fig-pick-place-sag.png)
 
 *feedforward가 없으면 팁이 계획에서 벗어나 표시를 빗나가므로 검사에 실패합니다.*
 

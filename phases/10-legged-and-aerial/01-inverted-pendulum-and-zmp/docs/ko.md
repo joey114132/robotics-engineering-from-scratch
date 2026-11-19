@@ -35,7 +35,7 @@
 
 살짝 밀리면 capture point가 발 안에 있어서 발목만으로 버틸 수 있습니다. 세게 밀리면 발끝 너머에 놓이고 그곳으로 내딛는 걸음만 도움이 됩니다.
 
-![두 번의 밀침](../assets/clip-example.mp4)
+[![두 번의 밀침](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *초록은 capture point가 발 안에 머물고 파랑은 발 밖으로 벗어나 쓰러집니다.*
 

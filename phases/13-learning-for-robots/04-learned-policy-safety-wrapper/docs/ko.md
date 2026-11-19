@@ -32,15 +32,15 @@
 
 *화면이 얼마나 오래됐는지 확인하고 신선한 화면에서만 policy를 돌린 뒤 명령을 자르고 느리게 만듭니다.*
 
-![사다리](../assets/diagram-wrapper-ladder.png)
+![프레임이 낡을수록 실행, 마지막 명령 유지, 정지로 내려가는 사다리](../assets/diagram-wrapper-ladder.png)
 
 *조금 오래된 화면에는 마지막 명령을 되풀이하고 아주 오래된 화면에는 정지까지 서서히 내려갑니다.*
 
-![억제](../assets/fig-wrapper-containment.png)
+![wrapper가 있을 때와 없을 때 반전된 명령 묶음의 영향](../assets/fig-wrapper-containment.png)
 
 *wrapper가 없으면 명령이 반대로 뒤집힌 burst가 자동차를 목표 너머로 멀리 던집니다. wrapper가 있으면 거의 움직이지 않습니다.*
 
-![화살표가 달린 자동차들](../assets/clip-example.mp4)
+[![화살표가 달린 자동차들](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *주황색 화살표는 모터가 받는 명령입니다. 파랑 자동차는 엉뚱한 값을 그대로 받아 뒤로 튕겨 나가고 초록 자동차의 화살표는 작게 머뭅니다.*
 

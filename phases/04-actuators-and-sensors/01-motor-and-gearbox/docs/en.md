@@ -38,7 +38,7 @@ The faster the motor spins, the more voltage it makes against its supply, so the
 
 A gearbox turns the motor many times for one turn of the load. It multiplies the push and makes the load feel lighter. With a big ratio the motor feels almost only its own spinning part.
 
-![Two gear ratios](../assets/clip-example.mp4)
+[![Two gear ratios](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Left: no gearbox, the motor creeps. Right: it races.*
 

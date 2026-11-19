@@ -35,7 +35,7 @@ Software crashes, so a real robot must stop on its own when its software goes qu
 
 *Distance during the timeout plus braking distance must fit in the room left.*
 
-![Two timeouts](../assets/clip-example.mp4)
+[![Two timeouts](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Green trips quickly and stops short. Blue waits too long and hits the stop.*
 
@@ -62,7 +62,10 @@ def stop_distance(v, a):
     return v * v / (2.0 * a)
 
 def max_timeout(room, v, a):
-    return (room - stop_distance(v, a)) / v   # raises if this is <= 0
+    t = (room - stop_distance(v, a)) / v
+    if t <= 0:
+        raise ValueError("braking alone needs more room than is free")
+    return t
 ```
 
 `simulate()` kills the command program at 0.5 s, then either switches the motor off (`"cut"`) or brakes steadily (`"ramp"`).

@@ -29,9 +29,9 @@ To reach anything, a robot first has to know where its own hand is. Start at the
 
 *Turn, step, turn, step.*
 
-![An arm turns its shoulder, then its elbow](../assets/clip-example.mp4)
+[![An arm turns its shoulder, then its elbow](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
-*Shoulder up, then elbow forward. The red ball is where the tip lands if the shoulder's turn is left out.*
+*Shoulder up, then elbow forward. The red ball uses the elbow angle as the second link's world direction.*
 
 The hand is farthest from the base when the arm is straight, and closest when it folds back on itself.
 
@@ -45,7 +45,7 @@ The hand is farthest from the base when the arm is straight, and closest when it
 
 <details><summary>The math (optional)</summary>
 
-The example target is the gripper at (0.5, 0.3). Each joint adds a turn `Rz(q)` and each link a slide `Tx(l)`; the tip pose is their ordered product. Links 1 and 0.5 long, shoulder a right angle up, elbow a right angle back: the tip is at (0.5, 1), and forgetting the shoulder's turn gives (0, 0.5). The closest reach is exactly `max(0, 2*longest - sum)`. The plot uses 3,000 random poses per arm: links [1, 1] cover a disc, links [3, 1] never come closer than 2 m. A test checks both routines agree to 1e-12.
+The example target is the gripper at (0.5, 0.3). Each joint adds a turn `Rz(q)` and each link a slide `Tx(l)`; the tip pose is their ordered product. Links 1 and 0.5 long, shoulder a right angle up, elbow a right angle back: the tip is at (0.5, 1), and treating the elbow angle as the second link's world direction gives (0, 0.5). The closest reach is exactly `max(0, 2*longest - sum)`. The plot uses 3,000 random poses per arm: links [1, 1] cover a disc, links [3, 1] never come closer than 2 m. A test checks both routines agree to 1e-12.
 
 </details>
 

@@ -35,7 +35,7 @@ position 모드에서 drive는 자기 제어 코드를 돌립니다. 이 코드�
 
 admittance 층은 미는 힘을 재서 목표를 옮기므로 관절이 부드럽게 움직입니다.
 
-![admittance 영상](../assets/clip-example.mp4)
+[![admittance 영상](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *둘 다 position 모드이고 위로 밀립니다(빨강). 파랑은 거의 움직이지 않습니다. 초록은 admittance 층이 주황색 목표를 올립니다.*
 

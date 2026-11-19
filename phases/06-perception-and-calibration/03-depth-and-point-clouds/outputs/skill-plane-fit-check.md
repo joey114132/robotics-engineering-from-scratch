@@ -6,8 +6,8 @@ description: Use when a table, floor or wall plane is fitted to depth data and t
 # Plane fit check
 
 1. Fit the plane twice: plain least squares on all points, and RANSAC with a threshold of a few times the depth noise. Compute the angle between the two normals.
-2. If the angle is more than about 1 degree, outliers are pulling the least-squares plane. Use the RANSAC plane and report the inlier fraction.
-3. Check the inlier fraction. Under 50% means the dominant surface is not the one you wanted.
+2. If the angle is more than about 1 degree, outliers are pulling the least-squares plane. Check that the RANSAC plane sits where the expected surface should (position and tilt), then use it.
+3. Report the inlier fraction. A low fraction means weak support, so check other candidate planes and the threshold. RANSAC picks the plane with the most points, which is not always the surface you wanted.
 4. Choose iterations with `log(1 - p) / log(1 - w^3)` for the expected inlier fraction `w`.
 5. Fix the random seed so the result repeats.
 

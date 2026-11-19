@@ -33,7 +33,7 @@
 평평한 체커보드는 모서리 위치가 알려져 있습니다. 새 각도에서 찍은 사진마다 그 위치와 pixel을 잇는 식이 나옵니다. 기울기가 다른 사진 두 장이면 간단한 matrix 계산만으로 카메라의 줌과 중심을 풀 수 있습니다.
 보드를 밀기만 한 사진은 같은 단서를 되풀이하므로 solver가 거부합니다.
 
-![밀기만 한 보드와 기울인 보드](../assets/clip-example.mp4)
+[![밀기만 한 보드와 기울인 보드](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *파란 보드는 밀기만 해서 빨간 십자로 거부됩니다. 초록 보드는 매번 기울여서 초록 공으로 풀립니다.*
 
@@ -59,9 +59,11 @@
 
 ```python
 A = np.array([r for H in Hs for r in (_v(H, 0, 1), _v(H, 0, 0) - _v(H, 1, 1))])
-b = np.linalg.svd(A)[2][-1]          # smallest singular vector = [B11, B22, B13, B23, B33]
+b = np.linalg.svd(A)[2][-1]          # smallest singular vector
+B11, B22, B13, B23, B33 = b
 cx, cy = -B13 / B11, -B23 / B22
-fx, fy = np.sqrt(lam / B11), np.sqrt(lam / B22)   # lam = B33 - B13^2/B11 - B23^2/B22
+lam = B33 - B13**2 / B11 - B23**2 / B22
+fx, fy = np.sqrt(lam / B11), np.sqrt(lam / B22)
 ```
 
 `homography_dlt()`는 점의 크기를 맞춘 뒤 가장 잘 맞는 값을 찾는 matrix 도구인 SVD를 씁니다. `calibrate()`는 퇴화한 시점과 물리적으로 말이 안 되는 결과를 거부합니다.

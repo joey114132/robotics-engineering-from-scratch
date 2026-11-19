@@ -31,17 +31,17 @@ Robots turn things all the time: a drone yaws, a joint swings, a camera looks ar
 
 The turned point keeps its distance from the origin. Only its direction changes.
 
-![Circle](../assets/fig-turn-circle.png)
+![A point swings around a circle at constant distance](../assets/fig-turn-circle.png)
 
 *Left: the point lands on a circle at every angle. Right: its distance never changes.*
 
-The recipe needs only the cos and sin of the angle. Write four numbers from them in a table, and turning a point becomes "table times point". That table is a rotation matrix.
+The recipe needs only cos and sin of the angle. Put four numbers from them in a table, the rotation matrix. Multiply each row by the point's coordinates and add for each new coordinate.
 
 ![The recipe as a table](../assets/diagram-turn-table.png)
 
 *The same turn, written as a table that multiplies the point.*
 
-![Drone turning](../assets/clip.mp4)
+[![Drone turning](../assets/clip.jpg)](../assets/clip.mp4)
 
 *The drone turns, and the amber ball in front of its nose moves where the code says.*
 

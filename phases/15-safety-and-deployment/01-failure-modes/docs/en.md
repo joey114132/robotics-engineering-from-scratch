@@ -29,7 +29,7 @@ A robot arm can hurt people and itself, so learn how it fails before you decide 
 
 *Faults can hit the push going out or the reading coming back.*
 
-![Wrong sign](../assets/clip-example.mp4)
+[![Wrong sign](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue runs the wrong way and the warning lamp lights before the stop. Green settles on the target.*
 
@@ -41,7 +41,7 @@ A robot arm can hurt people and itself, so learn how it fails before you decide 
 
 *Left: how far off each fault leaves the arm. Right: the alarm usually comes before the arm hits its stop.*
 
-![Checks](../assets/diagram-fault-checks.png)
+![Which cheap check catches which sensor fault](../assets/diagram-fault-checks.png)
 
 *Each fault trips at least one of four cheap checks.*
 

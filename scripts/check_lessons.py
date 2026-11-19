@@ -5,13 +5,13 @@ import re
 import sys
 from pathlib import Path
 
-from lesson_sections import PLAIN_HEADINGS, SECTIONS, TERMS_HEADINGS, headings, key_terms, split_plain_words
+from lesson_sections import SECTIONS, TERMS_HEADINGS, headings, key_terms, split_plain_words
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = ["docs/en.md", "docs/ko.md", "code/main.py", "quiz.json", "quiz.ko.json"]
 EN_SECTIONS = SECTIONS["en"]
 KO_SECTIONS = SECTIONS["ko"]
-MAX_WORDS = 380   # main reading path: outside code, Key Terms and the optional math fold
+MAX_WORDS = 380   # main reading path: outside code, Key Terms, the optional math fold and image alt text
 MATH_WORDS = 160  # the optional fold <details><summary>The math (optional)</summary>...</details>, all folds together
 MATH_FOLD = re.compile(r"<details>\s*<summary>[^<]*</summary>(.*?)</details>", re.S)
 PLAIN_WORDS = 70
@@ -19,7 +19,9 @@ TERMS_MIN, TERMS_MAX, TERM_DEF_WORDS = 3, 6, 25
 TERM_MATH = re.compile(r"\b(?:exp|sqrt|cos|sin|tan|atan2?|sinh|cosh)\(")
 PLAIN_KO_CHARS = 600
 MIN_IMAGES = 3
+ALT = re.compile(r"(?<!\\)(!\[)[^\]\n]*(\]\([^)]+\))")   # alt text is for screen readers, so it is not counted as reading prose
 IMG = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
+CLIP = re.compile(r"\[!\[[^\]]*\]\(([^)]+)\)\]\(([^)]+)\)")   # a clip: its poster image linked to the video, [![alt](x.jpg)](x.mp4)
 
 
 def fences(text: str):
@@ -80,7 +82,7 @@ def check_plain_words(d: Path, lang: str, block: str) -> list[str]:
     return errs
 
 
-def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[str]:
+def check_doc(d: Path, lang: str) -> list[str]:
     f = d / "docs" / f"{lang}.md"
     if not f.exists():
         return []
@@ -89,8 +91,6 @@ def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[st
     hs = [h[0].strip() for h in headings(t, 2)]
     if lang in SECTIONS:
         required = SECTIONS[lang]
-        if allow_missing_plain_words and PLAIN_HEADINGS[lang] not in hs:
-            required = required[1:]
         errs += [f"{lang}: missing '{s}'" for s in required if s not in hs]
         errs += [f"{lang}: duplicate '{s}'" for s in required if hs.count(s) > 1]
         if all(s in hs for s in required) and hs != required:
@@ -125,17 +125,24 @@ def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[st
     if len(imgs) < MIN_IMAGES:
         errs.append(f"{lang}: {len(imgs)} images, need {MIN_IMAGES}+")
     for p in imgs:
-        target = (f.parent / p).resolve()
-        if p.endswith(".mp4"):   # a clip: its script must exist; scripts/build_clips.py renders the file
-            if not (d / "code" / (target.stem + ".py")).exists():
-                errs.append(f"{lang}: clip script not found: code/{target.stem}.py")
-        elif not target.exists():
+        if p.endswith(".mp4"):
+            errs.append(f"{lang}: a clip is its poster linked to the video, write [![alt](x.jpg)](x.mp4), not ![alt]({p})")
+        elif not (f.parent / p).resolve().exists():
             errs.append(f"{lang}: image not found: {p}")
+    clips = CLIP.findall(t)
+    for poster, video in clips:   # the poster is checked above as an image; here the video and the script that renders it
+        stem = Path(video).stem
+        if not poster.endswith(".jpg") or not video.endswith(".mp4") or Path(poster).stem != stem:
+            errs.append(f"{lang}: clip poster and video must be the same name, .jpg and .mp4: {poster} {video}")
+        elif not (f.parent / video).resolve().exists():
+            errs.append(f"{lang}: clip video not found: {video}")
+        if not (d / "code" / (stem + ".py")).exists():
+            errs.append(f"{lang}: clip script not found: code/{stem}.py")
     if lang == "en":
         folds = [prose_words(b) for b in MATH_FOLD.findall(t)]
         if sum(folds) > MATH_WORDS:
             errs.append(f"en: {sum(folds)} words in optional math folds, limit {MATH_WORDS}")
-        w = prose_words(MATH_FOLD.sub("", t)) - sum(len(f"- **{k}**: {v}".split()) for k, v in key_terms(t, "en"))
+        w = prose_words(ALT.sub(r"\1\2", MATH_FOLD.sub("", t))) - sum(len(f"- **{k}**: {v}".split()) for k, v in key_terms(t, "en"))
         if w > MAX_WORDS:
             errs.append(f"en: {w} prose words, limit {MAX_WORDS}")
     else:
@@ -146,6 +153,8 @@ def check_doc(d: Path, lang: str, *, allow_missing_plain_words=False) -> list[st
             errs.append(f"{lang}: optional math folds differ from en")
         if IMG.findall(en) != imgs:
             errs.append(f"{lang}: images differ from en")
+        if CLIP.findall(en) != clips:
+            errs.append(f"{lang}: clips differ from en")
         if [g for g, _ in fences(en)] != [g for g, _ in blocks]:
             errs.append(f"{lang}: code block sequence differs from en")
     return errs
@@ -180,7 +189,7 @@ def check_motion(d: Path) -> list[str]:
     return errs
 
 
-def check_lesson(d: Path, *, allow_missing_plain_words=False) -> list[str]:
+def check_lesson(d: Path) -> list[str]:
     errs = [f"missing {f}" for f in REQUIRED if not (d / f).exists()]
     errs += check_motion(d)
     if not list((d / "outputs").glob("skill-*.md")):
@@ -191,7 +200,7 @@ def check_lesson(d: Path, *, allow_missing_plain_words=False) -> list[str]:
     elif sum(len(re.findall(r"^def test_", t.read_text(), re.M)) for t in tests) < 5:
         errs.append("fewer than 5 tests")
     for lang in sorted(p.stem for p in (d / "docs").glob("*.md")):
-        errs += check_doc(d, lang, allow_missing_plain_words=allow_missing_plain_words)
+        errs += check_doc(d, lang)
     qe, qk = check_quiz(d, "quiz.json"), check_quiz(d, "quiz.ko.json")
     errs += qe + qk
     if not qe and not qk and (d / "quiz.json").exists() and (d / "quiz.ko.json").exists():
@@ -204,14 +213,12 @@ def check_lesson(d: Path, *, allow_missing_plain_words=False) -> list[str]:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Check bilingual lesson structure (strict by default).")
-    mode = parser.add_mutually_exclusive_group()
-    mode.add_argument("--allow-missing-plain-words", action="store_true", help="rollout only: permit absent opening blocks; validate every block that exists")
-    mode.add_argument("--strict", action="store_true", help="require opening blocks in every lesson (the default)")
+    parser.add_argument("--strict", action="store_true", help="require opening blocks in every lesson (the default)")
     args = parser.parse_args(argv)
     lessons = sorted(p.parent for p in (ROOT / "phases").glob("*/*/docs"))
     failed = 0
     for d in lessons:
-        errs = check_lesson(d, allow_missing_plain_words=args.allow_missing_plain_words)
+        errs = check_lesson(d)
         print(("FAIL " if errs else "ok   ") + str(d.relative_to(ROOT)))
         for e in errs:
             print("     -", e)

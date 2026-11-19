@@ -13,7 +13,7 @@ Tilt the hovering drone and part of the push shoves it sideways, so less holds i
 ## Key Terms
 
 - **Quadrotor**: a drone with four propellers.
-- **Thrust (`T`)**: the total upward push of the propellers.
+- **Thrust (`T`)**: the total push of the propellers along the drone's body axis; it tilts with the drone.
 - **Pitch (`theta`)**: the tilt angle of the drone body.
 - **Torque (`tau`)**: a twist that tilts the drone; the only way to change the tilt.
 - **Hover**: staying at one height.
@@ -21,7 +21,7 @@ Tilt the hovering drone and part of the push shoves it sideways, so less holds i
 
 ## The Problem
 
-Picture a drone told to move to the right. It seems to ignore you, then tips, drifts and loses height. It has only two controls, thrust and one twist, for three things to move: sideways, up and down, and tilt.
+Picture a drone told to move to the right. It seems to ignore you, then tips, drifts and loses height. In this flat model it has only two controls, thrust and one twist, for three things to move: sideways, up and down, and tilt.
 
 ## The Concept
 
@@ -29,21 +29,21 @@ A drone must know that moving sideways costs height, or it sinks on every turn.
 
 A quadrotor cannot push sideways. It tilts first, and the tilt turns part of its upward thrust into a sideways push. But the tilt also leaves less thrust to hold it up.
 
-![Thrust](../assets/diagram-thrust-split.png)
+![Tilt splits thrust into sideways and upward parts](../assets/diagram-thrust-split.png)
 
 *Tilt splits thrust into up and sideways.*
 
 So a tilted drone sinks unless it pushes harder. And a position command seems to lag at first, because the tilt must build up before any sideways force exists.
 
-![Two drones](../assets/clip-example.mp4)
+[![Two drones](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Both tilt. Blue keeps its thrust and sinks. Green pushes harder and holds height.*
 
-![Torque](../assets/diagram-torque-to-position.png)
+![Torque tilts the drone first, then sideways motion builds slowly](../assets/diagram-torque-to-position.png)
 
 *A steady twist first tilts the drone, then it moves sideways, slowly.*
 
-![Tilt](../assets/fig-tilt-then-move.png)
+![More thrust only climbs; a torque step tilts then travels](../assets/fig-tilt-then-move.png)
 
 *More thrust only climbs. A twist tilts first, then moves.*
 

@@ -33,7 +33,7 @@ The map is a grid of small squares. Each laser beam marks the squares it crossed
 
 *Empty before the wall, wall at the end.*
 
-![Pillars grow](../assets/clip-example.mp4)
+[![Pillars grow](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Each pillar is a cell's score. Walls rise, floor sinks.*
 

@@ -1,12 +1,12 @@
 {
   "en": {
-    "hook": "Dijkstra checks every room. I only check rooms that point toward the goal. If you let me overestimate the distance, I get brave, then lost.",
-    "mission": "Make the guess bigger and see where it stops being safe. In `code/main.py` run the demo with `w` in `(0, 1, 6)`. Compare the squares expanded and the path cost, and say which weight stopped being safe.",
+    "hook": "Dijkstra spreads out by cost so far. I add a guess of the distance left and lean toward the goal. Exaggerate that guess and I get brave, then take the long way round.",
+    "mission": "Try a larger heuristic weight and see whether the route stays shortest. In `code/main.py`, run the demo with `w` in `(0, 1, 6)`. Compare the squares expanded and the path cost with `w = 0`.",
     "clip": "Dijkstra (blue) and A* (green) search the same map, trying 64 squares a second, and each coloured tile is a square already tried. Both find the 26-step path, but A* tries 115 squares against Dijkstra's 153, so its rover leaves sooner. Each rover carries a coloured flag so it is easy to follow, and each square is drawn 0.26 m wide."
   },
   "ko": {
-    "hook": "Dijkstra는 모든 방을 확인하고 저는 목표 쪽을 가리키는 방만 확인해요. 거리를 부풀려 추측하게 하면 용감해졌다가 길을 잃어요.",
-    "mission": "추측을 점점 더 크게 하고 어디서부터 안전하지 않은지 보세요. `code/main.py` 데모를 `w`가 `(0, 1, 6)`일 때 돌려 보세요. 확장한 칸 수와 경로 비용을 비교하고 어느 가중치부터 안전하지 않은지 말해 보세요.",
+    "hook": "Dijkstra는 지금까지 든 비용 순서로 퍼져요. 저는 남은 거리를 짐작해서 목표 쪽으로 기울어요. 짐작을 부풀리면 용감해졌다가 먼 길로 돌아가요.",
+    "mission": "heuristic weight를 키우고 여전히 최단 경로를 찾는지 확인합니다. `code/main.py`에서 `w`를 `(0, 1, 6)`으로 바꿔 실행하세요. 확장한 칸 수와 경로 비용을 `w = 0`의 결과와 비교하세요.",
     "clip": "Dijkstra(파랑)와 A*(초록)가 같은 지도를 초당 64칸씩 시도합니다. 색칠된 타일은 이미 시도한 칸입니다. 둘 다 26걸음 경로를 찾지만 A*는 115칸을, Dijkstra는 153칸을 시도하므로 A*의 로봇이 먼저 출발합니다. 로봇마다 색깔 깃발을 달아 따라가기 쉽게 했고 칸 하나를 0.26 m로 그렸습니다."
   },
   "toy": "astar-flood",

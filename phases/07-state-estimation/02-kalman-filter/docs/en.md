@@ -31,7 +31,7 @@ A robot needs a position it can trust more than any single sensor reading.
 
 A Kalman filter keeps its best guess and how unsure it is. Each cycle it predicts where the robot should be, using its model (a rule for how the robot moves), which adds doubt. Then it moves the guess toward the sensor reading by an amount called the gain. A very noisy sensor gets a small gain, so the filter mostly follows its model. A shaky model gets a large gain, so it follows the sensor. After each correction the filter is less unsure.
 
-![Same reading, two roads](../assets/clip-example.mp4)
+[![Same reading, two roads](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue road: noisy sensor, the estimate (the pin) barely moves. Green road: it moves halfway.*
 
@@ -45,7 +45,7 @@ A Kalman filter keeps its best guess and how unsure it is. Each cycle it predict
 
 <details><summary>The math (optional)</summary>
 
-The state `x` is `[position, velocity]`, and 2 m of doubt is `P = 4`. Predict: `x = F x` and `P = F P F^T + Q` (`F` is one step of motion). A reading `z = H x + noise` sees only the position. Correct: `x = x + K (z - H x)`, with the best `K = P H^T (H P H^T + R)^-1`, and `P` updated in Joseph form. For position alone, `K = P / (P + R)`. From 0 with `P = 4` and a reading of 3 m, `R = 4` gives `K = 0.5`: the estimate moves 1.5 m and `P` falls to 2. A sensor with 6 m of noise has `R = 36`, so `K = 4 / 40 = 0.1` and it moves only 0.3 m. Over 4000 runs the error settles near 1.0 m, not 2.0 m, and 95% of errors fall inside 2 sigma.
+The state `x` is `[position, velocity]`, and 2 m of doubt is `P = 4`. Predict: `x = F x` and `P = F P F^T + Q` (`F` is one step of motion). A reading `z = H x + noise` sees only the position. Correct: `x = x + K (z - H x)`, with the best `K = P H^T (H P H^T + R)^-1`, and `P = (I - K H) P`. For position alone, `K = P / (P + R)`. From 0 with `P = 4` and a reading of 3 m, `R = 4` gives `K = 0.5`: the estimate moves 1.5 m and `P` falls to 2. A sensor with 6 m of noise has `R = 36`, so `K = 4 / 40 = 0.1` and it moves only 0.3 m. Over 4000 runs the error settles near 1.0 m, not 2.0 m, and 95% of errors fall inside 2 sigma.
 
 </details>
 

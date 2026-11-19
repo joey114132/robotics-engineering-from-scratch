@@ -143,6 +143,13 @@ def test_quiz_eof_stops_without_crash_and_keeps_progress(env, capsys):
     assert state()["xp"] == 20
 
 
+def test_quiz_eof_prints_the_stop_message_on_its_own_line(env, capsys):
+    assert env("quiz", "00-01", "--plain", stdin="") == 1
+    lines = capsys.readouterr().out.splitlines()
+    stopped = [l for l in lines if "Stopped" in l]
+    assert len(stopped) == 1 and stopped[0].startswith("  Stopped") and "answer>" not in stopped[0]
+
+
 def test_mission_card_and_done(env, capsys):
     assert env("mission", "00-01", "--plain") == 0
     out = capsys.readouterr().out
@@ -210,6 +217,13 @@ def test_help_is_pretty_and_lists_commands(env, capsys):
     assert "--lang" in out and "--plain" in out and "completion" in out.lower()
     assert env("quiz", "--help") == 0
     assert "lesson" in capsys.readouterr().out.lower()
+
+
+def test_help_lists_ids_and_its_own_help_works(env, capsys):
+    assert env("--help", "--plain") == 0
+    assert re.search(r"^\s*ids\b", capsys.readouterr().out, re.M)
+    assert env("ids", "--help", "--plain") == 0
+    assert "ids" in capsys.readouterr().out
 
 
 def test_completion_script(env, capsys):
@@ -302,6 +316,15 @@ def test_narrow_terminal_prints_notice_on_stderr_only_when_interactive(env, caps
     assert "60 columns" not in capsys.readouterr().err
 
 
+def test_at_60_columns_the_level_phrase_and_the_next_commands_do_not_break_mid_phrase(env, capsys):
+    env("stats", "--plain", "--width", "60")
+    out = capsys.readouterr().out
+    assert re.search(r"\d+/60 to Servo", out) and all(len(l) <= 60 for l in out.splitlines())
+    env("home", "--plain", "--width", "60")
+    out = capsys.readouterr().out
+    assert "robo mission 00-01" in out and "robo read 00-01" in out and all(len(l) <= 60 for l in out.splitlines())
+
+
 def test_help_states_the_60_column_minimum(env, capsys):
     env("--help")
     assert "60 columns" in capsys.readouterr().out
@@ -342,3 +365,12 @@ def test_quiz_does_not_overwrite_progress_saved_by_another_process(env, capsys, 
     env("quiz", "00-01", "--plain", stdin="1\n1\n1\n1\n1\n1\nn\n")
     s = state()
     assert s["q"]["00-02-second-wind"] == {"0": 1} and len(s["q"]["00-01-first-steps"]) == 6 and s["xp"] == 60   # xp merges by max, never lowers
+
+
+def test_stats_level_row_stays_on_one_line_for_a_long_next_level_name(env, capsys):
+    s = P.new_state()
+    s["xp"] = 2500   # next level is "Robot Whisperer"
+    P.save(s, P.progress_path())
+    env("stats", "--plain", "--width", "60")
+    out = capsys.readouterr().out
+    assert re.search(r"\d+/1500 to Robot Whisperer", out) and all(len(l) <= 60 for l in out.splitlines())

@@ -25,29 +25,29 @@ Your rover drives a clean route and ends pressed against a wall, yet its screen 
 
 A robot never knows exactly where it is, so a good plan needs a way to correct its position. A planner finds a clear route on a grid whose walls are made thicker by the rover's size. The rover follows it by its belief about where it is.
 
-![System](../assets/diagram-nav-system.png)
+![Navigation chain: A* route, shortcuts, pure pursuit, position guess](../assets/diagram-nav-system.png)
 
 *A\* plans a route, a trimming step shortens it, and pure pursuit follows it.*
 
-![Broken](../assets/diagram-nav-broken.png)
+![Same wheel error, with and without landmark fixes](../assets/diagram-nav-broken.png)
 
 *Same wheel error in both rows, but only the bottom row uses landmark posts.*
 
-![Two rovers](../assets/clip-example.mp4)
+[![Two rovers](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The pale rover is the belief. Blue's stays on the line while the real rover curves away. Green is corrected every second.*
 
-![Success](../assets/fig-nav-result.png)
+![Planned route and the rover's actual path](../assets/fig-nav-result.png)
 
 *The planned route and the rover's path.*
 
-![Drift](../assets/fig-nav-drift.png)
+![Belief drift grows without corrections and resets with them](../assets/fig-nav-drift.png)
 
 *Without corrections the belief drifts far and the rover hits a wall. With a correction each second it stays close.*
 
 <details><summary>The math (optional)</summary>
 
-Drive straight at 0.6 m/s with speed read 3% high and turn rate read 0.03 rad/s off. After 10 s the facing is wrong by `0.03 × 10 = 0.3` rad. The belief is off by 0.015 m after 1 s, 0.26 m after 5 s and 0.97 m after 10 s, because the facing error turns each later metre sideways. A correction each second keeps it at 0.012 m. A\* gives 77 waypoints (21.1 m), shortcuts keep 6 (19.8 m). Without a correction the belief ends 4.7 m off and the rover hits a wall. With a correction each second it stays within 0.11 m, and the goal error is 0.15 m.
+Drive straight at 0.6 m/s with speed read 3% high and turn rate read 0.03 rad/s off. After 10 s the facing is wrong by `0.03 × 10 = 0.3` rad. The belief is off by 0.015 m after 1 s, 0.26 m after 5 s and 0.97 m after 10 s, because the facing error turns each later metre sideways. With a correction each second it is only 0.012 m off after 10 s. A\* gives 77 waypoints (21.1 m), shortcuts keep 6 (19.8 m). Without a correction the belief ends 4.7 m off and the rover hits a wall. With a correction each second it stays within 0.11 m, and the goal error is 0.15 m.
 
 </details>
 

@@ -45,13 +45,13 @@ That fake push, added up twice, makes the position error grow even faster than t
 
 *The error from a tilt mistake grows fastest and passes the plain accelerometer error.*
 
-![Still robot slides](../assets/clip-example.mp4)
+[![Still robot slides](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The green robot stays put while the amber copy slides. The tilt is exaggerated.*
 
 <details><summary>The math (optional)</summary>
 
-A gyro bias `b` gives an angle error `b t`. An accelerometer bias `a` gives a velocity error `a t` and a position error `a t^2 / 2`. The tilt error `b t` leaves a fake `g sin(b t)`, about `g b t`, and adding that up twice gives `g b t^3 / 6`. With `b = 0.01 rad/s` and `a = 0.05 m/s^2`, after 20 s the robot has turned 11 degrees and moved 10 m. After 10 s the tilt is off by `0.1 rad` and the fake push is `9.81 * sin(0.1) = 0.98 m/s^2`. Position error: about `9.81 * 0.01 * 10^3 / 6 = 16 m`, against `0.05 * 10^2 / 2 = 2.5 m` from the accelerometer bias. The cubic passes the quadratic after about 1.5 s. The clip draws tilt 5 times larger and 1 m as 0.1 m.
+A gyro bias `b` gives an angle error `b t`. An accelerometer bias `a` gives a velocity error `a t` and a position error `a t^2 / 2`. The tilt error `b t` leaves a fake `g sin(b t)`, about `g b t`, and adding that up twice gives `g b t^3 / 6`. With `b = 0.01 rad/s` and `a = 0.05 m/s^2`, after 20 s the still robot's estimate is off by 11 degrees (gyro bias) and 10 m (accelerometer bias). After 10 s the tilt is off by `0.1 rad` and the fake push is `9.81 * sin(0.1) = 0.98 m/s^2`. Position error: about `9.81 * 0.01 * 10^3 / 6 = 16 m`, against `0.05 * 10^2 / 2 = 2.5 m` from the accelerometer bias. The cubic passes the quadratic after about 1.5 s. The clip draws tilt 5 times larger and 1 m as 0.1 m.
 
 </details>
 

@@ -29,17 +29,17 @@ pose graph는 각 자리를 다음 자리와 스프링으로 잇는데 이 스�
 
 여정을 스프링으로 이은 위치의 사슬로 생각해 보세요. 스프링 하나는 측정한 이동 하나에 해당합니다. 출발점을 알아보면 끝에서 처음으로 가는 스프링이 하나 더 생깁니다.
 
-![스프링](../assets/diagram-posegraph-springs.png)
+![pose가 spring으로 이어지고 loop closure가 spring 하나를 더하는 그림](../assets/diagram-posegraph-springs.png)
 
 *이동은 스프링이고 루프가 스프링 하나를 더합니다.*
 
 그러면 모든 위치가 함께 움직여서 모든 스프링이 최대한 덜 늘어나게 됩니다. 보정이 여정 전체로 퍼집니다.
 
-![폐쇄들](../assets/clip-example.mp4)
+[![틀린 loop closure는 지도를 휘게 하고 맞는 것은 닫는 모습](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *틀린 매칭인 파랑은 지도를 휘게 하고 맞는 매칭인 초록은 사각형을 닫습니다.*
 
-![과정](../assets/diagram-posegraph-pipeline.png)
+![odometry가 표류한 뒤 closure edge를 더해 모든 pose를 다시 푸는 과정](../assets/diagram-posegraph-pipeline.png)
 
 *스프링 하나를 더하고 모든 pose를 한꺼번에 옮깁니다.*
 

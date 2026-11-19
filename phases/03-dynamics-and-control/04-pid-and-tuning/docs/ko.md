@@ -31,17 +31,17 @@ P, I, D 세 부분을 가진 컨트롤러가 장난감 자동차를 정지선에
 
 *세 항이 더해지고 모터가 그 합을 잘라 냅니다.*
 
-![P, P+D, P+I+D](../assets/fig-pid-terms.png)
+![P, P+D, P+I+D 제어의 응답 비교](../assets/fig-pid-terms.png)
 
 *일정한 부하가 걸리면 I만 관절을 되돌립니다.*
 
-![일정한 힘이 밀어도 선을 지키려는 장난감 자동차 두 대](../assets/clip-example.mp4)
+[![일정한 힘이 밀어도 선을 지키려는 장난감 자동차 두 대](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *일정한 힘으로 밀면 파랑(P와 D)은 선에 못 미치고 초록(I 포함)은 돌아옵니다.*
 
 그런데 I는 모터가 한계에 있어도 계속 쌓다가 그 빚을 갚느라 지나칩니다. 이것이 windup입니다.
 
-![windup이 적분 항을 쌓습니다](../assets/diagram-windup.png)
+![모터가 한계에 걸린 동안 적분 항이 쌓이는 windup](../assets/diagram-windup.png)
 
 *해법은 한계에서 쌓는 것을 멈추는 것입니다.*
 
@@ -57,7 +57,9 @@ P, I, D 세 부분을 가진 컨트롤러가 장난감 자동차를 정지선에
 
 일정한 부하는 P+D에서 offset `load / kp`를 남깁니다. `kp = 100`이고 힘이 20이면 offset은 `20 / 100 = 0.2`이고 부하는 5초에 걸립니다. clamp가 없으면 windup으로 약 1.5 rad 지나칩니다.
 ROS 2 `control_toolbox`는 anti-windup 방식으로 `none`, `back_calculation`, `conditional_integration`을 제공하고 `gains.<dof_names>.antiwindup_strategy`로 관절마다 고릅니다.
-loop는 2x2 갱신 행렬의 고유값(각 움직임 패턴이 tick마다 몇 배가 되는지) 크기가 모두 1보다 작을 때만 안정합니다. `kd`가 약 `2J/dt`를 넘으면 이 조건이 깨집니다(Craig 9.7).
+loop는 갱신 행렬의 고유값(각 움직임 패턴이 tick마다 몇 배가 되는지) 크기가 모두 1보다 작을 때만 안정합니다.
+2x2 행렬은 P와 D만 다루고 I를 쓰면 쌓인 I 항이 세 번째 state가 됩니다(`spectral_radius(..., ki=ki)`). `J = 0.02`, `kp = 400`, `kd = 2`에서 P+D만 보면 0.946이지만 `ki = 50000`이면 1.006입니다.
+saturation은 다루지 않습니다. `kd`가 약 `2J/dt`를 넘으면 P+D 부분의 조건이 깨집니다(Craig 9.7).
 
 </details>
 

@@ -39,13 +39,13 @@ A planning robot must weigh a sure small gain against a risky shortcut, and this
 
 *Top: value spreads out from the goal, and the pit pushes paths away. Bottom: the gap to the final answer shrinks quickly.*
 
-![Rover and scores](../assets/clip-example.mp4)
+[![Rover and scores](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Arrows show each move's score: blue is good, red is bad. The best turns green; the rover takes it.*
 
 <details><summary>The math (optional)</summary>
 
- s, a)` is the chance of reaching square s' from s by move a.|`V(s)` is the value of square `s`. `P(s' | s, a)` is the chance of reaching square s' from s by move a. The update is also called a backup. | s, a)` is the chance of reaching square s' from s by move a. Gamma is 0.9 here, so one sweep shrinks the worst-case error by a factor 0.9. Moves slip sideways with chance 0.2; the goal pays 1 and the pit -1. Next to the pit, after the first sweep moving left scores -0.8 (chance 0.8 of the pit's -1) and moving right 0. After 29 sweeps right scores 0.64, up or down 0.43, left -0.68, so the arrow points right. For `0 < gamma < 1`, the kth change is at most `gamma**(k - 1)` times the first, so the sweep count is bounded. Tests check all 256 policies of a tiny grid.
+One update sets `V(s) = max_a ( r(s, a) + gamma * sum_s' P(s' | s, a) * V(s') )`. Here `r` is the reward now and `P(s' | s, a)` the chance that move `a` from square `s` lands in square `s'`. The update is also called a backup. Gamma is 0.9 here, so one sweep shrinks the worst-case error by a factor 0.9. Moves slip sideways with chance 0.2; the goal pays 1 and the pit -1. Next to the pit, after the first sweep moving left scores -0.8 (chance 0.8 of the pit's -1) and moving right 0. After 29 sweeps right scores 0.64, up or down 0.43, left -0.68, so the arrow points right. For `0 < gamma < 1`, the kth change is at most `gamma**(k - 1)` times the first, so the sweep count is bounded. Tests check all 256 policies of a tiny grid.
 
 </details>
 

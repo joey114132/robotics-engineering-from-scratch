@@ -35,7 +35,7 @@ To see the cup from the hand, start with the cup as the camera sees it, climb to
 
 *Climb to the base, then come down.*
 
-![One cup measured from the camera, the base and the hand](../assets/clip-example.mp4)
+[![One cup measured from the camera, the base and the hand](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The same cup from three views: three different position numbers.*
 

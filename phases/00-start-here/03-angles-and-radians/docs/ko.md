@@ -1,6 +1,6 @@
-# Angles and Radians
+# 각도와 radian
 
-> 각도를 degree나 radian으로 셀 수 있다는 것과 코드는 항상 radian을 원한다는 것을 배웁니다.
+> Python의 sin과 cos에 맞게 degree와 radian을 변환하는 법을 배웁니다.
 
 **유형:** 배우기   **선수 지식:** 00/02 Points as Numbers   **시간:** 약 15분
 
@@ -8,7 +8,7 @@
 
 거리를 마일이나 킬로미터로 쓸 수 있듯이 회전도 두 가지 방법으로 셀 수 있어요. degree는 한 바퀴를 아주 많은 작은 조각으로 나눠요. radian은 반지름이 하나인 원의 가장자리를 따라 얼마나 걸었는지를 세요.
 
-컴퓨터는 radian을 기대해요. degree로 쓴 숫자를 주면 아무 경고 없이 엉뚱한 만큼 돌아요.
+Python의 sin과 cos는 radian을 받아요. degree를 변환하지 않고 넣으면 경고 없이 틀린 답이 나와요.
 
 ## 핵심 용어
 
@@ -43,7 +43,7 @@
 
 </details>
 
-![팔이 사분의 일 바퀴 돎](../assets/clip.mp4)
+[![팔이 사분의 일 바퀴 돎](../assets/clip.jpg)](../assets/clip.mp4)
 
 *팔의 경첩이 사분의 일 바퀴를 돕니다. 호박색 막대는 출발점과 도착점입니다.*
 

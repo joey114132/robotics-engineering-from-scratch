@@ -31,31 +31,31 @@ grasp quality는 손끝이 밀림과 비틀림을 모두 버틸 수 있는지 �
 
 손끝이 만들 수 있는 모든 밀기와 비틀림을 감싸 보세요(convex hull). "알짜 밀기와 비틀림이 없음"을 뜻하는 점이 그 안에 있으면 손끝이 모든 방향으로 맞밀 수 있어서 쥐기가 버팁니다.
 
-![closure 과정](../assets/diagram-closure-pipeline.png)
+![손가락 끝 접촉에서 closure 검사까지의 과정](../assets/diagram-closure-pipeline.png)
 
 *접촉마다 밀기가 더해지고 바깥의 어떤 밀기나 비틀림도 상쇄하면 버팁니다.*
 
-![올라가는 jaw](../assets/clip-example.mp4)
+[![올라가는 jaw](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *올린 손가락이 너무 높아지기 전까지는 상자가 버티다가 그 뒤에 돕니다.*
 
 마주 보는 접촉 두 개는 마찰이 없으면 비틀림을 견디지 못합니다. 여유를 나타내는 epsilon은 그 점이 hull 안쪽으로 얼마나 깊이 들어와 있는지입니다. epsilon이 아주 작으면 쥐기가 쉽게 깨집니다.
 
-![필요한 마찰](../assets/diagram-friction-needed.png)
+![마찰이 없으면 손가락 두 개가 비틂을 버티지 못하는 그림](../assets/diagram-friction-needed.png)
 
 *마찰이 없으면 비틀림을 견디지 못합니다.*
 
-![파지 모음](../assets/fig-grasp-gallery.png)
+![버티는 파지는 파랑, 못 버티는 파지는 주황으로 모은 그림](../assets/fig-grasp-gallery.png)
 
 *그림 하나가 쥐기 하나입니다. 파란색은 버티고 주황색은 버티지 못합니다.*
 
-![offset과 품질](../assets/fig-epsilon-vs-offset.png)
+![jaw 어긋남이 커질수록 파지 품질이 0으로 줄어드는 그래프](../assets/fig-epsilon-vs-offset.png)
 
 *손가락이 올라갈수록 epsilon이 줄어 0에 이릅니다.*
 
 <details><summary>The math (optional)</summary>
 
-wrench는 밀기와 비틀기를 `(fx, fy, torque)` 세 숫자로 묶은 것입니다.
+wrench는 밀기와 비틀기를 `(fx, fy, torque)` 세 숫자로 묶은 것입니다. 코드는 `torque / rho`를 쓰고 `rho`는 길이 1 단위이며 각 cone 모서리의 normal force는 1이므로 epsilon은 이 척도에 따라 달라집니다.
 손끝은 마찰 cone 안의 어떤 힘으로도 밀 수 있으므로 cone의 두 모서리 wrench가 그 양 끝입니다.
 원점(알짜 밀기와 비틀기가 없는 상태)이 모든 모서리 wrench의 convex hull 안쪽에 엄밀하게 들어 있으면 쥐기가 닫힙니다. epsilon은 원점에서 hull 표면까지의 최소 거리입니다.
 예를 들어 폭이 2인 상자에서 `mu = 0.3`이고 오른쪽 손가락이 왼쪽보다 `offset`만큼 높다고 합시다.

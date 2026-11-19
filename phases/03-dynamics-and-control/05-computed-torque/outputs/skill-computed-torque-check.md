@@ -8,6 +8,6 @@ description: Use when a model-based joint controller (computed torque, inverse-d
 1. Verify the model before using it: `M` symmetric and positive definite, `M` against kinetic energy, `h` against energy conservation in free motion, and the whole `M qdd + h` against the engine's inverse dynamics (for example `mj_inverse` in simulation).
 2. Compare against a joint PD of the same bandwidth on the real trajectory. Report max tracking error of both. If computed torque is not clearly better, suspect the model, not the gains.
 3. Perturb the masses by 20% in simulation. Computed torque should still beat PD. If not, the loop depends on the model too much.
-4. Computed torque inverts `M`. Check `kd` and `kp` against the sampling limit (`kd` below about `J/dt` for the smallest `M` eigenvalue).
+4. Computed torque multiplies the wanted acceleration by `M`, so `kp` and `kd` are acceleration gains (units 1/s^2 and 1/s), not torque gains, and the torque-damping bound `J/dt` does not apply to them. Once `M` cancels, the arm acts like a unit-inertia joint: keep `kd*dt` well below 1, then run the controller at the real control period with the perturbed masses of step 3 and confirm the error stays bounded.
 
 Return max error for PD, exact model and perturbed model, plus the verdict. Never send commands to hardware.

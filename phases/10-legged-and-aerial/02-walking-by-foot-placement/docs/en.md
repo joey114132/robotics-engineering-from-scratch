@@ -6,9 +6,9 @@
 
 ## In Plain Words
 
-You control walking speed with where each foot lands. Put a foot well ahead and your body stays behind it. Gravity pulls you back, so you slow down. Put a foot too close and your body passes over it. Gravity pulls you forward, so you speed up.
+You control walking speed with where each foot lands. Put a foot well ahead and your body stays behind it. The leg pushes you back, so you slow down. Put a foot too close and your body passes over it. The leg pushes you forward, so you speed up.
 
-A walking model picks each spot from the body's position and speed.
+A model picks each spot from the body's position and speed.
 
 ## Key Terms
 
@@ -24,21 +24,21 @@ Picture a walking robot told to walk at a steady speed with a plausible fixed st
 
 ## The Concept
 
-A real walker has no brakes, only feet, so where a foot lands is how it speeds up or slows down.
+This walker has no brakes, only feet, so where a foot lands is how it speeds up or slows down.
 
 At the end of each step the robot looks at where its body is and how fast it moves, then picks the next foot spot so the next step ends exactly at the target speed. This is called deadbeat.
 
-![Loop](../assets/diagram-foot-placement-loop.png)
+![Foot placement loop: read, solve, step, roll over](../assets/diagram-foot-placement-loop.png)
 
 *At each step: read, pick the next foot.*
 
-A foot placed well ahead leaves the body behind it, and gravity slows the body. A foot placed too close lets the body pass over it, and gravity speeds it up. Steps that are too long make the speed swing and even reverse.
+A foot well ahead leaves the body behind it, and the leg pushes the body back. A foot placed too close lets the body pass over it, and the leg pushes it forward. Steps that are too long make the speed swing and even reverse.
 
-![Two walkers](../assets/clip-example.mp4)
+[![Two walkers](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue's steps are too long and it barely advances. Green walks steadily.*
 
-![Outcomes](../assets/diagram-step-length-outcomes.png)
+![Speed grows with short steps and swings with long steps](../assets/diagram-step-length-outcomes.png)
 
 *Too short: speed runs away. Too long: speed swings.*
 

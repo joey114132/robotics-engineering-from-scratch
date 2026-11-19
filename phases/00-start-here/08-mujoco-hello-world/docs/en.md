@@ -31,15 +31,15 @@ Robots are tested in simulation first, so a simulator that invents energy mislea
 
 *Acceleration changes the speed, and the new speed moves the position. Moving with the old speed is the explicit way.*
 
-Let go and run the swing for ten seconds. The right order keeps the same height. The wrong order climbs about five times higher.
+Let go and run the swing ten seconds. The right order keeps the swing the same size. The wrong order grows the swing angle about fivefold.
 
 <details><summary>The math (optional)</summary>
 
-`theta` is the swing angle in radians, `omega` the angular speed, `L` the rod length and `g` gravity (9.81). Gravity changes the speed by `-(g/L) sin(theta)` per second. Each explicit step multiplies the energy by about `1 + (g/L) dt^2`, just above one. Released at 0.5 rad for 10 s, semi-implicit stays at 0.50 rad and explicit climbs to 2.46 rad.
+`theta` is the swing angle in radians, `omega` the angular speed, `L` the rod length and `g` gravity (9.81). Gravity changes the speed by `-(g/L) sin(theta)` per second. Each explicit step multiplies the energy by about `1 + (g/L) dt^2`, just above one. With `L = 1` m and `dt = 0.04` s, released at 0.5 rad, the largest angle over 10 s is 0.50 rad for semi-implicit and 2.46 rad for explicit.
 
 </details>
 
-![Three pendulums](../assets/clip-example.mp4)
+[![Three pendulums](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Amber line: where it was let go. Wrong order: blue (big steps) and dark blue (small steps) climb above it. Right order: green stays on it.*
 
@@ -76,7 +76,7 @@ python3 phases/00-start-here/08-mujoco-hello-world/code/main.py
 
 ## Use It
 
-`mujoco_period()` swings the same pendulum in MuJoCo. Its timing matches ours within 0.5% (tested): MuJoCo also moves with the new speed.
+Install `mujoco` and call `mujoco_period()` for the same pendulum. Its timing matches ours within 0.5% (tested): MuJoCo also uses the new speed.
 
 Sources: https://mujoco.readthedocs.io/en/stable/XMLreference.html
 

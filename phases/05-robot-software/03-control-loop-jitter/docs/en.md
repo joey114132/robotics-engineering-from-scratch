@@ -35,7 +35,7 @@ If the loop sleeps until a fixed clock time, the average stays perfect. Late wak
 
 *Averages can look healthy. The motor is driven by the single worst cycle.*
 
-![Arm behind its target](../assets/clip-example.mp4)
+[![Arm behind its target](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *The ball moves on schedule. The arm moves when its command goes out, so it lags once, then jumps.*
 

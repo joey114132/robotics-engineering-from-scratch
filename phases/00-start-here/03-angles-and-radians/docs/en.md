@@ -1,6 +1,6 @@
 # Angles and Radians
 
-> Learn that an angle can be counted in degrees or radians, and that code always wants radians.
+> Learn to convert degrees and radians for Python's sin and cos.
 
 **Type:** Learn   **Prerequisites:** 00/02 Points as Numbers   **Time:** ~15 minutes
 
@@ -8,7 +8,7 @@
 
 A turn can be counted in two ways, like a distance in miles or in kilometres. Degrees cut a full turn into many small slices. Radians count how far you walk around the edge of a circle whose radius is one.
 
-Computers expect radians. Give them a number in degrees and they turn the wrong amount, with no warning.
+Python's sin and cos expect radians. Pass degrees without converting and the result is wrong, with no warning.
 
 ## Key Terms
 
@@ -42,7 +42,7 @@ An angle can also be bigger than one turn. Going around once more leaves the arm
 
 </details>
 
-![An arm turns a quarter turn](../assets/clip.mp4)
+[![An arm turns a quarter turn](../assets/clip.jpg)](../assets/clip.mp4)
 
 *The arm's hinge turns a quarter turn. The amber bars mark where it starts and where it ends.*
 

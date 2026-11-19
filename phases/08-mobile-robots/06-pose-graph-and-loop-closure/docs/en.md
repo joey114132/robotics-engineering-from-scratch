@@ -28,17 +28,17 @@ A robot that returns to a known place can fix its whole map at once, not one poi
 
 Think of the trip as a chain of positions joined by springs. Each spring is a measured move. Recognising the start adds one more spring from the end back to the beginning.
 
-![Springs](../assets/diagram-posegraph-springs.png)
+![Poses are unknowns joined by springs, plus one loop spring](../assets/diagram-posegraph-springs.png)
 
 *Moves are springs. The loop adds one more.*
 
 All positions then shift together to stretch every spring as little as possible. The correction spreads along the whole trip.
 
-![Closures](../assets/clip-example.mp4)
+[![False loop closure bends the map; true one closes it](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue, a false match, bends the map. Green, a true match, closes the square.*
 
-![Pipeline](../assets/diagram-posegraph-pipeline.png)
+![Odometry drifts, a closure edge is added, all poses re-solve](../assets/diagram-posegraph-pipeline.png)
 
 *Add one spring, then shift all poses at once.*
 

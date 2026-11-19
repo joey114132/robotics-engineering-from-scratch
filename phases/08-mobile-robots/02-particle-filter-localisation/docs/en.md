@@ -47,7 +47,7 @@ If someone carries the robot away, every guess is far from the truth.
 
 The fix: scatter a few random guesses at every step. One lands near the truth, and the crowd follows.
 
-![Plain and random clouds](../assets/clip-example.mp4)
+[![Plain and random clouds](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Blue has no random guesses and never finds it. Green has some and jumps to it.*
 

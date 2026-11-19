@@ -10,6 +10,6 @@ description: Use when writing, tuning or reviewing a Kalman filter (linear, exte
 3. Check the update uses the innovation `z - H x` and a gain from the covariance. Flag a fixed gain unless the code says it is a steady-state value.
 4. Check `P` stays symmetric and positive: use the Joseph form or symmetrise after each update.
 5. Test consistency, not only error: over repeated runs the real error covariance must match `P`, about 95% of errors must lie inside 2 sigma, and the mean normalised error squared must be near the state dimension.
-6. If the filter is over-confident (coverage below 95%) raise `Q` or `R`. If it lags and the coverage is near 100%, lower them.
+6. If coverage is wrong, compare the measured sensor scatter with `R` and the motion-model error with `Q`, one at a time. Correct the one that disagrees, replay the run and check both coverage and lag. Scaling `Q` and `R` by the same factor leaves the steady-state gain unchanged, so it cannot fix lag; a filter that lags usually has `Q` too small compared with `R`.
 
 Return PASS or a list of `file:line` findings. Never change gains on a real robot.

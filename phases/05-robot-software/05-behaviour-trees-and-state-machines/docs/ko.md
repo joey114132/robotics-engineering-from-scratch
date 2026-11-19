@@ -34,11 +34,11 @@ Retry는 한 단계를 감싸고 실패하면 다시 시도합니다.
 
 ![부모가 각 답으로 하는 일](../assets/diagram-status-rules.png)
 
-*부모가 각 답으로 하는 일입니다.*
+*Sequence는 success 뒤에, Fallback은 failure 뒤에 다음 단계로 갑니다. running이면 둘 다 그 단계에서 기다립니다.*
 
 Fallback이 통 A를 시도하고 그다음 통 B를 시도합니다. 통 A가 가득 차 있어서 failure로 답하고 Fallback은 통 B로 넘어가며 통 B는 running이라고 답합니다. 다음 tick은 A를 다시 묻지 않고 통 B에서 이어 갑니다.
 
-![가득 찬 통을 건너뛰는 팔](../assets/clip-example.mp4)
+[![가득 찬 통을 건너뛰는 팔](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *가득 찬 통에 빨간 테두리가 번쩍입니다. 그다음 팔이 상자를 통 B로 옮깁니다.*
 

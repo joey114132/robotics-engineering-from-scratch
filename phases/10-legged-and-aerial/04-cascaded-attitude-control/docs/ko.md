@@ -21,7 +21,7 @@ cascaded attitude control은 integral(오차의 누적합)이라는 기억을 �
 
 ## 문제
 
-떠 있는 드론을 돌풍이 1초 동안 민다고 상상해 보세요. 단순한 규칙은 돌풍이 부는 내내 기울어진 상태를 유지하기 때문에 드론이 밀려갑니다. 기울기 1도당 더 세게 밀게 하면 기울기는 줄지만 토크가 더 많이 듭니다.
+떠 있는 드론을 돌풍이 1초 동안 민다고 상상해 보세요. 단순한 규칙은 돌풍이 부는 내내 기울어진 상태를 유지하기 때문에 드론이 밀려갑니다. 각도 gain을 키우면 기울기는 줄지만 돌풍에 맞서 버티는 토크는 그대로입니다.
 
 ## 개념
 
@@ -29,15 +29,15 @@ cascaded attitude control은 integral(오차의 누적합)이라는 기억을 �
 
 해결책은 기억입니다. 드론이 수평이 아닌 동안 기억이 되미는 힘을 계속 더해서 돌풍과 같아지게 합니다.
 
-![PD](../assets/diagram-single-pd.png)
+![각도에 거는 PD 루프 하나는 기울기가 남는 그림](../assets/diagram-single-pd.png)
 
 *단순한 제어는 기울기가 남습니다.*
 
-![캐스케이드](../assets/diagram-cascade.png)
+![바깥 각도 루프가 안쪽 속도 루프를 감싼 cascade](../assets/diagram-cascade.png)
 
 *바깥은 각도, 안쪽은 회전 속도인 두 루프에 기억이 붙습니다.*
 
-![같은 되미는 힘](../assets/clip-example.mp4)
+[![같은 되미는 힘](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *둘 다 같은 힘으로 되밀지만 수평인 것은 초록뿐입니다.*
 

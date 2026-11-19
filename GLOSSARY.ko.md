@@ -56,7 +56,7 @@
 | **Cost matrix `C`** | 로봇마다 일까지 얼마나 먼지 적은 표입니다. | [14-01](phases/14-multi-robot-and-swarms/01-task-allocation/docs/ko.md) |
 | **Cost weights** | 오차와 노력에 벌점을 얼마나 줄지 정하는 숫자들입니다. | [03-06](phases/03-dynamics-and-control/06-lqr/docs/ko.md) |
 | **Count** | encoder가 알려 주는 한 단계입니다. 여기서는 홈 모서리 하나가 센서를 지나간 것입니다. | [04-03](phases/04-actuators-and-sensors/03-encoders-and-quantisation/docs/ko.md) |
-| **Counterexample** | 기울기가 양수인 상태 하나입니다. 이것이 안정하다는 주장을 깨뜨립니다. | [03-09](phases/03-dynamics-and-control/09-lyapunov-stability/docs/ko.md) |
+| **Counterexample** | 기울기가 양수인 상태 하나입니다. 이 에너지 같은 수는 시험을 통과하지 못하지만 다른 수는 통과할 수 있습니다. | [03-09](phases/03-dynamics-and-control/09-lyapunov-stability/docs/ko.md) |
 | **Covariance (`P`)** | 추정이 얼마나 불확실한지입니다. 숫자 하나라면 퍼짐을 제곱한 값입니다. | [07-02](phases/07-state-estimation/02-kalman-filter/docs/ko.md) |
 | **CPR** | 한 바퀴당 count 수입니다. 한 바퀴가 몇 단계인지 알려 줍니다. | [04-03](phases/04-actuators-and-sensors/03-encoders-and-quantisation/docs/ko.md) |
 | **Crossover** | 변화의 빠르기를 초당 진동 수(Hz)로 나타냈을 때 gyro와 가속도계의 비중이 같아지는 지점입니다. | [07-04](phases/07-state-estimation/04-complementary-filter/docs/ko.md) |
@@ -84,7 +84,7 @@
 | **Discount (gamma)** | 나중 reward를 조금 덜 쳐 주는 1보다 작은 수입니다. | [13-05](phases/13-learning-for-robots/05-mdps-and-value-iteration/docs/ko.md) |
 | **Distance** | 두 점 사이의 곧은 간격입니다. | [00-02](phases/00-start-here/02-points-as-numbers/docs/ko.md) |
 | **Domain randomisation** | 수치를 무작위로 바꾼 여러 시뮬레이션 로봇에 걸쳐 controller를 튜닝하는 방법입니다. | [12-04](phases/12-simulation-and-sim-to-real/04-domain-randomisation/docs/ko.md) |
-| **Dot product** | 두 quaternion의 대응하는 숫자끼리 곱해 더한 값입니다. 양수면 서로 가깝고 음수면 멉니다. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/ko.md) |
+| **Dot product** | 두 quaternion의 대응하는 숫자끼리 곱해 더한 값입니다. 음수이면 두 자세 사이를 매끄럽게 돌릴 때 먼 길로 돕니다. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/ko.md) |
 | **Double integrator** | 가속도로 모는 자동차입니다. 위치는 속도로, 속도는 미는 힘으로 변합니다. | [03-06](phases/03-dynamics-and-control/06-lqr/docs/ko.md) |
 | **Drag (`b`)** | 속도가 클수록 커지는 저항입니다. | [12-03](phases/12-simulation-and-sim-to-real/03-system-identification/docs/ko.md) |
 | **Drift** | 반올림된 숫자를 여러 번 곱하면서 쌓이는 느린 오차입니다. | [01-01](phases/01-math-foundations/01-rotations-and-se3/docs/ko.md) |
@@ -121,7 +121,7 @@
 | **Frame** | link나 방 같은 어떤 대상에 붙은 x, y, z축의 묶음입니다. | [00-09](phases/00-start-here/09-reading-a-urdf/docs/ko.md) |
 | **Friction** | 움직임을 조금씩 빼앗는 마찰입니다. | [12-01](phases/12-simulation-and-sim-to-real/01-what-a-simulator-approximates/docs/ko.md) |
 | **Friction coefficient (`mu`)** | 표면이 얼마나 잘 붙는지를 나타내는 값입니다. | [11-01](phases/11-contact-and-manipulation/01-contact-models/docs/ko.md) |
-| **Friction cone** | 붙드는 한도, 즉 friction coefficient에 normal force를 곱한 값까지의 마찰력의 모음입니다. | [11-01](phases/11-contact-and-manipulation/01-contact-models/docs/ko.md) |
+| **Friction cone** | 접촉에서 가능한 normal force와 옆 방향 마찰력의 조합입니다. | [11-01](phases/11-contact-and-manipulation/01-contact-models/docs/ko.md) |
 | **Full turn** | 처음 향한 방향으로 돌아오는 한 바퀴입니다. | [00-03](phases/00-start-here/03-angles-and-radians/docs/ko.md) |
 | **Fuzzing** | 코드가 깨지는지 보려고 무작위 입력을 마구 던지는 시험입니다. | [13-04](phases/13-learning-for-robots/04-learned-policy-safety-wrapper/docs/ko.md) |
 | **Gain** | 컨트롤러가 얼마나 세게 반응하는지입니다. 예를 들어 오차 한 단위당 미는 힘입니다. | [03-04](phases/03-dynamics-and-control/04-pid-and-tuning/docs/ko.md) |
@@ -176,7 +176,7 @@
 | **Jacobian (`F`, `H`)** | 기울기 표(matrix)입니다. 로봇의 위치와 방향이 조금 변할 때 필터의 예측이 얼마나 변하는지 알려 줍니다. | [07-05](phases/07-state-estimation/05-extended-kalman-filter/docs/ko.md) |
 | **Jacobian (`J`)** | 현재 자세에서 joint 속도를 tip의 속도와 방향으로 바꾸는 숫자 표입니다. | [02-03](phases/02-manipulator-kinematics/03-jacobian-and-velocity/docs/ko.md) |
 | **Jacobian inverse** | 원하는 손의 움직임을 다시 joint 속도로 바꾸는 표입니다. | [02-04](phases/02-manipulator-kinematics/04-singularities/docs/ko.md) |
-| **Jam** | peg가 멈추고 더 세게 밀수록 더 단단히 박히는 상태입니다. | [11-04](phases/11-contact-and-manipulation/04-compliance-in-assembly/docs/ko.md) |
+| **Jam** | 벽의 마찰이 미는 힘을 버텨서 peg가 멈추는 상태입니다. | [11-04](phases/11-contact-and-manipulation/04-compliance-in-assembly/docs/ko.md) |
 | **Jerk** | 가속도가 얼마나 빨리 바뀌는지입니다. 가속도가 뛰면 jerk가 뾰족해집니다. | [09-01](phases/09-motion-planning/01-trajectory-profiles/docs/ko.md) |
 | **Jitter** | 한 cycle의 실제 타이밍이 계획에서 벗어난 정도입니다. | [05-03](phases/05-robot-software/03-control-loop-jitter/docs/ko.md) |
 | **Joint** | 돌아가는 경첩입니다. 얼마나 돌았는지는 각도로 나타냅니다. | [00-04](phases/00-start-here/04-joints-and-links/docs/ko.md) |
@@ -202,11 +202,11 @@
 | **Link** | 두 joint 사이의 단단한 막대입니다. 휘거나 늘어나지 않습니다. | [00-04](phases/00-start-here/04-joints-and-links/docs/ko.md) |
 | **Local minimum** | 작은 움직임으로는 오차가 더 줄지 않는 막다른 곳입니다. 답이 틀렸는데도 더는 줄지 않습니다. | [08-05](phases/08-mobile-robots/05-icp-scan-matching/docs/ko.md) |
 | **Log-odds (`L`)** | 칸 하나의 증거 점수입니다. 양수면 막혀 있을 가능성이 높고 음수면 비어 있을 가능성이 높으며 0은 모른다는 뜻입니다. | [08-03](phases/08-mobile-robots/03-occupancy-grid-and-slam-idea/docs/ko.md) |
-| **Lookahead (`Ld`)** | 그 일정한 거리입니다. 조절하는 값은 이것 하나입니다. | [08-04](phases/08-mobile-robots/04-path-following-pure-pursuit/docs/ko.md) |
+| **Lookahead (`Ld`)** | 그 거리의 최솟값입니다. 로봇에서 곧게 잰 거리이며 조절하는 값은 이것 하나입니다. | [08-04](phases/08-mobile-robots/04-path-following-pure-pursuit/docs/ko.md) |
 | **Loop** | 계속 되풀이되는 단계입니다. | [00-01](phases/00-start-here/01-what-is-a-robot/docs/ko.md) |
 | **Loop closure** | 이미 지난 곳을 알아보는 일입니다. 스프링이 하나 더 생깁니다. | [08-06](phases/08-mobile-robots/06-pose-graph-and-loop-closure/docs/ko.md) |
 | **LQR** | 모델과 cost weights로부터 feedback gain을 계산하는 방법입니다. | [03-06](phases/03-dynamics-and-control/06-lqr/docs/ko.md) |
-| **Lyapunov function (`V`)** | 안정한(가라앉는) 시스템이 움직이는 동안 절대 오르지 않는 에너지 같은 수입니다. | [03-09](phases/03-dynamics-and-control/09-lyapunov-stability/docs/ko.md) |
+| **Lyapunov function (`V`)** | 목표에서는 0이고 다른 곳에서는 양수인 에너지 같은 수입니다. 이 수가 오르지 않으면 목표 가까이에서 시작한 상태는 계속 가까이에 머뭅니다. | [03-09](phases/03-dynamics-and-control/09-lyapunov-stability/docs/ko.md) |
 | **Manhattan distance** | 벽을 무시하고 가로 칸 수와 세로 칸 수를 더한 값입니다. | [09-05](phases/09-motion-planning/05-grid-search-dijkstra-to-astar/docs/ko.md) |
 | **Manipulability** | tip이 얼마나 자유롭게 움직일 수 있는지 나타내는 점수입니다. | [02-04](phases/02-manipulator-kinematics/04-singularities/docs/ko.md) |
 | **MDP** | 칸, 행동, 각 결과의 확률, reward를 적어 둔 목록입니다. 이름은 그냥 이름표입니다. | [13-05](phases/13-learning-for-robots/05-mdps-and-value-iteration/docs/ko.md) |
@@ -273,9 +273,9 @@
 | **Quadratic** | 그릇 모양의 비용입니다. 최솟값을 찾기 쉽습니다. | [03-08](phases/03-dynamics-and-control/08-model-predictive-control/docs/ko.md) |
 | **Quadrotor** | 프로펠러가 네 개인 드론입니다. | [10-03](phases/10-legged-and-aerial/03-quadrotor-model/docs/ko.md) |
 | **Quantisation** | 부드러운 값을 정수 단계로 반올림하는 일입니다. 작은 변화는 보이지 않게 됩니다. | [04-03](phases/04-actuators-and-sensors/03-encoders-and-quantisation/docs/ko.md) |
-| **Quaternion** | 자세를 나타내는 숫자 네 개입니다. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/ko.md) |
+| **Quaternion** | 자세를 나타내는 숫자 네 개입니다. 네 수를 각각 제곱해서 더하면 1이 됩니다. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/ko.md) |
 | **Queue depth** | subscriber가 읽기 전까지 보관하는 메시지의 개수입니다. | [00-10](phases/00-start-here/10-ros2-in-one-page/docs/ko.md) |
-| **Quintic** | 양 끝의 위치, 속도, 미는 힘이 모두 정해진 가장 간단한 곡선입니다. | [09-01](phases/09-motion-planning/01-trajectory-profiles/docs/ko.md) |
+| **Quintic** | 양 끝의 위치, 속도, 가속도가 모두 정해진 가장 간단한 곡선입니다. | [09-01](phases/09-motion-planning/01-trajectory-profiles/docs/ko.md) |
 | **rad/s** | 초당 radian으로 나타낸 회전 속도입니다. 한 바퀴는 약 6.28 radian입니다. | [08-01](phases/08-mobile-robots/01-differential-drive-and-odometry/docs/ko.md) |
 | **Radian** | 한 바퀴가 약 6.28인 각도 단위입니다. 코드는 이 단위를 씁니다. | [00-03](phases/00-start-here/03-angles-and-radians/docs/ko.md) |
 | **Radian (rad)** | 각도의 단위로 한 바퀴가 약 6.28입니다. | [01-03](phases/01-math-foundations/03-axis-angle-and-quaternions/docs/ko.md) |
@@ -348,14 +348,14 @@
 | **tf2** | transform 트리를 저장하는 ROS 2 라이브러리입니다. | [01-04](phases/01-math-foundations/04-frames-and-transform-trees/docs/ko.md) |
 | **Thread** | 프로그램 안의 일꾼 하나입니다. 한 번에 한 가지 일만 합니다. | [05-02](phases/05-robot-software/02-executors-and-callbacks/docs/ko.md) |
 | **Throughput** | 시간 한 단계당 끝낸 작업 수입니다. | [14-03](phases/14-multi-robot-and-swarms/03-traffic-and-deadlock/docs/ko.md) |
-| **Thrust (`T`)** | 프로펠러가 내는 위쪽 힘의 합입니다. | [10-03](phases/10-legged-and-aerial/03-quadrotor-model/docs/ko.md) |
+| **Thrust (`T`)** | 드론 몸체의 축을 따라 작용하는 프로펠러 힘의 합입니다. 드론과 함께 기웁니다. | [10-03](phases/10-legged-and-aerial/03-quadrotor-model/docs/ko.md) |
 | **Tick** | 작은 한 걸음입니다. tree에게 일을 조금 하고 보고하라고 시키는 것입니다. | [05-05](phases/05-robot-software/05-behaviour-trees-and-state-machines/docs/ko.md) |
 | **Tick (`dt`)** | 제어 한 단계로 00/06의 time step과 같습니다. | [03-01](phases/03-dynamics-and-control/01-the-sampling-limit/docs/ko.md) |
 | **Time constant** | 오차가 약 3분의 2만큼 줄어드는 데 걸리는 시간입니다. | [11-02](phases/11-contact-and-manipulation/02-force-and-hybrid-control/docs/ko.md) |
 | **Time constant (`tau`)** | 가속도계가 넘겨받기 전까지 gyro를 믿는 시간입니다. | [07-04](phases/07-state-estimation/04-complementary-filter/docs/ko.md) |
 | **Time constant (`Tc`)** | 몸이 얼마나 빨리 기우는지입니다. 01 레슨과 같은 값입니다. | [10-02](phases/10-legged-and-aerial/02-walking-by-foot-placement/docs/ko.md) |
 | **Time stamp** | 값을 잰 컴퓨터의 시계가 그 값에 적어 넣은 시각입니다. | [05-04](phases/05-robot-software/04-time-sync-and-traces/docs/ko.md) |
-| **Time step** | loop를 한 번 돌고 다음 번을 돌기 전까지의 짧은 쉼입니다. 여기서는 0.1초입니다. | [00-01](phases/00-start-here/01-what-is-a-robot/docs/ko.md) |
+| **Time step** | loop를 한 번 시작한 뒤 다음 번을 시작할 때까지 지난 시간입니다. 여기서는 0.1초입니다. | [00-01](phases/00-start-here/01-what-is-a-robot/docs/ko.md) |
 | **Time step (`dt`)** | 컴퓨터가 한 번에 앞으로 넘기는 작은 시간 조각입니다. | [00-06](phases/00-start-here/06-time-steps/docs/ko.md) |
 | **Timeout `T`** | watchdog이 작동하기 전까지 조용한 시간을 참아 주는 길이입니다. | [15-02](phases/15-safety-and-deployment/02-watchdogs-and-stops/docs/ko.md) |
 | **Timing jitter** | 메시지 도착 시각이 흔들리는 정도입니다. | [15-02](phases/15-safety-and-deployment/02-watchdogs-and-stops/docs/ko.md) |

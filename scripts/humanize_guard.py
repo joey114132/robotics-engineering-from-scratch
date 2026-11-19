@@ -16,6 +16,7 @@ BK = ROOT / ".board" / "humanize-backup"
 DIGITS = re.compile(r"\d+(?:\.\d+)?")
 CODE = re.compile(r"`[^`\n]+`")
 URL = re.compile(r"https?://[^\s)>\]]+")
+IMAGE = ("![", "[![")   # a picture line, or a clip line (poster linked to the video)
 
 
 def split_md(t):
@@ -35,7 +36,7 @@ def split_md(t):
 
 
 def facts(prose):
-    body = "\n".join(l for l in prose if not l.startswith("!["))
+    body = "\n".join(l for l in prose if not l.startswith(IMAGE))
     return Counter(DIGITS.findall(body)), Counter(CODE.findall(body)), Counter(URL.findall(body))
 
 
@@ -46,7 +47,7 @@ def cmp_md(old, new, tag, errs):
     # A structural rollout must refresh only that lesson's baseline before humanizing.
     ho = [h[0] for h in headings(old)]; hn = [h[0] for h in headings(new)]
     if ho != hn: errs.append(f"{tag}: headings changed")
-    io = [l for l in po if l.startswith("![")]; inn = [l for l in pn if l.startswith("![")]
+    io = [l for l in po if l.startswith(IMAGE)]; inn = [l for l in pn if l.startswith(IMAGE)]
     if io != inn: errs.append(f"{tag}: image lines changed")
     to = sum(1 for l in po if l.startswith("|")); tn = sum(1 for l in pn if l.startswith("|"))
     if to != tn: errs.append(f"{tag}: table rows {to} -> {tn}")

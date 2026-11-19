@@ -33,11 +33,11 @@ An executor decides which ready callback runs next and on which thread. A group 
 
 ![Threads and groups](../assets/diagram-callback-groups.png)
 
-*A second thread helps only if the two callbacks sit in different groups.*
+*A second thread helps only if the groups let the two callbacks run together.*
 
-The fix needs a second thread and the slow callback in its own group.
+Use a second thread and groups that allow the two callbacks to run together.
 
-![Two cars, two threads each](../assets/clip-example.mp4)
+[![Two cars, two threads each](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Each roof lamp is a thread. Blue shares one group, so its second lamp stays dark and the car stops. Green never stops.*
 
@@ -54,8 +54,8 @@ The timer sends a heartbeat 100 times a second and the subscription callback doe
 ## Build It
 
 ```python
-busy = {g for _, g in running if g is not None}
-job = next((j for j in pending if j[3] is None or j[3] not in busy), None)
+busy = {g for _, g in running}
+job = next((j for j in pending if j[3] not in busy), None)
 ```
 
 `simulate()` moves time forward 1 ms at a time. Each free thread takes the oldest waiting callback whose group is not busy.

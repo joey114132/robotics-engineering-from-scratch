@@ -5,12 +5,15 @@ on:
 jobs:
   lessons:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
           cache: pip
       - run: pip install -r requirements.txt
-      - run: python scripts/check_lessons.py
-      - run: python -m pytest phases scripts/tests_robo -q
+      - run: python3 scripts/check_lessons.py
+      - run: python3 -m pytest phases scripts/tests_robo -q

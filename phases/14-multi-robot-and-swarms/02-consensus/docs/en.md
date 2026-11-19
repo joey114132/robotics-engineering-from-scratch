@@ -8,7 +8,7 @@
 
 Eight toy cars each point a different way and see only their neighbours. Every tick a car turns a little toward the headings it sees. The average heading never changes.
 
-Cars linked by chains of neighbours settle on that average. Groups with no link between them settle on different headings. A turn that is too big overshoots.
+Cars linked by chains of neighbours settle on that average. Groups with no link between them each settle on their own average. A turn that is too big overshoots.
 
 ## Key Terms
 
@@ -23,9 +23,9 @@ Eight robots each measure the same thing with a different error, and each hears 
 
 ## The Concept
 
-A real fleet has no boss and no radio that reaches everyone, so robots must agree using only local talk. Each tick, every robot moves a little toward the average of its neighbours. If the robots are connected, everyone ends at the group average. How fast depends on how well connected they are: a ring is slow, a group where everyone talks to everyone is quick, and two separate groups never agree.
+A real fleet has no boss and no radio that reaches everyone, so robots agree by local talk alone. Each tick, every robot moves a little toward the average of its neighbours. Connected robots all end at the group average. How fast depends on how well connected they are: a ring is slow, a group where everyone talks to everyone is quick, and two separate groups each keep their own average.
 
-![Update](../assets/diagram-consensus-update.png)
+![One robot steps toward its neighbours' average each tick](../assets/diagram-consensus-update.png)
 
 *Each robot steps a little toward its neighbours' average every tick.*
 
@@ -35,19 +35,19 @@ A real fleet has no boss and no radio that reaches everyone, so robots must agre
 
 ![Three networks](../assets/fig-consensus-states.png)
 
-*The ring crawls, the fully connected group is fast, and two split groups never agree.*
+*The ring crawls, the fully connected group is fast, and the two split groups stay apart.*
 
 ![Decay rate](../assets/fig-rate-vs-lambda2.png)
 
 *Four different networks of cars land on one line: the speed is set by one number, lambda2.*
 
-![Car clip](../assets/clip-example.mp4)
+[![Car clip](../assets/clip-example.jpg)](../assets/clip-example.mp4)
 
 *Watch the green car turn a little toward its two neighbours each tick.*
 
 <details><summary>The math (optional)</summary>
 
-Let `x_i` be car `i`'s heading. One tick moves every car at once: `x <- (I - eps L) x`, where `L = D - A`, `A` marks neighbours and `D` counts them. Rows of `L` sum to zero, so the average never changes. `lambda2` is the second-smallest eigenvalue of `L` (a number telling how fast one pattern of disagreement, a mode, shrinks). Every other mode shrinks by `1 - eps * lambda_k` per tick, so the slowest decay is `1 - eps * lambda2`. The update is stable when `eps * lambda_max < 2`. With `eps = 0.05` on a ring, the car at x = 7 sees neighbours 2 and 0, so one tick gives 7 + 0.05 * ((2 - 7) + (0 - 7)) = 6.4, a turn of about 9 degrees (1 unit drawn as 0.25 rad). If `lambda2 = 0` the network is split. One long-range link added to a ring raises `lambda2`.
+`x_i` is car `i`'s heading. One tick: `x <- (I - eps L) x`, with `L = D - A` (`A` marks neighbours, `D` counts them). Links work both ways, so `L` is symmetric with zero row sums: the average never changes. `lambda2`, the second-smallest eigenvalue of `L`, sets how fast the slowest disagreement pattern (a mode) shrinks. Other modes are multiplied by `1 - eps * lambda_k` per tick, so for a small step the slowest is `1 - eps * lambda2`. The update is stable when `eps * lambda_max < 2`. With `eps = 0.05` on a ring, the car at x = 7 sees 2 and 0, so one tick gives 7 + 0.05 * ((2 - 7) + (0 - 7)) = 6.4, a turn of about 9 degrees (1 unit drawn as 0.25 rad). One extra link need not raise `lambda2` (the ring keeps 0.586; every pair linked gives 8).
 
 </details>
 
@@ -80,6 +80,6 @@ Sources: Wikipedia, Algebraic connectivity (opened 2026-11-09). `lambda2` is abo
 
 ## Exercises
 
-1. Add one long-range link to the ring. What changes?
+1. Add one long-range link to the ring. Does `lambda2` change?
 2. Drop each link at random every tick. Do the cars still agree?
 3. Fix robot 0's value. Does everyone follow it?
