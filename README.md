@@ -1,5 +1,7 @@
 # Robotics Engineering from Scratch
 
+[![Read the course online at robotics-from-scratch.robotics-site.workers.dev: free, nothing to install, English and Korean](docs/img/banner-online.png)](https://robotics-from-scratch.robotics-site.workers.dev)
+
 A free, beginner-first course on how robots work. No robotics background needed: you build each idea yourself in small Python programs, watch it move, then see how real tools do it.
 
 **[Start reading online](https://robotics-from-scratch.robotics-site.workers.dev)**, no install. Progress is saved in your browser.
@@ -115,9 +117,9 @@ Forks and pull requests are welcome, from a typo to a whole new lesson. Run the 
 
 ## License and credits
 
-MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The Bolt mascot picture below, the 17 phase covers, the social card background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures are drawn in code, not generated.
+MIT, see [LICENSE](LICENSE). The lesson shape follows [rohitg00/ai-engineering-from-scratch](https://github.com/rohitg00/ai-engineering-from-scratch) (MIT). The text, code and figures here are original. The Bolt mascot picture below, the 17 phase covers, the social card and banner background and the Bolt animation are AI-generated (Higgsfield), from the Bolt mascot. Models and prompts are in [docs/img/AI-ART.md](docs/img/AI-ART.md). The lesson figures are drawn in code, not generated.
 
-To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw`, `node scripts/readme_shots.cjs cli home cli-home` and `node scripts/social_card.cjs`.
+To regenerate the pictures above, run `python3 scripts/readme_roadmap.py`, `node scripts/render_excalidraw.cjs docs/img/roadmap.excalidraw`, `node scripts/readme_shots.cjs cli home cli-home` and `node scripts/social_card.cjs` (the social card and the banner at the top).
 
 <img src="docs/img/hero-bolt.jpg" width="360" alt="Bolt, the course mascot, waves in a toy robotics workshop while a small arm lifts a hex nut and a drone drifts past">
 

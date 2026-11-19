@@ -8,6 +8,7 @@ Made on 2026-11-12 with Higgsfield, using the Bolt mascot as a reference image (
 | `hero-bolt.webp` | Seedance 2.0, 1080p, 5 s | Image-to-video from `hero-bolt.jpg`; slow push-in, arm lifts a hex nut, Bolt waves. Cropped to the right 84%, scaled to 840 px, 12 fps, played forward then in reverse so the loop has no jump (ffmpeg, animated WebP). The README shows `hero-bolt.jpg` where WebP is not supported |
 | `phases/00.jpg` to `16.jpg` | Nano Banana 2, 4:3, 2k | One cover per phase; 02, 08 and 12 were regenerated once |
 | `social-card.png` | none | `hero-bolt.jpg` with the title set in HTML, so the text is real text |
+| `banner-online.png` | none | `hero-bolt.jpg` with the "Read the course online" text set in HTML; the README banner that links to the website |
 | `phases-gallery.jpg` | none | The 17 covers laid out with captions in HTML |
 
 Style sentence used for every phase cover:
