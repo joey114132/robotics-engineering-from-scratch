@@ -74,3 +74,11 @@ def test_longer_window_trades_less_noise_for_more_delay():
     stds = [m.window_velocity(c, CPR, 1e-3, n).std() for n in (1, 5, 20)]
     lags = [m.window_lag(n, 1e-3) for n in (1, 5, 20)]
     assert stds[0] > stds[1] > stds[2] and lags[0] < lags[1] < lags[2]
+
+
+def test_window_noise_follows_the_fractional_part_of_speed_over_step():
+    _, c = ramp(1000.0)
+    for n in (1, 5, 13, 20):  # n = 20 has speed / step = 1.30, so only the fractional part 0.30 counts
+        step = m.min_velocity_step(CPR, 1e-3) / n
+        d = (W0 / step) % 1.0
+        assert np.isclose(m.window_velocity(c, CPR, 1e-3, n).std(), step * np.sqrt(d * (1 - d)), rtol=0.05)

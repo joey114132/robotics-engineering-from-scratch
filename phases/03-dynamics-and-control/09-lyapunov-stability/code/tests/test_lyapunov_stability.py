@@ -2,6 +2,8 @@
 import importlib.util
 import pathlib
 
+import pytest
+
 import numpy as np
 
 _p = pathlib.Path(__file__).resolve().parents[1] / "main.py"
@@ -50,3 +52,9 @@ def test_a_delayed_rate_signal_makes_V_grow():
     p = dict(P, kd=5.0)
     assert m.simulate(p, [1.0, 0.0], T=10.0, delay=0.0).max() <= m.V(np.array([1.0, 0.0]), p) + 1e-9
     assert m.simulate(p, [1.0, 0.0], T=10.0, delay=0.3).max() > 100 * m.V(np.array([1.0, 0.0]), p)
+
+
+def test_scipy_finds_the_counterexample_only_when_it_minimises_minus_vdot():
+    minimize = pytest.importorskip("scipy.optimize").minimize
+    assert -minimize(lambda x: -m.vdot(x, BAD), [1.0, 1.0]).fun > 1.0
+    assert minimize(lambda x: m.vdot(x, BAD), [1.0, 1.0]).fun < 0.1

@@ -78,3 +78,10 @@ def test_agrees_with_a_linear_program_on_random_grasps():
                       bounds=[(0, None)] * n + [(None, None)])
         lp_closed = res.status == 0 and -res.fun > 1e-7 and np.linalg.matrix_rank(W) == 3
         assert lp_closed == m.closes(W)
+
+
+def test_a_flat_hull_does_not_close_even_when_the_wrenches_span_the_space():
+    # three frictionless contacts: no force can point up; the wrenches span the space but their hull is a flat triangle
+    W = m.contact_wrenches([[-1, 0], [1, 0.5], [0, 1]], [[1, 0], [-1, 0], [0, -1]], 0.0)
+    assert np.linalg.matrix_rank(W) == 3
+    assert m.epsilon(W) == 0.0 and not m.closes(W)

@@ -36,14 +36,14 @@ def fit(X, Y, k=5):
 
 
 class Safety:
-    """Deterministic wrapper: hold on a stale observation, clip to the torque limit, limit the change per step."""
+    """Deterministic wrapper: request zero on a stale observation or a non-finite action, clip to the torque limit, limit the change per step."""
 
     def __init__(self, umax=UMAX, du=0.5, max_age=3):
         self.umax, self.du, self.max_age, self.u = umax, du, max_age, 0.0
         self.n = dict(clip=0, rate=0, hold=0)  # intervention counts
 
     def __call__(self, raw, age):
-        if age > self.max_age:  # the observation is too old to act on: command zero torque
+        if age > self.max_age or not np.isfinite(raw):  # stale observation or NaN/inf action: request zero torque
             raw, self.n["hold"] = 0.0, self.n["hold"] + 1
         c = float(np.clip(raw, -self.umax, self.umax))
         r = self.u + float(np.clip(c - self.u, -self.du, self.du))

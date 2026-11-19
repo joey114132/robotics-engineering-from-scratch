@@ -54,3 +54,17 @@ def test_mismatch_makes_the_joint_lag_far_behind_its_reference():
     bad, good = m.simulate(m.MISMATCHED), m.simulate(m.ALIGNED)
     assert bad["peak_err"] > 5 * good["peak_err"]
     assert bad["peak_err"] > 0.5 and good["peak_err"] < 0.15
+
+
+def test_the_controller_speed_limit_is_applied_when_it_is_the_tightest():
+    L = {k: dict(v) for k, v in m.ALIGNED.items()}
+    L["planner"]["vel"], L["controller"]["vel"] = 3.0, 0.5
+    assert m.effective(L, "vel") == (0.5, "controller")
+    assert m.simulate(L)["max_speed"] <= 0.5 + 0.02  # the joint really feels the controller's limit
+
+
+@pytest.mark.parametrize("dt,J", [(1e-3, 0.5), (1e-2, 0.5), (1e-3, 0.05), (5e-3, 0.1)])
+def test_joint_speed_never_passes_the_tightest_limit_even_with_a_coarse_step_or_small_inertia(dt, J):
+    L = {k: dict(v) for k, v in m.ALIGNED.items()}
+    L["planner"]["vel"], L["controller"]["vel"] = 3.0, 0.5
+    assert m.simulate(L, dt=dt, J=J)["max_speed"] <= 0.5 + 1e-9  # no step may carry the joint through the limit

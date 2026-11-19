@@ -64,3 +64,12 @@ def test_raised_gains_buzz_the_command_every_tick():
         _, u, _ = m.simulate(0.02, 0.1, kp, 0.0, kd, DT, 400, umax=5.0)
         return np.mean(np.sign(u[1:]) != np.sign(u[:-1]))
     assert flips(40.0, 2.0) < 0.05 and flips(400.0, 60.0) > 0.9
+
+
+def test_integral_gain_can_break_a_loop_the_pd_matrix_passes():
+    args = (0.02, 0.1, 400.0, 2.0, DT)
+    assert m.spectral_radius(*args) < 1  # P+D alone: 0.946
+    assert m.spectral_radius(*args, ki=50000.0) > 1  # with the stored I term as a third state
+    assert m.spectral_radius(*args, ki=2000.0) < 1
+    q, _, _ = m.simulate(0.02, 0.1, 400.0, 50000.0, 2.0, DT, 20000)
+    assert np.abs(q).max() > 1e3  # the simulation really diverges

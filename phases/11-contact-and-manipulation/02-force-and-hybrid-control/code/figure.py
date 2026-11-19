@@ -50,8 +50,8 @@ def hybrid():
     xs = np.linspace(0, 0.1, 400)
     ax1.plot(xs * 1000, (m.Y0 + m.BUMP * np.sin(2 * np.pi * xs / m.LAM)) * 1000, color=GREY, lw=3, label="surface")
     ax1.plot(p["x"] * 1000, p["y"] * 1000, "--", color=ORANGE, lw=2, label="position only: flat path")
-    ax1.plot(h["x"] * 1000, h["y"] * 1000, color=BLUE, lw=2, label="hybrid: path follows the bumps")
-    ax1.set_ylim(105, 97)  # y points into the surface, so draw it downward
+    ax1.plot(h["x"] * 1000, h["y"] * 1000, color=BLUE, lw=2, label="hybrid: moves with the bumps, a bit late")
+    ax1.set_ylim(107, 97)  # y points into the surface, so draw it downward
     ax1.set_xlim(0, 100)
     ax1.set_xlabel("x along the surface (mm)")
     ax1.set_ylabel("y into the surface (mm, down)")

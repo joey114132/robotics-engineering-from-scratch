@@ -74,3 +74,17 @@ def test_dropped_observations_overshoot_without_the_wrapper_but_not_with_it():
 
 def test_rollout_is_deterministic():
     assert np.array_equal(run(True, drop=range(10, 20))["q"], run(True, drop=range(10, 20))["q"])
+
+
+def test_non_finite_action_requests_zero_and_the_wrapper_recovers():
+    s = m.Safety()
+    out = [s(1.0, 0), s(float("nan"), 0), s(float("inf"), 0), s(1.0, 0)]
+    assert all(np.isfinite(out))  # a NaN must not be stored in the rate-limit state
+    assert out[2] <= out[1] <= out[0]  # bad actions request zero, so the push eases down
+    assert out[3] > out[2] and s.n["hold"] == 2
+
+
+def test_always_max_torque_is_bounded_in_command_but_not_in_position():
+    r = m.rollout(lambda obs: 3.0, TARGET, safety=m.Safety())
+    assert np.abs(r["u"]).max() <= m.UMAX  # the wrapper bounds the command ...
+    assert abs(r["q"].max() - 8.5) < 0.05  # ... but a bounded command alone does not keep the joint inside its limit

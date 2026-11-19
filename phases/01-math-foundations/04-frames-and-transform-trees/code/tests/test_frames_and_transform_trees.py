@@ -77,3 +77,8 @@ def test_caption_numbers_for_wrong_products():
         right = (base_cam @ cup)[:3, 3]
         err[yaw] = (np.linalg.norm((cup @ base_cam)[:3, 3] - right), np.linalg.norm((m.invert_T(base_cam) @ cup)[:3, 3] - right))
     assert np.isclose(err[np.pi][0], 0.4) and np.isclose(err[0.0][1], np.hypot(1.0, 0.8))
+
+
+def test_is_rotation_honours_tol_with_no_hidden_relative_slack():
+    assert not m.is_rotation((1 + 1e-6) * np.eye(3))
+    assert m.is_rotation(m.rot_z(0.7))

@@ -87,3 +87,11 @@ def test_drive_is_reproducible_for_a_seed():
     a, _ = m.drive(smooth, (*START, 0.0), seed=3, **BAD)
     b, _ = m.drive(smooth, (*START, 0.0), seed=3, **BAD)
     assert np.array_equal(a, b)
+
+
+def test_straight_drive_belief_error_after_1_5_and_10_s_with_and_without_a_fix():
+    path = [START, (START[0] + 10.0, START[1])]
+    at = lambda t, e, k: np.linalg.norm((t - e)[int(k / 0.05) - 1, :2])
+    for kw, want in ((BAD, (0.015, 0.26, 0.97)), (dict(BAD, landmarks=m.LANDMARKS), (0.009, 0.058, 0.012))):
+        t, e = m.drive(path, (*START, 0.0), **kw)
+        assert np.allclose([at(t, e, k) for k in (1, 5, 10)], want, atol=0.005)

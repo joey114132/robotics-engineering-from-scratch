@@ -59,3 +59,11 @@ def test_gains_tuned_across_the_range_beat_nominal_gains_on_that_range():
 def test_a_range_much_wider_than_the_real_uncertainty_costs_performance():
     right, wide = m.tune(0.3, 30, 1, *SMALL), m.tune(0.6, 30, 1, *SMALL)
     assert m.evaluate(*wide, 0.3, 300, 7)[1] > 1.05 * m.evaluate(*right, 0.3, 300, 7)[1]
+
+
+def test_numbers_quoted_in_the_lesson_fold_come_from_300_width_03_arms_with_seed_7():
+    g = {w: m.tune(w, 1 if w == 0 else 40, 1) for w in (0.0, 0.3, 0.6)}
+    ev = {w: m.evaluate(*g[w], 0.3, 300, 7) for w in g}
+    assert [round(g[0.0][0], 1), round(g[0.0][1], 2)] == [4.5, 0.70] and [round(g[0.3][0], 1), round(g[0.3][1], 2)] == [7.7, 1.35]
+    assert round(ev[0.0][0], 2) == 0.57 and round(ev[0.3][0], 2) == 0.99 and ev[0.6][0] == 1.0
+    assert [round(ev[w][1], 2) for w in (0.3, 0.6)] == [0.53, 0.59]

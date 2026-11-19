@@ -60,3 +60,14 @@ def test_hybrid_holds_force_on_a_bumpy_surface_where_position_control_does_not()
 def test_selection_matrix_keeps_the_free_axis_position_controlled():
     h = m.tool(np.array([0, 1]), ke=5000.0)
     assert abs(h["x"][-1] - m.VX * m.T_TOOL) < 1.2 * m.VX / m.KP  # ramp lag of the position law
+
+
+def test_probe_log_pairs_each_force_with_the_position_it_was_measured_at():
+    r = m.probe("force", ke=5000.0)
+    assert np.allclose(r["f"], 5000.0 * np.maximum(r["x"] - m.XS, 0.0))
+
+
+def test_tool_log_pairs_each_force_with_the_position_it_was_measured_at():
+    r = m.tool(np.array([0, 1]), ke=5000.0)
+    surface = m.Y0 + m.BUMP * np.sin(2 * np.pi * r["x"] / m.LAM)
+    assert np.allclose(r["f"], 5000.0 * np.maximum(r["y"] - surface, 0.0))

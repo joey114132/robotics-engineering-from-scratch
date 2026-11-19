@@ -16,8 +16,8 @@ def probe(mode, ke, fd=FD, xs=XS, dt=1e-3, T=3.0, vmax=VMAX):
             v = KP * (X_EST + fd / K_EST - x)
         else:                                        # integral force control: velocity proportional to force error
             v = KI * (fd - f)
+        out["x"][i], out["f"][i] = x, f                    # the position f was measured at
         x += np.clip(v, -vmax, vmax) * dt
-        out["x"][i], out["f"][i] = x, f
     return out
 
 
@@ -31,9 +31,9 @@ def tool(S, ke, fd=FD, dt=1e-3):
         v_pos = KP * (np.array([VX * t, Y0 + fd / K_EST]) - p)        # position law on every axis
         v_frc = np.array([0.0, KI * (fd - f)])                        # force law, only used where S = 1
         lim = np.array([1.0, VMAX if S[1] else 1.0])               # speed limit only on the force axis
-        p = p + np.clip((1 - S) * v_pos + S * v_frc, -lim, lim) * dt
-        for k, val in zip(out, (t, p[0], p[1], f)):
+        for k, val in zip(out, (t, p[0], p[1], f)):          # log the state f was measured at, then move
             out[k][i] = val
+        p = p + np.clip((1 - S) * v_pos + S * v_frc, -lim, lim) * dt
     return out
 
 

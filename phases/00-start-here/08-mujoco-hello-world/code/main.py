@@ -50,4 +50,3 @@ def mujoco_period(theta0, dt, seconds, L=1.0) -> float:
 if __name__ == "__main__":
     print("formula  :", 2 * np.pi * np.sqrt(1.0 / G))
     print("numpy    :", measure_period(simulate(0.05, 0.001, 20.0), 0.001))
-    print("mujoco   :", mujoco_period(0.05, 0.001, 20.0))

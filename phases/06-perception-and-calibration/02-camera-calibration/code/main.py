@@ -53,7 +53,7 @@ def calibrate(Hs):
     """B = K^-T K^-1 is symmetric. Each view gives h1'B h2 = 0 and h1'B h1 = h2'B h2, linear in [B11,B22,B13,B23,B33]."""
     A = np.array([r for H in Hs for r in (_v(H, 0, 1), _v(H, 0, 0) - _v(H, 1, 1))])
     _, s, Vt = np.linalg.svd(A)
-    if s[-2] < 1e-6 * s[0]:
+    if len(Hs) < 2 or s[3] < 1e-6 * s[0]:  # four independent rows are needed to pin 5 unknowns up to scale
         raise ValueError("degenerate views: need at least 2 distinct plane orientations")
     b = Vt[-1] * np.sign(Vt[-1][0])
     B11, B22, B13, B23, B33 = b

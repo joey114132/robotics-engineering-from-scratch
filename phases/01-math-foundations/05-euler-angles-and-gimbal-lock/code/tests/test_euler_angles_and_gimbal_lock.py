@@ -76,3 +76,10 @@ def test_needed_euler_rates_blow_up_like_one_over_cos_pitch():
     n1 = np.linalg.norm(m.euler_rates([1.0, 0, 0], 80 * D, 0.0))
     n2 = np.linalg.norm(m.euler_rates([1.0, 0, 0], 89 * D, 0.0))
     assert n2 / n1 > 8
+
+
+def test_locked_means_abs_sin_pitch_within_1e_9_of_one_about_4_5e_minus_5_rad_from_the_lock():
+    # the doc fold: the flag is set by |sin(pitch)| > 1 - 1e-9, not by an angle difference
+    for off, expected in ((3e-5, True), (1e-4, False)):
+        R = m.euler_to_R(0.4, np.pi / 2 - off, 0.9)
+        assert m.R_to_euler(R)[3] is expected

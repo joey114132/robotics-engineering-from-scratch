@@ -52,3 +52,10 @@ def test_halving_kp_doubles_the_sag():
     s_hi = m.sag(Q_DES, kp=[200.0, 200.0], ff_scale=0.8, **P)
     s_lo = m.sag(Q_DES, kp=[100.0, 100.0], ff_scale=0.8, **P)
     assert np.allclose(s_lo / s_hi, 2.0, rtol=0.1)
+
+
+def test_failed_iteration_is_not_reported_as_a_missing_equilibrium():
+    # an equilibrium exists here (q1 = -1.111 rad), the iteration just does not find it
+    with __import__("pytest").raises(ValueError, match="iteration did not converge") as err:
+        m.steady_state([-1.0, 0.0], kp=[1.0, 1000.0], ff_scale=0.8, **P)
+    assert "too soft" not in str(err.value)

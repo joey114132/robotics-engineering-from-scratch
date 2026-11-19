@@ -18,14 +18,17 @@ def simulate(J, b, kp, ki, kd, dt, n, q_des=1.0, load=0.0, t_load=0.0, umax=np.i
     return out
 
 
-def closed_loop_matrix(J, b, kp, kd, dt):
-    """State (q, v) of the PD loop above, no integral, no saturation: x+ = A x + (setpoint term)."""
+def closed_loop_matrix(J, b, kp, kd, dt, ki=0.0):
+    """State (q, v) of the unsaturated loop above: x+ = A x + (setpoint term). With ki > 0 the stored I term is a third state."""
     a = 1.0 - dt * (kd + b) / J
-    return np.array([[1.0 - dt * dt * kp / J, dt * a], [-dt * kp / J, a]])
+    A = np.array([[1.0 - dt * dt * kp / J, dt * a], [-dt * kp / J, a]])
+    if not ki:
+        return A
+    return np.block([[A, np.array([[dt * dt / J], [dt / J]])], [np.array([[-ki * dt, 0.0]]), np.ones((1, 1))]])
 
 
-def spectral_radius(J, b, kp, kd, dt):
-    return float(np.abs(np.linalg.eigvals(closed_loop_matrix(J, b, kp, kd, dt))).max())
+def spectral_radius(J, b, kp, kd, dt, ki=0.0):
+    return float(np.abs(np.linalg.eigvals(closed_loop_matrix(J, b, kp, kd, dt, ki))).max())
 
 
 def overshoot(q, q_des=1.0):

@@ -29,7 +29,7 @@ def options():
     t = d.box("Drive takes\ntorque commands", col=1, row=0, color="green")
     p = d.box("Drive takes only\nposition commands", col=1, row=1, color="yellow")
     ti = d.box("Impedance with\nany K, D", col=2, row=0, color="green")
-    ad = d.box("Admittance layer\nneeds a torque sensor", col=2, row=1, color="red")
+    ad = d.box("Adjust inner gains\nor use admittance", col=2, row=1, color="red")
     for s, tt in ((q, t), (q, p), (t, ti), (p, ad)):
         d.arrow(s, tt)
     d.save(OUT / "diagram-mode-options.excalidraw")

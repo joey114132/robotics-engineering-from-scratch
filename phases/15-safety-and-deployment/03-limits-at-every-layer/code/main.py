@@ -41,9 +41,11 @@ def simulate(L, goal=1.4, T=2.5, dt=1e-3, J=0.5, b=0.2, kp=60.0, kd=6.0):
         qr = np.clip(ref, -C["pos"], C["pos"])
         tau = np.clip(kp * (qr - q) - kd * qd, -C["tau"], C["tau"])
         tau = np.clip(tau, -D["tau"], D["tau"])
-        if qd >= D["vel"] or q >= D["pos"]:
+        vmax = min(C["vel"], D["vel"])  # controller and drive both cut torque so the speed after this step stays within the limit
+        tau = np.clip(tau, b * qd + J * (-vmax - qd) / dt, b * qd + J * (vmax - qd) / dt)
+        if q >= D["pos"]:
             tau = min(tau, 0.0)  # drive refuses to push further out
-        if qd <= -D["vel"] or q <= -D["pos"]:
+        if q <= -D["pos"]:
             tau = max(tau, 0.0)
         qd += (tau - b * qd) / J * dt
         q += qd * dt

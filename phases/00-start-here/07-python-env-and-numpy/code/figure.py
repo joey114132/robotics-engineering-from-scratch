@@ -28,8 +28,8 @@ def main():
     a2.plot(q, np.abs(bad - good) * 100, color=ORANGE, lw=2)
     a2.axhline(0, color=GREY, lw=1)
     a2.set_xlabel("joint reading (degrees)")
-    a2.set_ylabel("position error (cm)")
-    a2.set_title("A 0.4 m link ends up almost 80 cm off", fontsize=13)
+    a2.set_ylabel("error in tip x (cm)")
+    a2.set_title("The tip x is off by almost 80 cm", fontsize=13)
     a2.grid(alpha=0.3)
     fig.tight_layout()
     out = HERE.parent / "assets" / "fig-degrees-vs-radians.png"

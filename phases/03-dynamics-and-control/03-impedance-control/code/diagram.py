@@ -32,11 +32,11 @@ def recipe():
     a = d.box("Largest push F,\nbudget x_max", 0, 0, "yellow", step=1)
     b = d.box("K = F / x_max", 1, 0, "purple", step=2)
     c = d.box("D = 2*zeta*\nsqrt(K*J)", 1, 1, "purple", step=3)
-    e = d.box("Check\ndt*D/J < 1", 0, 1, "green", step=4)
+    e = d.box("Check full loop\nsampling limit", 0, 1, "green", step=4)
     d.arrow(a, b)
     d.arrow(b, c)
     d.arrow(c, e)
-    d.note("Too big? Lower D or speed up the loop.", near=e, side="b")
+    d.note("Over the limit? Lower K or D,\nor speed up the loop.", near=e, side="b")
     d.note("zeta 0.7 to 1 for contact tasks.", near=c, side="r")
     d.save(OUT / "diagram-impedance-recipe.excalidraw")
 

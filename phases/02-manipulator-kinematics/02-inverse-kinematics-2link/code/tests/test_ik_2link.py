@@ -63,3 +63,14 @@ def test_rounding_just_outside_the_boundary_is_not_a_false_refusal():
 def test_equal_links_reach_the_base_point():
     q = m.ik((0.0, 0.0), (0.4, 0.4))
     assert np.allclose(m.fk(q, (0.4, 0.4)), 0.0, atol=1e-9)
+
+
+def test_docs_build_it_block_survives_the_reach_boundary():
+    # run the code block printed in docs/en.md at a target just inside the tolerance band
+    text = (pathlib.Path(__file__).resolve().parents[2] / "docs" / "en.md").read_text()
+    block = text.split("```python\n")[1].split("```")[0]
+    l1, l2, x, y, tol, elbow = 0.5, 0.4, 0.90000000001, 0.0, 1e-9, "down"
+    env = {"np": np, "l1": l1, "l2": l2, "x": x, "y": y, "tol": tol, "elbow": elbow}
+    exec(block, env)
+    assert np.all(np.isfinite([env["q1"], env["q2"]]))
+    assert np.allclose([env["q1"], env["q2"]], m.ik((x, y), (l1, l2)))

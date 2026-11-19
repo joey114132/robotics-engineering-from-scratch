@@ -84,3 +84,12 @@ def test_picking_the_lowest_delay_of_eight_beats_a_single_exchange():
         one.append(abs(m.estimate(*s[0])[0] - 0.05))
         best.append(abs(m.best_offset(s) - 0.05))
     assert np.median(best) < np.median(one)
+
+
+def test_shortest_round_trip_bounds_the_error_but_a_longer_symmetric_try_can_be_exact():
+    uneven, even = m.exchange(0.05, 0.03, 0.001), m.exchange(0.05, 0.02, 0.02)
+    (off_u, rtt_u), (off_e, rtt_e) = m.estimate(*uneven), m.estimate(*even)
+    assert rtt_u < rtt_e  # the uneven try has the shorter round trip
+    assert abs(off_u - 0.05) <= rtt_u / 2 and abs(off_e - 0.05) < 1e-12
+    assert abs(off_u - 0.05) > abs(off_e - 0.05)  # yet its actual error is larger
+    assert np.isclose(m.best_offset([uneven, even]), off_u)

@@ -44,3 +44,25 @@ def test_underdamped_overshoot_matches_theory():
     overshoot = q.max() / q[-1] - 1.0
     theory = np.exp(-np.pi * zeta / np.sqrt(1 - zeta**2))
     assert np.isclose(overshoot, theory, atol=0.03)
+
+
+def test_damper_check_alone_does_not_certify_a_spring_and_damper_loop():
+    # dt*D/J = 0.1 passes the damper-only check, but the spring term dt^2 K/J = 100 does not
+    q = m.simulate(J=1.0, K=10000.0, D=1.0, f_ext=2.0, dt=0.1, n=100)
+    assert 0.1 * 1.0 / 1.0 < 1 and np.abs(q).max() > 1e6
+
+
+def test_full_sampling_limit_matches_the_simulation():
+    checked = 0
+    for dt in (1e-3, 1e-2, 1e-1):
+        for K in (1e2, 1e3, 1e4, 1e5):
+            for D in (1.0, 20.0, 200.0):
+                lhs = dt * dt * K + 2 * dt * D  # J = 1
+                if 0.7 < lhs / 4 < 1.4 or 0.7 < dt * D / 2 < 1.4:
+                    continue  # too close to the edge for a finite run to tell
+                with np.errstate(all="ignore"):
+                    q = m.simulate(J=1.0, K=K, D=D, f_ext=2.0, dt=dt, n=int(30 / dt))
+                stable = bool(np.abs(q).max() < 1e3)
+                assert stable == (lhs < 4 and dt * D < 2), (dt, K, D)
+                checked += 1
+    assert checked >= 20

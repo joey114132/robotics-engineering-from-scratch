@@ -19,7 +19,7 @@ def contact_wrenches(points, normals, mu, rho=1.0):
 def epsilon(W, tol=1e-9):
     """Radius of the largest ball around the origin inside the hull of W. 0 means no force closure."""
     W = np.asarray(W, float)
-    if np.linalg.matrix_rank(W) < 3:                # the wrenches do not even span the 3-D wrench space
+    if np.linalg.matrix_rank(W - W[0]) < 3:          # the hull is flat: it has no inside, so no ball fits
         return 0.0
     h = []
     for i, j, k in itertools.combinations(range(len(W)), 3):

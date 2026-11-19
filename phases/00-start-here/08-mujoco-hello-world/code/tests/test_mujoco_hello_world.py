@@ -52,3 +52,29 @@ def test_mujoco_pendulum_period_matches_our_simulator():
     pytest.importorskip("mujoco")
     mj = m.mujoco_period(0.05, 0.001, 20.0)
     assert np.isclose(mj, period(0.05), rtol=0.005)
+
+
+def test_main_runs_without_mujoco_installed():
+    # the documented run command must work in the minimal environment (numpy only)
+    import runpy
+    import sys
+
+    saved = sys.modules.get("mujoco", "absent")
+    sys.modules["mujoco"] = None  # makes `import mujoco` raise ImportError
+    try:
+        runpy.run_path(str(_p), run_name="__main__")
+    finally:
+        if saved == "absent":
+            del sys.modules["mujoco"]
+        else:
+            sys.modules["mujoco"] = saved
+
+
+def test_doc_numbers_for_the_wrong_order_swing():
+    # docs: L = 1 m, dt = 0.04 s, released at 0.5 rad, 10 s. The angle (not the height) grows about fivefold.
+    right = np.abs(m.simulate(0.5, 0.04, 10.0, 1.0, "semi")).max()
+    wrong = np.abs(m.simulate(0.5, 0.04, 10.0, 1.0, "explicit")).max()
+    assert right == pytest.approx(0.50, abs=0.005)
+    assert wrong == pytest.approx(2.46, abs=0.005)
+    assert wrong / 0.5 == pytest.approx(5, abs=0.2)
+    assert (1 - np.cos(wrong)) / (1 - np.cos(0.5)) > 10  # the height ratio is not "five times"

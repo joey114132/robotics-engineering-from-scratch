@@ -1,4 +1,4 @@
-# 레슨 11/04 예시 클립: peg 를 가까이서 본다. 같은 1 mm 어긋남에서 뻣뻣한 손목은 옆으로 약 112 N 으로 peg 를 벽에 밀고 jam 이 걸리며 부드러운 손목은 1.1 N 이라 들어간다
+# 레슨 11/04 예시 클립: peg 를 가까이서 본다. 같은 1 mm 어긋남에서 뻣뻣한 손목은 구멍이 좁아지면 옆힘이 커져 peg 가 wedge 되고 jam 이 걸리며 부드러운 손목은 옆힘이 작아 들어간다
 import math
 import pathlib
 import sys
@@ -7,7 +7,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[4] / "scripts" /
 import kit
 
 m = kit.lesson_main(__file__)
-K, R, ZM, SECONDS, T0, MOVE, AR, TILT = 9.0, 0.03, 0.5, 4.8, 0.4, 3.6, 0.003, 4.0   # drawing scale (lesson metre -> drawn m), peg radius (drawn fat so it reads at 350 px), hole mouth height, clip s, start s, insertion s, arrow m per newton
+K, R, ZM, SECONDS, T0, MOVE, AR, TILT = 9.0, 0.03, 0.5, 4.8, 0.4, 3.6, 0.06, 4.0   # drawing scale (lesson metre -> drawn m), peg radius (drawn fat so it reads at 350 px), hole mouth height, clip s, start s, insertion s, arrow m per newton
 CASES = (("stiff", 1e5, "#4f8df0", -0.3), ("soft", 1e3, "#2f9e62", 0.3))       # name, kx, colour, x of the hole
 runs = {n: m.insert(dict(m.P0, kx=kx)) for n, kx, *_ in CASES}
 h, L = m.P0["h"], m.P0["L"]
@@ -31,7 +31,7 @@ for f in range(sc.frame_start, sc.frame_end + 1):
         r = runs[n]
         i = min(int(max((f - 1) / sc.render.fps - T0, 0) / MOVE * STEPS), len(r["zt"]) - 1)
         zt, fx = r["zt"][i], r["Fx"][i]
-        th = TILT * math.atan2(2 * h, zt)                                    # the lesson's tilt of the peg for this tip depth, drawn 4 times larger (it is under 2 degrees at the jam)
+        th = TILT * min(math.atan2(2 * h, zt), r["th_free"])                  # the lesson's lean of the peg at this depth (the wrist's own lean until the edge catches it), drawn 4 times larger (it is under 2 degrees at the jam)
         u = (math.sin(th), math.cos(th))
         tip = (x0 - h * K, ZM - zt * K)
         kit.key(peg, f, loc=(tip[0] + u[0] * L * K / 2, 0, tip[1] + u[1] * L * K / 2), rot=(0, th, 0))

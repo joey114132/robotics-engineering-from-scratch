@@ -39,7 +39,7 @@ for f in range(sc.frame_start, sc.frame_end + 1):
     for n, peg, js, hand, push, x0, bx, fl in rigs:
         zt = runs[n]["zt"]
         zt = zt[min(int(max((f - 1) / sc.render.fps - T0, 0) / MOVE * STEPS), len(zt) - 1)]
-        th = math.atan2(2 * h, zt)                                       # the lesson's tilt of the peg for this tip depth
+        th = min(math.atan2(2 * h, zt), runs[n]["th_free"])                 # the lesson's lean of the peg at this depth (the wrist's own lean until the edge catches it)
         u = (math.sin(th), math.cos(th))                                 # up the peg (x, z)
         tip = (x0 - h * K, ZM - zt * K)
         kit.key(peg, f, loc=(tip[0] + u[0] * L * K / 2, 0, tip[1] + u[1] * L * K / 2), rot=(0, th, 0))

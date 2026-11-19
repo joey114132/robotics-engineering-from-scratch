@@ -49,6 +49,21 @@ def test_views_that_only_translate_are_rejected_as_degenerate():
         m.calibrate([m.homography_dlt(xy, uv) for xy, uv in views])
 
 
+def test_one_view_is_rejected_because_it_cannot_fix_four_intrinsics():
+    views = m.make_views(K, 1, 0.0, 3)
+    with pytest.raises(ValueError, match="degenerate"):
+        m.calibrate([m.homography_dlt(xy, uv) for xy, uv in views])
+
+
+def test_two_translation_only_views_are_rejected_but_two_tilted_views_are_enough():
+    flat = m.make_views(K, 2, 0.0, 3, tilt=0.0)
+    with pytest.raises(ValueError, match="degenerate"):
+        m.calibrate([m.homography_dlt(xy, uv) for xy, uv in flat])
+    est = calibrate(2, 0.0, 3)
+    for k, v in K.items():
+        assert np.isclose(est[k], v, rtol=1e-6), k
+
+
 def test_pixel_error_is_zero_for_the_true_intrinsics_and_grows_with_focal_error():
     assert m.pixel_error(K, K) == 0.0
     off = dict(K, fx=K["fx"] * 1.01)
@@ -73,3 +88,15 @@ def test_linear_solution_error_is_several_times_the_pixel_noise_with_few_views()
         except ValueError:
             pass
     assert np.median(errs) > 3.0
+
+
+def test_two_views_tilted_about_the_same_axis_are_rejected_as_degenerate():
+    Km = np.array([[K["fx"], 0, K["cx"]], [0, K["fy"], K["cy"]], [0, 0, 1.0]])
+    XY = np.array([(0.06 * i, 0.06 * j) for i in range(-3, 4) for j in range(-2, 3)])
+    Hs = []
+    for th in (0.1, 0.2):  # both tilts turn the board about y only: the equations repeat, rank 3 instead of 4
+        R = m.rodrigues(np.array([0.0, th, 0.0]))
+        p = Km @ (R[:, :2] @ XY.T + np.array([[0.0], [0.0], [0.7]]))
+        Hs.append(m.homography_dlt(XY, (p[:2] / p[2]).T))
+    with pytest.raises(ValueError, match="degenerate"):
+        m.calibrate(Hs)

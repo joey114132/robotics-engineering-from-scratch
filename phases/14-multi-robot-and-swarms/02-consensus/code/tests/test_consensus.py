@@ -60,3 +60,40 @@ def test_step_size_above_two_over_lambda_max_diverges():
     lmax = np.linalg.eigvalsh(m.laplacian(A))[-1]
     d = np.ptp(m.run(X0, A, 2.2 / lmax, 200)[-1])
     assert d > 100
+
+
+def test_one_extra_link_does_not_raise_lambda2_of_a_ring():
+    base = m.lambda2(m.laplacian(m.ring(8)))
+    for i in range(8):
+        for j in range(i + 2, 8):
+            A = m.ring(8)
+            A[i, j] = A[j, i] = 1
+            assert np.isclose(m.lambda2(m.laplacian(A)), base)  # the unlinked direction of the ring is untouched
+
+
+def test_with_a_big_step_the_slowest_decay_is_set_by_the_largest_eigenvalue():
+    A, eps = m.ring(8), 0.49
+    lam = np.linalg.eigvalsh(m.laplacian(A))
+    slowest = np.abs(1 - eps * lam[1:]).max()
+    assert np.isclose(slowest, 0.96) and slowest > 1 - eps * lam[1]  # 1 - eps*lambda2 would say 0.713
+    traj = m.run(X0, A, eps, 600)
+    d = np.linalg.norm(traj - traj.mean(axis=1, keepdims=True), axis=1)
+    assert np.isclose(d[501] / d[500], slowest, rtol=1e-3)
+
+
+def test_one_way_links_do_not_keep_the_average():
+    A = np.zeros((8, 8))
+    A[1:, 0] = 1  # robots 1..7 listen to robot 0, and robot 0 listens to nobody
+    L = m.laplacian(A)
+    assert np.allclose(L.sum(axis=1), 0) and not np.allclose(L, L.T)  # rows sum to zero, yet L is not symmetric
+    assert not np.isclose(m.run(X0, A, 0.2, 1)[1].mean(), X0.mean())  # the average moves after one tick
+
+
+def test_skill_step_prediction_matches_a_run():
+    A, eps, f = m.ring(8), 0.05, 0.01
+    lam = np.linalg.eigvalsh(m.laplacian(A))
+    rho = np.abs(1 - eps * lam[1:]).max()
+    steps = int(np.ceil(np.log(f) / np.log(rho)))
+    traj = m.run(X0, A, eps, steps)
+    d = np.linalg.norm(traj - traj.mean(axis=1, keepdims=True), axis=1)
+    assert d[steps] <= f * d[0] and d[steps] > f * d[0] * 0.3 * rho  # the bound holds and is not wildly loose

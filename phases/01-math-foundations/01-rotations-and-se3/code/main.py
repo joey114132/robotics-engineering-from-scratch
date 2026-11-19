@@ -19,7 +19,7 @@ def rot_z(a: float) -> np.ndarray:
 
 def is_rotation(R: np.ndarray, tol: float = 1e-9) -> bool:
     """Orthonormal columns and determinant +1."""
-    return bool(np.allclose(R.T @ R, np.eye(3), atol=tol) and np.isclose(np.linalg.det(R), 1.0, atol=tol))
+    return bool(np.allclose(R.T @ R, np.eye(3), atol=tol, rtol=0.0) and np.isclose(np.linalg.det(R), 1.0, atol=tol, rtol=0.0))
 
 
 def reorthonormalize(R: np.ndarray) -> np.ndarray:

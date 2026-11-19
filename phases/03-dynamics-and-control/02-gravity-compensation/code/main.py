@@ -21,8 +21,8 @@ def steady_state(q_des, kp, ff_scale, iters: int = 500, **params) -> np.ndarray:
     for _ in range(iters):
         q = 0.5 * q + 0.5 * (q_des + (ff - gravity_torque(q, **params)) / kp)
     residual = np.abs(kp * (q_des - q) + ff - gravity_torque(q, **params)).max()
-    if not residual < 1e-6:  # kp below the gravity gradient has no stable equilibrium to find
-        raise ValueError(f"steady state did not converge (residual {residual:.3g} Nm); kp too soft")
+    if not residual < 1e-6:  # iteration failure does not prove that no equilibrium exists
+        raise ValueError(f"steady state iteration did not converge (residual {residual:.3g} Nm)")
     return q
 
 

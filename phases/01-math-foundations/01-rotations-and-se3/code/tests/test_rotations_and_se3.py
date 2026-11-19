@@ -56,3 +56,9 @@ def test_matches_scipy_when_available():
     spatial = __import__("pytest").importorskip("scipy.spatial.transform")
     R = spatial.Rotation.from_euler("z", 0.8).as_matrix()
     assert np.allclose(m.rot_z(0.8), R, atol=1e-12)
+
+
+def test_is_rotation_honours_tol_with_no_hidden_relative_slack():
+    # a scaled identity is off by about 2e-6 in R.T @ R, far above tol = 1e-9
+    assert not m.is_rotation((1 + 1e-6) * np.eye(3))
+    assert m.is_rotation(m.rot_z(0.7))

@@ -29,10 +29,10 @@ def run(mode, q_des=0.0, K=20.0, D=None, push=2.0, kp_in=400.0, kd_in=40.0, J=0.
     return np.arange(n + 1) * dt, out
 
 
-def felt_stiffness(mode, K, push=2.0, **kw):
-    """Torque needed per radian of deflection, measured after the joint settles."""
-    _, q = run(mode, K=K, push=push, **kw)
-    return push / (q[-1] - 0.0)
+def felt_stiffness(mode, K, push=2.0, q_des=0.0, **kw):
+    """Torque needed per radian of deflection from the commanded angle, measured after the joint settles."""
+    _, q = run(mode, q_des=q_des, K=K, push=push, **kw)
+    return push / (q[-1] - q_des)
 
 
 if __name__ == "__main__":

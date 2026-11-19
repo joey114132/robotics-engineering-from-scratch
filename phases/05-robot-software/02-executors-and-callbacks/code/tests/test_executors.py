@@ -59,3 +59,15 @@ def test_never_more_callbacks_running_than_threads():
 def test_slow_callback_itself_is_not_delayed_when_alone_on_its_thread():
     log = m.simulate([TIMER, SLOW_OWN], threads=2, horizon=H)
     assert max(lat(log, "slow")) == 0
+
+
+def test_two_slow_callbacks_in_one_group_make_the_timer_wait_longer_than_either_duration():
+    cbs = [("timer", 10, 1, "fast", 1), ("a", 100, 60, "slow", 0), ("b", 100, 60, "slow", 0)]
+    assert max(m.latencies(m.simulate(cbs, 1, 1000), "timer")) == 299  # more than one 60 ms callback holds the thread
+
+
+def test_callbacks_without_a_group_share_one_default_group():
+    cbs = [("timer", 10, 1, None, 1), ("slow", 100, 60, None, 0)]  # no group given: both use the node's default group
+    assert max(m.latencies(m.simulate(cbs, 2, 1000), "timer")) == 59  # a second thread does not help
+    own = [("timer", 10, 1, None, 1), ("slow", 100, 60, "slow", 0)]  # the slow one gets its own group
+    assert max(m.latencies(m.simulate(own, 2, 1000), "timer")) == 0

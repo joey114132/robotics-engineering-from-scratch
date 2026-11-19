@@ -23,7 +23,7 @@ def starve():
 
 def groups():
     d = Diagram()
-    d.title("Two threads help only with two groups")
+    d.title("Groups decide whether callbacks can overlap")
     a = d.box("Timer and slow\nsame group", col=0, row=0, color="red")
     c = d.box("2 threads, but\none at a time", col=1, row=0, color="red")
     f = d.box("Timer still\nwaits", col=2, row=0, color="red")

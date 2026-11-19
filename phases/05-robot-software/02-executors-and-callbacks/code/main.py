@@ -3,17 +3,17 @@ def simulate(callbacks, threads, horizon):
     """callbacks: (name, period, duration, group, first_release) in ms. Returns (name, release, start, end) per job.
 
     One job per released callback waits in a FIFO. A free thread takes the oldest job whose group is idle.
-    group None means reentrant: it never blocks itself. Mutually exclusive groups run one job at a time.
+    Every group is mutually exclusive: one job at a time. group None is the node's shared default group.
     """
     pending, running, log = [], [], []  # running: (end, group)
     for t in range(horizon):
         for name, period, dur, group, first in callbacks:
             if t >= first and (t - first) % period == 0:
-                pending.append((name, t, dur, group))
+                pending.append((name, t, dur, group or "default"))
         running = [r for r in running if r[0] > t]
         while len(running) < threads:
-            busy = {g for _, g in running if g is not None}
-            job = next((j for j in pending if j[3] is None or j[3] not in busy), None)
+            busy = {g for _, g in running}
+            job = next((j for j in pending if j[3] not in busy), None)
             if job is None:
                 break
             pending.remove(job)

@@ -51,3 +51,8 @@ def test_every_mode_tracks_the_command_when_nothing_pushes():
     for mode in ("torque", "position", "admittance"):
         t, q = m.run(mode, q_des=0.3, push=0.0)
         assert np.isclose(q[-1], 0.3, atol=1e-3)
+
+
+def test_felt_stiffness_is_measured_from_the_commanded_angle():
+    assert np.isclose(m.felt_stiffness("torque", 20.0, q_des=0.3), 20.0, rtol=0.02)
+    assert np.isclose(m.felt_stiffness("torque", 20.0), m.felt_stiffness("torque", 20.0, q_des=0.3), rtol=0.02)

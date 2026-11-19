@@ -57,3 +57,16 @@ def test_rotation_preserves_length():
     pts = np.random.default_rng(0).normal(size=(20, 3))
     out = m.rotate_z(pts, 0.7)
     assert np.allclose(np.linalg.norm(out, axis=1), np.linalg.norm(pts, axis=1))
+
+
+def test_degrees_read_as_radians_move_a_0_4_m_tip_by_0_18_m():
+    # the lesson's math fold quotes this number for the reading 90
+    right = m.rotate_z([[0.4, 0.0, 0.0]], np.pi / 2)[0]
+    wrong = m.rotate_z([[0.4, 0.0, 0.0]], 90.0)[0]
+    assert np.linalg.norm(right - wrong) == pytest.approx(0.184, abs=1e-3)
+    assert abs(wrong[0]) / 0.4 == pytest.approx(0.45, abs=0.005)
+
+
+def test_rotate_z_only_checks_shape_not_the_size_of_theta():
+    # rotate_z does not apply the degrees check, so a degree-sized theta runs without an error
+    m.rotate_z([[1.0, 0.0, 0.0]], 90.0)

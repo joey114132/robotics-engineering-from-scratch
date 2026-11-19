@@ -57,3 +57,9 @@ def test_more_noise_gives_larger_parameter_error():
 def test_ignoring_the_motor_lag_leaves_a_larger_residual():
     d = _clean(1.0)
     assert m.fit(d, grid=[0.0])[2] > 3 * m.fit(d)[2]
+
+
+def test_condition_numbers_quoted_in_the_lesson_fold():
+    cond = lambda a, sw, sq, seed: m.fit(m.record(m.experiment(a), sw, sq, seed))[1]
+    assert round(cond(1.0, 0.01, 1e-4, 1)) == 4 and round(cond(0.0, 0.01, 1e-4, 1)) == 361  # noisy seed 1, as plotted
+    assert round(cond(1.0, 0.0, 0.0, 0)) == 4 and 2300 < cond(0.0, 0.0, 0.0, 0) < 2500  # noise-free

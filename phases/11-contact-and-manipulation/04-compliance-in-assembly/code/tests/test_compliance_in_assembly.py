@@ -1,5 +1,6 @@
 # 레슨 11/04 테스트: 두 점 접촉 wedge 해석에서 손목 compliance 가 낮으면 jam, 충분히 부드러우면 삽입된다
 import importlib.util
+import itertools
 import pathlib
 
 import numpy as np
@@ -47,13 +48,40 @@ def test_frictionless_contact_never_jams():
         assert m.insert(dict(P, kx=1e5, mu=0.0, e=e))["jam"] is None
 
 
-def test_sliding_contact_forces_balance_the_wrench_and_stay_positive():
-    r = m.insert(dict(P, kx=1e4))
-    assert r["jam"] is None and np.all(r["N1"] > 0) and np.all(r["N2"] > 0)
-    zt = r["zt"][100]
-    _, wr, _, c1, c2, tau = m.wedge(zt, dict(P, kx=1e4))
-    q = np.linalg.solve(np.c_[c1, c2, -tau], -wr)[2]
-    assert np.allclose(wr + r["N1"][100] * c1 + r["N2"][100] * c2, q * tau)
+def test_no_contact_ever_pulls_on_the_peg():
+    for kx, e, kth in itertools.product((1e5, 1e4, 1e3, 1e2), (0.0, 1e-3, 4e-3), (0.1, 1.0, 10.0)):
+        r = m.insert(dict(P, kx=kx, e=e, kth=kth), dz=5e-4)
+        assert np.all(r["N1"] >= 0) and np.all(r["N2"] >= 0), (kx, e, kth)
+
+
+def test_stiff_wrist_does_not_start_with_a_big_side_force():
+    # only the tip touches at first, so the peg leans where the wrist wants and the wrist is barely stretched
+    assert abs(m.insert(dict(P, kx=1e5))["Fx"][0]) < 1.0
+
+
+def test_peg_wedges_where_the_hole_allows_less_lean_than_the_wrist_wants():
+    for kx in (1e5, 1e4, 1e3):
+        p = dict(P, kx=kx)
+        r = m.insert(p)
+        first_edge_contact = r["zt"][np.argmax(r["N2"] > 0)]
+        assert abs(first_edge_contact - 2 * p["h"] / np.tan(m.free_tilt(p))) < 2e-4, kx
+
+
+def test_wedged_forces_balance_the_wrench_sideways_and_in_twist():
+    p = dict(P, kx=1e5)
+    r = m.insert(p)
+    i = len(r["zt"]) - 1
+    _, wr, _, c1, c2 = m.wedge(r["zt"][i], p)
+    total = wr + r["N1"][i] * c1 + r["N2"][i] * c2
+    assert abs(total[0]) < 1e-9 and abs(total[2]) < 1e-9  # the push is left over: it is what friction must beat
+    assert total[1] > 0  # still sliding one step before the jam
+
+
+def test_friction_at_the_tip_alone_can_hold_the_push():
+    p = dict(P, kx=1e5, alpha=np.radians(20), kth=5.0)
+    r = m.insert(p)
+    assert np.isclose(r["jam"], 2 * p["h"] / np.tan(p["alpha"]), rtol=0, atol=1e-12)  # jammed at the very first depth
+    assert len(r["zt"]) == 0
 
 
 def test_stiffer_wrist_loads_the_walls_harder_before_it_jams():

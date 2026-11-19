@@ -31,7 +31,7 @@ def J_times(J, qd):
 
 
 def joint_torque(J, F):
-    """Static joint torque that balances a tip force F: tau = J^T F."""
+    """Joint torque the motors supply so the tip pushes with force F: tau = J^T F. To hold a weight, F points up with the weight's size."""
     return J.T @ np.asarray(F, float)
 
 

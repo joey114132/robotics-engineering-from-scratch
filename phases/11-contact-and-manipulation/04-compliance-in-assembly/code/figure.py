@@ -36,27 +36,26 @@ def jam_map():
 
 def forces():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5.2))
-    for kx, color, ls in ((1e3, BLUE, "-"), (1e4, GREY, "-"), (1e5, ORANGE, "-")):
+    for kx, color in ((1e3, BLUE), (1e4, GREY), (1e5, ORANGE)):
         r = m.insert(dict(m.P0, kx=kx))
         z = r["zt"] * 1e3
-        ax1.plot(z, r["N1"], ls, color=color, lw=2, label=f"kx = {kx:g} N/m")
-        ax2.plot(z, r["Fx"], ls, color=color, lw=2)
+        wall = np.maximum(r["N1"], r["N2"])
+        ax1.plot(z, wall, color=color, lw=2, label=f"kx = {kx:g} N/m")
+        ax2.plot(z, r["Fx"], color=color, lw=2)
         if r["jam"]:
-            for ax, y in ((ax1, r["N1"][-1]), (ax2, r["Fx"][-1])):
+            for ax, y in ((ax1, wall[-1]), (ax2, r["Fx"][-1])):
                 ax.plot(r["jam"] * 1e3, y, "X", color=color, ms=13)
-                ax.annotate("jam", (r["jam"] * 1e3, y), xytext=(-40, 10), textcoords="offset points", color=color)
-    ax1.set_yscale("log")
-    ax2.set_yscale("symlog", linthresh=1.0)
+                ax.annotate("jam", (r["jam"] * 1e3, y), xytext=(-48, -4), textcoords="offset points", color=color)
     ax2.axhline(0, color=GREY, lw=1)
     ax1.set_xlabel("tip depth (mm)")
     ax2.set_xlabel("tip depth (mm)")
-    ax1.set_ylabel("tip contact normal force N1 (N)")
+    ax1.set_ylabel("largest wall force (N)")
     ax2.set_ylabel("wrist side force Fx (N, signed)")
-    ax1.set_title("Wall force at the tip follows the wrist side force", fontsize=12)
-    ax2.set_title("Side force is about kx times the misalignment", fontsize=12)
+    ax1.set_title("Wall force grows once the edge catches the peg", fontsize=12)
+    ax2.set_title("A stiff wrist's side force climbs as the hole narrows", fontsize=12)
     ax1.legend(loc="upper left")
     for ax in (ax1, ax2):
-        ax.grid(alpha=0.3, which="both")
+        ax.grid(alpha=0.3)
     fig.tight_layout()
     fig.savefig(OUT / "fig-contact-forces.png", dpi=100)
 
