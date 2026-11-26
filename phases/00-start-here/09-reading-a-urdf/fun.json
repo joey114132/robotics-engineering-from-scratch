@@ -9,6 +9,6 @@
     "mission": "그냥 더한 위치와 파일 방식으로 읽은 위치를 비교합니다. `cd code && python3 -c \"from main import *; c=chain(parse_urdf(URDF)[1],'base','hand'); print(naive_position(c), link_positions(c,{'shoulder':0,'elbow':0})['hand'])\"`를 실행하고 어느 쪽이 맞는지 답하세요.",
     "clip": "손 두 개가 같은 곳으로 뻗습니다. 초록 팔은 각 offset을 바로 앞 부품의 방향으로 읽어서 손이 y축 방향에서 끝납니다. 파란 손은 offset을 방의 방향인 것처럼 그냥 더해서 x축 위에 가만히 있습니다. 빨간 선은 두 손 사이의 간격이고 끝에서 0.71 m입니다. 모든 것을 실제의 두 배 크기로 그렸습니다."
   },
-  "toy": null,
+  "toy": "blocks-urdf-tree",
   "three": "urdf-tree-3d"
 }

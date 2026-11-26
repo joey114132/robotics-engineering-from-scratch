@@ -9,6 +9,6 @@
     "mission": "곧장 가는 길과 중간에 들르는 길을 비교해 봅니다. `cd code && python3 main.py`를 실행하세요. 출력을 보기 전에 A에서 C로 곧장 가는 길이 B를 거치는 길보다 얼마나 짧을지 예측해 보세요.",
     "clip": "작은 rover가 바닥에 표시한 세 점을 차례로 찾아갑니다. 점마다 잠시 쉬고 다음 점 쪽으로 돈 다음 곧게 달립니다. 각 점은 숫자 한 쌍일 뿐입니다."
   },
-  "toy": null,
+  "toy": "blocks-points",
   "three": "route-points-3d"
 }

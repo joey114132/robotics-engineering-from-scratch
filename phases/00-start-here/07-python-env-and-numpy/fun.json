@@ -9,6 +9,6 @@
     "mission": "degree처럼 보이는 숫자와 radian처럼 보이는 숫자를 검사기에 넣고 어느 쪽을 막는지 봅니다. `cd code && python3 -c \"from main import joint_angles; print(joint_angles([90, 45]))\"`를 실행하되 결과를 먼저 예측해 보세요. 이어서 `[1.5, 0.8]`을 넣고 guard가 왜 가만히 있는지 확인하세요.",
     "clip": "작은 로봇 팔 두 대가 같은 센서 값을 받습니다. 값은 0에서 90까지 15씩 늘어납니다. 초록 팔은 이를 degree로 읽어서 한 단계씩 수직까지 올라갑니다. 파란 팔은 같은 숫자를 radian으로 읽어서 자세를 이리저리 바꾸다가 수직보다 약 27도 넘어간 채 끝납니다."
   },
-  "toy": null,
+  "toy": "blocks-guards",
   "three": "degrees-guard-arm-3d"
 }
